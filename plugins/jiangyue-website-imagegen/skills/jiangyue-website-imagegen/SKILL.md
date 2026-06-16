@@ -7,7 +7,9 @@ description: Use when creating, editing, or reviewing website visuals for Jiangy
 
 ## Core Standard
 
-Create bright, minimal, precise industrial B2B visuals that support technical credibility. Every image needs one clear visual hammer and must avoid unsupported product, certification, customer, or performance claims.
+Create industrial B2B visuals that support technical credibility while leaving room for real creative range. Every image needs one clear visual hammer and must avoid unsupported product, certification, customer, or performance claims.
+
+Treat brand guidance as a floor, not a cage: the image may be inventive in composition, crop, material, space, and metaphor as long as it remains credible for motor-drive, HVAC, ventilation, and OEM industrial buyers.
 
 Use the shortest production path that preserves quality. Do not create an HTML preview, browser mockup, design document, competitor review, or multiple deliverables unless the user asks for them or they are necessary to judge the requested asset.
 
@@ -18,8 +20,28 @@ For every new image, use [references/image-brief-template.md](references/image-b
 - Do not dump the full questionnaire on the user.
 - Ask only the highest-value missing question, one at a time.
 - Infer low-risk production details from the brand rules and existing assets.
-- Before production, return a concise production brief that states the intended message, subject relationship, visual hammer, copy placement, method, and constraints.
+- Before production, return a concise production brief that states the original intent, intended message, subject relationship, visual hammer, copy placement, method, and constraints.
 - Generate only after the user confirms the brief or has already provided equivalent clear instructions.
+
+## Intent Lock
+
+Create an intent lock before choosing the visual form. Keep it active through every revision.
+
+The intent lock must state:
+
+- the user's original job for the image
+- the core message the image must support
+- what the image itself must communicate without relying on explanation
+- what will be carried by HTML/page copy instead of the image
+- the drift boundaries: what the image must not become
+
+Do not replace the original intent with a later production detail. If the user asks for a correction that may change the intent, stop and restate the trade-off before producing anything.
+
+Example:
+
+- Original intent: Contact hero visual supporting "AI + professional + service".
+- Allowed correction: make the subject more industrial and credible.
+- Drift boundary: do not turn the image into a standalone product hero where the three-part advantage disappears.
 
 ## Choose the Production Method First
 
@@ -38,14 +60,17 @@ Do not use an image model for deterministic geometry or important text when SVG/
 ## Fast Workflow
 
 1. Identify the asset type, crop, purpose, visual hammer, and required text.
-2. When the brief contains multiple subjects, confirm their semantic relationship before choosing a visual form.
-3. Run a content-sufficiency check before choosing a layout.
-4. Check only directly relevant project assets.
-5. Choose image generation, image editing, or deterministic SVG/canvas composition.
-6. Produce one strong draft first. Create variants only when they test a meaningful visual difference.
-7. Inspect the actual output at full size using a separate review pass.
-8. Reject and redo any output that hits a quality veto or design-upgrade trigger.
-9. Save the accepted asset in the project and report its path, dimensions, method, and unverified limitations.
+2. Create the intent lock. Do not continue if the image responsibility and page-copy responsibility are unclear.
+3. When the brief contains multiple subjects, confirm their semantic relationship before choosing a visual form.
+4. Run a content-sufficiency check before choosing a layout.
+5. Decide whether reference research is needed. For brand-defining hero images, motor-drive/HVAC/ventilation subject recognition, vague "premium/beautiful/industrial" requests, or failed visual quality, use the reference research gate.
+6. Choose a concrete visual concept and state why it preserves the intent lock. For a brand-defining hero or ambiguous abstract concept, offer 2-3 materially different visual directions before production.
+7. Check only directly relevant project assets.
+8. Choose image generation, image editing, or deterministic SVG/canvas composition.
+9. Produce one strong draft first. Create variants only when they test a meaningful visual difference.
+10. Inspect the actual output at full size and thumbnail size using a separate review pass.
+11. Reject and redo any output that fails intent fidelity, hits a quality veto, or triggers a design-upgrade rule.
+12. Save the accepted asset in the project and report its path, dimensions, method, and unverified limitations.
 
 For a clear simple request, do not conduct an extended questionnaire. Infer low-risk details, return the concise production brief, and proceed after confirmation. If meaning or subject relationships remain ambiguous, wait for the answer.
 
@@ -78,6 +103,14 @@ Offer 2–3 concrete relationship models when useful. Do not begin production un
 
 Do not treat proximity, interlocking geometry, equal-size labels, or a connecting line as proof of collaboration. The visual must show role, direction, and result.
 
+For every named subject, map it to either:
+
+- an explicit image element
+- an implicit visual cue
+- page copy outside the image
+
+If a named subject has no carrier, the concept is incomplete. Ask one question or revise the brief before production.
+
 ## Content-Sufficiency Check
 
 Before production, classify the brief:
@@ -89,16 +122,63 @@ Before production, classify the brief:
 
 Minimal does not mean placing a small object in empty space. A minimal asset still needs deliberate scale, tension, rhythm, and hierarchy.
 
-## Visual Direction
+## Concept Fidelity Gate
 
-- Mood: calm, precise, credible, modern, technical.
-- Brand feel: bright, minimal, focused, AI-native, quietly ambitious.
-- Palette: white and very light gray, graphite, sparse vivid blue, cyan, and green.
-- Suggested colors: `#FFFFFF`, `#F7F9FC`, `#E9EEF4`, `#0F172A`, `#147DFF`, `#18C7D8`, `#61D345`.
-- Lighting: bright studio or clean industrial lighting with restrained reflections.
-- Composition: generous negative space, strong hierarchy, few objects.
-- Materials: matte coated metal, anodized aluminum, ceramic, precise glass details used sparingly.
-- AI cues: a few energy nodes, fine data lines, or controlled luminous edges.
+Before generation, write a one-sentence concept contract:
+
+> This image will show [visual subject] so that [viewer understands/feels X], while [specific message Y] remains carried by [image/page copy].
+
+Reject the concept before production if any of these are true:
+
+- the visual subject is only adjacent to the user's core message
+- the chosen subject can replace or hide one of the user's named priorities
+- the image would still make sense if the user's company, product category, or message were removed
+- the concept depends on an explanation that is not visible in the image or planned HTML copy
+- a later requested correction makes the image solve a different job than the original request
+
+## Reference Research Gate
+
+For high-impact hero images, abstract concepts, weak visual direction, motor-drive/HVAC/ventilation recognition, or any draft rejected for visual quality, consider reference research before production or revision.
+
+Use [references/reference-research.md](references/reference-research.md) when reference research is needed. Keep this gate conditional: do not search by default for simple cards, deterministic diagrams, text-led graphics, format conversion, or minor image edits.
+
+Reference research must return executable visual principles, not a list of links to copy. Original intent lock overrides every reference.
+
+## Complexity Budget
+
+Use the lightest process that can protect the result:
+
+- **Light path:** clear simple assets. Use intake, brief, production, and review only.
+- **Standard path:** most website visuals. Add intent lock, subject carriers, and concept fidelity.
+- **High-impact path:** homepage, Contact hero, product hero, abstract advantage visuals, or repeated failure. Add reference research and stronger design-upgrade review.
+
+Do not load every reference file or run web research just because it exists. More process is only justified when it reduces drift, improves subject recognition, or raises visual quality.
+
+## Brand Floor and Creative Range
+
+The required brand floor:
+
+- calm, precise, credible, modern, technical
+- suitable for European B2B industrial buyers, OEMs, product teams, purchasing, and engineering roles
+- connected to motor control, motor drives, HVAC, ventilation equipment, or industrial control when those categories are relevant
+- restrained enough to feel engineered rather than theatrical
+
+The creative range:
+
+- Use stronger crops, asymmetry, depth, unusual product angles, abstract control layers, application-context fragments, or physical material contrast when they improve meaning.
+- Let the image feel designed, not merely safe. A clean but lifeless image is not acceptable for a hero asset.
+- AI may be shown through control behavior, feedback, sensing, adaptive flow, or decision layers; do not default to generic glowing nodes and data lines.
+- "Professional" may be shown through precision, assembly logic, material credibility, cooling rhythm, test-bench discipline, documentation adjacency, or clear system architecture.
+- "Service" may be shown through continuity, accessible support path, feedback loop, maintenance touchpoint, or responsive handoff; do not reduce it to a decorative ring.
+
+Use color as a role system, not a fixed recipe:
+
+- **Base:** white, light gray, graphite, metal gray, controlled shadow.
+- **Technical signal:** restrained blue, cyan, or green for control, data, efficiency, or feedback.
+- **Application warmth:** small warm or environmental accents when they prevent a cold sterile look.
+- Avoid large neon-purple fields, dark cyberpunk palettes, cheap gradients, rainbow tech effects, and excessive glow.
+
+Suggested colors may include `#FFFFFF`, `#F7F9FC`, `#E9EEF4`, `#0F172A`, `#147DFF`, `#18C7D8`, `#61D345`, plus restrained metal or application-context neutrals.
 
 Industrial technology should feel engineered, not theatrical.
 
@@ -138,6 +218,8 @@ Reject the draft immediately if any of these appear:
 - several equal focal points with no clear visual hammer
 - multiple subjects that appear merely adjacent, stacked, or mechanically interlocked without visible cause and effect
 - decorative grids or lines that make the image look busier rather than more precise
+- a draft that is visually polished but no longer supports the original intent lock
+- a revision that changes product/object recognition while losing the requested message relationship
 
 Do not deliver a vetoed draft as a “concept option.” Redo it.
 
@@ -152,12 +234,45 @@ Rework the concept when:
 - empty space feels accidental rather than controlled
 - added decoration does not increase meaning, hierarchy, or recognition
 - the first draft only changes color, shadow, or border treatment from a common template
+- a revised draft keeps the same weak silhouette, subject relationship, or composition as the rejected draft
+- the self-review can only defend the image by explaining the brief instead of pointing to visible evidence
+- brand rules produce a safe but dull image with no memorable crop, silhouette, material decision, or subject relationship
 
 Change the composition idea, content relationship, or medium. Do not merely polish the same weak layout.
 
+## Revision Discipline
+
+When a draft fails, name the failure category before changing anything:
+
+- **Intent drift:** the image no longer serves the original request.
+- **Semantic weakness:** the subjects or relationship are not visible.
+- **Visual weakness:** the message is right, but the form lacks beauty, tension, hierarchy, or craft.
+- **Recognition mismatch:** the subject is misread as the wrong object or industry.
+- **Claim risk:** the image implies unverified product structure, data, certification, customer use, or performance.
+
+Then choose the correction:
+
+- Intent drift requires returning to the brief or asking one question. Do not generate.
+- Semantic weakness requires changing subject relationship or message carriers.
+- Visual weakness requires changing silhouette, crop, scale, medium, or composition.
+- Recognition mismatch requires changing the subject cues while preserving the original message.
+- Claim risk requires removing or abstracting the risky detail.
+
+After two failed drafts for the same asset, stop production and return a short failure analysis plus 2-3 new concept directions for confirmation.
+
 ## Review Separation
 
-Review the rendered asset without relying on the production rationale. Score:
+Review the rendered asset without relying on the production rationale. Start with intent fidelity, then score visual quality.
+
+First answer:
+
+1. Does the draft still support the original intent lock?
+2. Can each named subject be traced to a visible image cue or planned HTML copy?
+3. Would the draft mislead the user into thinking it is a different type of asset?
+
+If any answer fails, reject the draft before scoring visual quality.
+
+Then score:
 
 1. visual hammer
 2. hierarchy and typography

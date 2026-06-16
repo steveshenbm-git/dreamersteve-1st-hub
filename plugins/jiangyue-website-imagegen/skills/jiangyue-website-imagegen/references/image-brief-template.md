@@ -18,8 +18,9 @@ The requester can paste this:
 3. 如果有多个主体，先确认它们的角色、关系、方向和最终结果，不要直接用并列、互锁或连线代替协同。
 4. 可以自主调整留白、比例、裁切、构图、材质、色彩和非语义品牌元素。
 5. 新增文字、产品、应用对象、人物、技术含义或营销主张前，先征得我的确认。
-6. 信息明确后，先输出一份简短的“制作简报”，让我确认后再生图。
-7. 初稿完成后，请按视觉锤、层级、品牌匹配、构图、原创性、克制程度、小尺寸表现和语义清晰度进行自审。不合格时进行结构性修改，不要只改颜色、阴影或光效。
+6. 对关键官网图，可以先联网搜索电机驱动器、HVAC、通风设备相关官网参考，但只提炼可执行的视觉原则，不复制参考图。
+7. 信息明确后，先输出一份简短的“制作简报”，让我确认后再生图。
+8. 初稿完成后，请按视觉锤、层级、品牌匹配、构图、原创性、克制程度、小尺寸表现和语义清晰度进行自审。不合格时进行结构性修改，不要只改颜色、阴影或光效。
 
 我目前的想法：
 - 使用位置：
@@ -33,6 +34,24 @@ The requester can paste this:
 ```
 
 Blank fields are allowed. Ask only what materially affects the concept.
+
+## Failure Pattern To Prevent
+
+Do not let a later visual correction replace the original task.
+
+Bad drift:
+
+1. User asks for a Contact hero about `AI + professional + service`.
+2. Draft is too abstract.
+3. User says the subject should look more like a drive.
+4. Agent changes the image into a motor drive product hero and loses `AI + professional + service`.
+
+Correct handling:
+
+1. Keep the original intent locked.
+2. Interpret "make it look more like a drive" as a recognition correction, not a new asset goal.
+3. Ask or restate the trade-off if the correction would hide the three-part advantage.
+4. Revise subject cues while preserving the original message carriers.
 
 ## Five Core Decisions
 
@@ -77,12 +96,21 @@ Ask what must appear. For multiple subjects, determine:
 - driver
 - outcome
 - flow or feedback
+- carrier for each subject: visual element, visual cue, or HTML/page copy
 
 Use:
 
 > 这些主体之间最重要的关系或结果是什么？
 
 Do not proceed while several relationship models remain equally plausible.
+
+If the user chooses not to put text inside the image, ask or infer how each named idea will be carried:
+
+- `AI`: visual signal, light layer, data path, or HTML copy
+- `Professional`: industrial form, engineering material, precision structure, or HTML copy
+- `Service`: support field, cooperative path, response touchpoint, or HTML copy
+
+If any named idea has no carrier, the brief is incomplete.
 
 ### 5. Constraints
 
@@ -147,6 +175,17 @@ When the user says only “高级、科技、简洁”, ask:
 
 The reason is more useful than the reference alone.
 
+For high-impact hero images, abstract advantage images, or motor-drive/HVAC/ventilation subject recognition, use reference research instead of guessing the style. Search official websites first with English category terms such as `motor drive`, `motor controller`, `PMSM motor controller`, `EC fan motor controller`, `HVAC motor drive`, `fan motor drive`, `ventilation fan motor controller`, plus Chinese `电机驱动器` only when useful for internal terminology.
+
+Reference research should answer:
+
+- what makes the subject read as an electric motor drive/controller
+- what makes the context feel related to HVAC or ventilation
+- what composition, crop, and material treatment can raise visual quality
+- what common template or stock-tech patterns must be avoided
+
+Do not turn reference research into broad competitor analysis unless the user asks.
+
 ## Assistant Production Brief
 
 Before generation, return this concise brief:
@@ -156,6 +195,12 @@ Before generation, return this concise brief:
 
 - 使用位置：
 - 图片任务：
+- 原始意图锁定：
+  - 原始目标：
+  - 图片必须支持的信息：
+  - 图片本身负责表达：
+  - HTML / 页面文案负责表达：
+  - 不可漂移成：
 - 目标受众：
 - 核心信息：
 - 希望产生的判断或行动：
@@ -164,10 +209,13 @@ Before generation, return this concise brief:
   - 驱动：
   - 结果：
   - 流向 / 反馈：
+  - 主体承载方式：
 - 核心视觉锤：
+- 概念契约：
 - 构图与文案留白：
 - 图片内文字：
 - 保留在 HTML 的文字：
+- 参考研究结论（如已触发）：
 - 视觉方向：
 - 制作方法：图像生成 / 图像编辑 / SVG 或混合制作
 - 必须避免：
@@ -176,6 +224,12 @@ Before generation, return this concise brief:
 ```
 
 Keep it short. State decisions rather than repeating the conversation.
+
+The concept contract must be visible and testable, not decorative:
+
+> This image will show [visual subject] so that [viewer understands/feels X], while [message Y] is carried by [image/page copy].
+
+Reject the brief before production if the concept contract could apply to any generic technology company.
 
 ## Information-Sufficiency Gate
 
@@ -187,6 +241,10 @@ Proceed when all are true:
 - the desired viewer response is clear enough to set hierarchy
 - required copy and claim boundaries are known
 - crop can be inferred or is supplied
+- the original intent lock is explicit
+- each named subject has an explicit carrier in the image or page copy
+- the visual concept has a drift boundary
+- for high-impact or recognition-sensitive images, reference research has either been used or explicitly judged unnecessary
 
 Do not proceed when:
 
@@ -195,6 +253,9 @@ Do not proceed when:
 - a stronger visual requires unapproved meaning
 - Hero copy placement is unknown and materially affects composition
 - supplied technical claims or product details are uncertain
+- a proposed visual direction solves a different job than the original request
+- removing the production rationale would make the image's connection to the message unclear
+- the concept relies on fixed brand colors, generic AI lines, or decorative glow as the main evidence of quality
 
 ## Question Priority
 
@@ -203,9 +264,11 @@ When several details are missing, ask in this order:
 1. What should the viewer understand?
 2. What should the viewer conclude or do?
 3. How do multiple subjects relate?
-4. Where will the image be used and where will copy sit?
-5. What exact content and constraints must be preserved?
-6. What visual references help distinguish preference?
+4. Which parts must be shown by the image and which may be carried by HTML/page copy?
+5. Where will the image be used and where will copy sit?
+6. What exact content and constraints must be preserved?
+7. Is this a high-impact or recognition-sensitive image that needs official website reference research?
+8. What visual references help distinguish preference?
 
 Do not ask about color, camera angle, materials, or minor styling before message and relationship are clear.
 
@@ -227,3 +290,17 @@ Confirmed internal sentence:
 > 专业控制能力支撑创新 AI，创新 AI 提升分析与控制价值，服务将能力落地并把现场反馈带回专业基础。
 
 Only then choose the visual form.
+
+## Correction Handling Example
+
+User:
+
+> 图片主体不像驱动器，调整一下。
+
+Incorrect response:
+
+> Make a product-like motor drive hero and drop the original three-part advantage.
+
+Correct response:
+
+> This is a recognition correction. Keep the original intent: Contact hero supporting AI + professional + service. Revise the subject so it borrows motor-drive cues such as low enclosure mass, heat-sink rhythm, mounting geometry, or restrained terminal hints, while AI/professional/service remain carried by the agreed image cues and HTML copy.

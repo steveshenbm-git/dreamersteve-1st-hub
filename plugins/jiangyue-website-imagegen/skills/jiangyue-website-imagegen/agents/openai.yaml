@@ -1,4 +1,4 @@
 interface:
   display_name: "Jiangyue Website Imagegen"
-  short_description: "Create precise Jiangyue industrial website visuals"
-  default_prompt: "Use $jiangyue-website-imagegen to clarify my real visual goal one question at a time, return a concise production brief, and then create the website image after confirmation."
+  short_description: "Create intent-safe industrial website visuals"
+  default_prompt: "Use $jiangyue-website-imagegen to lock the original visual intent, clarify one question at a time, use motor-drive/HVAC reference research when it materially improves the asset, return a concise production brief, self-review for drift, quality, and lifeless template output, and create the image only after confirmation."
