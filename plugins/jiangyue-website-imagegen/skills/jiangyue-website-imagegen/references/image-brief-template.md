@@ -1,0 +1,229 @@
+# Jiangyue Image Brief Template
+
+Use this template before every new image. Its purpose is to collect production requirements and help the requester identify what the image should communicate.
+
+Do not send every question at once. Start with the five core decisions, infer what is safe, and ask one highest-value missing question at a time.
+
+## Copyable User Prompt
+
+The requester can paste this:
+
+```text
+请使用 $jiangyue-website-imagegen 帮我制作一张网站图片。
+
+先不要立即生图。请帮助我把模糊想法整理成明确的视觉方案：
+
+1. 先判断我提供的信息是否足够。
+2. 每次只问我一个最关键的问题，并说明这个问题会解决什么设计问题。
+3. 如果有多个主体，先确认它们的角色、关系、方向和最终结果，不要直接用并列、互锁或连线代替协同。
+4. 可以自主调整留白、比例、裁切、构图、材质、色彩和非语义品牌元素。
+5. 新增文字、产品、应用对象、人物、技术含义或营销主张前，先征得我的确认。
+6. 信息明确后，先输出一份简短的“制作简报”，让我确认后再生图。
+7. 初稿完成后，请按视觉锤、层级、品牌匹配、构图、原创性、克制程度、小尺寸表现和语义清晰度进行自审。不合格时进行结构性修改，不要只改颜色、阴影或光效。
+
+我目前的想法：
+- 使用位置：
+- 目标受众：
+- 最想让人第一眼看懂：
+- 希望观众形成的判断或感受：
+- 必须出现的主体或文字：
+- 不希望出现：
+- 参考图片或偏好：
+- 尺寸或比例：
+```
+
+Blank fields are allowed. Ask only what materially affects the concept.
+
+## Five Core Decisions
+
+### 1. Job
+
+Ask:
+
+> 这张图将放在哪里，它在页面上要完成什么任务？
+
+Examples: Hero main visual, product introduction, application explanation, technical resource, contact, card, social preview.
+
+Why it matters: placement determines crop, information density, negative space, and whether text belongs in HTML or inside the image.
+
+### 2. First Understanding
+
+Ask:
+
+> 观众第一眼最应该看懂什么？请尽量用一句话描述，不要只列元素。
+
+Prefer messages such as:
+
+- 专业控制能力是基础，AI 提升诊断效率，服务保障项目落地。
+- 控制器连接风机应用，并提供清晰的维护入口。
+
+Avoid treating lists such as `专业 / AI / 服务` as a complete message.
+
+### 3. Intended Response
+
+Ask:
+
+> 看完图片后，希望客户形成什么判断、感受或下一步行动？
+
+Examples: technically credible, suitable for OEM discussion, easier to maintain, worth requesting technical information.
+
+Why it matters: the same subjects need different hierarchy when the desired response changes.
+
+### 4. Content and Relationship
+
+Ask what must appear. For multiple subjects, determine:
+
+- foundation
+- driver
+- outcome
+- flow or feedback
+
+Use:
+
+> 这些主体之间最重要的关系或结果是什么？
+
+Do not proceed while several relationship models remain equally plausible.
+
+### 5. Constraints
+
+Confirm:
+
+- exact required text
+- elements that must not appear
+- supplied references or real product photos
+- known claim boundaries
+- crop or dimensions when known
+
+Infer ordinary brand colors and production details rather than asking unnecessarily.
+
+## Conditional Questions
+
+Ask these only when relevant.
+
+### Hero
+
+- Where will the headline and CTA sit?
+- Should the visual support copy on the left or right?
+- Is the image a clean background asset, a complete mockup, or both?
+- What is the one headline the visual must reinforce?
+
+Keep H1, body copy, and CTA in HTML unless the user explicitly requests a composed mockup.
+
+### Multiple Subjects
+
+Confirm:
+
+1. What is the stable foundation or input?
+2. What is the active driver or transformation?
+3. What is the delivered outcome?
+4. Does the value move in one direction, converge, or return as a loop?
+
+### Text-Led Graphics
+
+- Which text must be inside the image?
+- Which copy should remain HTML?
+- Which term is primary and which are supporting?
+
+Use real typography. Do not ask the image model to render important Chinese text.
+
+### Product or Technical Meaning
+
+Ask before implying:
+
+- diagnostics
+- Bluetooth or cloud access
+- monitoring
+- safety or protection
+- performance
+- certification
+- customer installation
+- final product structure
+
+### References
+
+When the user says only “高级、科技、简洁”, ask:
+
+> 有没有一张你喜欢或不喜欢的参考图？它最值得保留或避免的是什么？
+
+The reason is more useful than the reference alone.
+
+## Assistant Production Brief
+
+Before generation, return this concise brief:
+
+```text
+制作简报
+
+- 使用位置：
+- 图片任务：
+- 目标受众：
+- 核心信息：
+- 希望产生的判断或行动：
+- 主体与关系：
+  - 基础：
+  - 驱动：
+  - 结果：
+  - 流向 / 反馈：
+- 核心视觉锤：
+- 构图与文案留白：
+- 图片内文字：
+- 保留在 HTML 的文字：
+- 视觉方向：
+- 制作方法：图像生成 / 图像编辑 / SVG 或混合制作
+- 必须避免：
+- 输出尺寸与文件：
+- 尚未验证或不可暗示的内容：
+```
+
+Keep it short. State decisions rather than repeating the conversation.
+
+## Information-Sufficiency Gate
+
+Proceed when all are true:
+
+- the image job is clear
+- one primary message is clear
+- the main subject or relationship is clear
+- the desired viewer response is clear enough to set hierarchy
+- required copy and claim boundaries are known
+- crop can be inferred or is supplied
+
+Do not proceed when:
+
+- the requester supplies only a list of objects
+- multiple relationship models remain plausible
+- a stronger visual requires unapproved meaning
+- Hero copy placement is unknown and materially affects composition
+- supplied technical claims or product details are uncertain
+
+## Question Priority
+
+When several details are missing, ask in this order:
+
+1. What should the viewer understand?
+2. What should the viewer conclude or do?
+3. How do multiple subjects relate?
+4. Where will the image be used and where will copy sit?
+5. What exact content and constraints must be preserved?
+6. What visual references help distinguish preference?
+
+Do not ask about color, camera angle, materials, or minor styling before message and relationship are clear.
+
+## Example
+
+Weak input:
+
+> 做一张专业、创新 AI、服务的图片。
+
+Useful clarification:
+
+> 这三个词可以表达多种关系。你最想展现哪一种结果：  
+> A. 专业是基础，创新 AI 是驱动，服务形成落地与反馈闭环；  
+> B. 三项能力平等汇聚为一套解决方案；  
+> C. 专业评估、AI 分析、持续服务构成客户流程？
+
+Confirmed internal sentence:
+
+> 专业控制能力支撑创新 AI，创新 AI 提升分析与控制价值，服务将能力落地并把现场反馈带回专业基础。
+
+Only then choose the visual form.

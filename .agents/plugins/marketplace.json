@@ -1,0 +1,20 @@
+{
+  "name": "jiangyue-team",
+  "interface": {
+    "displayName": "Jiangyue Team"
+  },
+  "plugins": [
+    {
+      "name": "jiangyue-website-imagegen",
+      "source": {
+        "source": "local",
+        "path": "./plugins/jiangyue-website-imagegen"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

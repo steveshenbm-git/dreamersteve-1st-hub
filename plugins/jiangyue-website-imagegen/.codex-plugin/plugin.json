@@ -1,0 +1,34 @@
+{
+  "name": "jiangyue-website-imagegen",
+  "version": "0.1.0",
+  "description": "Codex skill plugin for Jiangyue Technology website image direction and production briefs.",
+  "author": {
+    "name": "Hangzhou Jiangyue Technology Co., Ltd."
+  },
+  "repository": "https://github.com/steveshenbm-git/dreamersteve-1st-hub",
+  "keywords": [
+    "jiangyue",
+    "website-visuals",
+    "industrial-design",
+    "image-generation",
+    "b2b"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Jiangyue Website Imagegen",
+    "shortDescription": "Create precise Jiangyue industrial website visuals.",
+    "longDescription": "A Jiangyue Technology Codex skill for clarifying website image intent, forming production briefs, and guiding image generation or deterministic SVG/canvas composition for B2B industrial brand assets.",
+    "developerName": "Jiangyue Technology",
+    "category": "Design",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "brandColor": "#147DFF",
+    "defaultPrompt": [
+      "Use $jiangyue-website-imagegen to clarify and create a website visual.",
+      "Use $jiangyue-website-imagegen to turn a rough image idea into a production brief.",
+      "Use $jiangyue-website-imagegen to review and improve a Jiangyue website image."
+    ]
+  }
+}
