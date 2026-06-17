@@ -16,6 +16,8 @@ Identify the real problem before adding anything:
 | Too static | Everything is centered and evenly spaced | Use directional balance, controlled asymmetry, crop, or staggered rhythm |
 | Too complicated | Too many equal elements | Remove, group, or subordinate elements |
 | Subjects touch but do not collaborate | Shape connection replaced semantic connection | Define foundation, driver, outcome, and flow before redrawing |
+| Physically strange | Parts were chosen for symbolism, not assembly logic | Rebuild as plausible layers, enclosure, mounting, signal, or workflow relationships |
+| Flow feels fake | Light path reads as impossible electricity or decorative energy | Reframe as control signal, data path, feedback path, or remove it |
 | Correction causes drift | Later feedback replaces the original job | Re-lock the original intent and treat the feedback as a constrained correction |
 | Revision looks the same | Same silhouette, same focal relationship, same composition | Change the visual model, not the rendering polish |
 | Safe but lifeless | Brand rules became a rigid style template | Open creative range through crop, material, physical context, or a stronger visual metaphor |
@@ -84,6 +86,15 @@ Use creative freedom to change:
 - palette: neutral industrial base with restrained technical or environmental accents
 
 Do not use creativity to add unsupported claims, fake interfaces, unrealistic sci-fi machinery, over-complex environments, or generic decorative tech patterns.
+
+Do not use physical objects as arbitrary symbols. A transparent shell, base, PCB, heat sink, frame, enclosure, cable, fan, pump, connector, or chip must have a plausible reason to exist in the object:
+
+- **Enclosure:** complete cover, partial access panel, gasket line, screw points, thickness, clearance, or realistic open-state logic.
+- **Base:** mounting, heat transfer, isolation, test fixture, or support role.
+- **PCB/chip:** signal/control relationship, layout discipline, thermal or connector context.
+- **Light path:** control signal, sensing, data path, feedback path, or diagnostic cue; not impossible external electricity.
+
+If the metaphor requires a half shell, floating frame, arbitrary metal platform, or unexplained energy loop, change the visual model before generating.
 
 For motor-drive, HVAC, or ventilation visuals, the best creative solution usually combines one recognizable hardware/control cue with one clear control or service relationship. It should not become either a plain product photo or an abstract AI poster.
 
@@ -170,6 +181,7 @@ Score each item from 1 to 5:
 - **Hierarchy:** one dominant level, clear secondary level, no accidental competition
 - **Typography:** integrated, legible, correctly spaced, appropriate to the geometry
 - **Brand fit:** bright, calm, precise, industrial, AI-native, not generic sci-fi
+- **Physical plausibility:** parts, enclosure, mounting, material, and signal paths look possible in the real world
 - **Composition:** controlled negative space, purposeful balance, strong silhouette
 - **Originality:** not a stock infographic, default card system, or familiar technology template
 - **Creative vitality:** visually memorable within real industrial boundaries, not merely compliant

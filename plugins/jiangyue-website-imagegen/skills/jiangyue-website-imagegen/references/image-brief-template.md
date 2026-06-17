@@ -20,7 +20,8 @@ The requester can paste this:
 5. 新增文字、产品、应用对象、人物、技术含义或营销主张前，先征得我的确认。
 6. 对关键官网图，可以先联网搜索电机驱动器、HVAC、通风设备相关官网参考，但只提炼可执行的视觉原则，不复制参考图。
 7. 信息明确后，先输出一份简短的“制作简报”，让我确认后再生图。
-8. 初稿完成后，请按视觉锤、层级、品牌匹配、构图、原创性、克制程度、小尺寸表现和语义清晰度进行自审。不合格时进行结构性修改，不要只改颜色、阴影或光效。
+8. 在输出制作简报前，先自查简报是否通过意图、主体承载、物理合理性、视觉锤、模板风险和 claim 风险检查；不合格时先修改简报或继续问一个关键问题。
+9. 初稿完成后，请按视觉锤、层级、品牌匹配、构图、原创性、克制程度、小尺寸表现和语义清晰度进行自审。不合格时进行结构性修改，不要只改颜色、阴影或光效。
 
 我目前的想法：
 - 使用位置：
@@ -167,6 +168,20 @@ Ask before implying:
 - customer installation
 - final product structure
 
+### Physical Plausibility
+
+For industrial hardware, electronics, equipment, application scenes, enclosures, PCBs, or physical metaphors, check before writing the production brief:
+
+- Can the object be plausibly manufactured, mounted, assembled, wired, enclosed, supported, or handled?
+- Do the enclosure, base, PCB, chip, heat sink, connectors, shell, fasteners, and signal paths have a practical relationship?
+- Are transparent parts complete enough to make physical sense, with thickness, edges, screw points, clearance, and realistic reflections?
+- Could a blue/green path be mistaken for impossible electrical power flow?
+- Is any object used only as a forced symbol rather than a believable industrial layer?
+
+Prefer terms such as `control signal`, `data path`, `feedback path`, and `support layer`. Avoid `energy flow` unless the image is intentionally showing a plausible power path with source, load, wiring, and safety boundary.
+
+If the physical logic is uncertain, ask one question or change the concept before showing the brief. Do not postpone this problem to image review.
+
 ### References
 
 When the user says only “高级、科技、简洁”, ask:
@@ -210,6 +225,10 @@ Before generation, return this concise brief:
   - 结果：
   - 流向 / 反馈：
   - 主体承载方式：
+- 物理合理性：
+  - 结构 / 装配逻辑：
+  - 信号 / 数据 / 反馈路径：
+  - 避免误读为：
 - 核心视觉锤：
 - 概念契约：
 - 构图与文案留白：
@@ -221,6 +240,12 @@ Before generation, return this concise brief:
 - 必须避免：
 - 输出尺寸与文件：
 - 尚未验证或不可暗示的内容：
+- 简报自查：
+  - 意图是否锁定：
+  - 主体承载是否完整：
+  - 物理合理性是否通过：
+  - 视觉锤是否明确：
+  - 模板 / claim / 文字风险：
 ```
 
 Keep it short. State decisions rather than repeating the conversation.
@@ -229,7 +254,9 @@ The concept contract must be visible and testable, not decorative:
 
 > This image will show [visual subject] so that [viewer understands/feels X], while [message Y] is carried by [image/page copy].
 
-Reject the brief before production if the concept contract could apply to any generic technology company.
+Reject the brief before asking for user confirmation if the concept contract could apply to any generic technology company, if the physical logic is weak, or if the visual design only works after a long explanation.
+
+The brief self-review must be factual, not reassuring. If it finds a problem, revise the concept or ask one focused question instead of listing the problem and still proceeding.
 
 ## Information-Sufficiency Gate
 
@@ -244,6 +271,8 @@ Proceed when all are true:
 - the original intent lock is explicit
 - each named subject has an explicit carrier in the image or page copy
 - the visual concept has a drift boundary
+- physical structure or metaphor is plausible enough for an industrial buyer
+- brief self-review has passed before the user is asked to confirm
 - for high-impact or recognition-sensitive images, reference research has either been used or explicitly judged unnecessary
 
 Do not proceed when:
@@ -254,6 +283,7 @@ Do not proceed when:
 - Hero copy placement is unknown and materially affects composition
 - supplied technical claims or product details are uncertain
 - a proposed visual direction solves a different job than the original request
+- physical parts, enclosures, frames, bases, paths, or materials look forced together or mechanically unrelated
 - removing the production rationale would make the image's connection to the message unclear
 - the concept relies on fixed brand colors, generic AI lines, or decorative glow as the main evidence of quality
 
@@ -265,10 +295,11 @@ When several details are missing, ask in this order:
 2. What should the viewer conclude or do?
 3. How do multiple subjects relate?
 4. Which parts must be shown by the image and which may be carried by HTML/page copy?
-5. Where will the image be used and where will copy sit?
-6. What exact content and constraints must be preserved?
-7. Is this a high-impact or recognition-sensitive image that needs official website reference research?
-8. What visual references help distinguish preference?
+5. What physical structure or metaphor can carry the message credibly?
+6. Where will the image be used and where will copy sit?
+7. What exact content and constraints must be preserved?
+8. Is this a high-impact or recognition-sensitive image that needs official website reference research?
+9. What visual references help distinguish preference?
 
 Do not ask about color, camera angle, materials, or minor styling before message and relationship are clear.
 

@@ -20,7 +20,8 @@ For every new image, use [references/image-brief-template.md](references/image-b
 - Do not dump the full questionnaire on the user.
 - Ask only the highest-value missing question, one at a time.
 - Infer low-risk production details from the brand rules and existing assets.
-- Before production, return a concise production brief that states the original intent, intended message, subject relationship, visual hammer, copy placement, method, and constraints.
+- Before showing the production brief to the user, run the brief self-review and physical plausibility gates. If either fails, revise the concept or ask one more question instead of asking for confirmation.
+- Before production, return a concise production brief that states the original intent, intended message, subject relationship, physical logic, visual hammer, copy placement, method, and constraints.
 - Generate only after the user confirms the brief or has already provided equivalent clear instructions.
 
 ## Intent Lock
@@ -63,14 +64,16 @@ Do not use an image model for deterministic geometry or important text when SVG/
 2. Create the intent lock. Do not continue if the image responsibility and page-copy responsibility are unclear.
 3. When the brief contains multiple subjects, confirm their semantic relationship before choosing a visual form.
 4. Run a content-sufficiency check before choosing a layout.
-5. Decide whether reference research is needed. For brand-defining hero images, motor-drive/HVAC/ventilation subject recognition, vague "premium/beautiful/industrial" requests, or failed visual quality, use the reference research gate.
-6. Choose a concrete visual concept and state why it preserves the intent lock. For a brand-defining hero or ambiguous abstract concept, offer 2-3 materially different visual directions before production.
-7. Check only directly relevant project assets.
-8. Choose image generation, image editing, or deterministic SVG/canvas composition.
-9. Produce one strong draft first. Create variants only when they test a meaningful visual difference.
-10. Inspect the actual output at full size and thumbnail size using a separate review pass.
-11. Reject and redo any output that fails intent fidelity, hits a quality veto, or triggers a design-upgrade rule.
-12. Save the accepted asset in the project and report its path, dimensions, method, and unverified limitations.
+5. For any product, equipment, application, lab, hardware, enclosure, PCB, signal-flow, or physical-metaphor visual, run the physical plausibility gate before writing the brief.
+6. Decide whether reference research is needed. For brand-defining hero images, motor-drive/HVAC/ventilation subject recognition, vague "premium/beautiful/industrial" requests, or failed visual quality, use the reference research gate.
+7. Choose a concrete visual concept and state why it preserves the intent lock. For a brand-defining hero or ambiguous abstract concept, offer 2-3 materially different visual directions before production.
+8. Run the brief self-review gate. Do not show the brief for user confirmation if the concept only works by explanation, has weak visual design, or fails physical plausibility.
+9. Check only directly relevant project assets.
+10. Choose image generation, image editing, or deterministic SVG/canvas composition.
+11. Produce one strong draft first. Create variants only when they test a meaningful visual difference.
+12. Inspect the actual output at full size and thumbnail size using a separate review pass.
+13. Reject and redo any output that fails intent fidelity, physical plausibility, hits a quality veto, or triggers a design-upgrade rule.
+14. Save the accepted asset in the project and report its path, dimensions, method, and unverified limitations.
 
 For a clear simple request, do not conduct an extended questionnaire. Infer low-risk details, return the concise production brief, and proceed after confirmation. If meaning or subject relationships remain ambiguous, wait for the answer.
 
@@ -135,6 +138,48 @@ Reject the concept before production if any of these are true:
 - the image would still make sense if the user's company, product category, or message were removed
 - the concept depends on an explanation that is not visible in the image or planned HTML copy
 - a later requested correction makes the image solve a different job than the original request
+
+## Physical Plausibility Gate
+
+Use this gate before showing the production brief when the image includes real-world objects, industrial equipment, electronics, enclosures, application scenes, energy/signal paths, or physical metaphors.
+
+Reject or revise the concept before user confirmation if any of these are true:
+
+- the object could not be plausibly manufactured, mounted, assembled, wired, enclosed, supported, or handled
+- a base, frame, shell, cover, PCB, chip, heat sink, connector, fan, pump, cable, or fixture appears mechanically unrelated to the other parts
+- transparent parts lack practical thickness, edges, fastening, clearance, or enclosure logic
+- a partial shell, floating frame, decorative cage, unsupported platform, or arbitrary metal base is used only to symbolize an idea
+- blue/green light paths look like impossible electricity or energy flowing outside the device
+- "service", "AI", or "engineering" is carried by a generic icon, decorative glow, or forced object instead of a physically meaningful layer or relationship
+
+Default terms:
+
+- Use **control signal**, **data path**, **feedback path**, or **support layer** for abstract flows.
+- Do not use **energy flow** unless the image explicitly shows a believable power source, load, wiring path, and safety boundary.
+
+For conceptual electronics and controller visuals, prefer physically coherent layers: board or engineered base, control chip/module, thermal path, connectors, enclosure/cover, fasteners, and restrained signal cues. Keep the result conceptual, but do not ask the image model to invent impossible industrial design.
+
+## Brief Self-Review Gate
+
+Run this gate before returning the production brief for confirmation.
+
+First answer:
+
+1. Does the brief preserve the original intent lock?
+2. Does every named subject have a visible carrier or a planned HTML/page-copy carrier?
+3. Is the visual hammer specific enough to guide image generation?
+4. Does the physical structure or metaphor pass the physical plausibility gate?
+5. Can the relationship be understood from the planned image, not only from the explanation?
+
+Then check for risks:
+
+- **Visual weakness:** safe but dull, generic, template-like, or no memorable silhouette/crop/material decision
+- **Physical mismatch:** parts look forced together, decorative, unsupported, unmanufacturable, or mechanically unrelated
+- **Claim risk:** fake specs, certifications, product architecture, interfaces, customer use, or performance may appear
+- **Text risk:** the image model might generate important text, labels, UI values, PCB marks, or nameplates
+- **Template risk:** three cards, equal icons, badges, hexagons, generic AI nodes, or stock infographic layout
+
+If any answer fails or any risk remains high, revise the brief structurally or ask one focused question. Do not proceed by saying "we will fix it after the draft." A weak brief produces weak images.
 
 ## Reference Research Gate
 
