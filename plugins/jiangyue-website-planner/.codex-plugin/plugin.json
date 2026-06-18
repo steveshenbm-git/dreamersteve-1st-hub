@@ -1,0 +1,35 @@
+{
+  "name": "jiangyue-website-planner",
+  "version": "0.2.0",
+  "description": "Codex skill plugin for Jiangyue Technology website page planning, B2B messaging, content structure, and image request briefs.",
+  "author": {
+    "name": "Hangzhou Jiangyue Technology Co., Ltd."
+  },
+  "repository": "https://github.com/steveshenbm-git/dreamersteve-1st-hub",
+  "keywords": [
+    "jiangyue",
+    "website-planning",
+    "b2b",
+    "seo",
+    "conversion",
+    "gutenberg"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Jiangyue Website Planner",
+    "shortDescription": "Plan Jiangyue B2B website pages and image briefs.",
+    "longDescription": "A Jiangyue Technology Codex skill for planning WordPress/Gutenberg page structure, B2B industrial messaging, CTA strategy, attention hierarchy, and handoff briefs for website images.",
+    "developerName": "Jiangyue Technology",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "brandColor": "#147DFF",
+    "defaultPrompt": [
+      "Use $jiangyue-website-planner to plan a Jiangyue website page before creating assets.",
+      "Use $jiangyue-website-planner to turn a rough page idea into a B2B page brief and image request brief.",
+      "Use $jiangyue-website-planner to revise a page plan after image production reveals a strategy or scope problem."
+    ]
+  }
+}
