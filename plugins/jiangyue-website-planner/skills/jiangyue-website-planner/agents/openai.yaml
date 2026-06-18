@@ -1,0 +1,4 @@
+interface:
+  display_name: "Jiangyue Website Planner"
+  short_description: "Plan B2B page structure, messaging, and image briefs"
+  default_prompt: "Use $jiangyue-website-planner to clarify a Jiangyue website page goal, buyer intent, SEO/AEO direction, section structure, CTA path, first-screen attention hierarchy, and image role before handing a confirmed image request brief to imagegen."

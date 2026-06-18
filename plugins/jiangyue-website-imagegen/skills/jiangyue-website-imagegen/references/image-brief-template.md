@@ -336,6 +336,7 @@ Do not proceed when:
 - removing the production rationale would make the image's connection to the message unclear
 - the concept relies on fixed brand colors, generic AI lines, or decorative glow as the main evidence of quality
 - all proposed structure directions are only style variants of the same weak idea
+- a good image would require changing page strategy, H1, CTA, section order, or marketing claims
 
 ## Question Priority
 
@@ -387,3 +388,26 @@ Incorrect response:
 Correct response:
 
 > This is a recognition correction. Keep the original intent: Contact hero supporting AI + professional + service. Revise the subject so it borrows motor-drive cues such as low enclosure mass, heat-sink rhythm, mounting geometry, or restrained terminal hints, while AI/professional/service remain carried by the agreed image cues and HTML copy.
+
+## Planner Return Example
+
+If imagegen fails because the brief is strategically wrong, do not keep generating. Return this:
+
+```text
+Imagegen 返工请求
+
+- 失败归因：策略问题
+- 触发打回 planner 的原因：
+- 原图片需求哪里不成立：
+- 已尝试但失败的视觉方向：
+- 不建议继续尝试的方向：
+- 需要 planner 重新决定：
+  - 页面目标：
+  - 首屏注意力层级：
+  - 图片角色：
+  - 图片与 HTML / 页面文案的信息分工：
+  - claim 边界：
+- 给 planner 的问题：
+```
+
+Use this when the issue is not visual execution, but unclear or conflicting page strategy.

@@ -64,6 +64,7 @@ Stop before image generation when any of these are true:
 - the visual quality relies mainly on color, glow, gradients, or background atmosphere
 - the concept uses a generic AI icon, three equal cards, decorative lines, or an arbitrary enclosure as the core idea
 - the user has not approved a new product, application object, human figure, technical meaning, or claim-like addition
+- the image request requires changing page strategy, H1, CTA, section order, or marketing claims to work
 
 ## Efficient Review Format
 
@@ -95,5 +96,6 @@ Choose one correction:
 - **Physical failure:** rebuild the structure using plausible layers, enclosure, mounting, workflow, or abstract geometry.
 - **Dull but reliable:** change crop, scale, silhouette, material contrast, or structure family.
 - **Overloaded:** demote or move a message into HTML/page copy.
+- **Strategy failure:** return to `$jiangyue-website-planner` with an imagegen rework request.
 
-After two failed brief reviews for the same asset, stop and offer 2-3 new structure directions instead of polishing the same concept.
+After two failed brief reviews for the same asset, stop and offer 2-3 new structure directions only if the page strategy is still valid. If the failure involves page goal, attention hierarchy, image role, message ownership, or claim boundary, return to planner instead.

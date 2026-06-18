@@ -13,6 +13,8 @@ Treat brand guidance as a floor, not a cage: the image may be inventive in compo
 
 Use the shortest production path that preserves quality. Do not create an HTML preview, browser mockup, design document, competitor review, or multiple deliverables unless the user asks for them or they are necessary to judge the requested asset.
 
+For page strategy, copy structure, CTA logic, SEO/AEO direction, or first-screen planning, use `$jiangyue-website-planner` first. This skill may consume a planner image request brief, but it must not silently change page strategy, marketing claims, CTA hierarchy, or section order.
+
 ## Brief Intake
 
 For every new image, use [references/image-brief-template.md](references/image-brief-template.md).
@@ -76,8 +78,10 @@ Do not use an image model for deterministic geometry or important text when SVG/
 12. Choose image generation, image editing, or deterministic SVG/canvas composition.
 13. Produce one strong draft first. Create variants only when they test a meaningful visual difference.
 14. Inspect the actual output at full size and thumbnail size using a separate review pass.
-15. Reject and redo any output that fails intent fidelity, physical plausibility, hits a quality veto, or triggers a design-upgrade rule.
-16. Save the accepted asset in the project and report its path, dimensions, method, and unverified limitations.
+15. If the output fails, run the failure attribution gate before revising.
+16. Continue imagegen only for execution failures. Return to planner when the image request brief is strategically wrong.
+17. Reject and redo any output that fails intent fidelity, physical plausibility, hits a quality veto, or triggers a design-upgrade rule.
+18. Save the accepted asset in the project and report its path, dimensions, method, and unverified limitations.
 
 For a clear simple request, do not conduct an extended questionnaire. Infer low-risk details, return the concise production brief, and proceed after confirmation. If meaning or subject relationships remain ambiguous, wait for the answer.
 
@@ -317,6 +321,7 @@ When a draft fails, name the failure category before changing anything:
 - **Visual weakness:** the message is right, but the form lacks beauty, tension, hierarchy, or craft.
 - **Recognition mismatch:** the subject is misread as the wrong object or industry.
 - **Claim risk:** the image implies unverified product structure, data, certification, customer use, or performance.
+- **Strategy failure:** the image request conflicts with page goal, attention hierarchy, image role, claim boundaries, or message ownership.
 
 Then choose the correction:
 
@@ -325,8 +330,51 @@ Then choose the correction:
 - Visual weakness requires changing silhouette, crop, scale, medium, or composition.
 - Recognition mismatch requires changing the subject cues while preserving the original message.
 - Claim risk requires removing or abstracting the risky detail.
+- Strategy failure requires returning to `$jiangyue-website-planner` with a rework request. Do not generate another image from the same brief.
 
-After two failed drafts for the same asset, stop production and return a short failure analysis plus 2-3 new concept directions for confirmation.
+After two failed structural image revisions for the same reason, stop production and run the planner return gate. Do not keep changing colors, glow, camera angle, or background atmosphere.
+
+## Planner Return Gate
+
+After a failed draft or failed brief review, decide whether to continue imagegen or return to `$jiangyue-website-planner`.
+
+Continue imagegen when the strategy is sound but execution is weak:
+
+- composition, crop, material, lighting, realism, or visual craft is poor
+- image role is correct, but atmosphere or polish is not strong enough
+- subject recognition needs clearer visual cues without changing the page message
+- physical structure needs rebuilding, but page goal and image task remain valid
+- the image can be fixed by changing visual model, silhouette, crop, material, medium, or reference direction
+
+Return to planner when the image request brief is strategically wrong:
+
+- image responsibility is too broad, overloaded, or contradictory
+- first-screen attention owner is unclear
+- image role conflicts with the page goal, H1, CTA, logo, or conversion path
+- a better image would require changing page copy, CTA, section order, positioning, or marketing claim
+- the brief asks imagegen to imply unverified product architecture, claims, customer use, installation, certification, or application context
+- two structural image revisions failed for the same reason
+
+When returning to planner, output:
+
+```text
+Imagegen 返工请求
+
+- 失败归因：执行问题 / 策略问题
+- 触发打回 planner 的原因：
+- 原图片需求哪里不成立：
+- 已尝试但失败的视觉方向：
+- 不建议继续尝试的方向：
+- 需要 planner 重新决定：
+  - 页面目标：
+  - 首屏注意力层级：
+  - 图片角色：
+  - 图片与 HTML / 页面文案的信息分工：
+  - claim 边界：
+- 给 planner 的问题：
+```
+
+Do not produce another draft until planner returns a revised image request brief or the user explicitly narrows the task.
 
 ## Review Separation
 

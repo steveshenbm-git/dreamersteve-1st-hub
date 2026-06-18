@@ -1,8 +1,13 @@
-# Jiangyue Website Imagegen Plugin
+# Jiangyue Website Plugins
 
-This repository package shares the `jiangyue-website-imagegen` Codex skill with teammates.
+This repository package shares Jiangyue Technology website-planning and image-production Codex plugins with teammates.
 
-The skill helps Codex create, edit, and review Jiangyue Technology website visuals with a clear image brief, industrial B2B brand direction, and safer handling of text, claims, and visual hierarchy.
+The package separates strategy and execution:
+
+- `jiangyue-website-planner` plans B2B page goals, content structure, SEO/AEO direction, CTA path, first-screen attention hierarchy, and image request briefs.
+- `jiangyue-website-imagegen` creates, edits, and reviews website visuals from a confirmed image request brief, with physical plausibility, visual structure, and failure-attribution checks.
+
+The user remains the final reviewer for page strategy, claims, and visual approval.
 
 ## Package Structure
 
@@ -12,6 +17,10 @@ plugins/jiangyue-website-imagegen/.codex-plugin/plugin.json
 plugins/jiangyue-website-imagegen/skills/jiangyue-website-imagegen/SKILL.md
 plugins/jiangyue-website-imagegen/skills/jiangyue-website-imagegen/agents/openai.yaml
 plugins/jiangyue-website-imagegen/skills/jiangyue-website-imagegen/references/
+plugins/jiangyue-website-planner/.codex-plugin/plugin.json
+plugins/jiangyue-website-planner/skills/jiangyue-website-planner/SKILL.md
+plugins/jiangyue-website-planner/skills/jiangyue-website-planner/agents/openai.yaml
+plugins/jiangyue-website-planner/skills/jiangyue-website-planner/references/
 ```
 
 ## Install From This Repository
@@ -23,17 +32,27 @@ plugins/jiangyue-website-imagegen/skills/jiangyue-website-imagegen/references/
 codex plugin marketplace add /absolute/path/to/jiangyue-imagegen-marketplace
 ```
 
-3. Install the plugin:
+3. Install the plugins:
 
 ```bash
+codex plugin add jiangyue-website-planner@jiangyue-team
 codex plugin add jiangyue-website-imagegen@jiangyue-team
 ```
 
 4. Start a new Codex thread and use:
 
 ```text
+Use $jiangyue-website-planner to plan a Jiangyue website page and image brief.
 Use $jiangyue-website-imagegen to help me create a Jiangyue website visual.
 ```
+
+## Recommended Workflow
+
+1. Use `jiangyue-website-planner` to define page strategy, section structure, CTA path, attention hierarchy, and image role.
+2. Confirm the planner output with the user.
+3. Hand the confirmed image request brief to `jiangyue-website-imagegen`.
+4. If imagegen fails because of visual execution, continue structural image revision inside imagegen.
+5. If imagegen fails because the image request conflicts with page strategy, attention hierarchy, image role, or claim boundaries, return to planner with an `Imagegen 返工请求`.
 
 ## Public Repository Safety
 
@@ -51,7 +70,7 @@ Repository: https://github.com/steveshenbm-git/dreamersteve-1st-hub
 
 Treat this repository as the source of truth. Do not edit the installed cache as the main working copy.
 
-1. Edit files under `plugins/jiangyue-website-imagegen/skills/jiangyue-website-imagegen/`.
+1. Edit files under `plugins/jiangyue-website-planner/skills/jiangyue-website-planner/` or `plugins/jiangyue-website-imagegen/skills/jiangyue-website-imagegen/`.
 2. Validate the plugin.
 3. Bump the plugin version for intentional releases.
 4. Update `CHANGELOG.md`.
