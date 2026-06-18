@@ -78,10 +78,12 @@ Do not use an image model for deterministic geometry or important text when SVG/
 12. Choose image generation, image editing, or deterministic SVG/canvas composition.
 13. Produce one strong draft first. Create variants only when they test a meaningful visual difference.
 14. Inspect the actual output at full size and thumbnail size using a separate review pass.
-15. If the output fails, run the failure attribution gate before revising.
-16. Continue imagegen only for execution failures. Return to planner when the image request brief is strategically wrong.
-17. Reject and redo any output that fails intent fidelity, physical plausibility, hits a quality veto, or triggers a design-upgrade rule.
-18. Save the accepted asset in the project and report its path, dimensions, method, and unverified limitations.
+15. For revisions, compare the new draft side-by-side against the prior draft or reference. Single-image review is not enough.
+16. Treat every user-named defect as a hard regression gate. If the user asked to fix left-right separation, weak brand-color connection, text crowding, product recognition, or similar, the review must explicitly answer whether that defect is visibly improved. If not, reject the draft.
+17. If the output fails, run the failure attribution gate before revising.
+18. Continue imagegen only for execution failures. Return to planner when the image request brief is strategically wrong.
+19. Reject and redo any output that fails intent fidelity, physical plausibility, user-stated regression gates, hits a quality veto, or triggers a design-upgrade rule.
+20. Save the accepted asset in the project and report its path, dimensions, method, and unverified limitations.
 
 For a clear simple request, do not conduct an extended questionnaire. Infer low-risk details, return the concise production brief, and proceed after confirmation. If meaning or subject relationships remain ambiguous, wait for the answer.
 
@@ -186,6 +188,7 @@ Then check for risks:
 - **Claim risk:** fake specs, certifications, product architecture, interfaces, customer use, or performance may appear
 - **Text risk:** the image model might generate important text, labels, UI values, PCB marks, or nameplates
 - **Template risk:** three cards, equal icons, badges, hexagons, generic AI nodes, or stock infographic layout
+- **User-defect risk:** the production plan does not name how it will fix the user's stated defect, or it only changes color, opacity, glow, blur, or gradient while leaving the same failing composition
 
 If any answer fails or any risk remains high, revise the brief structurally or ask one focused question. Do not proceed by saying "we will fix it after the draft." A weak brief produces weak images.
 
@@ -309,6 +312,9 @@ Rework the concept when:
 - a revised draft keeps the same weak silhouette, subject relationship, or composition as the rejected draft
 - the self-review can only defend the image by explaining the brief instead of pointing to visible evidence
 - brand rules produce a safe but dull image with no memorable crop, silhouette, material decision, or subject relationship
+- a user-named layout problem remains visible after a revision, even if typography, color, or file quality improved
+- a revision claims improved integration but the thumbnail still reads as separate panels, pasted layers, or independent left-right blocks
+- two attempts in a row only adjust gradient, opacity, blur, glow, saturation, or accent lines for a composition problem
 
 Change the composition idea, content relationship, or medium. Do not merely polish the same weak layout.
 
@@ -321,6 +327,8 @@ When a draft fails, name the failure category before changing anything:
 - **Visual weakness:** the message is right, but the form lacks beauty, tension, hierarchy, or craft.
 - **Recognition mismatch:** the subject is misread as the wrong object or industry.
 - **Claim risk:** the image implies unverified product structure, data, certification, customer use, or performance.
+- **Composition integration failure:** the elements are correct, but the layout still reads as separate panels, pasted blocks, or weakly connected regions.
+- **Regression failure:** the specific problem the user asked to fix did not visibly improve when compared with the prior version.
 - **Strategy failure:** the image request conflicts with page goal, attention hierarchy, image role, claim boundaries, or message ownership.
 
 Then choose the correction:
@@ -328,11 +336,13 @@ Then choose the correction:
 - Intent drift requires returning to the brief or asking one question. Do not generate.
 - Semantic weakness requires changing subject relationship or message carriers.
 - Visual weakness requires changing silhouette, crop, scale, medium, or composition.
+- Composition integration failure requires changing the spatial structure, mask shape, background continuity, shared lighting, or content overlap logic. Do not treat it as a color or gradient problem.
+- Regression failure requires side-by-side comparison, a new hypothesis, and a materially different correction path before another draft.
 - Recognition mismatch requires changing the subject cues while preserving the original message.
 - Claim risk requires removing or abstracting the risky detail.
 - Strategy failure requires returning to `$jiangyue-website-planner` with a rework request. Do not generate another image from the same brief.
 
-After two failed structural image revisions for the same reason, stop production and run the planner return gate. Do not keep changing colors, glow, camera angle, or background atmosphere.
+After two failed structural image revisions for the same reason, stop production and run the planner return gate. Do not keep changing colors, glow, camera angle, gradient width, opacity, blur, or background atmosphere.
 
 ## Planner Return Gate
 
@@ -385,6 +395,8 @@ First answer:
 1. Does the draft still support the original intent lock?
 2. Can each named subject be traced to a visible image cue or planned HTML copy?
 3. Would the draft mislead the user into thinking it is a different type of asset?
+4. For every user-stated defect, what visible evidence shows it improved versus the prior version? If there is no clear side-by-side improvement, reject the draft.
+5. At thumbnail size, does the composition still show the rejected problem, such as a hard left-right split, pasted panel, weak product recognition, or distracting accent? If yes, reject the draft.
 
 If any answer fails, reject the draft before scoring visual quality.
 
@@ -397,8 +409,30 @@ Then score:
 5. template resistance
 6. legibility at website-card size
 7. semantic clarity: foundation, driver, outcome, and flow are understandable without reading the design explanation
+8. user-stated regression gates: the specific issues named by the user are visibly improved compared with the prior version
 
 Any score below acceptable requires revision. For an important asset or repeated failure, request permission to use an independent reviewer or additional reference research rather than approving the work through self-justification.
+
+## Composition Integration Gate
+
+Use this gate for hero images, existing image revisions, and any task where the user mentions balance, layout, split, color blocks, integration, cohesion, or brand-color connection.
+
+Hard fail and revise structurally when:
+
+- the left and right sides still read as two independent panels or pasted layers
+- a readable text zone is achieved by covering the image with a flat block rather than by shared lighting, depth, or controlled local contrast
+- the image depends on a vertical gradient edge that remains visible in thumbnail view
+- product edges or important visual mass are weakened by fog used only to hide old content
+- brand colors are added as isolated lines, dots, or accents but do not connect logo, focal subject, and technical cues
+- the claimed improvement cannot be pointed to in the rendered image without explaining the intention
+
+Preferred fixes:
+
+- change the mask shape, not just mask opacity
+- use local text backing instead of a full-height panel when possible
+- let background texture, lighting, or product shadow continue across the transition zone
+- use brand color through existing carriers such as logo, product highlight, selected data path, or CTA accent rather than extra decoration
+- preserve the focal product's contrast while softening only the reading area
 
 
 ## Subject Guidance
