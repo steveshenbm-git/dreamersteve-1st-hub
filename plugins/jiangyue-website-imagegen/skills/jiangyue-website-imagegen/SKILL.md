@@ -62,6 +62,13 @@ Classify the request before generating anything:
 
 Do not use an image model for deterministic geometry or important text when SVG/canvas can produce a cleaner and more controllable result.
 
+When repeatability or later editing matters, prefer a deterministic or hybrid method:
+
+- Use SVG/canvas/Python composition for typography, layout, crops, masks, color variants, and overlays.
+- Use image generation only for the non-deterministic visual base when needed.
+- Preserve the generated base image and put all repeatable edits in source files or scripts so future changes can run locally with low token use.
+- Do not promise exact pixel-identical regeneration from a fresh AI image prompt unless a stable seed, model version, inputs, and generation tool behavior are available and verified. Exact regeneration is expected only for deterministic pipelines using saved source assets.
+
 ## Fast Workflow
 
 1. Identify the asset type, crop, purpose, attention owner, image role, and required text.
@@ -76,16 +83,80 @@ Do not use an image model for deterministic geometry or important text when SVG/
 10. Run the brief self-review and brief scoring gates. Do not show the brief for user confirmation if the concept only works by explanation, has weak attention hierarchy, has weak visual design, or fails physical plausibility.
 11. Check only directly relevant project assets.
 12. Choose image generation, image editing, or deterministic SVG/canvas composition.
-13. Produce one strong draft first. Create variants only when they test a meaningful visual difference.
-14. Inspect the actual output at full size and thumbnail size using a separate review pass.
-15. For revisions, compare the new draft side-by-side against the prior draft or reference. Single-image review is not enough.
-16. Treat every user-named defect as a hard regression gate. If the user asked to fix left-right separation, weak brand-color connection, text crowding, product recognition, or similar, the review must explicitly answer whether that defect is visibly improved. If not, reject the draft.
-17. If the output fails, run the failure attribution gate before revising.
-18. Continue imagegen only for execution failures. Return to planner when the image request brief is strategically wrong.
-19. Reject and redo any output that fails intent fidelity, physical plausibility, user-stated regression gates, hits a quality veto, or triggers a design-upgrade rule.
-20. Save the accepted asset in the project and report its path, dimensions, method, and unverified limitations.
+13. Create a dedicated task output folder before producing files.
+14. Produce one strong draft first. Create variants only when they test a meaningful visual difference.
+15. Maintain a reproduction archive for the task and update it after each accepted draft or meaningful revision.
+16. Inspect the actual output at full size and thumbnail size using a separate review pass.
+17. For revisions, compare the new draft side-by-side against the prior draft or reference. Single-image review is not enough.
+18. Treat every user-named defect as a hard regression gate. If the user asked to fix left-right separation, weak brand-color connection, text crowding, product recognition, or similar, the review must explicitly answer whether that defect is visibly improved. If not, reject the draft.
+19. If the output fails, run the failure attribution gate before revising.
+20. Continue imagegen only for execution failures. Return to planner when the image request brief is strategically wrong.
+21. Reject and redo any output that fails intent fidelity, physical plausibility, user-stated regression gates, hits a quality veto, or triggers a design-upgrade rule.
+22. Save the accepted asset in the task folder and report its path, dimensions, method, reproduction archive path, and unverified limitations.
 
 For a clear simple request, do not conduct an extended questionnaire. Infer low-risk details, return the concise production brief, and proceed after confirmation. If meaning or subject relationships remain ambiguous, wait for the answer.
+
+## Task Folder And Reproduction Archive
+
+Every imagegen task must create versioned folders under the project outputs area. Organize first by page or content type, then by dated draft/final folders.
+
+```text
+outputs/jiangyue-website-images/{content-type}/{YYYY-MM-DD-short-topic-draft-01}/
+outputs/jiangyue-website-images/{content-type}/{YYYY-MM-DD-short-topic-draft-02}/
+outputs/jiangyue-website-images/{content-type}/{YYYY-MM-DD-short-topic-final}/
+```
+
+Recommended first-level content folders:
+
+- `home/`
+- `product/`
+- `application/`
+- `about-us/`
+- `contact/`
+- `technical-resources/`
+- `brand/`
+- `shared/`
+
+Examples:
+
+- `outputs/jiangyue-website-images/home/2026-06-18-pmsm-drive-hero-draft-01/`
+- `outputs/jiangyue-website-images/home/2026-06-18-pmsm-drive-hero-draft-02/`
+- `outputs/jiangyue-website-images/home/2026-06-18-pmsm-drive-hero-final/`
+- `outputs/jiangyue-website-images/contact/2026-06-18-ai-service-hero-draft-01/`
+
+Each draft or final folder is a self-contained production record. Put that version's image files, source assets, scripts, and reproduction archive inside the version folder. Do not scatter new task outputs directly into the shared output root unless the user explicitly asks.
+
+When several drafts belong to the same asset, use the same `{YYYY-MM-DD-short-topic}` prefix and increment `draft-01`, `draft-02`, `draft-03` until the accepted version becomes `final`. If a later revision happens after final approval, start a new dated folder such as `2026-06-25-pmsm-drive-hero-revision-01`.
+
+Required files inside each draft/final folder when applicable:
+
+- `README.md` or `REPRODUCTION.md`: the human-readable reproduction archive
+- `recipe.json`: compact machine-readable parameters for fast reuse when practical
+- `source/`: source images, generated bases, references, masks, SVGs, or editable assets
+- `scripts/`: deterministic scripts used to rebuild the image
+- `output/`: PNG/JPG/WebP outputs for this draft/final version
+- `review/`: optional comparison images or thumbnails used for verification
+
+The reproduction archive must let a future agent modify the image quickly without re-reading the whole conversation. It must record:
+
+- original task and intent lock
+- final file paths and dimensions
+- source inputs with relative paths
+- production method: deterministic, AI-generated, image-edit, or hybrid
+- exact public-facing text, fonts, colors, crop boxes, masks, layout constants, and export settings
+- prompts, negative prompts, reference images, model/tool names, seed or generation ID if available
+- commands to rebuild deterministic outputs locally
+- revision history with what changed and why
+- known non-reproducible parts and how to regenerate only those parts if needed
+
+Efficiency rule:
+
+- The archive should point to scripts and compact parameters instead of restating long prompts repeatedly.
+- Future small edits should change `recipe.json`, an SVG, or a short script parameter, then rerun locally.
+- Do not force a new AI generation round for typography, color variants, cropping, masks, composition overlays, or copy changes that can be handled deterministically.
+- If the asset depends on an AI-generated base, preserve that base image and make later edits on top of it whenever possible.
+
+Use [references/reproduction-archive-template.md](references/reproduction-archive-template.md) for the recommended archive structure.
 
 ## Mixed-Autonomy Design Mode
 
@@ -475,7 +546,10 @@ Use supplied brand marks or product photos only when the user provides or verifi
 - Default to one PNG plus an editable source when the source is SVG or another practical native format.
 - Produce a clean image and a full mockup only when both are useful or explicitly requested.
 - Use descriptive filenames and never overwrite existing assets without permission.
-- Save project-bound assets inside the workspace.
+- Save project-bound assets inside a dedicated task folder under the workspace output area.
+- Include or update a reproduction archive for every delivered task so the image can be rebuilt or modified without consuming large prompt context.
+- For deterministic or hybrid outputs, include the script/source needed to rebuild the final image from saved local assets.
+- For fully AI-generated outputs, archive prompts, inputs, model/tool metadata, and limitations; state clearly when exact pixel-identical regeneration is not verified.
 - Inspect dimensions, legibility, spelling, composition, and visible artifacts before delivery.
 - Do not claim browser, mobile, SEO, compression, or WordPress behavior that was not checked.
 
@@ -484,6 +558,8 @@ Use supplied brand marks or product photos only when the user provides or verifi
 Report:
 
 - final file path
+- task folder path
+- reproduction archive path
 - dimensions and format
 - production method
 - what was visually verified

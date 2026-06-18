@@ -1,4 +1,4 @@
 interface:
   display_name: "Jiangyue Website Imagegen"
-  short_description: "Create intent-safe industrial website visuals"
-  default_prompt: "Use $jiangyue-website-imagegen to lock the original visual intent, clarify one question at a time, decide the attention hierarchy and image role before visual form, use reliable visual structures and brief scoring for high-impact assets, use motor-control or application-category reference research when it materially improves the asset, self-review for drift, physical plausibility, quality, and lifeless template output, and create the image only after confirmation."
+  short_description: "Create reproducible industrial website visuals"
+  default_prompt: "Use $jiangyue-website-imagegen to lock the original visual intent, decide the attention hierarchy and image role before visual form, use reliable visual structures and brief scoring for high-impact assets, create each task in a dated output folder, maintain a reproduction archive with sources and rebuild instructions, prefer deterministic or hybrid workflows for fast future edits, self-review for drift, physical plausibility, quality, and lifeless template output, and create the image only after confirmation."

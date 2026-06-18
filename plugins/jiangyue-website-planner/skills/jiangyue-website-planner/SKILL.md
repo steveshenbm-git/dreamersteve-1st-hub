@@ -1,13 +1,13 @@
 ---
 name: jiangyue-website-planner
-description: Use when planning or revising Jiangyue Technology website pages, including page goals, B2B messaging, WordPress/Gutenberg section structure, SEO/AEO intent, CTA strategy, hero attention hierarchy, image role definition, and image request briefs before visual production.
+description: Use when planning or revising Jiangyue Technology website pages or reviewing imagegen drafts after user feedback, including page goals, B2B messaging, SEO/AEO intent, CTA strategy, hero attention hierarchy, image role, design critique, and next-round image request briefs.
 ---
 
 # Jiangyue Website Planner
 
 ## Core Role
 
-Plan Jiangyue website pages before visual production. Own page strategy, buyer messaging, content structure, SEO/AEO direction, CTA logic, and image role definition. Do not generate images.
+Plan Jiangyue website pages before visual production and review imagegen drafts after the user gives feedback. Own page strategy, buyer messaging, content structure, SEO/AEO direction, CTA logic, first-screen attention, image role definition, design critique, failure attribution, and next-round image request briefs. Do not generate images.
 
 Use professional English for public website copy unless the user asks for Chinese planning notes. Keep language credible for European B2B industrial buyers. Do not invent certifications, performance data, customer cases, export claims, patents, compliance status, or product specifications.
 
@@ -21,18 +21,26 @@ This skill owns:
 - WordPress/Gutenberg-friendly page structure
 - first-screen attention hierarchy
 - image role and image request brief
-- rework orders when image production exposes a strategy problem
+- post-image draft review after user feedback
+- design-problem attribution: strategy, attention hierarchy, layout, brand color, message ownership, claim risk, or execution detail
+- next-round optimization briefs for imagegen
+- rework orders when image production exposes a strategy or direction problem
 
 This skill does not own:
 
 - image generation or image editing
 - final visual structure, material rendering, or physical object composition
+- pixel-level retouching instructions when page strategy and design direction are already clear
 - changing verified product facts without user confirmation
 - final approval; the user owns approval
 
 For image production, hand off to `$jiangyue-website-imagegen` with a confirmed image request brief.
 
 ## Workflow
+
+Use one of two modes.
+
+### Initial Planning Mode
 
 1. Identify the page type: homepage, product page, category page, application page, Contact page, technical resource, or landing section.
 2. Define the buyer: engineer, purchasing manager, OEM decision maker, distributor, system integrator, or owner.
@@ -43,6 +51,28 @@ For image production, hand off to `$jiangyue-website-imagegen` with a confirmed 
 7. Define the image role: main visual hammer, professional atmosphere, brand atmosphere, trust support, CTA support, product/category recognition, or application context.
 8. Output a concise page brief and image request brief.
 9. Wait for user approval before handing off to imagegen or changing implementation files.
+
+### Post-Image Review Mode
+
+Use this mode whenever imagegen has delivered a draft and the user gives initial review feedback.
+
+1. Restate the image's original page job, attention hierarchy, and image role.
+2. Treat the user's stated concerns as hard review gates, not optional taste notes.
+3. Classify each concern:
+   - page strategy or buyer-message problem
+   - first-screen attention hierarchy problem
+   - image role or message-ownership problem
+   - layout / composition integration problem
+   - brand color system problem
+   - claim or product-fact risk
+   - execution detail for imagegen only
+4. Decide whether planner must revise the brief or imagegen can execute directly.
+5. Output a concise next-round optimization brief with:
+   - what must visibly change
+   - what must remain unchanged
+   - what imagegen must not repeat
+   - pass / fail criteria for the next draft
+6. Do not approve another imagegen round when the feedback implies a page-message or attention-hierarchy decision that planner has not resolved.
 
 Ask one high-value question at a time when the page goal, buyer, claim boundary, or image role is unclear.
 
@@ -81,9 +111,29 @@ Before imagegen starts, produce:
 
 If the user asks for a complete page plan, also use [references/page-brief-template.md](references/page-brief-template.md).
 
+## Post-Image Optimization Brief
+
+Use this after the user reviews an imagegen draft and asks for improvements. Keep it shorter than a full page brief unless page strategy changes.
+
+```text
+图片优化简报
+
+- 原图 / 当前版本：
+- 用户反馈中的硬性问题：
+- planner 归因：
+- 是否改变页面目标 / H1 / CTA / claim 边界：
+- 下一版必须保留：
+- 下一版必须明显改善：
+- 不允许重复的旧方向：
+- 给 imagegen 的执行方向：
+- 下一版验收标准：
+```
+
+For visual-design feedback, define visible pass / fail criteria. Example: if the user says the left and right sides feel split, the next brief must state how the split will be reduced and how the next draft will be judged against the prior image.
+
 ## Imagegen Rework Intake
 
-When `$jiangyue-website-imagegen` reports a failed image, classify the failure before revising the page plan.
+When `$jiangyue-website-imagegen` reports a failed image, or when the user reviews a delivered draft and raises design concerns, classify the issue before revising the page plan or sending another imagegen request.
 
 Continue with imagegen when the strategy is sound but execution is weak:
 
@@ -91,6 +141,7 @@ Continue with imagegen when the strategy is sound but execution is weak:
 - the image role is correct but the atmosphere is not strong enough
 - the subject needs clearer visual cues, but the page message and image task are still correct
 - physical structure needs visual rebuilding, but the page strategy does not change
+- the user asks for local fixes such as residue removal, cleaner text, sharper crop, color correction, or file-format changes
 
 Revise in planner when the image brief is strategically wrong:
 
@@ -100,6 +151,8 @@ Revise in planner when the image brief is strategically wrong:
 - image needs to change H1, CTA, section order, or marketing claim to work
 - image production would imply unverified product architecture, claims, customer use, or application context
 - two structural image revisions failed for the same reason
+- the user questions brand direction, color system, layout integration, visual hierarchy, or whether the draft feels credible for European B2B buyers
+- the same user-stated problem remains visible after a previous imagegen revision
 
 Use [references/rework-order-template.md](references/rework-order-template.md) when revising after imagegen failure.
 
@@ -116,5 +169,8 @@ Do not say only "make it more premium" or "try again." Define what changes:
 - removed or demoted information
 - forbidden old direction
 - new image request brief
+- pass / fail criteria for the next imagegen draft
+
+For post-image review, do not allow imagegen to self-approve a revision that does not visibly address the user's named concern. Planner should make the concern explicit before handoff.
 
 If the user changes the page objective during image production, stop image work and produce a revised page brief first.
