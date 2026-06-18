@@ -20,7 +20,7 @@ Use a three-layer funnel. Stop as soon as enough visual evidence exists.
 
 ### 1. Same Category First
 
-Start with motor drive and HVAC/ventilation-related official websites. This layer defines subject recognition and industrial credibility. The Chinese category anchor is `电机驱动器`; use English queries first for Europe/US references.
+Start with motor-control and the current target application category. This layer defines subject recognition and industrial credibility without locking Jiangyue into one downstream market. The Chinese category anchor is `电机驱动器`; use English queries first for Europe/US references.
 
 Preferred query seeds:
 
@@ -29,11 +29,22 @@ Preferred query seeds:
 - `permanent magnet motor controller`
 - `PMSM motor controller`
 - `BLDC motor controller`
+- `industrial motor controller`
+- `industrial control electronics`
+- `power electronics controller`
+- `OEM motor controller`
+- `motor drive product page`
+- `motor drive contact hero`
+
+Add application-specific seeds only when the brief or page calls for them. Examples:
+
 - `motor drive HVAC fan controller`
 - `motor drive ventilation fan`
 - `HVAC motor drive`
 - `fan motor drive`
 - `fan motor controller`
+- `pump drive`
+- `pump motor controller`
 - `EC fan motor controller`
 - `EC motor controller ventilation`
 - `PMSM motor drive fan`
@@ -41,19 +52,14 @@ Preferred query seeds:
 - `variable speed drive HVAC fan`
 - `inverter drive ventilation fan`
 - `air handling unit fan drive`
-- `motor drive product page`
-- `motor drive contact hero`
 - `HVAC fan drive product page`
 - `ventilation fan motor controller`
 
 Use Chinese only when the target asset is for Chinese-market content or when searching internal terminology:
 
 - `电机驱动器`
-- `风机 电机驱动器`
-- `通风设备 电机驱动器`
-- `HVAC 电机驱动器`
 - `永磁电机控制器`
-- `风机电机控制器`
+- add current application terms such as `风机`, `通风设备`, `泵`, `压缩机`, or other user-provided equipment keywords only when relevant
 
 Prefer official brand websites, product pages, application pages, and support/contact pages. Favor European and US industrial B2B sites when available.
 
@@ -61,10 +67,10 @@ Do not use Pinterest, Behance, Dribbble, stock image sites, AI image galleries, 
 
 Extract only:
 
-- what makes the object read as a motor drive or HVAC fan controller
+- what makes the object read as a motor drive, motor controller, or current target controller category
 - housing proportions, heat-sink rhythm, mounting geometry, terminal/connector hints
 - product-to-copy layout and hero crop behavior
-- how HVAC/ventilation context is suggested without becoming a busy factory scene
+- how the current application context is suggested without becoming a busy factory scene
 - restrained material and lighting patterns
 - what looks outdated, consumer-like, or template-like
 
@@ -104,7 +110,7 @@ Return a short synthesis before the production brief:
 参考研究结论
 
 - 同品类识别：
-- HVAC / 通风设备相关启发：
+- 当前应用类别启发（如有）：
 - 可借鉴的构图原则：
 - 必须避免的套路：
 - 对本图的执行原则：
@@ -112,7 +118,7 @@ Return a short synthesis before the production brief:
 
 Keep it to 3-6 bullets. Mention only 3-5 useful references or reference patterns if needed. Do not provide a long competitor report unless the user asks.
 
-The synthesis must be actionable. Good output says "use a cropped aluminum enclosure with heat-sink rhythm and a restrained fan-control path"; weak output says "make it high-tech and premium."
+The synthesis must be actionable. Good output says "use a cropped aluminum enclosure with heat-sink rhythm and a restrained control-signal path"; weak output says "make it high-tech and premium."
 
 ## Guardrails
 

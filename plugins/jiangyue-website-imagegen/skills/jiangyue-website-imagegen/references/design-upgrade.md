@@ -8,7 +8,7 @@ Identify the real problem before adding anything:
 
 | Symptom | Likely cause | Preferred response |
 |---|---|---|
-| Empty and weak | Subject is too small or lacks tension | Increase scale, crop, overlap, or edge interaction |
+| Empty and weak | Subject is too small, or the image role is unclear | Clarify whether the image leads attention or supports atmosphere; then adjust scale, crop, overlap, or space |
 | Clean but generic | No Jiangyue-specific design logic | Introduce control-layer relationships, precise material contrast, or sparse AI signal behavior |
 | Looks like a template | Familiar card, hexagon, badge, or dashboard pattern | Change the silhouette and spatial relationship, not just styling |
 | Text looks pasted on | Typography is not part of the geometry | Align type to planes, axes, rhythm, or material boundaries |
@@ -57,12 +57,20 @@ Do not proceed if a named subject has no carrier. Do not let a later subject-rec
 
 Ask the user to select the intended model when more than one is plausible.
 
+For high-impact visuals, choose from or adapt the structure library in [visual-structure-patterns.md](visual-structure-patterns.md). Each candidate structure must be expressed as:
+
+- **Relationship model:** the roles and direction of value.
+- **Variable parameters:** the carriers, crop, medium, specificity, material, and text ownership that can change.
+- **Forbidden boundary:** what would make the structure physically fake, generic, over-specific, or off-intent.
+
+This framework should widen the useful design space. If it makes the image safe but plain, change the parameters or relationship model; do not treat the first reliable option as final.
+
 ## Upgrade Order
 
 Attempt improvements in this order:
 
 0. **Intent:** Confirm the draft still serves the original user goal and message responsibility.
-1. **Scale:** Make the visual hammer decisively larger or use intentional cropping.
+1. **Scale:** If the image owns attention, make the visual hammer larger or use intentional cropping. If headline, CTA, or logo owns attention, protect clear space and strengthen professional atmosphere instead.
 2. **Relationship:** Change how elements connect, overlap, align, repeat, or oppose each other.
 3. **Silhouette:** Create a memorable outer contour before adding internal detail.
 4. **Typography:** Use size, weight, spacing, alignment, and line breaks as structural design.
@@ -79,13 +87,15 @@ Creativity is allowed when it remains physically and commercially plausible for 
 
 Use creative freedom to change:
 
-- crop: close product fragments, edge tension, partial fan/control-system context
+- crop: close product fragments, edge tension, partial application-equipment or control-system context
 - spatial model: layered control field, feedback loop, product-to-application relationship, engineering workspace
 - material: cast or anodized metal, matte coating, controlled reflections, heat-sink rhythm
 - metaphor: adaptive control, service feedback, precision handoff, airflow-to-control relationship
 - palette: neutral industrial base with restrained technical or environmental accents
 
 Do not use creativity to add unsupported claims, fake interfaces, unrealistic sci-fi machinery, over-complex environments, or generic decorative tech patterns.
+
+A reliable visual structure is only the baseline. High-impact hero images still need at least one strong design decision. When the image owns attention, this may be a memorable silhouette, decisive crop, clear material contrast, unusual but credible spatial relationship, or compact system symbol. When headline, CTA, or logo owns attention, this may be controlled negative space, professional atmosphere, material credibility, brand mood, or restrained depth.
 
 Do not use physical objects as arbitrary symbols. A transparent shell, base, PCB, heat sink, frame, enclosure, cable, fan, pump, connector, or chip must have a plausible reason to exist in the object:
 
@@ -96,7 +106,7 @@ Do not use physical objects as arbitrary symbols. A transparent shell, base, PCB
 
 If the metaphor requires a half shell, floating frame, arbitrary metal platform, or unexplained energy loop, change the visual model before generating.
 
-For motor-drive, HVAC, or ventilation visuals, the best creative solution usually combines one recognizable hardware/control cue with one clear control or service relationship. It should not become either a plain product photo or an abstract AI poster.
+For motor-control or application-specific visuals, the best creative solution usually combines one recognizable hardware/control cue with one clear control, application, or service relationship. It should not become either a plain product photo or an abstract AI poster.
 
 If the previous draft failed for visual quality, the next draft must change at least one of:
 
@@ -120,14 +130,14 @@ These may be added without asking when they remain abstract and non-semantic:
 - abstract waveform or diagnostic rhythm without values or status claims
 - one small warm accent used only for balance
 
-Keep additions subordinate to the visual hammer.
+Keep additions subordinate to the chosen attention hierarchy. If the image supports the headline, CTA, or logo, additions must not steal first attention.
 
 ## Additions That Require One Question
 
 Ask before adding:
 
 - a headline, subtitle, caption, slogan, or explanatory phrase
-- a motor controller, fan, pump, machine, application, or human figure not requested
+- a motor controller or application object not requested, such as a fan, pump, machine, equipment scene, or human figure
 - a symbol that implies diagnostics, Bluetooth, AI monitoring, safety, certification, or performance
 - specific product architecture, interface behavior, data, values, or claims
 - a new brand metaphor that may affect positioning
@@ -177,7 +187,7 @@ Score each item from 1 to 5:
 
 - **Intent fidelity:** still serves the original request and does not become a different asset
 - **Carrier completeness:** every named subject is visible through an image cue or planned page copy
-- **Visual hammer:** noticed immediately and connected to the message
+- **Attention hierarchy and image role:** first attention owner is clear, and the image either leads or supports intentionally
 - **Hierarchy:** one dominant level, clear secondary level, no accidental competition
 - **Typography:** integrated, legible, correctly spaced, appropriate to the geometry
 - **Brand fit:** bright, calm, precise, industrial, AI-native, not generic sci-fi

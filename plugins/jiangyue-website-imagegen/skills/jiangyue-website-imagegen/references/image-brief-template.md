@@ -18,10 +18,11 @@ The requester can paste this:
 3. 如果有多个主体，先确认它们的角色、关系、方向和最终结果，不要直接用并列、互锁或连线代替协同。
 4. 可以自主调整留白、比例、裁切、构图、材质、色彩和非语义品牌元素。
 5. 新增文字、产品、应用对象、人物、技术含义或营销主张前，先征得我的确认。
-6. 对关键官网图，可以先联网搜索电机驱动器、HVAC、通风设备相关官网参考，但只提炼可执行的视觉原则，不复制参考图。
-7. 信息明确后，先输出一份简短的“制作简报”，让我确认后再生图。
-8. 在输出制作简报前，先自查简报是否通过意图、主体承载、物理合理性、视觉锤、模板风险和 claim 风险检查；不合格时先修改简报或继续问一个关键问题。
-9. 初稿完成后，请按视觉锤、层级、品牌匹配、构图、原创性、克制程度、小尺寸表现和语义清晰度进行自审。不合格时进行结构性修改，不要只改颜色、阴影或光效。
+6. 对关键官网图，可以先联网搜索电机控制、工业控制或当前应用类别相关官网参考；HVAC、通风、风机、泵等只在当前页面或简报相关时使用，只提炼可执行的视觉原则，不复制参考图。
+7. 对关键官网图、抽象优势图或多主体图，先给出 2-3 个不同的视觉结构方向；结构要写成“关系模型 + 可变参数 + 禁止边界”，不是只换颜色、光效或角度。
+8. 信息明确后，先输出一份简短的“制作简报”，让我确认后再生图。
+9. 在输出制作简报前，先给简报评分，检查意图、主体承载、关系可读、物理合理性、注意力层级与图片角色、设计强度、模板风险和 claim 风险；不合格时先修改结构或继续问一个关键问题。
+10. 初稿完成后，请按注意力层级、图片角色、品牌匹配、构图、原创性、克制程度、小尺寸表现和语义清晰度进行自审。不合格时进行结构性修改，不要只改颜色、阴影或光效。
 
 我目前的想法：
 - 使用位置：
@@ -131,6 +132,8 @@ Ask these only when relevant.
 
 ### Hero
 
+- Who owns first attention: headline, CTA, logo, image, or the combined hero?
+- Should the image act as the main visual hammer, or support professional atmosphere, brand mood, trust, and conversion?
 - Where will the headline and CTA sit?
 - Should the visual support copy on the left or right?
 - Is the image a clean background asset, a complete mockup, or both?
@@ -146,6 +149,24 @@ Confirm:
 2. What is the active driver or transformation?
 3. What is the delivered outcome?
 4. Does the value move in one direction, converge, or return as a loop?
+
+### High-Impact Structure Direction
+
+For homepage hero, Contact hero, product hero, abstract advantage images, multi-subject relationships, or repeated failure, first offer 2-3 structure directions unless the user already confirmed one.
+
+Each direction should be brief:
+
+```text
+方向 A：
+- 关系模型：
+- 可变参数：
+- 禁止边界：
+- 注意力主导与图片角色：
+- 图片视觉锤（如适用）：
+- 适合原因：
+```
+
+The directions must differ by relationship and structure, not by color, glow, camera angle, or mood. If all options are just variants of the same layout, revise them before showing the user.
 
 ### Text-Led Graphics
 
@@ -190,12 +211,12 @@ When the user says only “高级、科技、简洁”, ask:
 
 The reason is more useful than the reference alone.
 
-For high-impact hero images, abstract advantage images, or motor-drive/HVAC/ventilation subject recognition, use reference research instead of guessing the style. Search official websites first with English category terms such as `motor drive`, `motor controller`, `PMSM motor controller`, `EC fan motor controller`, `HVAC motor drive`, `fan motor drive`, `ventilation fan motor controller`, plus Chinese `电机驱动器` only when useful for internal terminology.
+For high-impact hero images, abstract advantage images, or motor-control / application-category subject recognition, use reference research instead of guessing the style. Search official websites first with broad category terms such as `motor drive`, `motor controller`, `PMSM motor controller`, `BLDC motor controller`, `industrial motor controller`, `industrial control electronics`, plus the current page's application terms when relevant, such as `HVAC motor drive`, `fan motor drive`, `pump drive`, `ventilation fan motor controller`, or other user-provided application keywords. Use Chinese `电机驱动器` only when useful for internal terminology.
 
 Reference research should answer:
 
 - what makes the subject read as an electric motor drive/controller
-- what makes the context feel related to HVAC or ventilation
+- what makes the context feel related to the current application category, if one is specified
 - what composition, crop, and material treatment can raise visual quality
 - what common template or stock-tech patterns must be avoided
 
@@ -229,7 +250,18 @@ Before generation, return this concise brief:
   - 结构 / 装配逻辑：
   - 信号 / 数据 / 反馈路径：
   - 避免误读为：
-- 核心视觉锤：
+- 注意力层级与图片角色：
+  - 首屏第一注意力由谁承担：
+  - 图片角色：主视觉锤 / 专业氛围 / 品牌氛围 / 信任支撑 / CTA 辅助 / 其他
+  - 图片需要避免抢走：
+- 可靠视觉结构：
+  - 关系模型：
+  - 可变参数：
+  - 禁止边界：
+  - 不采用的结构及原因：
+- 图片视觉策略：
+  - 图片视觉锤（如适用）：
+  - 氛围与专业度策略（如图片不承担主视觉锤）：
 - 概念契约：
 - 构图与文案留白：
 - 图片内文字：
@@ -243,9 +275,21 @@ Before generation, return this concise brief:
 - 简报自查：
   - 意图是否锁定：
   - 主体承载是否完整：
+  - 关系是否可读：
   - 物理合理性是否通过：
-  - 视觉锤是否明确：
+  - 注意力层级与图片角色是否明确：
   - 模板 / claim / 文字风险：
+- 简报评分：
+  - 意图锁定：/5
+  - 主体承载：/5
+  - 关系可读：/5
+  - 物理合理性：/5
+  - 注意力层级与图片角色：/5
+  - 设计强度：/5
+  - 创意活性：/5
+  - 品牌与买家匹配：/5
+  - claim / 文字风险：/5
+  - 结论：通过 / 需要重构 / 需要再问一个问题
 ```
 
 Keep it short. State decisions rather than repeating the conversation.
@@ -258,6 +302,8 @@ Reject the brief before asking for user confirmation if the concept contract cou
 
 The brief self-review must be factual, not reassuring. If it finds a problem, revise the concept or ask one focused question instead of listing the problem and still proceeding.
 
+For high-impact visuals, a reliable structure is not enough. If the brief is plausible but visually plain, revise the relationship model, crop, scale, silhouette, material, or medium before asking for confirmation.
+
 ## Information-Sufficiency Gate
 
 Proceed when all are true:
@@ -268,12 +314,15 @@ Proceed when all are true:
 - the desired viewer response is clear enough to set hierarchy
 - required copy and claim boundaries are known
 - crop can be inferred or is supplied
+- the page-level attention owner and image role are clear enough for the asset type
 - the original intent lock is explicit
 - each named subject has an explicit carrier in the image or page copy
 - the visual concept has a drift boundary
 - physical structure or metaphor is plausible enough for an industrial buyer
 - brief self-review has passed before the user is asked to confirm
 - for high-impact or recognition-sensitive images, reference research has either been used or explicitly judged unnecessary
+- for high-impact or abstract images, a structure direction has been selected or explicitly judged unnecessary
+- standard or high-impact brief scoring has passed before the user is asked to confirm
 
 Do not proceed when:
 
@@ -286,6 +335,7 @@ Do not proceed when:
 - physical parts, enclosures, frames, bases, paths, or materials look forced together or mechanically unrelated
 - removing the production rationale would make the image's connection to the message unclear
 - the concept relies on fixed brand colors, generic AI lines, or decorative glow as the main evidence of quality
+- all proposed structure directions are only style variants of the same weak idea
 
 ## Question Priority
 
@@ -293,13 +343,15 @@ When several details are missing, ask in this order:
 
 1. What should the viewer understand?
 2. What should the viewer conclude or do?
-3. How do multiple subjects relate?
-4. Which parts must be shown by the image and which may be carried by HTML/page copy?
-5. What physical structure or metaphor can carry the message credibly?
-6. Where will the image be used and where will copy sit?
-7. What exact content and constraints must be preserved?
-8. Is this a high-impact or recognition-sensitive image that needs official website reference research?
-9. What visual references help distinguish preference?
+3. For hero assets, who owns first attention: headline, CTA, logo, image, or the combined hero?
+4. How do multiple subjects relate?
+5. Which parts must be shown by the image and which may be carried by HTML/page copy?
+6. What physical structure or metaphor can carry the message credibly?
+7. For high-impact visuals, which structure direction best fits the intended buyer judgment?
+8. Where will the image be used and where will copy sit?
+9. What exact content and constraints must be preserved?
+10. Is this a high-impact or recognition-sensitive image that needs official website reference research?
+11. What visual references help distinguish preference?
 
 Do not ask about color, camera angle, materials, or minor styling before message and relationship are clear.
 

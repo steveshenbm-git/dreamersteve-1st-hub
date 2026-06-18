@@ -7,9 +7,9 @@ description: Use when creating, editing, or reviewing website visuals for Jiangy
 
 ## Core Standard
 
-Create industrial B2B visuals that support technical credibility while leaving room for real creative range. Every image needs one clear visual hammer and must avoid unsupported product, certification, customer, or performance claims.
+Create industrial B2B visuals that support technical credibility while leaving room for real creative range. Every hero or page asset needs a clear attention hierarchy and image role; the image may be the visual hammer, or it may support a headline, CTA, logo, or brand atmosphere. Avoid unsupported product, certification, customer, or performance claims.
 
-Treat brand guidance as a floor, not a cage: the image may be inventive in composition, crop, material, space, and metaphor as long as it remains credible for motor-drive, HVAC, ventilation, and OEM industrial buyers.
+Treat brand guidance as a floor, not a cage: the image may be inventive in composition, crop, material, space, and metaphor as long as it remains credible for motor-control, industrial OEM, and the current target application context. Fan, HVAC, ventilation, pump, and similar fields are examples to use only when relevant to the page or user brief.
 
 Use the shortest production path that preserves quality. Do not create an HTML preview, browser mockup, design document, competitor review, or multiple deliverables unless the user asks for them or they are necessary to judge the requested asset.
 
@@ -20,8 +20,10 @@ For every new image, use [references/image-brief-template.md](references/image-b
 - Do not dump the full questionnaire on the user.
 - Ask only the highest-value missing question, one at a time.
 - Infer low-risk production details from the brand rules and existing assets.
+- For high-impact, abstract, multi-subject, or physically metaphorical visuals, read [references/visual-structure-patterns.md](references/visual-structure-patterns.md) before selecting the visual structure.
+- For standard or high-impact briefs, read [references/brief-review-rubric.md](references/brief-review-rubric.md) and score the brief before asking for confirmation.
 - Before showing the production brief to the user, run the brief self-review and physical plausibility gates. If either fails, revise the concept or ask one more question instead of asking for confirmation.
-- Before production, return a concise production brief that states the original intent, intended message, subject relationship, physical logic, visual hammer, copy placement, method, and constraints.
+- Before production, return a concise production brief that states the original intent, intended message, subject relationship, physical logic, attention hierarchy, image role, copy placement, method, and constraints.
 - Generate only after the user confirms the brief or has already provided equivalent clear instructions.
 
 ## Intent Lock
@@ -60,20 +62,22 @@ Do not use an image model for deterministic geometry or important text when SVG/
 
 ## Fast Workflow
 
-1. Identify the asset type, crop, purpose, visual hammer, and required text.
+1. Identify the asset type, crop, purpose, attention owner, image role, and required text.
 2. Create the intent lock. Do not continue if the image responsibility and page-copy responsibility are unclear.
 3. When the brief contains multiple subjects, confirm their semantic relationship before choosing a visual form.
 4. Run a content-sufficiency check before choosing a layout.
 5. For any product, equipment, application, lab, hardware, enclosure, PCB, signal-flow, or physical-metaphor visual, run the physical plausibility gate before writing the brief.
-6. Decide whether reference research is needed. For brand-defining hero images, motor-drive/HVAC/ventilation subject recognition, vague "premium/beautiful/industrial" requests, or failed visual quality, use the reference research gate.
-7. Choose a concrete visual concept and state why it preserves the intent lock. For a brand-defining hero or ambiguous abstract concept, offer 2-3 materially different visual directions before production.
-8. Run the brief self-review gate. Do not show the brief for user confirmation if the concept only works by explanation, has weak visual design, or fails physical plausibility.
-9. Check only directly relevant project assets.
-10. Choose image generation, image editing, or deterministic SVG/canvas composition.
-11. Produce one strong draft first. Create variants only when they test a meaningful visual difference.
-12. Inspect the actual output at full size and thumbnail size using a separate review pass.
-13. Reject and redo any output that fails intent fidelity, physical plausibility, hits a quality veto, or triggers a design-upgrade rule.
-14. Save the accepted asset in the project and report its path, dimensions, method, and unverified limitations.
+6. Decide whether reference research is needed. For brand-defining hero images, motor-control or application-category subject recognition, vague "premium/beautiful/industrial" requests, or failed visual quality, use the reference research gate.
+7. Choose a reliable visual structure before choosing rendering style. For high-impact, abstract, multi-subject, or physically metaphorical visuals, use a structure written as relationship model + variable parameters + forbidden boundaries.
+8. For a brand-defining hero or ambiguous abstract concept, use the high-impact dual path: offer 2-3 materially different structure directions before production unless the user has already approved a clear structure.
+9. Choose a concrete visual concept and state why it preserves the intent lock.
+10. Run the brief self-review and brief scoring gates. Do not show the brief for user confirmation if the concept only works by explanation, has weak attention hierarchy, has weak visual design, or fails physical plausibility.
+11. Check only directly relevant project assets.
+12. Choose image generation, image editing, or deterministic SVG/canvas composition.
+13. Produce one strong draft first. Create variants only when they test a meaningful visual difference.
+14. Inspect the actual output at full size and thumbnail size using a separate review pass.
+15. Reject and redo any output that fails intent fidelity, physical plausibility, hits a quality veto, or triggers a design-upgrade rule.
+16. Save the accepted asset in the project and report its path, dimensions, method, and unverified limitations.
 
 For a clear simple request, do not conduct an extended questionnaire. Infer low-risk details, return the concise production brief, and proceed after confirmation. If meaning or subject relationships remain ambiguous, wait for the answer.
 
@@ -167,13 +171,13 @@ First answer:
 
 1. Does the brief preserve the original intent lock?
 2. Does every named subject have a visible carrier or a planned HTML/page-copy carrier?
-3. Is the visual hammer specific enough to guide image generation?
+3. Is the attention hierarchy clear enough to guide image generation or page composition?
 4. Does the physical structure or metaphor pass the physical plausibility gate?
 5. Can the relationship be understood from the planned image, not only from the explanation?
 
 Then check for risks:
 
-- **Visual weakness:** safe but dull, generic, template-like, or no memorable silhouette/crop/material decision
+- **Visual weakness:** safe but dull, generic, template-like, or no memorable hierarchy, atmosphere, silhouette, crop, or material decision
 - **Physical mismatch:** parts look forced together, decorative, unsupported, unmanufacturable, or mechanically unrelated
 - **Claim risk:** fake specs, certifications, product architecture, interfaces, customer use, or performance may appear
 - **Text risk:** the image model might generate important text, labels, UI values, PCB marks, or nameplates
@@ -181,9 +185,11 @@ Then check for risks:
 
 If any answer fails or any risk remains high, revise the brief structurally or ask one focused question. Do not proceed by saying "we will fix it after the draft." A weak brief produces weak images.
 
+For standard or high-impact briefs, score the brief using [references/brief-review-rubric.md](references/brief-review-rubric.md). Intent fidelity, carrier completeness, relationship readability, physical plausibility, and attention hierarchy must all score at least 4 before user confirmation.
+
 ## Reference Research Gate
 
-For high-impact hero images, abstract concepts, weak visual direction, motor-drive/HVAC/ventilation recognition, or any draft rejected for visual quality, consider reference research before production or revision.
+For high-impact hero images, abstract concepts, weak visual direction, motor-control or application-category recognition, or any draft rejected for visual quality, consider reference research before production or revision.
 
 Use [references/reference-research.md](references/reference-research.md) when reference research is needed. Keep this gate conditional: do not search by default for simple cards, deterministic diagrams, text-led graphics, format conversion, or minor image edits.
 
@@ -194,10 +200,12 @@ Reference research must return executable visual principles, not a list of links
 Use the lightest process that can protect the result:
 
 - **Light path:** clear simple assets. Use intake, brief, production, and review only.
-- **Standard path:** most website visuals. Add intent lock, subject carriers, and concept fidelity.
-- **High-impact path:** homepage, Contact hero, product hero, abstract advantage visuals, or repeated failure. Add reference research and stronger design-upgrade review.
+- **Standard path:** most website visuals. Add intent lock, subject carriers, concept fidelity, and brief scoring.
+- **High-impact path:** homepage, Contact hero, product hero, abstract advantage visuals, recognition-sensitive assets, or repeated failure. Add the high-impact dual path, reliable visual structure selection, reference research when needed, and stronger design-upgrade review.
 
 Do not load every reference file or run web research just because it exists. More process is only justified when it reduces drift, improves subject recognition, or raises visual quality.
+
+Reliable visual structures are not templates. Use [references/visual-structure-patterns.md](references/visual-structure-patterns.md) to choose a relationship model, vary parameters, and set forbidden boundaries. If a reliable structure becomes visually plain, change crop, scale, silhouette, material, medium, or relationship model rather than adding decoration.
 
 ## Brand Floor and Creative Range
 
@@ -205,7 +213,7 @@ The required brand floor:
 
 - calm, precise, credible, modern, technical
 - suitable for European B2B industrial buyers, OEMs, product teams, purchasing, and engineering roles
-- connected to motor control, motor drives, HVAC, ventilation equipment, or industrial control when those categories are relevant
+- connected to motor control, industrial control, OEM equipment, or the specific application category when relevant
 - restrained enough to feel engineered rather than theatrical
 
 The creative range:
@@ -227,15 +235,30 @@ Suggested colors may include `#FFFFFF`, `#F7F9FC`, `#E9EEF4`, `#0F172A`, `#147DF
 
 Industrial technology should feel engineered, not theatrical.
 
-## Visual Hammer
+## Attention Hierarchy And Image Role
 
-The visual hammer is the first and dominant form the viewer notices.
+Decide the page-level attention hierarchy before deciding whether the image needs a strong visual hammer.
 
-- Use one focal object or one tightly unified object group.
-- When several subjects jointly form the hammer, their silhouette must read as one compact symbol.
-- Secondary lines, grids, glows, labels, icons, and scenery must remain weaker.
-- If a decorative effect attracts attention before the subject, remove it.
-- For multiple subjects, make the relationship itself the visual hammer, not merely the collection of objects.
+First identify the attention owner:
+
+- **Image-led:** the image is the primary visual hammer. Use one focal object, compact system symbol, or clear relationship that is noticed first.
+- **Headline-led:** the H1 or value proposition owns first attention. The image supports meaning through atmosphere, precision, depth, or subject recognition without competing.
+- **CTA-led:** the action path is primary. The image should increase trust and reduce friction, not overpower the CTA.
+- **Logo or brand-led:** brand recognition owns first attention. The image builds professional mood, technical credibility, and brand world.
+- **Balanced hero:** image, headline, CTA, and logo share the first screen. Use controlled hierarchy so no secondary decoration steals attention.
+
+When the image is not the primary attention owner, do not force a strong image visual hammer. Instead, design for:
+
+- professional atmosphere
+- brand mood
+- technical credibility
+- product or category recognition
+- trust support for inquiry or CTA
+- clean negative space for headline and actions
+
+When the image is the primary visual hammer, use one focal object or one tightly unified object group. When several subjects jointly form the hammer, their silhouette must read as one compact symbol. Secondary lines, grids, glows, labels, icons, and scenery must remain weaker.
+
+For multiple subjects, make the relationship visible. It may be the visual hammer, or it may be a quieter support structure when headline, CTA, or brand owns attention.
 
 ## Text and Chinese Typography
 
@@ -260,7 +283,7 @@ Reject the draft immediately if any of these appear:
 - busy factory scenes, sparks, smoke, clutter, or heavy machinery drama
 - generated or distorted Chinese text
 - fake device labels, certification marks, specifications, customer logos, or status claims
-- several equal focal points with no clear visual hammer
+- several equal focal points with no clear attention hierarchy
 - multiple subjects that appear merely adjacent, stacked, or mechanically interlocked without visible cause and effect
 - decorative grids or lines that make the image look busier rather than more precise
 - a draft that is visually polished but no longer supports the original intent lock
@@ -319,7 +342,7 @@ If any answer fails, reject the draft before scoring visual quality.
 
 Then score:
 
-1. visual hammer
+1. attention hierarchy and image role
 2. hierarchy and typography
 3. brand specificity
 4. composition and negative space
@@ -334,7 +357,7 @@ Any score below acceptable requires revision. For an important asset or repeated
 
 ### Hero
 
-Use one minimal control-core, product form, or compact system symbol. Keep space for HTML headline and CTA.
+First decide whether the hero image owns first attention or supports the H1, CTA, logo, or brand atmosphere. If the image owns attention, use one minimal control-core, product form, compact system symbol, or clear relationship. If the H1, CTA, or logo owns attention, keep the image calmer and use it to build professional atmosphere, technical credibility, category recognition, and space for HTML headline and CTA.
 
 ### Product
 
@@ -342,7 +365,7 @@ Show a conceptual controller clearly on a light background. Emphasize enclosure,
 
 ### Application
 
-Show a clear controller-to-fan, pump, OEM equipment, or industrial system relationship. Keep the environment clean and secondary.
+Show a clear controller-to-application relationship. Use fan, pump, HVAC, ventilation, OEM equipment, or other industrial systems only when the brief or page calls for them. Keep the environment clean and secondary.
 
 ### Technical Resources
 
