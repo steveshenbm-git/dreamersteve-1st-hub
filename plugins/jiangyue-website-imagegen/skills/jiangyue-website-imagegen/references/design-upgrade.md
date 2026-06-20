@@ -20,6 +20,7 @@ Identify the real problem before adding anything:
 | Flow feels fake | Light path reads as impossible electricity or decorative energy | Reframe as control signal, data path, feedback path, or remove it |
 | Correction causes drift | Later feedback replaces the original job | Re-lock the original intent and treat the feedback as a constrained correction |
 | Revision looks the same | Same silhouette, same focal relationship, same composition | Change the visual model, not the rendering polish |
+| Method downgraded quality | The method was chosen because it can save or reproduce files, not because it can reach the brief's visual grade | Stop and choose a quality-appropriate method, or report the limitation |
 | Safe but lifeless | Brand rules became a rigid style template | Open creative range through crop, material, physical context, or a stronger visual metaphor |
 
 ## Relationship Before Form
@@ -118,6 +119,8 @@ If the previous draft failed for visual quality, the next draft must change at l
 
 Changing only color, glow, line weight, material sheen, or background atmosphere is not a valid revision.
 
+For a user-requested rebuild, remake, or complete redesign, changing only element positions, text placement, panel count, color palette, line style, crop, or local contrast is not enough. The new draft must visibly change at least one core structure: visual model, composition structure, subject relationship, crop/scale hierarchy, medium, or production method. If the full-size or thumbnail comparison still reads as the same direction, reject the draft before delivery.
+
 ## Brand-Safe Autonomous Additions
 
 These may be added without asking when they remain abstract and non-semantic:
@@ -214,6 +217,7 @@ Each revision must name one structural change:
 - new crop
 - new typography system
 - new medium
+- quality-appropriate production method
 
 Color-only, shadow-only, border-only, and glow-only revisions do not count as design progress.
 
@@ -222,3 +226,5 @@ Before delivering a revised draft, compare it with the rejected draft in one sen
 > Structural delta: changed [old visual model] into [new visual model] to fix [failure category].
 
 If this sentence is not true, the revision is not valid.
+
+If the reason for the change is file saving, reproducibility, or local controllability rather than visual quality and brief fidelity, the revision is not valid for a high-impact hero. Stop and report the production limitation instead of delivering a lower-grade substitute.

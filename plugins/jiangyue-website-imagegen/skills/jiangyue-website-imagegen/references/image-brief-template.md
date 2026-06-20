@@ -23,6 +23,7 @@ The requester can paste this:
 8. 信息明确后，先输出一份简短的“制作简报”，让我确认后再生图。
 9. 在输出制作简报前，先给简报评分，检查意图、主体承载、关系可读、物理合理性、注意力层级与图片角色、设计强度、模板风险和 claim 风险；不合格时先修改结构或继续问一个关键问题。
 10. 初稿完成后，请按注意力层级、图片角色、品牌匹配、构图、原创性、克制程度、小尺寸表现和语义清晰度进行自审。不合格时进行结构性修改，不要只改颜色、阴影或光效。
+11. 如果我要求“重做、重新制作、完全重新设计”，请先列出必须保留、必须删除、必须明显改变、禁止出现的内容。新稿必须在结构上明显不同，不能只是旧稿换色、移动、裁切或重新排版。
 
 我目前的想法：
 - 使用位置：
@@ -69,9 +70,11 @@ Correct handling:
 
 1. Classify as **brief-based rebuild plus export sizing**, not old-image retouching.
 2. Extract the earlier requirements before choosing method.
-3. State a short execution understanding before production.
-4. Produce a new hero image unless the user explicitly says to keep the existing image.
-5. Treat "standard hero size" as image output size by default, such as `1920x1080` or the confirmed 16:9 size. If "web page size" may mean an HTML preview or browser layout, ask one question.
+3. Extract four hard lists: must keep, must remove, must materially change, and must avoid.
+4. State a short execution understanding before production.
+5. Produce a new hero image unless the user explicitly says to keep the existing image.
+6. Treat "standard hero size" as image output size by default, such as `1920x1080` or the confirmed 16:9 size. If "web page size" may mean an HTML preview or browser layout, ask one question.
+7. Reject the output before delivery if the thumbnail still reads as the same visual model, composition structure, subject relationship, crop/scale hierarchy, or medium.
 
 Compact confirmation:
 
@@ -79,9 +82,31 @@ Compact confirmation:
 本次执行理解：
 - 类型：按上面简报重做新 hero，并导出标准 hero 尺寸
 - 依据：红色品牌 hero、明亮工业实验室/测试台、透明 UI、红色数据连接、弱化报警感
+- 保留：已确认的标题、正文、CTA 或用户指定资产
+- 删除：旧稿中不再成立的构图、面板、装饰或色彩关系
+- 必须明显改变：视觉模型、主体关系、构图结构、品牌色承载或媒介
+- 禁止：旧图简单调色、裁切、移动元素、截图截取、低等级插画替代高质量 hero
 - 尺寸与交付：1920x1080 / 16:9 图片资产
 - 不做：不是基于旧图简单调色和裁切
 ```
+
+## Method Downgrade To Prevent
+
+Do not let file export, reproducibility, or local convenience lower the required visual quality.
+
+Bad downgrade:
+
+1. User asks for a realistic or brand-defining homepage hero.
+2. Image generation preview is not exposed as a local file.
+3. Agent creates a deterministic flat illustration only because it can be saved locally.
+4. The output is delivered as if it satisfied the brief.
+
+Correct handling:
+
+1. Treat the image brief and visual quality as the primary goal.
+2. Use deterministic composition only for typography, masks, crops, overlays, simple diagrams, or user-requested illustration styles.
+3. If the available method cannot produce the required image quality or cannot expose a local source file, stop and report the limitation.
+4. Do not crop screenshots, do not fabricate a lower-grade substitute, and do not present a failed trial as a usable draft.
 
 ## Five Core Decisions
 
@@ -152,6 +177,7 @@ Confirm:
 - known claim boundaries
 - crop or dimensions when known
 - whether the user means image file dimensions or an HTML/page preview when saying page size, web size, hero size, or browser size
+- for remake/rebuild tasks: what must be kept, removed, materially changed, and avoided
 
 Infer ordinary brand colors and production details rather than asking unnecessarily.
 
@@ -299,6 +325,11 @@ Before generation, return this concise brief:
 - 视觉方向：
 - 制作方法：图像生成 / 图像编辑 / SVG 或混合制作
 - 必须避免：
+- 简报硬约束：
+  - 保留：
+  - 删除：
+  - 必须明显改变：
+  - 禁止：
 - 输出尺寸与文件：
 - 尚未验证或不可暗示的内容：
 - 简报自查：
@@ -342,6 +373,7 @@ Proceed when all are true:
 - the main subject or relationship is clear
 - the desired viewer response is clear enough to set hierarchy
 - required copy and claim boundaries are known
+- for rebuild/remake tasks, must keep, must remove, must materially change, and must avoid are explicit
 - crop can be inferred or is supplied
 - the page-level attention owner and image role are clear enough for the asset type
 - the original intent lock is explicit
@@ -365,6 +397,8 @@ Do not proceed when:
 - removing the production rationale would make the image's connection to the message unclear
 - the concept relies on fixed brand colors, generic AI lines, or decorative glow as the main evidence of quality
 - all proposed structure directions are only style variants of the same weak idea
+- the selected method can save a file but cannot reach the visual quality required by the brief
+- a remake/rebuild plan keeps the same visual model, composition structure, subject relationship, crop/scale hierarchy, and medium as the rejected draft
 - a good image would require changing page strategy, H1, CTA, section order, or marketing claims
 
 ## Question Priority

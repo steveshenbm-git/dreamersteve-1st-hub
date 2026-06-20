@@ -9,6 +9,8 @@ description: Use when creating, editing, or reviewing website visuals for Jiangy
 
 Create industrial B2B visuals that support technical credibility while leaving room for real creative range. Every hero or page asset needs a clear attention hierarchy and image role; the image may be the visual hammer, or it may support a headline, CTA, logo, or brand atmosphere. Avoid unsupported product, certification, customer, or performance claims.
 
+The first objective is a high-quality image that satisfies the brief. Saving files, folder structure, reproducibility, documentation, speed, or local convenience are secondary and must never lower the visual standard or weaken the brief. If a usable image cannot be produced with the available method, stop and report the limitation instead of delivering a lower-grade substitute.
+
 Treat brand guidance as a floor, not a cage: the image may be inventive in composition, crop, material, space, and metaphor as long as it remains credible for motor-control, industrial OEM, and the current target application context. Fan, HVAC, ventilation, pump, and similar fields are examples to use only when relevant to the page or user brief.
 
 Use the shortest production path that preserves quality. Do not create an HTML preview, browser mockup, design document, competitor review, or multiple deliverables unless the user asks for them or they are necessary to judge the requested asset.
@@ -27,6 +29,7 @@ For every new image, use [references/image-brief-template.md](references/image-b
 - For standard or high-impact briefs, read [references/brief-review-rubric.md](references/brief-review-rubric.md) and score the brief before asking for confirmation.
 - Before showing the production brief to the user, run the brief self-review and physical plausibility gates. If either fails, revise the concept or ask one more question instead of asking for confirmation.
 - Before production, return a concise production brief that states the original intent, intended message, subject relationship, physical logic, attention hierarchy, image role, copy placement, method, and constraints.
+- Before production, extract the brief into four hard lists: **must keep**, **must remove**, **must materially change**, and **must avoid**. Use these lists as regression gates during review.
 - Generate only after the user confirms the brief or has already provided equivalent clear instructions.
 
 ## Execution Intent Gate
@@ -59,6 +62,10 @@ For high-impact hero images, briefly state the execution understanding before pr
 - 类型：新图制作 / 按简报重做 / 旧图局部修改 / 只改尺寸 / 页面预览调整
 - 依据：
 - 关键要求：
+- 保留：
+- 删除：
+- 必须明显改变：
+- 禁止：
 - 尺寸与交付：
 - 不做：
 ```
@@ -101,6 +108,8 @@ Classify the request before generating anything:
 
 Do not use an image model for deterministic geometry or important text when SVG/canvas can produce a cleaner and more controllable result.
 
+Do not choose a lower-grade method only because it can save local files, preserve editability, or create a reproducible archive. For photographic, realistic, atmospheric, product, lab, equipment, or brand-defining hero images, deterministic SVG/canvas/Python composition is only suitable for typography, layout, masks, crops, and overlays unless the user explicitly requests an illustration or diagram. If image generation or image editing cannot expose a local source file, do not crop screenshots or replace the requested image with a flat illustration; stop and report the export limitation or ask for permission to use a file-export-capable method.
+
 When repeatability or later editing matters, prefer a deterministic or hybrid method:
 
 - Use SVG/canvas/Python composition for typography, layout, crops, masks, color variants, and overlays.
@@ -123,16 +132,18 @@ When repeatability or later editing matters, prefer a deterministic or hybrid me
 11. Run the brief self-review and brief scoring gates. Do not show the brief for user confirmation if the concept only works by explanation, has weak attention hierarchy, has weak visual design, or fails physical plausibility.
 12. Check only directly relevant project assets.
 13. Choose image generation, image editing, or deterministic SVG/canvas composition.
-14. Create a dedicated task output folder before producing files.
-15. Produce one strong trial image first. Create variants only when they test a meaningful visual difference.
-16. Use lightweight trial storage until the image is initially usable; create the full reproduction archive only for a usable draft, accepted draft, final image, or meaningful revision.
-17. Inspect the actual output at full size and thumbnail size using a separate review pass.
-18. For revisions, compare the new draft side-by-side against the prior draft or reference. Single-image review is not enough.
-19. Treat every user-named defect as a hard regression gate. If the user asked to fix left-right separation, weak brand-color connection, text crowding, product recognition, or similar, the review must explicitly answer whether that defect is visibly improved. If not, reject the draft.
-20. If the output fails, run the failure attribution gate before revising.
-21. Continue imagegen only for execution failures. Return to planner when the image request brief is strategically wrong.
-22. Reject and redo any output that fails intent fidelity, physical plausibility, user-stated regression gates, hits a quality veto, or triggers a design-upgrade rule.
-23. Save the asset in the task folder and report its path, dimensions, method, archive status, and unverified limitations.
+14. Run the method quality gate: the method must be able to produce the required visual level, not merely a savable file.
+15. Create a dedicated task output folder before producing files.
+16. Produce one strong trial image first. Create variants only when they test a meaningful visual difference.
+17. Use lightweight trial storage until the image is initially usable; create the full reproduction archive only for a usable draft, accepted draft, final image, or meaningful revision.
+18. Inspect the actual output at full size and thumbnail size using a separate review pass.
+19. For revisions, compare the new draft side-by-side against the prior draft or reference. Single-image review is not enough.
+20. Treat every user-named defect as a hard regression gate. If the user asked to fix left-right separation, weak brand-color connection, text crowding, product recognition, "completely redesign", "looks almost unchanged", or similar, the review must explicitly answer whether that defect is visibly improved. If not, reject the draft.
+21. If a rebuild or remake still reads as the same visual model, composition structure, subject relationship, crop/scale hierarchy, medium, or failed direction at thumbnail size, reject it before delivery.
+22. If the output fails, run the failure attribution gate before revising.
+23. Continue imagegen only for execution failures. Return to planner when the image request brief is strategically wrong.
+24. Reject and redo any output that fails intent fidelity, physical plausibility, user-stated regression gates, hits a quality veto, or triggers a design-upgrade rule.
+25. Save the asset in the task folder and report its path, dimensions, method, archive status, and unverified limitations.
 
 For a clear simple request, do not conduct an extended questionnaire. Infer low-risk details, return the concise production brief, and proceed after confirmation. If meaning or subject relationships remain ambiguous, wait for the answer.
 
@@ -447,6 +458,8 @@ Rework the concept when:
 - a user-named layout problem remains visible after a revision, even if typography, color, or file quality improved
 - a revision claims improved integration but the thumbnail still reads as separate panels, pasted layers, or independent left-right blocks
 - two attempts in a row only adjust gradient, opacity, blur, glow, saturation, or accent lines for a composition problem
+- a requested rebuild keeps the old visual model, composition structure, subject relationship, crop/scale hierarchy, or medium
+- a production method downgrade makes a photographic, realistic, or brand-defining hero read as a flat illustration or diagram without user approval
 
 Change the composition idea, content relationship, or medium. Do not merely polish the same weak layout.
 

@@ -45,8 +45,9 @@ Score from 1 to 5. A passing brief needs every core dimension at 4 or above. Do 
 | Brand and buyer fit | It feels calm, technical, credible, and suitable for industrial B2B buyers |
 | Claim safety | It avoids fake specs, certifications, customer use, interfaces, performance, and product architecture |
 | Text safety | Important text will be typeset directly, kept in HTML, or omitted from image generation |
-| Production controllability | The selected method can realistically produce the needed geometry, text, and quality |
+| Production controllability | The selected method can realistically produce the needed geometry, text, local asset handling, and required visual quality |
 | Execution intent | The brief correctly distinguishes new image, brief-based rebuild, local edit, format edit, and page/mockup work |
+| Rebuild delta | For remake/rebuild tasks, the brief states what will be kept, removed, materially changed, and avoided |
 
 ## Hard Stops
 
@@ -67,6 +68,10 @@ Stop before image generation when any of these are true:
 - the user has not approved a new product, application object, human figure, technical meaning, or claim-like addition
 - the image request requires changing page strategy, H1, CTA, section order, or marketing claims to work
 - a request to make or remake a hero image from an earlier brief has been downgraded into old-image retouching, resizing, or color adjustment
+- a requested remake/rebuild keeps the same visual model, composition structure, subject relationship, crop/scale hierarchy, and medium as the rejected draft
+- the selected method can produce a local file but cannot reach the required visual grade for the asset
+- a photographic, realistic, atmospheric, product, equipment, lab, or brand-defining hero has been downgraded to flat SVG/canvas/Python illustration without explicit user approval
+- the generation tool cannot expose a local source file and the plan is to crop a screenshot or create a lower-grade substitute instead of stopping to report the limitation
 - "web page size", "hero size", or "standard size" is ambiguous between image file output and page/mockup layout, and the ambiguity changes the work
 
 ## Efficient Review Format
@@ -83,6 +88,8 @@ For a standard or high-impact brief, include a compact self-review in the produc
 - 设计强度：/5
 - 创意活性：/5
 - 品牌与买家匹配：/5
+- 方法与视觉等级：/5
+- 重做结构差异：/5（仅重做/返工任务）
 - claim / 文字风险：/5
 - 结论：通过 / 需要重构 / 需要再问一个问题
 ```
@@ -100,6 +107,8 @@ Choose one correction:
 - **Dull but reliable:** change crop, scale, silhouette, material contrast, or structure family.
 - **Overloaded:** demote or move a message into HTML/page copy.
 - **Misread execution type:** restate whether the task is new image, brief-based rebuild, local edit, format edit, or page/mockup work before producing.
+- **Method downgrade:** stop and report the limitation, or switch to a method that can reach the required visual quality before producing.
+- **No rebuild delta:** change the visual model, composition structure, subject relationship, crop/scale hierarchy, medium, or production method before producing.
 - **Strategy failure:** return to `$jiangyue-website-planner` with an imagegen rework request.
 
 After two failed brief reviews for the same asset, stop and offer 2-3 new structure directions only if the page strategy is still valid. If the failure involves page goal, attention hierarchy, image role, message ownership, or claim boundary, return to planner instead.
