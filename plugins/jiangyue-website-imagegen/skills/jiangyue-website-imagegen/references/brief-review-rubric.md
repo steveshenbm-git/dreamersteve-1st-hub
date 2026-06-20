@@ -46,6 +46,7 @@ Score from 1 to 5. A passing brief needs every core dimension at 4 or above. Do 
 | Claim safety | It avoids fake specs, certifications, customer use, interfaces, performance, and product architecture |
 | Text safety | Important text will be typeset directly, kept in HTML, or omitted from image generation |
 | Production controllability | The selected method can realistically produce the needed geometry, text, and quality |
+| Execution intent | The brief correctly distinguishes new image, brief-based rebuild, local edit, format edit, and page/mockup work |
 
 ## Hard Stops
 
@@ -65,6 +66,8 @@ Stop before image generation when any of these are true:
 - the concept uses a generic AI icon, three equal cards, decorative lines, or an arbitrary enclosure as the core idea
 - the user has not approved a new product, application object, human figure, technical meaning, or claim-like addition
 - the image request requires changing page strategy, H1, CTA, section order, or marketing claims to work
+- a request to make or remake a hero image from an earlier brief has been downgraded into old-image retouching, resizing, or color adjustment
+- "web page size", "hero size", or "standard size" is ambiguous between image file output and page/mockup layout, and the ambiguity changes the work
 
 ## Efficient Review Format
 
@@ -96,6 +99,7 @@ Choose one correction:
 - **Physical failure:** rebuild the structure using plausible layers, enclosure, mounting, workflow, or abstract geometry.
 - **Dull but reliable:** change crop, scale, silhouette, material contrast, or structure family.
 - **Overloaded:** demote or move a message into HTML/page copy.
+- **Misread execution type:** restate whether the task is new image, brief-based rebuild, local edit, format edit, or page/mockup work before producing.
 - **Strategy failure:** return to `$jiangyue-website-planner` with an imagegen rework request.
 
 After two failed brief reviews for the same asset, stop and offer 2-3 new structure directions only if the page strategy is still valid. If the failure involves page goal, attention hierarchy, image role, message ownership, or claim boundary, return to planner instead.

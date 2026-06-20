@@ -55,6 +55,34 @@ Correct handling:
 3. Ask or restate the trade-off if the correction would hide the three-part advantage.
 4. Revise subject cues while preserving the original message carriers.
 
+## Execution Misread To Prevent
+
+Do not treat "according to the above suggestion" as a small edit to the latest image when the earlier brief asked for a new image.
+
+Bad downgrade:
+
+1. Planner or prior brief says: make a new red brand hero, brighter industrial lab/test-bench environment, reorganized red data connections, transparent glass UI, less alarm feeling, standard hero size.
+2. User says: `根据上面建议制作一张红色的 hero 主图，同时调整网页尺寸，改为 hero 主图的标准尺寸大小。`
+3. Agent only color-corrects an old red image, brightens it, reduces pressure, and exports `1920x1080`.
+
+Correct handling:
+
+1. Classify as **brief-based rebuild plus export sizing**, not old-image retouching.
+2. Extract the earlier requirements before choosing method.
+3. State a short execution understanding before production.
+4. Produce a new hero image unless the user explicitly says to keep the existing image.
+5. Treat "standard hero size" as image output size by default, such as `1920x1080` or the confirmed 16:9 size. If "web page size" may mean an HTML preview or browser layout, ask one question.
+
+Compact confirmation:
+
+```text
+本次执行理解：
+- 类型：按上面简报重做新 hero，并导出标准 hero 尺寸
+- 依据：红色品牌 hero、明亮工业实验室/测试台、透明 UI、红色数据连接、弱化报警感
+- 尺寸与交付：1920x1080 / 16:9 图片资产
+- 不做：不是基于旧图简单调色和裁切
+```
+
 ## Five Core Decisions
 
 ### 1. Job
@@ -123,6 +151,7 @@ Confirm:
 - supplied references or real product photos
 - known claim boundaries
 - crop or dimensions when known
+- whether the user means image file dimensions or an HTML/page preview when saying page size, web size, hero size, or browser size
 
 Infer ordinary brand colors and production details rather than asking unnecessarily.
 

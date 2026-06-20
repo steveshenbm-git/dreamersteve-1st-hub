@@ -21,12 +21,51 @@ For every new image, use [references/image-brief-template.md](references/image-b
 
 - Do not dump the full questionnaire on the user.
 - Ask only the highest-value missing question, one at a time.
+- When the user refers to an earlier suggestion, planner brief, or approved direction, first extract the actionable requirements from that context before choosing a production method.
 - Infer low-risk production details from the brand rules and existing assets.
 - For high-impact, abstract, multi-subject, or physically metaphorical visuals, read [references/visual-structure-patterns.md](references/visual-structure-patterns.md) before selecting the visual structure.
 - For standard or high-impact briefs, read [references/brief-review-rubric.md](references/brief-review-rubric.md) and score the brief before asking for confirmation.
 - Before showing the production brief to the user, run the brief self-review and physical plausibility gates. If either fails, revise the concept or ask one more question instead of asking for confirmation.
 - Before production, return a concise production brief that states the original intent, intended message, subject relationship, physical logic, attention hierarchy, image role, copy placement, method, and constraints.
 - Generate only after the user confirms the brief or has already provided equivalent clear instructions.
+
+## Execution Intent Gate
+
+Before editing or generating, classify the user's latest instruction in one quick pass. Keep this gate short; do not turn it into another full brief unless the classification is unclear.
+
+Classify as one of:
+
+- **New image:** create a new visual from the current brief or request.
+- **Brief-based rebuild:** remake the image from an approved planner/image brief or "above suggestion".
+- **Local edit:** modify the existing image without changing the concept.
+- **Format edit:** resize, crop, compress, export, or adapt dimensions only.
+- **Page/mockup work:** adjust an HTML/page preview or layout, not just the image file.
+
+If the instruction combines production and format language, do not automatically reduce it to a format edit. Treat "make a red hero image and adjust to standard hero size" as image production plus export sizing unless the user explicitly asks only to resize an existing file.
+
+When the user says "根据上面建议", "按 planner 方案", "按简报", "重新制作", "重做", or similar, extract the brief requirements first:
+
+- asset type and usage
+- new image versus old-image edit
+- required visual direction, mood, color, subject, and relationship
+- what must be weakened, removed, or avoided
+- output ratio and pixel size
+- whether page layout or only the image asset should change
+
+For high-impact hero images, briefly state the execution understanding before production:
+
+```text
+本次执行理解：
+- 类型：新图制作 / 按简报重做 / 旧图局部修改 / 只改尺寸 / 页面预览调整
+- 依据：
+- 关键要求：
+- 尺寸与交付：
+- 不做：
+```
+
+Only ask a question when two or more classifications remain plausible. The usual question is:
+
+> 这里你是要我按上面的方案重新做一张新 hero 图，还是只基于现有旧图做局部修图和尺寸整理？
 
 ## Intent Lock
 
@@ -58,7 +97,7 @@ Classify the request before generating anything:
 | Simple geometric card, icon-like graphic, diagram, label system, or text-led composition | Build as SVG/canvas and export PNG |
 | Existing raster image modification | Use image editing |
 | Visible Chinese or English copy in a graphic | Generate the visual base without text, then typeset real text programmatically |
-| Website implementation or responsive page testing | Use HTML/CSS only when explicitly requested |
+| Website implementation, responsive page testing, or page preview resizing | Use HTML/CSS only when explicitly requested |
 
 Do not use an image model for deterministic geometry or important text when SVG/canvas can produce a cleaner and more controllable result.
 
@@ -71,28 +110,29 @@ When repeatability or later editing matters, prefer a deterministic or hybrid me
 
 ## Fast Workflow
 
-1. Identify the asset type, crop, purpose, attention owner, image role, and required text.
-2. Create the intent lock. Do not continue if the image responsibility and page-copy responsibility are unclear.
-3. When the brief contains multiple subjects, confirm their semantic relationship before choosing a visual form.
-4. Run a content-sufficiency check before choosing a layout.
-5. For any product, equipment, application, lab, hardware, enclosure, PCB, signal-flow, or physical-metaphor visual, run the physical plausibility gate before writing the brief.
-6. Decide whether reference research is needed. For brand-defining hero images, motor-control or application-category subject recognition, vague "premium/beautiful/industrial" requests, or failed visual quality, use the reference research gate.
-7. Choose a reliable visual structure before choosing rendering style. For high-impact, abstract, multi-subject, or physically metaphorical visuals, use a structure written as relationship model + variable parameters + forbidden boundaries.
-8. For a brand-defining hero or ambiguous abstract concept, use the high-impact dual path: offer 2-3 materially different structure directions before production unless the user has already approved a clear structure.
-9. Choose a concrete visual concept and state why it preserves the intent lock.
-10. Run the brief self-review and brief scoring gates. Do not show the brief for user confirmation if the concept only works by explanation, has weak attention hierarchy, has weak visual design, or fails physical plausibility.
-11. Check only directly relevant project assets.
-12. Choose image generation, image editing, or deterministic SVG/canvas composition.
-13. Create a dedicated task output folder before producing files.
-14. Produce one strong draft first. Create variants only when they test a meaningful visual difference.
-15. Maintain a reproduction archive for the task and update it after each accepted draft or meaningful revision.
-16. Inspect the actual output at full size and thumbnail size using a separate review pass.
-17. For revisions, compare the new draft side-by-side against the prior draft or reference. Single-image review is not enough.
-18. Treat every user-named defect as a hard regression gate. If the user asked to fix left-right separation, weak brand-color connection, text crowding, product recognition, or similar, the review must explicitly answer whether that defect is visibly improved. If not, reject the draft.
-19. If the output fails, run the failure attribution gate before revising.
-20. Continue imagegen only for execution failures. Return to planner when the image request brief is strategically wrong.
-21. Reject and redo any output that fails intent fidelity, physical plausibility, user-stated regression gates, hits a quality veto, or triggers a design-upgrade rule.
-22. Save the accepted asset in the task folder and report its path, dimensions, method, reproduction archive path, and unverified limitations.
+1. Run the execution intent gate and extract any referenced brief requirements.
+2. Identify the asset type, crop, purpose, attention owner, image role, and required text.
+3. Create the intent lock. Do not continue if the image responsibility and page-copy responsibility are unclear.
+4. When the brief contains multiple subjects, confirm their semantic relationship before choosing a visual form.
+5. Run a content-sufficiency check before choosing a layout.
+6. For any product, equipment, application, lab, hardware, enclosure, PCB, signal-flow, or physical-metaphor visual, run the physical plausibility gate before writing the brief.
+7. Decide whether reference research is needed. For brand-defining hero images, motor-control or application-category subject recognition, vague "premium/beautiful/industrial" requests, or failed visual quality, use the reference research gate.
+8. Choose a reliable visual structure before choosing rendering style. For high-impact, abstract, multi-subject, or physically metaphorical visuals, use a structure written as relationship model + variable parameters + forbidden boundaries.
+9. For a brand-defining hero or ambiguous abstract concept, use the high-impact dual path: offer 2-3 materially different structure directions before production unless the user has already approved a clear structure.
+10. Choose a concrete visual concept and state why it preserves the intent lock.
+11. Run the brief self-review and brief scoring gates. Do not show the brief for user confirmation if the concept only works by explanation, has weak attention hierarchy, has weak visual design, or fails physical plausibility.
+12. Check only directly relevant project assets.
+13. Choose image generation, image editing, or deterministic SVG/canvas composition.
+14. Create a dedicated task output folder before producing files.
+15. Produce one strong trial image first. Create variants only when they test a meaningful visual difference.
+16. Use lightweight trial storage until the image is initially usable; create the full reproduction archive only for a usable draft, accepted draft, final image, or meaningful revision.
+17. Inspect the actual output at full size and thumbnail size using a separate review pass.
+18. For revisions, compare the new draft side-by-side against the prior draft or reference. Single-image review is not enough.
+19. Treat every user-named defect as a hard regression gate. If the user asked to fix left-right separation, weak brand-color connection, text crowding, product recognition, or similar, the review must explicitly answer whether that defect is visibly improved. If not, reject the draft.
+20. If the output fails, run the failure attribution gate before revising.
+21. Continue imagegen only for execution failures. Return to planner when the image request brief is strategically wrong.
+22. Reject and redo any output that fails intent fidelity, physical plausibility, user-stated regression gates, hits a quality veto, or triggers a design-upgrade rule.
+23. Save the asset in the task folder and report its path, dimensions, method, archive status, and unverified limitations.
 
 For a clear simple request, do not conduct an extended questionnaire. Infer low-risk details, return the concise production brief, and proceed after confirmation. If meaning or subject relationships remain ambiguous, wait for the answer.
 
@@ -124,11 +164,32 @@ Examples:
 - `outputs/jiangyue-website-images/home/2026-06-18-pmsm-drive-hero-final/`
 - `outputs/jiangyue-website-images/contact/2026-06-18-ai-service-hero-draft-01/`
 
-Each draft or final folder is a self-contained production record. Put that version's image files, source assets, scripts, and reproduction archive inside the version folder. Do not scatter new task outputs directly into the shared output root unless the user explicitly asks.
+Use three archive levels:
+
+- **Trial:** exploratory or clearly not-yet-usable output. Save only local test images, source inputs needed to inspect them, and a short `trial-note.md` when helpful.
+- **Usable draft:** an image that passes basic intent, composition, size, and artifact review and may be shown to the user for decision. Create the full reproduction archive here.
+- **Final:** user-accepted or production-intended asset. Update or create the full reproduction archive and compact rebuild recipe when practical.
+
+Do not create full production documentation for every trial image. A trial folder may be deleted or ignored later, but do not overwrite it while the user may still want to compare results.
+
+Trial folders may use this naming pattern:
+
+```text
+outputs/jiangyue-website-images/{content-type}/{YYYY-MM-DD-short-topic-trial-01}/
+outputs/jiangyue-website-images/{content-type}/{YYYY-MM-DD-short-topic-trial-02}/
+```
+
+Each usable draft or final folder is a self-contained production record. Put that version's image files, source assets, scripts, and reproduction archive inside the version folder. Do not scatter new task outputs directly into the shared output root unless the user explicitly asks.
 
 When several drafts belong to the same asset, use the same `{YYYY-MM-DD-short-topic}` prefix and increment `draft-01`, `draft-02`, `draft-03` until the accepted version becomes `final`. If a later revision happens after final approval, start a new dated folder such as `2026-06-25-pmsm-drive-hero-revision-01`.
 
-Required files inside each draft/final folder when applicable:
+Minimum files for trial folders:
+
+- `output/`: local test PNG/JPG/WebP images.
+- `source/`: only source images or inputs that are needed to inspect or reuse the trial.
+- `trial-note.md`: optional, short, only if the trial changed the concept or contains a useful learning.
+
+Required files inside each usable draft/final folder when applicable:
 
 - `README.md` or `REPRODUCTION.md`: the human-readable reproduction archive
 - `recipe.json`: compact machine-readable parameters for fast reuse when practical
@@ -137,7 +198,7 @@ Required files inside each draft/final folder when applicable:
 - `output/`: PNG/JPG/WebP outputs for this draft/final version
 - `review/`: optional comparison images or thumbnails used for verification
 
-The reproduction archive must let a future agent modify the image quickly without re-reading the whole conversation. It must record:
+The full reproduction archive must let a future agent modify the image quickly without re-reading the whole conversation. Create it only after the image is initially usable or accepted. It must record:
 
 - original task and intent lock
 - final file paths and dimensions
@@ -547,7 +608,8 @@ Use supplied brand marks or product photos only when the user provides or verifi
 - Produce a clean image and a full mockup only when both are useful or explicitly requested.
 - Use descriptive filenames and never overwrite existing assets without permission.
 - Save project-bound assets inside a dedicated task folder under the workspace output area.
-- Include or update a reproduction archive for every delivered task so the image can be rebuilt or modified without consuming large prompt context.
+- During trial production, save local test images in the task folder without full production documentation.
+- Include or update a reproduction archive only when the image is initially usable, user-accepted, final, or a meaningful revision that should be reusable.
 - For deterministic or hybrid outputs, include the script/source needed to rebuild the final image from saved local assets.
 - For fully AI-generated outputs, archive prompts, inputs, model/tool metadata, and limitations; state clearly when exact pixel-identical regeneration is not verified.
 - Inspect dimensions, legibility, spelling, composition, and visible artifacts before delivery.
@@ -559,7 +621,7 @@ Report:
 
 - final file path
 - task folder path
-- reproduction archive path
+- reproduction archive path, or `not created yet` for trial-only outputs
 - dimensions and format
 - production method
 - what was visually verified

@@ -1,6 +1,6 @@
 {
   "name": "jiangyue-website-imagegen",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "description": "Codex skill plugin for Jiangyue Technology website image production from confirmed page and image briefs.",
   "author": {
     "name": "Hangzhou Jiangyue Technology Co., Ltd."

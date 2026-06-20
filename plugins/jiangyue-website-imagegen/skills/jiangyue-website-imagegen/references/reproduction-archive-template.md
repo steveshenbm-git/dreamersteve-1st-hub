@@ -1,6 +1,8 @@
 # Reproduction Archive Template
 
-Use this template for each imagegen draft or final folder. Keep it concise and practical. The goal is fast reuse: a future agent should be able to rebuild this exact version, make common edits, or understand non-reproducible parts without rereading the chat history.
+Use this template for each usable draft, accepted draft, final, or meaningful revision folder. Keep it concise and practical. The goal is fast reuse: a future agent should be able to rebuild this exact version, make common edits, or understand non-reproducible parts without rereading the chat history.
+
+Do not create this full archive for every exploratory trial image. For trial-only outputs, keep the local test image in the version folder and add only a short `trial-note.md` when the trial contains reusable learning.
 
 Create this as `REPRODUCTION.md` in each version folder, for example:
 
