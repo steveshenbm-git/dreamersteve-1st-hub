@@ -1,4 +1,4 @@
 interface:
   display_name: "Jiangyue Website Planner"
-  short_description: "Plan B2B pages and review image drafts"
-  default_prompt: "Use $jiangyue-website-planner to clarify a Jiangyue website page goal, buyer intent, SEO/AEO direction, section structure, CTA path, first-screen attention hierarchy, and image role; after imagegen drafts, classify user feedback and produce a next-round optimization brief with visible pass/fail criteria."
+  short_description: "Plan Jiangyue page strategy and imagegen handoffs"
+  default_prompt: "Use $jiangyue-website-planner to clarify a Jiangyue website page goal, buyer intent, SEO/AEO direction, section structure, CTA path, first-screen attention hierarchy, image role, claim boundary, and Planner Brief for $jiangyue-website-imagegen; after imagegen drafts, classify user feedback as strategy or execution, route the next step, and produce a next-round optimization brief with visible pass/fail criteria."
