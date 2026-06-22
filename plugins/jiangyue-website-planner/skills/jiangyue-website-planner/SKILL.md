@@ -76,6 +76,26 @@ Use this mode whenever imagegen has delivered a draft and the user gives initial
 
 Ask one high-value question at a time when the page goal, buyer, claim boundary, or image role is unclear.
 
+## Visible Result Gate
+
+Use this gate before explaining why a page plan, visual route, color system, image prompt, or imagegen result is reasonable. Methodological correctness does not prove result correctness.
+
+1. Judge the visible result first:
+   - Is the result actually good for Jiangyue's page goal and European B2B industrial buyer context?
+   - Is it better than the user's reference or prior stronger draft on the named concern?
+   - Does it preserve the parts of the reference that were already working?
+2. If the visible result is weaker, say so directly before any method explanation.
+3. Do not defend a weak result because it follows the brief, palette, layout logic, prompt strategy, or accepted design method.
+4. Treat user-provided reference images and explicit user dissatisfaction as hard evidence, not taste noise.
+5. Use method, color theory, and brief logic only after the visible result has passed the first judgment.
+
+Red flags that require stopping and revising the brief:
+
+- The explanation starts with why the method is reasonable before stating whether the result is visibly better.
+- The result is justified by "it matches the palette," "it follows the prompt," or "the route is theoretically correct" while the image looks weaker.
+- The new draft fails to keep the reference image's successful hierarchy, credibility, or buyer-facing clarity.
+- A design element is technically allowed by the rules but dominates the result in a way that hurts trust, clarity, or industrial credibility.
+
 ## Page Planning Rules
 
 - Keep important SEO and buyer information in HTML text, not only inside images.
