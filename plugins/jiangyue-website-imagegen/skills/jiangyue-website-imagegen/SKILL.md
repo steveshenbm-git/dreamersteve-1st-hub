@@ -194,6 +194,20 @@ Each usable draft or final folder is a self-contained production record. Put tha
 
 When several drafts belong to the same asset, use the same `{YYYY-MM-DD-short-topic}` prefix and increment `draft-01`, `draft-02`, `draft-03` until the accepted version becomes `final`. If a later revision happens after final approval, start a new dated folder such as `2026-06-25-pmsm-drive-hero-revision-01`.
 
+Use short, stable filenames inside each task folder. Name main image files as:
+
+```text
+{page-or-section}-{position}-{draft-or-final}-{number}.{ext}
+```
+
+Examples:
+
+- `home-hero-draft-01.png`
+- `product-hero-final-01.png`
+- `contact-hero-draft-02.png`
+
+Keep filenames concise: omit dates, company names such as `jiangyue`, repeated product/category words, H1 text, and long prompt descriptors unless needed to distinguish two assets in the same folder. Auxiliary files may add a short suffix after the same base name, such as `-source`, `-thumb`, `-comparison`, or `-no-text`.
+
 Minimum files for trial folders:
 
 - `output/`: local test PNG/JPG/WebP images.
@@ -619,6 +633,7 @@ Use supplied brand marks or product photos only when the user provides or verifi
 
 - Default to one PNG plus an editable source when the source is SVG or another practical native format.
 - Produce a clean image and a full mockup only when both are useful or explicitly requested.
+- For Jiangyue website hero or page concept drafts, the primary effect image should include the planned visible page copy, such as H1, supporting line, CTA, and logo placement when applicable, typeset deterministically rather than model-generated. After the visual direction is approved, generate or export the clean no-text PNG for website implementation.
 - Use descriptive filenames and never overwrite existing assets without permission.
 - Save project-bound assets inside a dedicated task folder under the workspace output area.
 - During trial production, save local test images in the task folder without full production documentation.
