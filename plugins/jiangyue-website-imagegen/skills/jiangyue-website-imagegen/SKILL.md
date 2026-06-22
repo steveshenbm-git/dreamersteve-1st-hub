@@ -17,6 +17,23 @@ Use the shortest production path that preserves quality. Do not create an HTML p
 
 For page strategy, copy structure, CTA logic, SEO/AEO direction, or first-screen planning, use `$jiangyue-website-planner` first. This skill may consume a planner image request brief, but it must not silently change page strategy, marketing claims, CTA hierarchy, or section order.
 
+## Visible Result Gate
+
+Use this gate as the highest-priority review rule before accepting or defending any generated, edited, or rebuilt visual. Process quality does not prove image quality.
+
+1. Judge the rendered result first, not the prompt, palette, method, archive, or workflow compliance.
+2. If the user provided a reference or prior stronger draft, compare against it before explaining the production method. The new result must preserve the reference's successful hierarchy, credibility, and buyer-facing clarity unless the user explicitly changed direction.
+3. If the visible result is weaker, say so and revise or reject it. Do not defend it because it followed the brief, brand rules, prompt strategy, file workflow, or a theoretically sound method.
+4. Use brief logic, color theory, production method, and failure categories only to decide the next correction after the result judgment.
+5. If the result cannot be made strong with the available method, stop and report the limitation instead of delivering a polished but weak substitute.
+
+Red flags:
+
+- The review starts by explaining why the method was reasonable before stating whether the image is visibly good.
+- The image is justified by "it matches the brief," "it follows the palette," or "the archive is complete" while the visual result is weaker than the reference.
+- A user-named defect is still visible at full size or thumbnail size.
+- A draft passes technical gates but would still feel generic, uncredible, visually awkward, or unsuitable for a European industrial B2B website.
+
 ## Brief Intake
 
 For every new image, use [references/image-brief-template.md](references/image-brief-template.md).
@@ -117,33 +134,54 @@ When repeatability or later editing matters, prefer a deterministic or hybrid me
 - Preserve the generated base image and put all repeatable edits in source files or scripts so future changes can run locally with low token use.
 - Do not promise exact pixel-identical regeneration from a fresh AI image prompt unless a stable seed, model version, inputs, and generation tool behavior are available and verified. Exact regeneration is expected only for deterministic pipelines using saved source assets.
 
-## Fast Workflow
+## Method Quality Gate
 
-1. Run the execution intent gate and extract any referenced brief requirements.
-2. Identify the asset type, crop, purpose, attention owner, image role, and required text.
-3. Create the intent lock. Do not continue if the image responsibility and page-copy responsibility are unclear.
-4. When the brief contains multiple subjects, confirm their semantic relationship before choosing a visual form.
-5. Run a content-sufficiency check before choosing a layout.
-6. For any product, equipment, application, lab, hardware, enclosure, PCB, signal-flow, or physical-metaphor visual, run the physical plausibility gate before writing the brief.
-7. Decide whether reference research is needed. For brand-defining hero images, motor-control or application-category subject recognition, vague "premium/beautiful/industrial" requests, or failed visual quality, use the reference research gate.
-8. Choose a reliable visual structure before choosing rendering style. For high-impact, abstract, multi-subject, or physically metaphorical visuals, use a structure written as relationship model + variable parameters + forbidden boundaries.
-9. For a brand-defining hero or ambiguous abstract concept, use the high-impact dual path: offer 2-3 materially different structure directions before production unless the user has already approved a clear structure.
-10. Choose a concrete visual concept and state why it preserves the intent lock.
-11. Run the brief self-review and brief scoring gates. Do not show the brief for user confirmation if the concept only works by explanation, has weak attention hierarchy, has weak visual design, or fails physical plausibility.
-12. Check only directly relevant project assets.
-13. Choose image generation, image editing, or deterministic SVG/canvas composition.
-14. Run the method quality gate: the method must be able to produce the required visual level, not merely a savable file.
-15. Create a dedicated task output folder before producing files.
-16. Produce one strong trial image first. Create variants only when they test a meaningful visual difference.
-17. Use lightweight trial storage until the image is initially usable; create the full reproduction archive only for a usable draft, accepted draft, final image, or meaningful revision.
-18. Inspect the actual output at full size and thumbnail size using a separate review pass.
-19. For revisions, compare the new draft side-by-side against the prior draft or reference. Single-image review is not enough.
-20. Treat every user-named defect as a hard regression gate. If the user asked to fix left-right separation, weak brand-color connection, text crowding, product recognition, "completely redesign", "looks almost unchanged", or similar, the review must explicitly answer whether that defect is visibly improved. If not, reject the draft.
-21. If a rebuild or remake still reads as the same visual model, composition structure, subject relationship, crop/scale hierarchy, medium, or failed direction at thumbnail size, reject it before delivery.
-22. If the output fails, run the failure attribution gate before revising.
-23. Continue imagegen only for execution failures. Return to planner when the image request brief is strategically wrong.
-24. Reject and redo any output that fails intent fidelity, physical plausibility, user-stated regression gates, hits a quality veto, or triggers a design-upgrade rule.
-25. Save the asset in the task folder and report its path, dimensions, method, archive status, and unverified limitations.
+Choose a method because it can reach the required visual result, not because it is easier to save, script, archive, or control.
+
+- Use AI generation or image editing for photographic, realistic, atmospheric, product, lab, equipment, application, and brand-defining hero bases.
+- Use deterministic SVG/canvas/Python for typography, layout, masks, crops, overlays, geometry, diagrams, and repeatable variants.
+- Use a hybrid method when the visual base needs image generation but copy, CTA, logo placement, crop, color variants, or review thumbnails need deterministic control.
+- Do not downgrade a requested realistic hero into a flat illustration, diagram, or screenshot composition unless the user approves that change.
+- If no available method can expose a usable local source file or meet the visual standard, stop and report the limitation instead of fabricating a lower-quality workaround.
+
+## Workflow Paths
+
+Use the lightest path that can protect the visible result.
+
+### Light Path
+
+Use for clear format edits, simple local edits, deterministic cards, text-led graphics, and low-risk exports.
+
+1. Run the execution intent gate.
+2. Confirm the required asset, size, text, source image, and output format.
+3. Choose the production method and run the method quality gate.
+4. Produce the asset in a task folder.
+5. Review the rendered result with the visible result gate.
+6. Save only the needed output files and report limitations.
+
+### Standard Path
+
+Use for most Jiangyue website visuals.
+
+1. Run the execution intent gate and extract referenced brief requirements.
+2. Create the intent lock and identify attention owner, image role, crop, required text, and page-copy responsibility.
+3. Run content-sufficiency, concept fidelity, and physical plausibility gates when relevant.
+4. Choose the visual structure and production method; run the method quality gate.
+5. Return a concise production brief and generate only after user confirmation or equivalent clear instruction.
+6. Produce one strong trial image first; make variants only when testing a meaningful visual difference.
+7. Review full size, thumbnail size, and side-by-side against the reference or prior draft when available.
+8. Reject, revise, or archive based on the visible result gate, user-stated regression gates, quality vetoes, and design-upgrade triggers.
+
+### High-Impact Path
+
+Use for homepage heroes, product heroes, Contact heroes, abstract advantage visuals, recognition-sensitive assets, brand-defining imagery, or repeated failures.
+
+1. Follow the standard path.
+2. Read directly relevant reference files only: visual-structure patterns, brief-review rubric, design-upgrade guidance, or reference research when the task needs them.
+3. Offer 2-3 materially different structure directions before production unless the user has already approved a clear structure.
+4. Score the brief before confirmation; intent fidelity, carrier completeness, relationship readability, physical plausibility, and attention hierarchy must all pass.
+5. Compare the output against the user's reference or prior strongest draft before delivery. Single-image review is not enough.
+6. If the same failure repeats after two structural revisions, stop and run the planner return gate.
 
 For a clear simple request, do not conduct an extended questionnaire. Infer low-risk details, return the concise production brief, and proceed after confirmation. If meaning or subject relationships remain ambiguous, wait for the answer.
 
@@ -502,6 +540,21 @@ Then choose the correction:
 - Strategy failure requires returning to `$jiangyue-website-planner` with a rework request. Do not generate another image from the same brief.
 
 After two failed structural image revisions for the same reason, stop production and run the planner return gate. Do not keep changing colors, glow, camera angle, gradient width, opacity, blur, or background atmosphere.
+
+## Failure Attribution Gate
+
+Use this gate only after the visible result has failed. Failure attribution explains the correction path; it must not be used to defend the failed result.
+
+1. State the visible failure in plain terms.
+2. Compare against the user reference, prior draft, or user-stated defect when available.
+3. Classify the failure using Revision Discipline categories.
+4. Decide the correction path:
+   - execution failure: revise visual model, silhouette, crop, lighting, material, medium, subject cue, or deterministic overlay
+   - regression failure: use side-by-side comparison and a materially different correction path
+   - strategy failure: return to planner instead of generating again from the same brief
+5. Record what must not be repeated in the next draft.
+
+Do not start with tool limitations, prompt rationale, color theory, archive status, or "the concept is sound" before naming what visibly failed.
 
 ## Planner Return Gate
 
