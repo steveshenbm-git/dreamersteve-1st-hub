@@ -22,6 +22,8 @@ In the Jiangyue website workflow:
 
 For the end-to-end workflow, read [references/workflow-with-imagegen.md](references/workflow-with-imagegen.md) when a task crosses planner, imagegen, and superpowers boundaries.
 
+Read [references/objective-and-visual-audit.md](references/objective-and-visual-audit.md) when the task involves visual judgment, brand direction, color systems, image review, repeated rework, user correction about process quality, or any claim that a visual/page result is good enough.
+
 ## Authority Boundary
 
 This skill owns:
@@ -54,6 +56,76 @@ For image production, hand off to `$jiangyue-website-imagegen` with a confirmed 
 **Imagegen Production Brief = execution contract.** Imagegen converts the Planner Brief into a visual production plan: execution intent, subject carriers, relationship model, physical logic, production method, output size, archive level, and visual QA criteria.
 
 Planner should not specify pixel-level rendering, material details, camera angle, masks, editing method, or final physical object composition unless those details are required to protect page strategy, claim safety, or user-stated feedback. If the requested image needs those production decisions, hand off to imagegen.
+
+## Task Intent Lock
+
+Before planning, reviewing, optimizing, sorting, or handing off work, lock the task intent in concrete terms. Do not treat the user's requested action as the real objective until you have identified what the action is meant to achieve.
+
+State or internally confirm:
+
+- the real task objective
+- what this task is not trying to do
+- the expected deliverable
+- the evidence needed to judge success
+- which evidence must come from visible page, image, screenshot, or rendered result rather than written explanation
+
+Every planner recommendation must remain traceable to this locked objective. If a local step does not directly serve the objective, stop and revise the workflow before continuing.
+
+## Mandatory Visual Evidence Gate
+
+For any website visual, image, hero, preview page, brand color, layout, imagegen draft, or visual comparison task, planner must inspect the visible result before judging quality, ranking options, approving direction, or writing a summary.
+
+Do not use these as substitutes for visual evidence:
+
+- option names or labels
+- written strategy explanations
+- prompt, palette, or brief compliance
+- file existence
+- HTML existence
+- generated summaries
+- user-interface logic that has not been checked visually
+
+If two visual options require reading explanatory text to distinguish them, planner must treat them as visually insufficiently distinct. They cannot both remain primary candidates until the visible result is changed and checked again.
+
+## Whole Workflow Audit
+
+When a user correction, repeated failure, similar draft, weak result, or process-quality complaint appears, do not only fix the nearest symptom. Audit the whole workflow before continuing.
+
+Check whether:
+
+- the task objective was locked correctly
+- the baseline assets or candidate set were wrong
+- the workflow skipped visual evidence
+- evaluation happened before all candidates were checked
+- sorting, summarizing, or handoff happened before fact review
+- verification only proved existence instead of quality
+- a local patch is masking a broader process failure
+
+If the workflow itself is flawed, stop local revision and rebuild the workflow from objective, evidence, baseline, check objects, pass/fail criteria, and next action.
+
+## Two-Failure Reset Rule
+
+The Whole Workflow Audit must automatically trigger Failure Reset after two failed rework rounds in the same task. Do not attempt a third local revision.
+
+A rework round counts as failed when any of these happen:
+
+- the user says the same problem remains
+- the new draft is visually too similar to the prior draft
+- the draft fixes a detail but misses or drifts from the objective
+- the result only works through explanation, not visible evidence
+- verification proves only file/page existence, not result quality
+- the user states the process or workflow has failed
+
+After two failed rounds, planner must stop and reset:
+
+- task objective
+- required evidence
+- baseline assets or candidate set
+- check objects
+- work sequence
+- pass/fail criteria
+
+Failure Reset must complete before planner can request imagegen, adjust a preview, rank options, write a completion summary, or continue local fixes.
 
 ## Workflow
 
