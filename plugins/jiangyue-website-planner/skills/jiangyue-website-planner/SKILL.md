@@ -57,19 +57,27 @@ For image production, hand off to `$jiangyue-website-imagegen` with a confirmed 
 
 Planner should not specify pixel-level rendering, material details, camera angle, masks, editing method, or final physical object composition unless those details are required to protect page strategy, claim safety, or user-stated feedback. If the requested image needs those production decisions, hand off to imagegen.
 
-## Task Intent Lock
+## Guided Intent Discovery And Lock
 
-Before planning, reviewing, optimizing, sorting, or handing off work, lock the task intent in concrete terms. Do not treat the user's requested action as the real objective until you have identified what the action is meant to achieve.
+Before planning, reviewing, optimizing, sorting, or handing off work, discover and lock the real task intent. Do not treat the user's requested action as the real objective until planner has helped the user clarify what the action is meant to achieve.
 
-State or internally confirm:
+Planner must first separate:
 
-- the real task objective
-- what this task is not trying to do
-- the expected deliverable
-- the evidence needed to judge success
-- which evidence must come from visible page, image, screenshot, or rendered result rather than written explanation
+- **Original request:** what the user directly asked for
+- **Likely underlying problem:** what business, page, buyer, SEO/AEO, trust, conversion, or visual-communication issue may be driving the request
+- **Questionable assumptions:** what may be wrong, incomplete, too broad, or not yet proven in the user's request
+- **Decision needed:** what must be confirmed before a page plan or image request can be reliable
 
-Every planner recommendation must remain traceable to this locked objective. If a local step does not directly serve the objective, stop and revise the workflow before continuing.
+Use third-party professional judgment. If the user's request appears misdirected, over-broad, too abstract, claim-risky, or likely to produce weak imagegen output, say so plainly and guide the user toward the real need.
+
+Do not finalize a Planner Brief after only internal diagnosis when the real intent is uncertain. Run a guided dialogue:
+
+- Ask one high-value question at a time.
+- Prefer questions that force a useful choice between page goal, buyer intent, image responsibility, claim boundary, or success standard.
+- After each answer, update the working intent and identify what remains unclear.
+- Continue until the user has confirmed the real objective, expected deliverable, evidence of success, and what the task is not trying to do.
+
+Only after this confirmation, state the **Confirmed Real Intent** and use it as the source for the Planner Brief. Every planner recommendation must remain traceable to that confirmed intent. If a local step does not directly serve it, stop and revise the workflow before continuing.
 
 ## Mandatory Visual Evidence Gate
 
@@ -133,15 +141,18 @@ Use one of two modes.
 
 ### Initial Planning Mode
 
-1. Identify the page type: homepage, product page, category page, application page, Contact page, technical resource, or landing section.
-2. Define the buyer: engineer, purchasing manager, OEM decision maker, distributor, system integrator, or owner.
-3. Define the page job: SEO acquisition, AEO visibility, product understanding, trust building, inquiry conversion, or support navigation.
-4. Lock the page message and claim boundaries.
-5. Plan the section structure and CTA path.
-6. Decide the first-screen attention hierarchy: headline-led, CTA-led, logo or brand-led, image-led, or balanced hero.
-7. Define the image role: main visual hammer, professional atmosphere, brand atmosphere, trust support, CTA support, product/category recognition, or application context.
-8. Output a concise page brief and Planner Brief for imagegen.
-9. Wait for user approval before handing off to imagegen or changing implementation files.
+1. Capture the user's original request without assuming it is the correct final objective.
+2. Diagnose the likely real intent and questionable assumptions from a professional planner perspective.
+3. Guide the user through one high-value question at a time until the real intent is confirmed.
+4. Identify the page type: homepage, product page, category page, application page, Contact page, technical resource, or landing section.
+5. Define the buyer: engineer, purchasing manager, OEM decision maker, distributor, system integrator, or owner.
+6. Define the page job: SEO acquisition, AEO visibility, product understanding, trust building, inquiry conversion, or support navigation.
+7. Lock the page message and claim boundaries.
+8. Plan the section structure and CTA path.
+9. Decide the first-screen attention hierarchy: headline-led, CTA-led, logo or brand-led, image-led, or balanced hero.
+10. Define the image role: main visual hammer, professional atmosphere, brand atmosphere, trust support, CTA support, product/category recognition, or application context.
+11. Output a concise page brief and Planner Brief for imagegen only after the confirmed real intent is clear.
+12. Wait for user approval before handing off to imagegen or changing implementation files.
 
 ### Post-Image Review Mode
 
@@ -204,6 +215,10 @@ Before imagegen starts, produce a strategy-only Planner Brief. Do not turn this 
 ```text
 Planner Brief / 图片需求简报
 
+- 用户原始需求：
+- planner 诊断的潜在真实需求：
+- 已确认的真实意图：
+- 仍未确认但不影响本轮执行的假设：
 - 页面：
 - 页面目标：
 - 目标受众：
@@ -214,12 +229,16 @@ Planner Brief / 图片需求简报
 - 图片必须支持的信息：
 - 图片不需要承担的信息：
 - 应保留在 HTML / 页面文案中的信息：
+- 图片需要解决的具体页面 / 视觉沟通问题：
 - 必须出现的主体或线索：
+- 必须可见的视觉关系：
 - 禁止暗示的 claims / 产品事实：
 - 推荐图片方向：
 - 不建议尝试的图片方向：
 - CTA / 标题 / Logo 与图片的关系：
 - 输出比例和使用位置：
+- imagegen 可以自由决定的范围：
+- imagegen 必须退回 planner 的情况：
 - 下一版验收标准：
 ```
 

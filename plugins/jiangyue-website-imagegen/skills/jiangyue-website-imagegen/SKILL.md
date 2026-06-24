@@ -17,11 +17,13 @@ Use professional industrial judgment for European B2B buyers. Avoid unsupported 
 
 Treat the planner handoff as the strategy contract.
 
-**Planner Brief = strategy contract.** It should define page, page goal, target audience, core page message, first-screen attention owner, image role, information the image must support, information kept in HTML/page copy, required subject cues, forbidden claims, recommended direction, CTA/title/logo relationship, and output location or ratio.
+**Planner Brief = strategy contract.** It should define the user's original request, planner-diagnosed likely need, user-confirmed real intent, page, page goal, target audience, core page message, first-screen attention owner, image role, information the image must support, information kept in HTML/page copy, required subject cues, visible relationships, forbidden claims, recommended direction, CTA/title/logo relationship, output location or ratio, imagegen freedom, and return-to-planner triggers.
 
 **Imagegen Production Brief = execution contract.** Imagegen turns the strategy contract into a production-ready visual plan: execution intent, must keep/remove/change/avoid lists, subject carriers, relationship model, physical logic, attention hierarchy, copy placement, production method, output size, archive level, and visible pass/fail criteria.
 
 Do not silently change page goal, H1, CTA hierarchy, attention owner, image role, claim boundary, page section order, or message ownership. If the image can only work by changing one of these, stop and return to planner.
+
+If the Planner Brief does not include a confirmed real intent, do not produce a new image. Return to planner for guided intent confirmation.
 
 ## When To Use Planner First
 
@@ -35,6 +37,43 @@ Use `$jiangyue-website-planner` before image production when any of these are un
 - two structural image revisions failed for the same reason
 
 Imagegen may ask one concise execution question when the strategy is clear but one production detail is missing.
+
+## Planner Brief Readiness Review
+
+Before creating or rebuilding an image from a Planner Brief, review whether the brief can actually produce a strong visual. Do not treat a brief as ready only because it has many fields.
+
+The brief is ready only when all of these are clear:
+
+- the user's original request and the user-confirmed real intent are both present
+- the page goal, buyer, image role, attention owner, and claim boundary are concrete
+- the image has a specific communication job, not only a mood word such as "premium", "technical", "future", "trust", or "AI"
+- every required subject has either a visible subject carrier or a planned HTML/page-copy carrier
+- the relationship between subjects is visible: role, direction, cause/effect, comparison, control flow, support layer, or application context
+- abstract terms have been translated into visible cues imagegen can execute
+- required and forbidden product/application claims are explicit enough to avoid unsafe implication
+- output ratio, use location, and pass/fail criteria are specific
+
+Return to planner instead of producing when:
+
+- confirmed real intent is missing or still described as a guess
+- the image is expected to solve page strategy, H1, CTA, claim boundary, or buyer-message problems
+- the brief asks for a broad idea but gives no concrete subject carriers or relationships
+- required subjects are named but their visual role is unclear
+- the image would need to invent product facts, specifications, customer use, compliance status, or final architecture
+- pass/fail criteria depend on explanation rather than visible evidence
+
+Use this return format:
+
+```text
+Return to Planner / 简报退回
+
+- Missing or unclear confirmed real intent:
+- Brief item that is too abstract for reliable image production:
+- Missing visible subject carrier or relationship:
+- Claim / product-fact risk:
+- One recommended planner question to ask next:
+- What imagegen can proceed with after clarification:
+```
 
 ## Workflow Selection
 
@@ -56,12 +95,14 @@ Use for format edits, simple local edits, deterministic cards, text-led graphics
 Use for most Jiangyue website visuals.
 
 1. Classify execution intent and extract planner or user requirements.
-2. Create the production brief and four hard lists: must keep, must remove, must materially change, must avoid.
-3. Check subject carriers, relationship readability, physical plausibility, method fit, claim risk, and text risk.
-4. Ask for confirmation before a new image or brief-based rebuild unless the user already gave equivalent clear approval.
-5. Produce one strong draft first; create variants only for meaningful visual differences.
-6. Review full size, thumbnail size, and reference/prior draft when available.
-7. Revise, reject, archive, or return to planner based on visible result.
+2. Run Planner Brief Readiness Review when working from planner handoff.
+3. Create the production brief and four hard lists: must keep, must remove, must materially change, must avoid.
+4. Translate abstract terms into concrete subject carriers, visual relationships, physical logic, and pass/fail checks.
+5. Check subject carriers, relationship readability, physical plausibility, method fit, claim risk, and text risk.
+6. Ask for confirmation before a new image or brief-based rebuild unless the user already gave equivalent clear approval.
+7. Produce one strong draft first; create variants only for meaningful visual differences.
+8. Review full size, thumbnail size, and reference/prior draft when available.
+9. Revise, reject, archive, or return to planner based on visible result.
 
 ### High-Impact Path
 
@@ -85,8 +126,8 @@ For detailed gate rules, read [references/execution-gates.md](references/executi
 Always run these gates in short form:
 
 1. **Execution intent:** new image, brief-based rebuild, local edit, format edit, or page/mockup work.
-2. **Intent lock:** original job, core message, what the image communicates, what HTML/page copy carries, and drift boundaries.
-3. **Production readiness:** every named subject has a visible carrier or planned page-copy carrier; the relationship is readable; the output size and role are clear.
+2. **Intent lock:** original request, confirmed real intent, core message, what the image communicates, what HTML/page copy carries, and drift boundaries.
+3. **Production readiness:** every named subject has a visible carrier or planned page-copy carrier; abstract terms are translated into concrete cues; the relationship is readable; the output size and role are clear.
 4. **Method quality:** choose the method because it can reach the required visible result, not because it is easier to save, script, or archive.
 5. **Physical plausibility:** real-world objects, industrial equipment, electronics, enclosures, flows, and support layers must be mechanically or visually believable.
 6. **Visible result:** judge the rendered image before defending prompt, method, palette, archive, or workflow compliance.
