@@ -102,7 +102,7 @@ Use for most Jiangyue website visuals.
 6. Ask for confirmation before a new image or brief-based rebuild unless the user already gave equivalent clear approval.
 7. Produce one strong draft first; create variants only for meaningful visual differences.
 8. Review full size, thumbnail size, and reference/prior draft when available.
-9. Revise, reject, archive, or return to planner based on visible result.
+9. Revise, reject, deliver without full archive, archive on request, or return to planner based on visible result.
 
 ### High-Impact Path
 
@@ -185,11 +185,20 @@ outputs/jiangyue-website-images/{content-type}/{YYYY-MM-DD-short-topic-draft-01}
 outputs/jiangyue-website-images/{content-type}/{YYYY-MM-DD-short-topic-final}/
 ```
 
+Do not create a full reproduction archive for every image draft. A weak or rejected draft should not receive a full archive just because it was generated.
+
 Use archive levels:
 
 - **Trial:** exploratory or not-yet-usable output; save only needed inspection files.
-- **Usable draft:** passes basic intent, composition, size, and artifact review; create a reproduction archive.
-- **Final:** user-accepted or production-intended asset; update reproduction archive and compact rebuild recipe when practical.
+- **Usable draft:** passes basic intent, composition, size, and artifact review; deliver the image and inspection notes without a full reproduction archive unless the user asks to keep it.
+- **Final:** user-accepted, user-requested for archive, or production-intended asset; create or update the reproduction archive and compact rebuild recipe when practical.
+
+Archive only when one of these is true:
+
+- the user explicitly asks to archive, save, preserve, or package the result
+- the user approves the draft as final or production-intended
+- the task is a deterministic template, reusable card system, or approved source asset that must be reproduced later
+- the archive is needed to hand off production work and the current result is worth preserving
 
 ## Delivery Report
 
@@ -197,7 +206,7 @@ Report only verified facts:
 
 - final file path
 - task folder path
-- reproduction archive path, or `not created yet` for trial-only outputs
+- reproduction archive path, or `not created yet` when no full archive was requested or justified
 - dimensions and format
 - production method
 - what was visually checked
