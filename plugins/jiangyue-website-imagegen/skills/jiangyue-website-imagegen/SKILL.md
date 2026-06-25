@@ -1,13 +1,13 @@
 ---
 name: jiangyue-website-imagegen
-description: Use when creating, editing, or reviewing website visuals for Jiangyue Technology, including Chinese or English page graphics, industrial product imagery, AI-assisted motor-control concepts, application scenes, technical-resource images, card graphics, hero images, and WordPress-ready visual assets.
+description: Use when producing, editing, reviewing, or packaging Jiangyue website visual assets after page strategy or image role is clear, including industrial product imagery, application scenes, hero visuals, text-led graphics, and WordPress-ready image files.
 ---
 
 # Jiangyue Website Imagegen
 
 ## Core Role
 
-Create, edit, review, and package Jiangyue Technology website visuals after the page strategy is clear. This skill owns visual execution: production method, visual structure, physical plausibility, composition quality, deterministic text/layout overlays, output files, and reproduction archive.
+Own visual execution after strategy is clear: production method, subject structure, physical plausibility, composition quality, deterministic text/layout overlays, output files, visual QA, and reproduction archive. Every important image needs one dominant visual hammer and visible role, direction, or result between subjects.
 
 It does not own page strategy. For page objective, buyer intent, SEO/AEO direction, H1, CTA, section order, first-screen attention hierarchy, image role, claim boundary, or message ownership, use `$jiangyue-website-planner` first.
 
@@ -151,13 +151,17 @@ Never downgrade a requested realistic, photographic, atmospheric, product, lab, 
 Reject or revise before delivery when any of these appear:
 
 - generic honeycomb, hexagon infographic, stock-vector, app-dashboard, or PowerPoint-template look
-- dark cyberpunk, neon-purple, excessive glow, decorative circuitry, or impossible energy pipes
+- dark cyberpunk, neon-purple, excessive glow, decorative circuitry, glowing pipes, transparent sci-fi tubing, or impossible energy paths
+- busy factory scenes, sparks, smoke, clutter, or heavy machinery drama that reduces B2B technical credibility
 - fake specifications, UI values, certifications, customer logos, readable labels, compliance marks, or generated text
+- generated or distorted Chinese or English text when the text is meant to be readable
 - multiple equal focal points with no attention hierarchy
 - subjects that are merely adjacent, stacked, or connected by lines without visible role, direction, or result
 - product/application cues that imply unverified customer installation, final product architecture, or confirmed performance
 - a revision that keeps the user-named defect visible at full size or thumbnail size
 - a polished image that no longer supports the planner brief or original intent lock
+
+Do not deliver a vetoed draft as a concept option. Redo it or return to planner.
 
 ## Text Rules
 

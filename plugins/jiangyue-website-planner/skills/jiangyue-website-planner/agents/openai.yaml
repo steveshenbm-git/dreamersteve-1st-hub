@@ -1,4 +1,4 @@
 interface:
   display_name: "Jiangyue Website Planner"
-  short_description: "Plan Jiangyue page strategy and imagegen handoffs"
-  default_prompt: "Use $jiangyue-website-planner to clarify a Jiangyue website page goal, buyer intent, SEO/AEO direction, section structure, CTA path, first-screen attention hierarchy, image role, claim boundary, and Planner Brief for $jiangyue-website-imagegen; after imagegen drafts, classify user feedback as strategy or execution, route the next step, and produce a next-round optimization brief with visible pass/fail criteria."
+  short_description: "Lock Jiangyue page strategy and image handoffs"
+  default_prompt: "Use $jiangyue-website-planner to lock Jiangyue page strategy, claim boundaries, first-screen attention, image role, and evidence-based imagegen handoff or rework routing."

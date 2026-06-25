@@ -1,7 +1,7 @@
 {
   "name": "jiangyue-website-imagegen",
   "version": "0.2.2+codex.20260622081146",
-  "description": "Codex skill plugin for Jiangyue Technology website image production from confirmed page and image briefs.",
+  "description": "Codex skill plugin for Jiangyue website visual production from clear page strategy or image roles, with hard visual QA, physical plausibility, and archive discipline.",
   "author": {
     "name": "Hangzhou Jiangyue Technology Co., Ltd."
   },
@@ -16,8 +16,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Jiangyue Website Imagegen",
-    "shortDescription": "Create precise Jiangyue industrial website visuals.",
-    "longDescription": "A Jiangyue Technology Codex skill for creating, editing, and reviewing website visuals from confirmed image request briefs, with physical plausibility, visual structure, and return-to-planner checks for B2B industrial brand assets.",
+    "shortDescription": "Produce QA-gated Jiangyue website visuals.",
+    "longDescription": "A Jiangyue Technology Codex skill for producing, editing, reviewing, and packaging website visuals from clear page strategy or image roles, with physical plausibility, visual hard stops, rendered-result inspection, and return-to-planner checks.",
     "developerName": "Jiangyue Technology",
     "category": "Design",
     "capabilities": [

@@ -1,13 +1,13 @@
 ---
 name: jiangyue-website-planner
-description: Use when planning or revising Jiangyue Technology website pages or reviewing imagegen drafts after user feedback, including page goals, B2B messaging, SEO/AEO intent, CTA strategy, hero attention hierarchy, image role, design critique, and next-round image request briefs.
+description: Use when Jiangyue website page strategy, buyer intent, SEO/AEO direction, CTA path, claim boundary, hero attention hierarchy, image role, or imagegen rework routing must be decided for WordPress/Gutenberg pages.
 ---
 
 # Jiangyue Website Planner
 
 ## Core Role
 
-Plan Jiangyue website pages before visual production and review imagegen drafts after the user gives feedback. Own page strategy, buyer messaging, content structure, SEO/AEO direction, CTA logic, first-screen attention, image role definition, design critique, failure attribution, and next-round image request briefs. Do not generate images.
+Own Jiangyue website strategy before asset production: page objective, buyer intent, message hierarchy, SEO/AEO direction, CTA path, claim boundary, first-screen attention, image role, design critique, failure attribution, and planner-to-imagegen briefs. Do not generate or edit images.
 
 Use professional English for public website copy unless the user asks for Chinese planning notes. Keep language credible for European B2B industrial buyers. Do not invent certifications, performance data, customer cases, export claims, patents, compliance status, or product specifications.
 
@@ -57,83 +57,14 @@ For image production, hand off to `$jiangyue-website-imagegen` with a confirmed 
 
 Planner should not specify pixel-level rendering, material details, camera angle, masks, editing method, or final physical object composition unless those details are required to protect page strategy, claim safety, or user-stated feedback. If the requested image needs those production decisions, hand off to imagegen.
 
-## Guided Intent Discovery And Lock
+## Required Strategy Gates
 
-Before planning, reviewing, optimizing, sorting, or handing off work, discover and lock the real task intent. Do not treat the user's requested action as the real objective until planner has helped the user clarify what the action is meant to achieve.
+Run these gates before producing a page plan, image brief, review judgment, or imagegen handoff:
 
-Planner must first separate:
-
-- **Original request:** what the user directly asked for
-- **Likely underlying problem:** what business, page, buyer, SEO/AEO, trust, conversion, or visual-communication issue may be driving the request
-- **Questionable assumptions:** what may be wrong, incomplete, too broad, or not yet proven in the user's request
-- **Decision needed:** what must be confirmed before a page plan or image request can be reliable
-
-Use third-party professional judgment. If the user's request appears misdirected, over-broad, too abstract, claim-risky, or likely to produce weak imagegen output, say so plainly and guide the user toward the real need.
-
-Do not finalize a Planner Brief after only internal diagnosis when the real intent is uncertain. Run a guided dialogue:
-
-- Ask one high-value question at a time.
-- Prefer questions that force a useful choice between page goal, buyer intent, image responsibility, claim boundary, or success standard.
-- After each answer, update the working intent and identify what remains unclear.
-- Continue until the user has confirmed the real objective, expected deliverable, evidence of success, and what the task is not trying to do.
-
-Only after this confirmation, state the **Confirmed Real Intent** and use it as the source for the Planner Brief. Every planner recommendation must remain traceable to that confirmed intent. If a local step does not directly serve it, stop and revise the workflow before continuing.
-
-## Mandatory Visual Evidence Gate
-
-For any website visual, image, hero, preview page, brand color, layout, imagegen draft, or visual comparison task, planner must inspect the visible result before judging quality, ranking options, approving direction, or writing a summary.
-
-Do not use these as substitutes for visual evidence:
-
-- option names or labels
-- written strategy explanations
-- prompt, palette, or brief compliance
-- file existence
-- HTML existence
-- generated summaries
-- user-interface logic that has not been checked visually
-
-If two visual options require reading explanatory text to distinguish them, planner must treat them as visually insufficiently distinct. They cannot both remain primary candidates until the visible result is changed and checked again.
-
-## Whole Workflow Audit
-
-When a user correction, repeated failure, similar draft, weak result, or process-quality complaint appears, do not only fix the nearest symptom. Audit the whole workflow before continuing.
-
-Check whether:
-
-- the task objective was locked correctly
-- the baseline assets or candidate set were wrong
-- the workflow skipped visual evidence
-- evaluation happened before all candidates were checked
-- sorting, summarizing, or handoff happened before fact review
-- verification only proved existence instead of quality
-- a local patch is masking a broader process failure
-
-If the workflow itself is flawed, stop local revision and rebuild the workflow from objective, evidence, baseline, check objects, pass/fail criteria, and next action.
-
-## Two-Failure Reset Rule
-
-The Whole Workflow Audit must automatically trigger Failure Reset after two failed rework rounds in the same task. Do not attempt a third local revision.
-
-A rework round counts as failed when any of these happen:
-
-- the user says the same problem remains
-- the new draft is visually too similar to the prior draft
-- the draft fixes a detail but misses or drifts from the objective
-- the result only works through explanation, not visible evidence
-- verification proves only file/page existence, not result quality
-- the user states the process or workflow has failed
-
-After two failed rounds, planner must stop and reset:
-
-- task objective
-- required evidence
-- baseline assets or candidate set
-- check objects
-- work sequence
-- pass/fail criteria
-
-Failure Reset must complete before planner can request imagegen, adjust a preview, rank options, write a completion summary, or continue local fixes.
+1. **Intent lock:** Separate the original request, likely business problem, questionable assumptions, and decision needed. Do not finalize a Planner Brief until the real objective, deliverable, success evidence, and non-goals are confirmed or conservatively locked.
+2. **Claim boundary:** Do not invent certifications, performance data, customer cases, export claims, patents, compliance status, or product specifications. Flag missing product facts instead of filling them.
+3. **Visual evidence:** For any image, hero, preview page, color, layout, or visual comparison, inspect the actual visible result before ranking, approving, summarizing, or explaining. File existence, HTML existence, prompt compliance, palette logic, or option names are not visual evidence.
+4. **Failure reset:** When the user correction, repeated failure, similar draft, or process complaint shows workflow drift, read [references/objective-and-visual-audit.md](references/objective-and-visual-audit.md). After two failed rework rounds, stop local revision and reset objective, evidence, baseline, check objects, sequence, and pass/fail criteria before requesting more imagegen work.
 
 ## Workflow
 
@@ -178,26 +109,6 @@ Use this mode whenever imagegen has delivered a draft and the user gives initial
 7. If repeated imagegen attempts fail for the same reason and the cause is unclear, stop the revision loop and use `superpowers:systematic-debugging` before another image round.
 
 Ask one high-value question at a time when the page goal, buyer, claim boundary, or image role is unclear.
-
-## Visible Result Gate
-
-Use this gate before explaining why a page plan, visual route, color system, image prompt, or imagegen result is reasonable. Methodological correctness does not prove result correctness.
-
-1. Judge the visible result first:
-   - Is the result actually good for Jiangyue's page goal and European B2B industrial buyer context?
-   - Is it better than the user's reference or prior stronger draft on the named concern?
-   - Does it preserve the parts of the reference that were already working?
-2. If the visible result is weaker, say so directly before any method explanation.
-3. Do not defend a weak result because it follows the brief, palette, layout logic, prompt strategy, or accepted design method.
-4. Treat user-provided reference images and explicit user dissatisfaction as hard evidence, not taste noise.
-5. Use method, color theory, and brief logic only after the visible result has passed the first judgment.
-
-Red flags that require stopping and revising the brief:
-
-- The explanation starts with why the method is reasonable before stating whether the result is visibly better.
-- The result is justified by "it matches the palette," "it follows the prompt," or "the route is theoretically correct" while the image looks weaker.
-- The new draft fails to keep the reference image's successful hierarchy, credibility, or buyer-facing clarity.
-- A design element is technically allowed by the rules but dominates the result in a way that hurts trust, clarity, or industrial credibility.
 
 ## Page Planning Rules
 
