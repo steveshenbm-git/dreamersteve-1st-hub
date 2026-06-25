@@ -18,11 +18,28 @@ In the Jiangyue website workflow:
 - `superpowers:*` owns process quality: brainstorming before unclear creative work, planning before multi-step edits, root-cause analysis when repeated failures appear, and evidence before completion claims.
 - `$jiangyue-website-planner` owns the strategy gate: page goal, buyer intent, message ownership, CTA path, first-screen attention hierarchy, image role, claim boundary, and image request brief.
 - `$jiangyue-website-imagegen` owns the visual execution gate: production method, visual structure, physical plausibility, rendering/editing, file outputs, and reproduction archive.
+- `$jiangyue-knowledge-curator` owns project memory: it curates confirmed product facts, visual standards, approved materials, failure cases, competitor references, and daily curation logs into the local `brand-system` knowledge base after user confirmation.
 - `superpowers:verification-before-completion` should be used before claiming the page plan, image brief, or image handoff is complete.
 
 For the end-to-end workflow, read [references/workflow-with-imagegen.md](references/workflow-with-imagegen.md) when a task crosses planner, imagegen, and superpowers boundaries.
 
 Read [references/objective-and-visual-audit.md](references/objective-and-visual-audit.md) when the task involves visual judgment, brand direction, color systems, image review, repeated rework, user correction about process quality, or any claim that a visual/page result is good enough.
+
+## Brand-System And Curator Coordination
+
+Use the local Jiangyue knowledge base as lightweight project memory, not as a heavy checklist for every task.
+
+Default local knowledge gate:
+
+```text
+/Users/lirongjing/Documents/JY TECH WEB/brand-system/00-knowledge-gate/jiangyue-knowledge-gate.md
+```
+
+Read the knowledge gate before a Planner Brief, post-image review, brand-direction judgment, repeated-failure reset, or any task involving product facts, application context, certifications, performance claims, customer use, compliance, or competitor reference.
+
+Read only the relevant formal `brand-system/01-*` through `brand-system/06-*` files that the gate points to. Do not treat `brand-system/90-inbox/` or `brand-system/91-daily-curation-log/` as formal authority.
+
+When a task produces useful failures, approved candidates, source materials, claim-boundary lessons, or competitor references, do not fold curation into planner work. Hand off to `$jiangyue-knowledge-curator` or tell the user that curator should prepare a confirmation card.
 
 ## Authority Boundary
 
@@ -64,7 +81,8 @@ Run these gates before producing a page plan, image brief, review judgment, or i
 1. **Intent lock:** Separate the original request, likely business problem, questionable assumptions, and decision needed. Do not finalize a Planner Brief until the real objective, deliverable, success evidence, and non-goals are confirmed or conservatively locked.
 2. **Claim boundary:** Do not invent certifications, performance data, customer cases, export claims, patents, compliance status, or product specifications. Flag missing product facts instead of filling them.
 3. **Visual evidence:** For any image, hero, preview page, color, layout, or visual comparison, inspect the actual visible result before ranking, approving, summarizing, or explaining. File existence, HTML existence, prompt compliance, palette logic, or option names are not visual evidence.
-4. **Failure reset:** When the user correction, repeated failure, similar draft, or process complaint shows workflow drift, read [references/objective-and-visual-audit.md](references/objective-and-visual-audit.md). After two failed rework rounds, stop local revision and reset objective, evidence, baseline, check objects, sequence, and pass/fail criteria before requesting more imagegen work.
+4. **Knowledge gate:** For image briefs, visual reviews, claim-sensitive planning, high-impact pages, competitor-based direction, or repeated failures, read the local `brand-system` gate and consult only the relevant formal knowledge files.
+5. **Failure reset:** When the user correction, repeated failure, similar draft, or process complaint shows workflow drift, read [references/objective-and-visual-audit.md](references/objective-and-visual-audit.md). After two failed rework rounds, stop local revision and reset objective, evidence, baseline, check objects, sequence, and pass/fail criteria before requesting more imagegen work.
 
 ## Workflow
 
@@ -152,6 +170,8 @@ Planner Brief / 图片需求简报
 - imagegen 必须退回 planner 的情况：
 - 下一版验收标准：
 ```
+
+If formal `brand-system` files were consulted, include a short `已参考资料库` line listing only the files that materially affected the brief. Do not list files that were not read.
 
 If the user asks for a complete page plan, also use [references/page-brief-template.md](references/page-brief-template.md).
 

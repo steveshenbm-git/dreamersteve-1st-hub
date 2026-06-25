@@ -13,6 +13,24 @@ It does not own page strategy. For page objective, buyer intent, SEO/AEO directi
 
 Use professional industrial judgment for European B2B buyers. Avoid unsupported product, certification, customer, performance, export, compliance, patent, or specification claims.
 
+## Brand-System And Curator Coordination
+
+Use the local Jiangyue `brand-system` as a risk-based reference source, not a full mandatory reading list for every export.
+
+Default local knowledge gate:
+
+```text
+/Users/lirongjing/Documents/JY TECH WEB/brand-system/00-knowledge-gate/jiangyue-knowledge-gate.md
+```
+
+Read the gate before high-impact images, homepage heroes, product heroes, Contact heroes, brand-defining visuals, repeated failures, user complaints about visual quality, product-fact-sensitive visuals, or competitor/reference-driven image work.
+
+After reading the gate, read only the relevant formal files under `brand-system/01-*` through `brand-system/06-*`. Do not use `brand-system/90-inbox/` or `brand-system/91-daily-curation-log/` as formal visual authority.
+
+For ordinary format edits, crops, deterministic text exports, and low-risk local adaptations, do not expand the workflow beyond the gate unless the task touches product facts, brand direction, approved materials, or known failure cases.
+
+When a production run creates useful failures, approved candidates, reusable source materials, or lessons for future prompts, do not curate them inside imagegen. Hand off to `$jiangyue-knowledge-curator` or state that curator should prepare a confirmation card after the image task.
+
 ## Contract With Planner
 
 Treat the planner handoff as the strategy contract.
@@ -109,15 +127,16 @@ Use for most Jiangyue website visuals.
 Use for homepage heroes, product heroes, Contact heroes, brand-defining visuals, abstract advantage visuals, recognition-sensitive images, or repeated failures.
 
 1. Follow the Standard Path.
-2. Read only the relevant references before production:
+2. Read the local `brand-system` knowledge gate and only the relevant formal knowledge files it points to, especially approved materials, visual standards, product fact boundaries, and image failure cases.
+3. Read only the relevant skill references before production:
    - [references/image-brief-template.md](references/image-brief-template.md) for intake and production brief structure.
    - [references/brief-review-rubric.md](references/brief-review-rubric.md) for production readiness scoring.
    - [references/visual-structure-patterns.md](references/visual-structure-patterns.md) for abstract, multi-subject, or physically metaphorical structures.
    - [references/design-upgrade.md](references/design-upgrade.md) when the design is thin, generic, template-like, or visually weak.
    - [references/reference-research.md](references/reference-research.md) when category recognition or visual quality needs reference research.
-3. Offer 2-3 materially different structure directions unless planner or user already approved a clear structure.
-4. Compare the output against the user's reference or prior strongest draft before delivery.
-5. If the same structural failure repeats twice, stop and return to planner.
+4. Offer 2-3 materially different structure directions unless planner or user already approved a clear structure.
+5. Compare the output against the user's reference, prior strongest draft, and any relevant confirmed failure case before delivery.
+6. If the same structural failure repeats twice, stop and return to planner.
 
 ## Execution Gates
 
@@ -130,7 +149,8 @@ Always run these gates in short form:
 3. **Production readiness:** every named subject has a visible carrier or planned page-copy carrier; abstract terms are translated into concrete cues; the relationship is readable; the output size and role are clear.
 4. **Method quality:** choose the method because it can reach the required visible result, not because it is easier to save, script, or archive.
 5. **Physical plausibility:** real-world objects, industrial equipment, electronics, enclosures, flows, and support layers must be mechanically or visually believable.
-6. **Visible result:** judge the rendered image before defending prompt, method, palette, archive, or workflow compliance.
+6. **Knowledge gate:** for high-impact, repeated-failure, brand-direction, product-fact-sensitive, or reference-driven work, check the local `brand-system` gate and relevant formal files before production or delivery.
+7. **Visible result:** judge the rendered image before defending prompt, method, palette, archive, or workflow compliance.
 
 ## Production Method Rules
 
@@ -204,6 +224,7 @@ Report only verified facts:
 - reproduction archive path, or `not created yet` for trial-only outputs
 - dimensions and format
 - production method
+- formal `brand-system` files consulted, if any
 - what was visually checked
 - what could not be verified
 - remaining limitation, if any
