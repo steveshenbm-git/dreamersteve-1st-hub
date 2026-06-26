@@ -97,6 +97,12 @@ Return to Planner / 简报退回
 
 Use the lightest path that protects visible quality.
 
+### Failure Reset Hard Gate
+
+When the user says self-check failed, still wrong, not qualified, ugly, missed a reference, ignored an attachment, or repeats/marks the same visible defect, read [references/failure-reset-hard-gates.md](references/failure-reset-hard-gates.md) before any further image generation or revision.
+
+Hard rule: copy user-named defects into a defect register. A revised image may not be delivered if any registered defect remains visible at full size or thumbnail size. If the same registered defect remains twice, stop the method and either change production method/structure or return to planner.
+
 ### Light Path
 
 Use for format edits, simple local edits, deterministic cards, text-led graphics, exports, and low-risk adaptations.
@@ -134,6 +140,7 @@ Use for homepage heroes, product heroes, Contact heroes, brand-defining visuals,
    - [references/visual-structure-patterns.md](references/visual-structure-patterns.md) for abstract, multi-subject, or physically metaphorical structures.
    - [references/design-upgrade.md](references/design-upgrade.md) when the design is thin, generic, template-like, or visually weak.
    - [references/reference-research.md](references/reference-research.md) when category recognition or visual quality needs reference research.
+   - [references/failure-reset-hard-gates.md](references/failure-reset-hard-gates.md) when user frustration, repeated failure, missed reference, or a user-named defect indicates the self-check failed.
 4. Offer 2-3 materially different structure directions unless planner or user already approved a clear structure.
 5. Compare the output against the user's reference, prior strongest draft, and any relevant confirmed failure case before delivery.
 6. If the same structural failure repeats twice, stop and return to planner.
@@ -150,7 +157,8 @@ Always run these gates in short form:
 4. **Method quality:** choose the method because it can reach the required visible result, not because it is easier to save, script, or archive.
 5. **Physical plausibility:** real-world objects, industrial equipment, electronics, enclosures, flows, and support layers must be mechanically or visually believable.
 6. **Knowledge gate:** for high-impact, repeated-failure, brand-direction, product-fact-sensitive, or reference-driven work, check the local `brand-system` gate and relevant formal files before production or delivery.
-7. **Visible result:** judge the rendered image before defending prompt, method, palette, archive, or workflow compliance.
+7. **Failure reset:** if user-named defects, repeated failure, or self-check failure signals exist, run `failure-reset-hard-gates.md`; do not continue with small visual tweaks.
+8. **Visible result:** judge the rendered image before defending prompt, method, palette, archive, or workflow compliance.
 
 ## Production Method Rules
 
@@ -166,10 +174,13 @@ Default methods:
 
 Never downgrade a requested realistic, photographic, atmospheric, product, lab, equipment, or brand-defining hero into a flat illustration or screenshot workaround without user approval. If the available method cannot produce or expose a usable image at the required quality, stop and report the limitation.
 
+For natural or organic structures such as leaves, leaf veins, tree branches, plants, people, natural textures, realistic scenes, or natural material details, do not use deterministic vector/Python/SVG geometry as the final visual method unless the user explicitly requests a flat/vector style. Use image generation, image editing, real source imagery, or a photographic reference-driven method first; deterministic tools are appropriate for crop, mask, text, export, compression, and review derivatives.
+
 ## Quality Hard Stops
 
 Reject or revise before delivery when any of these appear:
 
+- any defect copied into the User-Named Defect Register remains visible at full size or thumbnail size
 - generic honeycomb, hexagon infographic, stock-vector, app-dashboard, or PowerPoint-template look
 - dark cyberpunk, neon-purple, excessive glow, decorative circuitry, glowing pipes, transparent sci-fi tubing, or impossible energy paths
 - busy factory scenes, sparks, smoke, clutter, or heavy machinery drama that reduces B2B technical credibility
@@ -182,6 +193,8 @@ Reject or revise before delivery when any of these appear:
 - a polished image that no longer supports the planner brief or original intent lock
 
 Do not deliver a vetoed draft as a concept option. Redo it or return to planner.
+
+When multiple generated candidates exist, record why rejected candidates failed and why the selected candidate passes. A candidate containing a forbidden item or user-named defect cannot be delivered as a "direction" or "concept".
 
 ## Text Rules
 
@@ -230,3 +243,5 @@ Report only verified facts:
 - remaining limitation, if any
 
 Do not claim browser, mobile, SEO, compression, WordPress behavior, or exact reproducibility unless it was checked.
+
+Correct dimensions, a saved file path, or a successful script run are not visual verification. Inspect the rendered output and at least one thumbnail/review-size version before claiming a visual pass.

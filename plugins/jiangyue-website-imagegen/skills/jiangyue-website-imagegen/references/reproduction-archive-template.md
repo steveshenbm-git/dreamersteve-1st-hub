@@ -45,9 +45,24 @@ outputs/jiangyue-website-images/home/2026-06-18-pmsm-drive-hero-final/REPRODUCTI
 
 - Base image(s):
 - Reference image(s):
+- Reference attribution:
+  - Generated from before production:
+  - Consulted before production:
+  - Mentioned in conversation but not used:
+  - Added/confirmed later for next revision:
 - Logo / brand assets:
 - Fonts:
 - Other inputs:
+
+## Reference Translation
+
+For each important reference:
+
+- Source:
+- What to keep:
+- What to avoid:
+- Visible pass criteria:
+- Used to generate this version: yes/no
 
 ## Production Method
 
@@ -84,6 +99,25 @@ Use this section only when an AI model generated or edited pixels.
 - User / planner feedback addressed:
 - Remaining issues:
 
+## User-Named Defect Register
+
+- Defect:
+  - Source feedback:
+  - Pass / Fail in this version:
+  - Evidence checked at full size:
+  - Evidence checked at thumbnail/review size:
+
+## Candidate Review
+
+Use when multiple generated candidates or trial outputs exist.
+
+- Candidate:
+  - Pass / Reject:
+  - Rejection reason:
+  - User-named defects checked:
+  - Forbidden elements checked:
+  - Selected: yes/no
+
 ## Fast Edit Guide
 
 - To change copy:
@@ -97,6 +131,10 @@ Use this section only when an AI model generated or edited pixels.
 - Checked dimensions:
 - Checked text:
 - Checked visual defects:
+- Checked user-named defects:
+- Checked forbidden elements:
+- Checked full-size output:
+- Checked thumbnail/review output:
 - Not checked:
 ```
 
@@ -113,6 +151,13 @@ When the output is deterministic or hybrid, also create a compact `recipe.json` 
   "method": "deterministic|ai-generated|image-edit|hybrid",
   "final_outputs": [],
   "source_inputs": [],
+  "reference_attribution": {
+    "generated_from_before_production": [],
+    "consulted_before_production": [],
+    "mentioned_but_not_used": [],
+    "added_or_confirmed_later_for_next_revision": []
+  },
+  "reference_translation": [],
   "scripts": [],
   "rebuild_command": "",
   "text": {},
@@ -126,6 +171,16 @@ When the output is deterministic or hybrid, also create a compact `recipe.json` 
     "prompt_ref": "",
     "seed_or_generation_id": "",
     "exact_regeneration_verified": false
+  },
+  "user_named_defect_register": [],
+  "candidate_review": [],
+  "verification": {
+    "dimensions_checked": false,
+    "full_size_visual_checked": false,
+    "thumbnail_visual_checked": false,
+    "user_named_defects_checked": false,
+    "forbidden_elements_checked": false,
+    "not_checked": []
   }
 }
 ```

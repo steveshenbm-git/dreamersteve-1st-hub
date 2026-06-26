@@ -15,6 +15,17 @@ Name the visible failure before changing anything:
 - **Regression failure:** the user-named issue remains visible compared with the prior version.
 - **Strategy failure:** the image request conflicts with page goal, attention hierarchy, image role, claim boundary, or message ownership.
 
+## User-Named Defect Register
+
+When the user names or marks a visible defect, copy it verbatim into a defect register before changing anything. Examples include "red-line curves are wrong", "leaf shape is abstract", "black product block remains", "reference was ignored", or "self-check failed".
+
+Hard rules:
+
+- A revision may not be delivered if any registered defect remains visible at full size or thumbnail size.
+- If a registered defect remains after one revision, reject the draft internally and revise with a materially different correction path.
+- If the same registered defect remains after two revisions, stop the current method and run `failure-reset-hard-gates.md`.
+- Do not soften the defect wording into something easier to pass.
+
 ## Continue In Imagegen
 
 Continue with imagegen when the strategy is sound but execution is weak:
@@ -26,6 +37,8 @@ Continue with imagegen when the strategy is sound but execution is weak:
 - the user asks for local repair such as residue removal, sharper crop, cleaner text, or export sizing
 
 Choose a materially different correction path when the previous one failed. Do not keep adjusting only color, glow, blur, gradient, opacity, or camera angle for a structural problem.
+
+After a structural failure, the next revision must change at least one of: production method, visual model, source/reference basis, composition structure, subject carrier, or crop/scale hierarchy. If none changed, the revision is invalid.
 
 ## Return To Planner
 
@@ -39,6 +52,8 @@ Return to `$jiangyue-website-planner` when:
 - user feedback questions brand direction, layout integration, visual hierarchy, credibility for European B2B buyers, or whether the visual strategy is right
 - two structural image revisions fail for the same reason
 - the same user-stated problem remains visible after a previous imagegen revision
+
+If the failure is execution-only and strategy is still valid, run `failure-reset-hard-gates.md` before deciding whether to continue in imagegen or return to planner.
 
 ## Planner Return Format
 
@@ -72,3 +87,5 @@ A revised draft must visibly improve the named failure:
 - claim risk: risky details removed or abstracted
 - composition integration failure: shared lighting, depth, mask, overlap logic, or spatial relationship replaces pasted panels
 - regression failure: side-by-side comparison shows the named defect improved
+
+The pass decision must be made from the rendered image and one thumbnail/review size. File existence, prompt compliance, correct dimensions, or archive completeness do not count as visual pass evidence.
