@@ -100,6 +100,8 @@ If two candidates need written explanation to tell them apart, they are not visu
 Use Whole Workflow Audit whenever:
 
 - a user challenges the process or reasoning
+- a user says self-check failed, the reference was missed, or the attachment was ignored
+- a user names or marks a visible defect
 - a similar visual problem repeats
 - a second revision does not materially improve the result
 - sorting or summaries happen before visual fact checking
@@ -119,6 +121,8 @@ Whole Workflow Audit
 - Did we summarize before visual checking?
 - Did verification prove quality or only existence?
 - Is the next action a local patch or a workflow reset?
+- Are user-named defects copied into a blocking defect register?
+- Are references correctly attributed as used, conversation-only, or next-version references?
 ```
 
 If any answer shows a workflow flaw, stop local revision. Rebuild the workflow.
@@ -148,6 +152,8 @@ Failure includes:
 - the user says the process failed
 - verification checks files but not result quality
 
+Immediate reset or routing review is required, even before two full rounds, when the user explicitly challenges self-check, reference use, or attachment review.
+
 After two failures, prohibited actions:
 
 - do not add another option
@@ -169,6 +175,8 @@ Failure Reset
 - Candidate set or check objects:
 - Work sequence:
 - Pass/fail criteria:
+- User-named defect register:
+- Reference attribution:
 - What is explicitly prohibited:
 - Next allowed action:
 ```
@@ -201,8 +209,8 @@ When a user correction exposes process failure, respond in this order:
 1. State the visible or workflow fact directly.
 2. Identify the broken assumption.
 3. Decide whether this is local revision or Failure Reset.
-4. If reset is needed, stop all local fixes and rebuild the workflow.
-5. Only then propose the next action.
+4. If imagegen is involved, decide the next route: continue in imagegen, revise Planner Brief, failure reset, or stop image work.
+5. If reset is needed, stop all local fixes and rebuild the workflow.
+6. Only then propose the next action.
 
 Do not apologize and then continue the same flawed workflow.
-

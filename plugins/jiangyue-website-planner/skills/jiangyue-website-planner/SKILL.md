@@ -25,6 +25,8 @@ For the end-to-end workflow, read [references/workflow-with-imagegen.md](referen
 
 Read [references/objective-and-visual-audit.md](references/objective-and-visual-audit.md) when the task involves visual judgment, brand direction, color systems, image review, repeated rework, user correction about process quality, or any claim that a visual/page result is good enough.
 
+Read [references/imagegen-coordination-hard-gates.md](references/imagegen-coordination-hard-gates.md) before sending another imagegen request after user-named defects, missed references, self-check failure, repeated visual failure, or any dispute about whether the next problem is strategy or execution.
+
 ## Brand-System And Curator Coordination
 
 Use the local Jiangyue knowledge base as lightweight project memory, not as a heavy checklist for every task.
@@ -82,7 +84,8 @@ Run these gates before producing a page plan, image brief, review judgment, or i
 2. **Claim boundary:** Do not invent certifications, performance data, customer cases, export claims, patents, compliance status, or product specifications. Flag missing product facts instead of filling them.
 3. **Visual evidence:** For any image, hero, preview page, color, layout, or visual comparison, inspect the actual visible result before ranking, approving, summarizing, or explaining. File existence, HTML existence, prompt compliance, palette logic, or option names are not visual evidence.
 4. **Knowledge gate:** For image briefs, visual reviews, claim-sensitive planning, high-impact pages, competitor-based direction, or repeated failures, read the local `brand-system` gate and consult only the relevant formal knowledge files.
-5. **Failure reset:** When the user correction, repeated failure, similar draft, or process complaint shows workflow drift, read [references/objective-and-visual-audit.md](references/objective-and-visual-audit.md). After two failed rework rounds, stop local revision and reset objective, evidence, baseline, check objects, sequence, and pass/fail criteria before requesting more imagegen work.
+5. **Imagegen coordination:** When a user-named defect, missed reference, self-check failure, or repeated imagegen problem appears, read [references/imagegen-coordination-hard-gates.md](references/imagegen-coordination-hard-gates.md). Decide the route before sending another imagegen request.
+6. **Failure reset:** When the user correction, repeated failure, similar draft, or process complaint shows workflow drift, read [references/objective-and-visual-audit.md](references/objective-and-visual-audit.md). After two failed rework rounds, stop local revision and reset objective, evidence, baseline, check objects, sequence, and pass/fail criteria before requesting more imagegen work.
 
 ## Workflow
 
@@ -117,14 +120,17 @@ Use this mode whenever imagegen has delivered a draft and the user gives initial
    - brand color system problem
    - claim or product-fact risk
    - execution detail for imagegen only
-4. Decide whether planner must revise the brief or imagegen can execute directly.
-5. Output a concise next-round optimization brief with:
+4. Copy user-named defects into a planner defect register when the user names or marks visible defects.
+5. Decide whether planner must revise the brief, imagegen can execute directly, failure reset is required, or image work should stop.
+6. Output a concise next-round optimization brief with:
    - what must visibly change
    - what must remain unchanged
    - what imagegen must not repeat
+   - user-named defects as hard pass / fail checks
+   - reference attribution when references are involved
    - pass / fail criteria for the next draft
-6. Do not approve another imagegen round when the feedback implies a page-message, claim-boundary, image-role, or attention-hierarchy decision that planner has not resolved.
-7. If repeated imagegen attempts fail for the same reason and the cause is unclear, stop the revision loop and use `superpowers:systematic-debugging` before another image round.
+7. Do not approve another imagegen round when the feedback implies a page-message, claim-boundary, image-role, or attention-hierarchy decision that planner has not resolved.
+8. If repeated imagegen attempts fail for the same reason and the cause is unclear, stop the revision loop and use `superpowers:systematic-debugging` before another image round.
 
 Ask one high-value question at a time when the page goal, buyer, claim boundary, or image role is unclear.
 
@@ -186,9 +192,11 @@ Use this after the user reviews an imagegen draft and asks for improvements. Kee
 - 用户反馈中的硬性问题：
 - planner 归因：
 - 是否改变页面目标 / H1 / CTA / claim 边界：
+- planner 缺陷登记：
 - 下一版必须保留：
 - 下一版必须明显改善：
 - 不允许重复的旧方向：
+- 参考归因：
 - 给 imagegen 的执行方向：
 - 下一版验收标准：
 ```
@@ -221,6 +229,8 @@ Revise in planner when the image brief is strategically wrong:
 
 Use [references/rework-order-template.md](references/rework-order-template.md) when revising after imagegen failure.
 
+Use [references/imagegen-coordination-hard-gates.md](references/imagegen-coordination-hard-gates.md) before another imagegen handoff if the user named a defect, challenged self-check, disputed reference use, or the same visual issue repeated.
+
 ## Handoff Discipline
 
 Planner output must be clear enough that imagegen can execute without inventing page strategy.
@@ -239,3 +249,5 @@ Do not say only "make it more premium" or "try again." Define what changes:
 For post-image review, do not allow imagegen to self-approve a revision that does not visibly address the user's named concern. Planner should make the concern explicit before handoff.
 
 If the user changes the page objective during image production, stop image work and produce a revised page brief first.
+
+If the user asks for final or 4K output after a disputed draft, planner should not route to final export until a draft is accepted or the request is only deterministic export from an accepted draft.

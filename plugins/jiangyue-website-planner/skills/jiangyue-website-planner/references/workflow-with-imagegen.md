@@ -12,6 +12,7 @@ Fuzzy page or image request
 -> jiangyue-website-imagegen creates the Production Brief and visual asset
 -> user reviews the draft
 -> planner classifies feedback when strategy, hierarchy, credibility, or message ownership is questioned
+-> planner records user-named defects and reference attribution when feedback names visible problems or missed references
 -> imagegen continues only when the problem is visual execution
 -> superpowers:systematic-debugging enters if repeated failures have unclear root cause
 -> superpowers:verification-before-completion checks evidence before completion is claimed
@@ -25,6 +26,7 @@ Fuzzy page or image request
 | Planner Brief is approved and the task is visual production, image editing, export, or asset packaging | `$jiangyue-website-imagegen` |
 | User feedback challenges brand direction, credibility, visual hierarchy, layout integration, message ownership, or claim safety | `$jiangyue-website-planner` |
 | User asks for sharper crop, cleaner text, format conversion, local cleanup, or visual execution changes without strategy change | `$jiangyue-website-imagegen` |
+| User names/marks a visible defect, says self-check failed, or disputes reference use | `$jiangyue-website-planner` classifies and registers the defect, then routes to `$jiangyue-website-imagegen` hard gates or revised Planner Brief |
 | The same visual or strategy problem repeats and the cause is unclear | `superpowers:systematic-debugging` |
 | The plan, handoff, image, archive, or implementation is about to be called complete | `superpowers:verification-before-completion` |
 
@@ -47,6 +49,8 @@ Planner must define:
 - CTA/title/logo relationship
 - output ratio or usage position
 - visible pass/fail criteria
+- user-named defects and whether each is blocking, when this is a rework
+- reference attribution: used before generation, conversation-only, or next-version reference
 
 Imagegen then defines:
 
@@ -56,6 +60,7 @@ Imagegen then defines:
 - physical logic and method selection
 - production brief
 - image output, review, and archive
+- candidate review, defect closure, reference translation, and visual verification records when hard gates are triggered
 
 ## Feedback Loop
 
@@ -68,3 +73,26 @@ Planner should not send another vague instruction such as "make it more premium"
 - what the next draft must show to pass
 
 If the page strategy remains correct and the issue is execution quality, return the draft to imagegen. If the image can only work by changing page message, attention hierarchy, CTA, H1, or claim boundary, revise the Planner Brief first.
+
+## Hard Handoff Rules
+
+Before planner sends a rework back to imagegen after user feedback, decide and state one route:
+
+- `continue in imagegen`
+- `revise Planner Brief`
+- `failure reset`
+- `stop image work`
+
+Do not send another imagegen request while the route is ambiguous.
+
+For rework after a user-named defect, planner must include:
+
+- exact user wording or marked defect
+- planner classification: strategy, hierarchy, image role, claim, layout integration, brand direction, or execution
+- whether the defect blocks delivery
+- what evidence closes the defect
+- references that must be used or must not be implied
+
+If the same blocking defect remains after one imagegen revision, planner must require imagegen failure reset or revise the Planner Brief. It may not send "try again" or "make it better".
+
+If final or 4K output is requested after a disputed draft, planner must block final export until a draft is accepted or the request is only deterministic export from an accepted draft.
