@@ -1,7 +1,7 @@
 {
   "name": "jiangyue-knowledge-curator",
   "version": "0.1.0",
-  "description": "Codex skill plugin for curating Jiangyue website knowledge, visual evidence, approved materials, failure cases, product fact boundaries, and competitor references into the local brand-system knowledge base.",
+  "description": "Codex skill plugin for curating confirmed Jiangyue website outputs, visual evidence, approved materials, failure cases, product fact boundaries, and competitor references into the local brand-system.",
   "author": {
     "name": "Hangzhou Jiangyue Technology Co., Ltd."
   },
@@ -16,8 +16,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Jiangyue Knowledge Curator",
-    "shortDescription": "Curate Jiangyue website knowledge and visual evidence.",
-    "longDescription": "A Jiangyue Technology Codex skill for semi-automatically collecting website task outputs, image failures, approved reference materials, product fact boundaries, visual standards, and competitor references into a local brand-system knowledge base after user confirmation.",
+    "shortDescription": "Curate confirmed website knowledge and evidence.",
+    "longDescription": "A Jiangyue Technology Codex skill for collecting confirmed website task outputs, image failures, approved reference materials, product fact boundaries, visual standards, and competitor references into the local brand-system after user confirmation.",
     "developerName": "Jiangyue Technology",
     "category": "Productivity",
     "capabilities": [
@@ -26,9 +26,9 @@
     ],
     "brandColor": "#147DFF",
     "defaultPrompt": [
-      "Use $jiangyue-knowledge-curator to organize Jiangyue website outputs, failures, references, and confirmed materials into the brand-system knowledge base.",
+      "Use $jiangyue-knowledge-curator to organize confirmed Jiangyue outputs into the brand-system.",
       "Use $jiangyue-knowledge-curator to turn a completed image task into a short curation card for user confirmation.",
-      "Use $jiangyue-knowledge-curator to update approved materials, failure cases, product fact boundaries, and competitor references after confirmation."
+      "Use $jiangyue-knowledge-curator to update approved materials and failure cases after confirmation."
     ]
   }
 }

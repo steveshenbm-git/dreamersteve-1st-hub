@@ -1,168 +1,116 @@
 ---
 name: jiangyue-website-imagegen
-description: Use when producing, editing, reviewing, or packaging Jiangyue website visual assets after page strategy or image role is clear, including industrial product imagery, application scenes, hero visuals, text-led graphics, and WordPress-ready image files.
+description: Use when producing, editing, reviewing, exporting, or packaging Jiangyue website visual assets after page strategy, image role, or local image-editing intent is clear.
 ---
 
 # Jiangyue Website Imagegen
 
 ## Core Role
 
-Own visual execution after strategy is clear: production method, subject structure, physical plausibility, composition quality, deterministic text/layout overlays, output files, visual QA, and reproduction archive. Every important image needs one dominant visual hammer and visible role, direction, or result between subjects.
+Own visual execution: production method, image editing, subject structure, physical plausibility, composition quality, deterministic text/layout overlays, output files, visual QA, and reproduction archive.
 
-It does not own page strategy. For page objective, buyer intent, SEO/AEO direction, H1, CTA, section order, first-screen attention hierarchy, image role, claim boundary, or message ownership, use `$jiangyue-website-planner` first.
+Do not own page strategy, H1, CTA hierarchy, buyer-message fit, claim boundary, or final approval. If those are unclear, return to `$jiangyue-website-workflow-director` with the missing decision.
 
 Use professional industrial judgment for European B2B buyers. Avoid unsupported product, certification, customer, performance, export, compliance, patent, or specification claims.
 
-## Brand-System And Curator Coordination
+## Execution Boundary
 
-Use the local Jiangyue `brand-system` as a risk-based reference source, not a full mandatory reading list for every export.
+Imagegen owns:
 
-Default local knowledge gate:
+- new image production after strategy or local edit intent is clear
+- P图, element removal, crop, cleanup, background extension, upscaling/export, and file packaging
+- production brief, hard keep/remove/change/avoid lists, visual QA, and reproduction notes
+- visible quality checks at full size and thumbnail/review size
 
-```text
-/Users/lirongjing/Documents/JY TECH WEB/brand-system/00-knowledge-gate/jiangyue-knowledge-gate.md
-```
+Imagegen does not own:
 
-Read the gate before high-impact images, homepage heroes, product heroes, Contact heroes, brand-defining visuals, repeated failures, user complaints about visual quality, product-fact-sensitive visuals, or competitor/reference-driven image work.
+- page objective, buyer intent, SEO/AEO, H1, CTA, section order, or claim boundary
+- deciding whether user feedback is a strategy problem after repeated failure
+- formal knowledge-base entry
+- final approval
 
-After reading the gate, read only the relevant formal files under `brand-system/01-*` through `brand-system/06-*`. Do not use `brand-system/90-inbox/` or `brand-system/91-daily-curation-log/` as formal visual authority.
+## Intake
 
-For ordinary format edits, crops, deterministic text exports, and low-risk local adaptations, do not expand the workflow beyond the gate unless the task touches product facts, brand direction, approved materials, or known failure cases.
+Classify the request before production:
 
-When a production run creates useful failures, approved candidates, reusable source materials, or lessons for future prompts, do not curate them inside imagegen. Hand off to `$jiangyue-knowledge-curator` or state that curator should prepare a confirmation card after the image task.
+| Intent | Imagegen action |
+|---|---|
+| Local edit / P图 / crop / export | Execute directly if source, target, and output are clear |
+| Brief-based new image | Review the Planner Brief, then produce a production brief |
+| Post-image execution fix | Register user-named defects and revise only if strategy remains clear |
+| Repeated failure, unclear intent, or strategy drift | Return to Workflow Director before producing |
 
-## Contract With Planner
+Ask one concise execution question only when a required file, target object, output size, or draft/final stage is missing.
 
-Treat the planner handoff as the strategy contract.
+## Planner Brief Readiness
 
-**Planner Brief = strategy contract.** It should define the user's original request, planner-diagnosed likely need, user-confirmed real intent, page, page goal, target audience, core page message, first-screen attention owner, image role, information the image must support, information kept in HTML/page copy, required subject cues, visible relationships, forbidden claims, recommended direction, CTA/title/logo relationship, output location or ratio, imagegen freedom, and return-to-planner triggers.
+Before a brief-based image, confirm:
 
-**Imagegen Production Brief = execution contract.** Imagegen turns the strategy contract into a production-ready visual plan: execution intent, must keep/remove/change/avoid lists, subject carriers, relationship model, physical logic, attention hierarchy, copy placement, production method, output size, archive level, and visible pass/fail criteria.
+- real intent, page/use location, image role, and attention owner are clear
+- required subjects have visible carriers
+- abstract terms are translated into visible cues
+- visual relationships are readable: role, direction, cause/effect, comparison, support layer, control flow, or application context
+- forbidden claims and product-fact risks are explicit
+- output ratio, stage, and pass/fail criteria are clear
 
-Do not silently change page goal, H1, CTA hierarchy, attention owner, image role, claim boundary, page section order, or message ownership. If the image can only work by changing one of these, stop and return to planner.
-
-If the Planner Brief does not include a confirmed real intent, do not produce a new image. Return to planner for guided intent confirmation.
-
-## When To Use Planner First
-
-Use `$jiangyue-website-planner` before image production when any of these are unclear or contested:
-
-- page type, buyer, SEO/AEO job, inquiry path, H1, CTA, or section order
-- first-screen attention owner or image role
-- whether a message belongs in image, HTML copy, CTA, logo area, or later page content
-- claim boundary, verified product facts, or application context
-- user feedback questions brand direction, credibility for European B2B buyers, layout integration, visual hierarchy, or strategy fit
-- two structural image revisions failed for the same reason
-
-Imagegen may ask one concise execution question when the strategy is clear but one production detail is missing.
-
-## Planner Brief Readiness Review
-
-Before creating or rebuilding an image from a Planner Brief, review whether the brief can actually produce a strong visual. Do not treat a brief as ready only because it has many fields.
-
-The brief is ready only when all of these are clear:
-
-- the user's original request and the user-confirmed real intent are both present
-- the page goal, buyer, image role, attention owner, and claim boundary are concrete
-- the image has a specific communication job, not only a mood word such as "premium", "technical", "future", "trust", or "AI"
-- every required subject has either a visible subject carrier or a planned HTML/page-copy carrier
-- the relationship between subjects is visible: role, direction, cause/effect, comparison, control flow, support layer, or application context
-- abstract terms have been translated into visible cues imagegen can execute
-- required and forbidden product/application claims are explicit enough to avoid unsafe implication
-- output ratio, use location, and pass/fail criteria are specific
-
-Return to planner instead of producing when:
-
-- confirmed real intent is missing or still described as a guess
-- the image is expected to solve page strategy, H1, CTA, claim boundary, or buyer-message problems
-- the brief asks for a broad idea but gives no concrete subject carriers or relationships
-- required subjects are named but their visual role is unclear
-- the image would need to invent product facts, specifications, customer use, compliance status, or final architecture
-- pass/fail criteria depend on explanation rather than visible evidence
-
-Use this return format:
+If not ready, return this:
 
 ```text
-Return to Planner / 简报退回
+Return to Workflow Director / 简报退回
 
-- Missing or unclear confirmed real intent:
-- Brief item that is too abstract for reliable image production:
-- Missing visible subject carrier or relationship:
+- Missing decision:
+- Too abstract for production:
+- Missing visible carrier or relationship:
 - Claim / product-fact risk:
-- One recommended planner question to ask next:
 - What imagegen can proceed with after clarification:
 ```
 
-## Workflow Selection
+## Production Paths
 
 Use the lightest path that protects visible quality.
 
-### Failure Reset Hard Gate
-
-When the user says self-check failed, still wrong, not qualified, ugly, missed a reference, ignored an attachment, or repeats/marks the same visible defect, read [references/failure-reset-hard-gates.md](references/failure-reset-hard-gates.md) before any further image generation or revision.
-
-Hard rule: copy user-named defects into a defect register. A revised image may not be delivered if any registered defect remains visible at full size or thumbnail size. If the same registered defect remains twice, stop the method and either change production method/structure or return to planner.
-
 ### Light Path
 
-Use for format edits, simple local edits, deterministic cards, text-led graphics, exports, and low-risk adaptations.
+For simple local edits, deterministic cards, format edits, crops, exports, and low-risk adaptations:
 
-1. Classify execution intent.
-2. Confirm asset, size, source, text, and output format.
-3. Choose production method.
-4. Produce the asset in a task folder.
-5. Inspect the rendered result.
-6. Deliver file path, size, method, verification, and limitations.
+1. Confirm source, target change, output size, and stage.
+2. Produce the asset in the project output root.
+3. Inspect the rendered result.
+4. Report path, dimensions, method, verification, and limitations.
 
 ### Standard Path
 
-Use for most Jiangyue website visuals.
+For most Jiangyue website visuals:
 
-1. Classify execution intent and extract planner or user requirements.
-2. Run Planner Brief Readiness Review when working from planner handoff.
-3. Create the production brief and four hard lists: must keep, must remove, must materially change, must avoid.
-4. Translate abstract terms into concrete subject carriers, visual relationships, physical logic, and pass/fail checks.
-5. Check subject carriers, relationship readability, physical plausibility, method fit, claim risk, and text risk.
-6. Ask for confirmation before a new image or brief-based rebuild unless the user already gave equivalent clear approval.
-7. Produce one strong draft first; create variants only for meaningful visual differences.
-8. Review full size, thumbnail size, and reference/prior draft when available.
-9. Revise, reject, archive, or return to planner based on visible result.
+1. Create a production brief and four hard lists: must keep, must remove, must materially change, must avoid.
+2. Choose method based on visible result quality, not convenience.
+3. Translate abstract terms into concrete subject carriers, visual relationships, physical logic, and pass/fail checks.
+4. Produce one strong draft first; create variants only when they differ materially.
+5. Inspect full size, thumbnail/review size, prior draft, and references when available.
+6. Revise, reject, archive, or return to Workflow Director based on visible evidence.
 
 ### High-Impact Path
 
-Use for homepage heroes, product heroes, Contact heroes, brand-defining visuals, abstract advantage visuals, recognition-sensitive images, or repeated failures.
+For homepage heroes, product heroes, Contact heroes, brand-defining visuals, recognition-sensitive images, or repeated failures:
 
-1. Follow the Standard Path.
-2. Read the local `brand-system` knowledge gate and only the relevant formal knowledge files it points to, especially approved materials, visual standards, product fact boundaries, and image failure cases.
-3. Read only the relevant skill references before production:
-   - [references/image-brief-template.md](references/image-brief-template.md) for intake and production brief structure.
-   - [references/brief-review-rubric.md](references/brief-review-rubric.md) for production readiness scoring.
-   - [references/visual-structure-patterns.md](references/visual-structure-patterns.md) for abstract, multi-subject, or physically metaphorical structures.
-   - [references/design-upgrade.md](references/design-upgrade.md) when the design is thin, generic, template-like, or visually weak.
-   - [references/reference-research.md](references/reference-research.md) when category recognition or visual quality needs reference research.
-   - [references/failure-reset-hard-gates.md](references/failure-reset-hard-gates.md) when user frustration, repeated failure, missed reference, or a user-named defect indicates the self-check failed.
-4. Offer 2-3 materially different structure directions unless planner or user already approved a clear structure.
-5. Compare the output against the user's reference, prior strongest draft, and any relevant confirmed failure case before delivery.
-6. If the same structural failure repeats twice, stop and return to planner.
+1. Follow Standard Path.
+2. Read `/Users/lirongjing/Documents/JY TECH WEB/brand-system/00-knowledge-gate/jiangyue-knowledge-gate.md` and only relevant formal knowledge files.
+3. Load only the needed references:
+   - [references/brief-review-rubric.md](references/brief-review-rubric.md) for production readiness.
+   - [references/visual-structure-patterns.md](references/visual-structure-patterns.md) for abstract or multi-subject structure.
+   - [references/design-upgrade.md](references/design-upgrade.md) when the design is generic or weak.
+   - [references/reference-research.md](references/reference-research.md) when category recognition or reference quality matters.
+   - [references/failure-reset-hard-gates.md](references/failure-reset-hard-gates.md) when user-named defects or repeated failures appear.
 
-## Execution Gates
+## Failure And Defect Rules
 
-For detailed gate rules, read [references/execution-gates.md](references/execution-gates.md) when producing or reviewing an asset.
-
-Always run these gates in short form:
-
-1. **Execution intent:** new image, brief-based rebuild, local edit, format edit, or page/mockup work.
-2. **Intent lock:** original request, confirmed real intent, core message, what the image communicates, what HTML/page copy carries, and drift boundaries.
-3. **Production readiness:** every named subject has a visible carrier or planned page-copy carrier; abstract terms are translated into concrete cues; the relationship is readable; the output size and role are clear.
-4. **Method quality:** choose the method because it can reach the required visible result, not because it is easier to save, script, or archive.
-5. **Physical plausibility:** real-world objects, industrial equipment, electronics, enclosures, flows, and support layers must be mechanically or visually believable.
-6. **Knowledge gate:** for high-impact, repeated-failure, brand-direction, product-fact-sensitive, or reference-driven work, check the local `brand-system` gate and relevant formal files before production or delivery.
-7. **Failure reset:** if user-named defects, repeated failure, or self-check failure signals exist, run `failure-reset-hard-gates.md`; do not continue with small visual tweaks.
-8. **Visible result:** judge the rendered image before defending prompt, method, palette, archive, or workflow compliance.
+- Copy user-named defects into a defect register.
+- A revised image may not be delivered if a registered defect remains visible at full size or thumbnail size.
+- If the same registered defect remains twice, stop the method and return to Workflow Director.
+- If the user says self-check failed, still wrong, not qualified, ugly, missed a reference, ignored an attachment, or marks the same defect, read [references/failure-reset-hard-gates.md](references/failure-reset-hard-gates.md) before further production.
+- Do not deliver a vetoed draft as a concept option.
 
 ## Production Method Rules
-
-Default methods:
 
 | Request | Default method |
 |---|---|
@@ -172,61 +120,47 @@ Default methods:
 | Important Chinese or English text in a graphic | Generate base without text, then typeset real text programmatically |
 | Website implementation or responsive preview | HTML/CSS only when explicitly requested |
 
-Never downgrade a requested realistic, photographic, atmospheric, product, lab, equipment, or brand-defining hero into a flat illustration or screenshot workaround without user approval. If the available method cannot produce or expose a usable image at the required quality, stop and report the limitation.
+Never downgrade a requested realistic, photographic, atmospheric, product, lab, equipment, or brand-defining hero into a flat illustration or screenshot workaround without user approval.
 
-For natural or organic structures such as leaves, leaf veins, tree branches, plants, people, natural textures, realistic scenes, or natural material details, do not use deterministic vector/Python/SVG geometry as the final visual method unless the user explicitly requests a flat/vector style. Use image generation, image editing, real source imagery, or a photographic reference-driven method first; deterministic tools are appropriate for crop, mask, text, export, compression, and review derivatives.
+For natural or organic structures such as leaves, leaf veins, branches, plants, people, natural textures, or natural material details, do not use deterministic vector/Python/SVG geometry as the final visual method unless the user explicitly requests a flat/vector style.
 
 ## Quality Hard Stops
 
 Reject or revise before delivery when any of these appear:
 
-- any defect copied into the User-Named Defect Register remains visible at full size or thumbnail size
+- registered user defect still visible
 - generic honeycomb, hexagon infographic, stock-vector, app-dashboard, or PowerPoint-template look
 - dark cyberpunk, neon-purple, excessive glow, decorative circuitry, glowing pipes, transparent sci-fi tubing, or impossible energy paths
-- busy factory scenes, sparks, smoke, clutter, or heavy machinery drama that reduces B2B technical credibility
+- busy factory drama, sparks, smoke, clutter, or heavy machinery scenes that reduce B2B credibility
 - fake specifications, UI values, certifications, customer logos, readable labels, compliance marks, or generated text
-- generated or distorted Chinese or English text when the text is meant to be readable
+- distorted Chinese or English text when the text must be readable
 - multiple equal focal points with no attention hierarchy
-- subjects that are merely adjacent, stacked, or connected by lines without visible role, direction, or result
+- subjects merely adjacent, stacked, or connected by lines without visible role, direction, or result
 - product/application cues that imply unverified customer installation, final product architecture, or confirmed performance
-- a revision that keeps the user-named defect visible at full size or thumbnail size
-- a polished image that no longer supports the planner brief or original intent lock
-
-Do not deliver a vetoed draft as a concept option. Redo it or return to planner.
-
-When multiple generated candidates exist, record why rejected candidates failed and why the selected candidate passes. A candidate containing a forbidden item or user-named defect cannot be delivered as a "direction" or "concept".
+- polished output that no longer supports the approved brief or local edit intent
 
 ## Text Rules
 
-Important website copy should remain HTML whenever possible. Text inside images is acceptable for labeled graphics or visual mockups only when the same meaning is also available through page content, alt text, or the surrounding page.
+Important website copy should remain HTML whenever possible. Text inside images is acceptable for labels or mockups only when the same meaning is available through page content, alt text, or surrounding copy.
 
-Use exact user-provided wording. Typeset important Chinese or English text with real fonts. Do not ask the image model to create important readable text.
-
-## Revision And Planner Return
-
-For failure attribution, revision discipline, and planner return format, read [references/revision-and-planner-return.md](references/revision-and-planner-return.md).
-
-Short rule:
-
-- Continue in imagegen when the strategy is sound but composition, crop, material, lighting, realism, subject cue, or file execution is weak.
-- Return to planner when the image responsibility is too broad or contradictory, attention owner is unclear, image role conflicts with page goal, claims are unsafe, page copy/CTA/H1 must change, or the same structural failure repeats.
+Use exact user-provided wording. Typeset important text with real fonts. Do not ask the image model to create important readable text.
 
 ## Output And Archive
 
-For folder structure and reproduction archive details, read [references/output-and-archive.md](references/output-and-archive.md). For full archive content, use [references/reproduction-archive-template.md](references/reproduction-archive-template.md).
+Read [references/output-and-archive.md](references/output-and-archive.md) when creating reusable drafts or finals. For full reproduction notes, use [references/reproduction-archive-template.md](references/reproduction-archive-template.md).
 
 Default output root:
 
 ```text
-outputs/jiangyue-website-images/{content-type}/{YYYY-MM-DD-short-topic-draft-01}/
-outputs/jiangyue-website-images/{content-type}/{YYYY-MM-DD-short-topic-final}/
+outputs/jiangyue-website-images/{content-type}/{short-folder-name}/
 ```
 
-Use archive levels:
+Use short lowercase kebab-case folder names such as:
 
-- **Trial:** exploratory or not-yet-usable output; save only needed inspection files.
-- **Usable draft:** passes basic intent, composition, size, and artifact review; create a reproduction archive.
-- **Final:** user-accepted or production-intended asset; update reproduction archive and compact rebuild recipe when practical.
+```text
+home-hero-a1-draft-1
+product-controller-a1-final
+```
 
 ## Delivery Report
 
@@ -234,7 +168,7 @@ Report only verified facts:
 
 - final file path
 - task folder path
-- reproduction archive path, or `not created yet` for trial-only outputs
+- reproduction archive path, or `not created yet`
 - dimensions and format
 - production method
 - formal `brand-system` files consulted, if any
@@ -242,6 +176,4 @@ Report only verified facts:
 - what could not be verified
 - remaining limitation, if any
 
-Do not claim browser, mobile, SEO, compression, WordPress behavior, or exact reproducibility unless it was checked.
-
-Correct dimensions, a saved file path, or a successful script run are not visual verification. Inspect the rendered output and at least one thumbnail/review-size version before claiming a visual pass.
+Correct dimensions, a saved path, or a successful script run are not visual verification. Inspect the rendered output before claiming a visual pass.

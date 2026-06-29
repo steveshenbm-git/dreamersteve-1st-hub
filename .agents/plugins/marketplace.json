@@ -5,6 +5,18 @@
   },
   "plugins": [
     {
+      "name": "jiangyue-website-workflow-director",
+      "source": {
+        "source": "local",
+        "path": "./plugins/jiangyue-website-workflow-director"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
       "name": "jiangyue-website-imagegen",
       "source": {
         "source": "local",

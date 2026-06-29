@@ -1,0 +1,34 @@
+{
+  "name": "jiangyue-website-workflow-director",
+  "version": "0.1.0",
+  "description": "Codex skill plugin for routing Jiangyue website planning, image production, knowledge curation, and superpowers process gates through one workflow director.",
+  "author": {
+    "name": "Hangzhou Jiangyue Technology Co., Ltd."
+  },
+  "repository": "https://github.com/steveshenbm-git/dreamersteve-1st-hub",
+  "keywords": [
+    "jiangyue",
+    "workflow",
+    "website-planning",
+    "image-generation",
+    "skill-routing"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Jiangyue Website Workflow Director",
+    "shortDescription": "Route Jiangyue website work through the right skills.",
+    "longDescription": "A Jiangyue Technology Codex skill for acting as the single user-facing entry point before planner, imagegen, curator, and superpowers process skills. It handles intent checks, post-image triage, repeated-failure resets, and delivery gates.",
+    "developerName": "Jiangyue Technology",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "brandColor": "#147DFF",
+    "defaultPrompt": [
+      "Use $jiangyue-website-workflow-director to route my Jiangyue website task to the right skill.",
+      "Use $jiangyue-website-workflow-director to review image feedback and decide the next workflow step.",
+      "Use $jiangyue-website-workflow-director to reset a failed Jiangyue visual workflow."
+    ]
+  }
+}

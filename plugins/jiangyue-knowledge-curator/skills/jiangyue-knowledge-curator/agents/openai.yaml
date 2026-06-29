@@ -1,4 +1,4 @@
 interface:
   display_name: "Jiangyue Knowledge Curator"
-  short_description: "Curate Jiangyue website knowledge and visual evidence."
-  default_prompt: "Use $jiangyue-knowledge-curator to organize Jiangyue website outputs, failures, references, and confirmed materials into the brand-system knowledge base."
+  short_description: "Curate confirmed website knowledge and evidence"
+  default_prompt: "Use $jiangyue-knowledge-curator to organize confirmed Jiangyue website outputs, failures, references, and materials into the brand-system."
