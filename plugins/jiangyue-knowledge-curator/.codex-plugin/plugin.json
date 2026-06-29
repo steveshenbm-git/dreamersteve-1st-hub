@@ -1,6 +1,6 @@
 {
   "name": "jiangyue-knowledge-curator",
-  "version": "0.1.0+codex.20260629022335",
+  "version": "0.1.0+codex.20260629024345",
   "description": "Codex skill plugin for curating confirmed Jiangyue website outputs, visual evidence, approved materials, failure cases, product fact boundaries, and competitor references into the local brand-system.",
   "author": {
     "name": "Hangzhou Jiangyue Technology Co., Ltd."
