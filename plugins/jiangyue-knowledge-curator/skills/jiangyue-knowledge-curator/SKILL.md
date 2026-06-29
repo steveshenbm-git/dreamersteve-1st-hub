@@ -15,27 +15,44 @@ Normally work after `$jiangyue-website-workflow-director` identifies that a resu
 
 ## Source And Destination
 
-Default knowledge root:
+Default formal knowledge root:
 
 ```text
 /Users/lirongjing/Documents/JY TECH WEB/brand-system/
 ```
 
+Reusable brand source root:
+
+```text
+/Users/lirongjing/Documents/JY TECH WEB/brand-source/
+```
+
 Approved visual asset library:
 
 ```text
-/Users/lirongjing/Documents/JY TECH WEB/outputs/jiangyue-website-images/_approved-library/
+/Users/lirongjing/Documents/JY TECH WEB/brand-source/_approved-library/
+```
+
+Temporary reusable materials:
+
+```text
+/Users/lirongjing/Documents/JY TECH WEB/brand-source/Temporary materials/
 ```
 
 Common source locations:
 
 ```text
+/Users/lirongjing/Documents/JY TECH WEB/brand-source/
 /Users/lirongjing/Documents/JY TECH WEB/outputs/jiangyue-website-images/
 /Users/lirongjing/Documents/JY TECH WEB/website-content-brand-plan/
 /Users/lirongjing/Documents/JY TECH WEB/市场调研/
 ```
 
 Formal authority lives under `brand-system/01-*` through `brand-system/06-*`. Do not treat `90-inbox/` or `91-daily-curation-log/` as formal authority.
+
+`brand-source/_approved-library/` is the centralized reusable asset library for user-confirmed `approved` final visuals.
+
+`brand-source/Temporary materials/` contains reusable reference materials below `approved` level. Use these materials only when creating reference images or internal visual comparisons. Do not treat them as approved website assets, final public materials, product proof, customer case evidence, certification evidence, or verified product facts.
 
 ## Workflow
 
@@ -65,32 +82,34 @@ unconfirmed candidates -> brand-system/90-inbox/
 daily curation summary -> brand-system/91-daily-curation-log/
 ```
 
+Physical reusable assets live under `brand-source/`. Formal decisions, boundaries, and indexes still live under `brand-system/`.
+
 ## Approved Asset Library
 
-Only user-confirmed `approved` final visuals enter the centralized asset library. Do not copy `source-only`, `partial-reference`, `process-only`, `candidate`, `rejected`, failure cases, or pure reference images.
+Only user-confirmed `approved` final visuals enter `brand-source/_approved-library/`. Do not copy `source-only`, `partial-reference`, `process-only`, `candidate`, `rejected`, failure cases, pure reference images, or anything from `Temporary materials/` into the approved library unless the user explicitly confirms that exact final visual as `approved`.
 
 When a final website visual is confirmed as `approved`:
 
 1. Keep the original task folder unchanged for reproduction and audit context.
-2. Copy the reusable final image into the matching library folder:
+2. Copy the reusable final image into the matching library folder under `brand-source/_approved-library/`:
 
 ```text
-_approved-library/backgrounds/
-_approved-library/hero/
-_approved-library/product/
-_approved-library/modules/
+/Users/lirongjing/Documents/JY TECH WEB/brand-source/_approved-library/backgrounds/
+/Users/lirongjing/Documents/JY TECH WEB/brand-source/_approved-library/hero/
+/Users/lirongjing/Documents/JY TECH WEB/brand-source/_approved-library/product/
+/Users/lirongjing/Documents/JY TECH WEB/brand-source/_approved-library/modules/
 ```
 
 3. Generate a small preview under:
 
 ```text
-_approved-library/thumbnails/
+/Users/lirongjing/Documents/JY TECH WEB/brand-source/_approved-library/thumbnails/
 ```
 
 4. Update:
 
 ```text
-_approved-library/asset-library-index.md
+/Users/lirongjing/Documents/JY TECH WEB/brand-source/_approved-library/asset-library-index.md
 ```
 
 Each index entry must include asset ID, status `approved`, asset type, library path, original source path, reproduction document path when available, approved use, prohibited use or limitations, confirmation date, and user confirmation note.
@@ -100,6 +119,16 @@ Use stable semantic filenames, for example:
 ```text
 b2-3-natural-leaf-vein-background-approved-4k-01.png
 ```
+
+## Temporary Materials
+
+Materials under `/Users/lirongjing/Documents/JY TECH WEB/brand-source/Temporary materials/` are reusable only as lower-authority reference inputs.
+
+- Treat them as below `approved` even when the user says they are reusable.
+- Use them only for reference image creation, internal comparisons, visual direction exploration, or controlled imagegen input.
+- Do not use them as final website assets or copy them into `brand-source/_approved-library/`.
+- Do not cite them as product facts, proof of application, certification, customer case, export market evidence, or performance evidence.
+- When indexing them in `brand-system/05-approved-materials/`, use `source-only`, `partial-reference`, or `risk-material` as appropriate, and clearly state the reference-only limitation.
 
 ## Naming Rules
 
