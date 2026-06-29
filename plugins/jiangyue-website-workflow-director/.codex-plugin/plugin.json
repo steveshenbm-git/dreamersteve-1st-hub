@@ -1,6 +1,6 @@
 {
   "name": "jiangyue-website-workflow-director",
-  "version": "0.1.0",
+  "version": "0.1.0+codex.20260629022334",
   "description": "Codex skill plugin for routing Jiangyue website planning, image production, knowledge curation, and superpowers process gates through one workflow director.",
   "author": {
     "name": "Hangzhou Jiangyue Technology Co., Ltd."
