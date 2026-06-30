@@ -96,6 +96,7 @@ For homepage heroes, product heroes, Contact heroes, brand-defining visuals, rec
 1. Follow Standard Path.
 2. Read `/Users/lirongjing/Documents/JY TECH WEB/brand-system/00-knowledge-gate/jiangyue-knowledge-gate.md` and only relevant formal knowledge files.
 3. Load only the needed references:
+   - [references/execution-gates.md](references/execution-gates.md) for method choice, subtask method lock, and visible-result gates.
    - [references/brief-review-rubric.md](references/brief-review-rubric.md) for production readiness.
    - [references/visual-structure-patterns.md](references/visual-structure-patterns.md) for abstract or multi-subject structure.
    - [references/design-upgrade.md](references/design-upgrade.md) when the design is generic or weak.
@@ -107,10 +108,13 @@ For homepage heroes, product heroes, Contact heroes, brand-defining visuals, rec
 - Copy user-named defects into a defect register.
 - A revised image may not be delivered if a registered defect remains visible at full size or thumbnail size.
 - If the same registered defect remains twice, stop the method and return to Workflow Director.
+- If the user says a requested change did not visibly happen, read [references/failure-reset-hard-gates.md](references/failure-reset-hard-gates.md) and do not deliver another draft without observable change evidence.
 - If the user says self-check failed, still wrong, not qualified, ugly, missed a reference, ignored an attachment, or marks the same defect, read [references/failure-reset-hard-gates.md](references/failure-reset-hard-gates.md) before further production.
 - Do not deliver a vetoed draft as a concept option.
 
 ## Production Method Rules
+
+For high-impact visuals, repeated failures, approved-material protection, or method disputes, use a subtask method lock from [references/execution-gates.md](references/execution-gates.md). A complex image task may have multiple subtasks, but each subtask must have one primary method.
 
 | Request | Default method |
 |---|---|
@@ -122,7 +126,7 @@ For homepage heroes, product heroes, Contact heroes, brand-defining visuals, rec
 
 Never downgrade a requested realistic, photographic, atmospheric, product, lab, equipment, or brand-defining hero into a flat illustration or screenshot workaround without user approval.
 
-For natural or organic structures such as leaves, leaf veins, branches, plants, people, natural textures, or natural material details, do not use deterministic vector/Python/SVG geometry as the final visual method unless the user explicitly requests a flat/vector style.
+For natural or organic structures such as water ripples, leaves, leaf veins, branches, plants, people, natural textures, or natural material details, do not use deterministic vector/Python/SVG geometry, Bezier curves, or geometric color blocks as the final visual method unless the user explicitly requests a flat/vector style. Deterministic tools may support masks, crops, text, export, comparison thumbnails, and color matching.
 
 ## Quality Hard Stops
 

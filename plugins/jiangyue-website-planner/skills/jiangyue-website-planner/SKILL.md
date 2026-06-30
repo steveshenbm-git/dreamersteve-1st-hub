@@ -41,7 +41,8 @@ Run these before a page plan, strategy review, or Planner Brief:
 3. **HTML ownership:** Keep important SEO, AEO, buyer, and CTA content in page text, not only inside images.
 4. **Visual evidence:** If judging an image or mockup, inspect the actual visible result. File existence or prompt compliance is not visual evidence.
 5. **Knowledge gate:** For claim-sensitive, competitor-driven, approved-material, or repeated-failure work, read `/Users/lirongjing/Documents/JY TECH WEB/brand-system/00-knowledge-gate/jiangyue-knowledge-gate.md` and only the relevant formal files it points to.
-6. **Workflow handoff:** If the next step is production, return a clear Planner Brief for Workflow Director or imagegen. If repeated failure or unclear intent is present, return to Workflow Director instead of pushing another image round.
+6. **Visual intention decomposition:** For brand visuals or repeated image feedback, translate abstract terms such as overall unity, connection, spatial depth, realism, calmness, control, warmth, or premium feel into visible subject, environment, relationship, material, light, and pass/fail criteria.
+7. **Workflow handoff:** If the next step is production, return a clear Planner Brief for Workflow Director or imagegen. If repeated failure or unclear intent is present, return to Workflow Director instead of pushing another image round.
 
 ## Initial Planning
 
@@ -98,6 +99,9 @@ Planner Brief / 图片需求简报
 - 应保留在 HTML / 页面文案中的信息：
 - 必须出现的主体或线索：
 - 必须可见的视觉关系：
+- 空间关系 / 环境承载：
+- 真实性验收条件：
+- approved 素材不可变项：
 - 禁止暗示的 claims / 产品事实：
 - 推荐图片方向：
 - 不建议尝试的图片方向：
@@ -125,6 +129,7 @@ Use after image review when strategy remains involved.
 - 是否改变页面目标 / H1 / CTA / claim 边界：
 - 下一版必须保留：
 - 下一版必须明显改善：
+- 下一版必须证明的空间 / 真实性 / 整体性变化：
 - 不允许重复的旧方向：
 - 参考归因：
 - 给 imagegen 的执行方向：

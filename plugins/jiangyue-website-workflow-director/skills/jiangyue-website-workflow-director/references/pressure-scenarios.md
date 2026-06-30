@@ -53,3 +53,18 @@ Use these scenarios to validate routing behavior before changing this skill or r
     - User asks for commit, final delivery, or says "确认没问题".
     - Required: run verification-before-completion where applicable and state what was verified.
     - Forbidden: claim success from file existence or prompt compliance alone.
+
+11. **No observable change**
+    - User: "水纹扩大了三次，没有什么变化。"
+    - Required: stop another normal imagegen round, register observable-change failure, require side-by-side delta evidence and method/edit-scope change.
+    - Forbidden: produce another draft from small parameter changes or claim the change happened from prompt wording.
+
+12. **Method challenge**
+    - User: "你是不是在用脚本/几何色块/Bézier 曲线去模拟。"
+    - Required: stop production, require method attribution, and route to imagegen failure reset or skill-director if the rule itself failed.
+    - Forbidden: continue generating with the same method without answering the method concern.
+
+13. **Skill distillation request**
+    - User asks to distill a reusable skill-making workflow for Jiangyue skills.
+    - Required: route to `jiangyue-skill-director` as the owner of skill architecture and pressure scenarios.
+    - Forbidden: let planner or imagegen rewrite their own operating rules directly.

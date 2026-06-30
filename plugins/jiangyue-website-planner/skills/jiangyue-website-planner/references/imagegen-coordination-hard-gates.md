@@ -55,6 +55,30 @@ Every rework handoff after user feedback must include:
 - pass/fail criteria for full-size and thumbnail review
 - whether imagegen must run its failure reset hard gates
 
+## Visual Intention Decomposition
+
+Use this when feedback contains abstract visual goals such as overall unity, connection, spatial depth, realism, calm control, warmth, premium feel, or brand atmosphere. Planner must translate the intention into visible evidence without prescribing imagegen's exact production method.
+
+```text
+Visual Intention Decomposition
+- User wording:
+- Strategy meaning:
+- Subject relationship:
+- Environment carrier:
+- Spatial evidence:
+- Material / texture evidence:
+- Light / color boundary:
+- Approved material that must not change:
+- Visible pass/fail criteria:
+```
+
+Examples:
+
+- "整体性 / 关联感": require shared environment, contact logic, consistent light, material transition, overlap, reflection, shadow, or depth relationship. Do not default to line connectors.
+- "空间感": require foreground/background order, contact surface, floating/attached/embedded logic, shadow, reflection, refraction, or scale consistency.
+- "真实性": require photographic or source-based texture behavior, natural non-geometric forms, plausible light, and detail scale that matches the subject.
+- "颜色不能大改": define protected hue, saturation, luminance, and affected area for approved materials.
+
 ## Reference Attribution
 
 Planner must distinguish:

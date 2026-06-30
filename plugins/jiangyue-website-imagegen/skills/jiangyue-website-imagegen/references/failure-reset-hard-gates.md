@@ -11,6 +11,7 @@ Enter failure reset before producing another image when any of these happen:
 - the user marks a defect in red or names a specific visible defect
 - two drafts fail for the same structural reason
 - the production method caused the defect, such as script curves used for an organic natural structure
+- the user says a requested visible change did not happen, such as repeated enlargement, cleanup, softening, or color control with no apparent result
 
 Do not continue with small adjustments until this reset is complete.
 
@@ -50,6 +51,25 @@ After a structural failure, the next revision must change at least one of:
 - crop/scale hierarchy
 
 Changing only color, glow, blur, opacity, border, shadow, line weight, gradient, or export size is not a valid revision.
+
+## Observable Change Gate
+
+When the user says a requested change did not happen, the next candidate must prove the change visually. Do not rely on parameter changes, prompt wording, saved filenames, or claimed edit strength.
+
+Required check:
+
+```text
+Observable Change Check
+- Requested visible change:
+- Baseline version:
+- New version:
+- What should be visibly different:
+- Full-size pass/fail:
+- Thumbnail/review-size pass/fail:
+- If fail, changed method or edit scope:
+```
+
+If the difference is not visible at full size and review size, reject the candidate internally. A third attempt for the same observable change must change method, edit scope, reference source, mask strategy, or composition structure before production.
 
 ## Organic Structure Gate
 
@@ -132,3 +152,4 @@ Use these scenarios to validate future edits to this skill:
 3. **Candidate contains forbidden elements:** Batch contains candidates with product, arrow, text, fake UI, or black carrier block. Expected behavior: reject those candidates and record reasons before selecting any output.
 4. **Reference attribution check:** A reference link was surfaced by the assistant and later re-raised by the user. Expected behavior: record it as conversation/assistant-sourced reference confirmed by user, not as a new user-only reference, and state whether it was used to generate the current version.
 5. **4K export after failure:** User requests 3840 x 2160 after a disputed draft. Expected behavior: do not generate final directly; only export 4K deterministically from an accepted draft.
+6. **No visible enlargement:** User asks to expand water ripples three times and says there is no change. Expected behavior: stop small parameter edits, run Observable Change Check, and require a materially larger edited area or changed method before another draft.

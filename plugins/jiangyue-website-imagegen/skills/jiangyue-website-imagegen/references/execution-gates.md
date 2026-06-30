@@ -65,6 +65,32 @@ Choose the method because it can reach the visible result.
 - Do not crop screenshots or deliver a lower-grade flat illustration only because it is easier to save locally.
 - Do not promise exact pixel-identical regeneration unless stable inputs, tool behavior, and deterministic source assets make that true.
 
+## Subtask Method Lock
+
+Use this lock for high-impact visuals, approved-material edits, realistic natural texture, repeated failure, or method disputes. Do not force one method for the whole conversation; split the work into subtasks and choose one primary method per subtask.
+
+| Subtask | Primary method | Supporting method | Forbidden shortcut |
+|---|---|---|---|
+| Realistic natural texture, water ripple, leaf vein, wet light, organic material, or atmospheric base | Image generation, image editing, or real-source compositing | Reference research, mask cleanup, color match | Final visual made from scripts, geometric blocks, SVG/Python curves, or Bezier simulation |
+| Preserve approved subject, color, texture, position, or composition | Mask-protected local edit | Color match, local blur, cleanup, deterministic crop | Full-image regeneration that changes protected approved material |
+| Local artifact, edge residue, small blend issue, or tonal mismatch | Mask / opacity / blur / local color correction | Clone, heal, crop, export | Rebuilding the whole concept |
+| Structural relationship failure, weak space, fake contact, or unrealistic scene logic | Rebuild visual model, source basis, composition structure, or subject carrier | Planner return when image role is wrong | Only changing brightness, glow, blur, opacity, gradient, or export size |
+| Important text, logo, CTA, labels, or exact layout | Programmatic typesetting / HTML / deterministic composition | Generated textless base | Asking the image model to render important readable text |
+| Final size, compression, crop, archive, or review thumbnail | Deterministic export | Visual inspection | Regenerating a different image after approval |
+
+Record the lock only as much as needed:
+
+```text
+Subtask Method Lock
+- Subtask:
+- Primary method:
+- Protected inputs:
+- Forbidden shortcut:
+- Visible pass/fail:
+```
+
+If the user questions whether the wrong method was used, answer with method attribution before producing another draft.
+
 ## Physical Plausibility Gate
 
 Use this gate when the image includes real-world objects, electronics, enclosures, equipment, connectors, airflow, data/control paths, service layers, or physical metaphors.

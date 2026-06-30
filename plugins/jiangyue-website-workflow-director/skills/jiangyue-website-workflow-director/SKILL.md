@@ -20,7 +20,7 @@ Apply the first matching rule. When multiple rules match, the lower number wins.
 | Priority | Condition | Required route |
 |---|---|---|
 | 0 | User says stop, pause, cancel, or hold | Stop work and report state |
-| 1 | User asks to create or modify a skill/plugin/workflow | Use `skill-creator`, `superpowers:writing-skills`, `superpowers:writing-plans` for multi-step edits, and, for plugins, `plugin-creator` |
+| 1 | User asks to create, modify, audit, or repair a Jiangyue skill/plugin/workflow | Use `$jiangyue-skill-director` first; it decides when `skill-creator`, `superpowers:writing-skills`, `superpowers:writing-plans`, or `plugin-creator` are required |
 | 2 | Task needs creative/strategic exploration or intent is unclear | Use `superpowers:brainstorming` or ask one necessary question |
 | 3 | Same issue repeated, self-check failed, user says still wrong, or process misread happened | Use `superpowers:systematic-debugging` before another production attempt |
 | 4 | Page goal, buyer intent, SEO/AEO, CTA, claim boundary, visual direction, customer feedback, or image role is involved | Use `$jiangyue-website-planner` |
@@ -34,9 +34,23 @@ Apply the first matching rule. When multiple rules match, the lower number wins.
 - A user change request after image output is not default imagegen. Run post-image triage first.
 - If a simple local edit is returned more than twice, stop small edits and run Intent Check.
 - If the same visible defect remains after two rounds, stop imagegen and run failure reset.
+- If the user says a requested visible change did not happen, treat it as an observable-change failure, not a preference note.
+- If the user challenges the production method, such as asking whether scripts, geometric blocks, or Bezier curves were used, stop production and require method attribution before another draft.
 - If the user named or marked a defect, copy it into the active defect register and treat it as pass/fail.
 - Do not produce final or 4K output from a disputed draft unless the user has accepted it or requests deterministic export from an accepted version.
 - Ask only one necessary question at a time. Prefer routing and progress over broad questionnaires.
+
+## Post-Image Feedback Routing
+
+Before sending another image round, classify the latest feedback:
+
+| Feedback signal | Required action |
+|---|---|
+| User accepts direction but asks for a local visual change | Route to imagegen with accepted baseline, protected elements, and pass/fail criteria |
+| User says no visible change happened | Run failure reset and require side-by-side observable-delta evidence |
+| User says the image is wrong, ugly, unrealistic, or not qualified | Register the defect and decide planner attribution vs imagegen execution failure |
+| User questions the method or repeated method failure | Stop small revisions and require method change or method justification |
+| User asks to optimize a skill, plugin, workflow, or self-check | Route to `$jiangyue-skill-director`; production skills must not repair themselves |
 
 ## Intent Check
 
