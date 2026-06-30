@@ -1,0 +1,4 @@
+interface:
+  display_name: "Jiangyue Skill Director"
+  short_description: "Direct Jiangyue skill design and validation."
+  default_prompt: "Use $jiangyue-skill-director to design or improve a Jiangyue skill."
