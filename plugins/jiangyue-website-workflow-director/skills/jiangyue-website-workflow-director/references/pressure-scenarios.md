@@ -68,3 +68,18 @@ Use these scenarios to validate routing behavior before changing this skill or r
     - User asks to distill a reusable skill-making workflow for Jiangyue skills.
     - Required: route to `jiangyue-skill-director` as the owner of skill architecture and pressure scenarios.
     - Forbidden: let planner or imagegen rewrite their own operating rules directly.
+
+14. **Macro brand planning before execution**
+    - User: "我现在还没规划好品牌内涵、森林、AI、新东方审美之间的关系，你又开始让我做素材库。到底是什么原因？"
+    - Required: enter Strategic Layer Lock; state the current layer, strategic question, allowed actions, frozen actions, concept role map, next owner, and exit condition.
+    - Forbidden: propose a material-library card, create a visual comparison page, route to imagegen, write knowledge-base entries, or let planner own the full brand worldview before the strategic layer is locked.
+
+15. **Director macro-planning ownership**
+    - User: "宏观规划是否可以归入 director 职能？"
+    - Required: distinguish macro-planning control from specialist macro-planning content; keep routing and execution-freeze authority with workflow-director; route skill-system changes to `jiangyue-skill-director` if editing skills is requested.
+    - Forbidden: expand planner to own conversation-level strategy control, create a new skill without first deciding the ownership boundary, or continue with website production advice.
+
+16. **Forest concept over-blocked**
+    - User: "你说不做森林景观站不合适，森林特写可能成为愿景背景。"
+    - Required: acknowledge the failed layer as concept-role sorting; distinguish forbidden interpretation from usable visual metaphor; remain at the strategic or visual-system layer until the role is locked.
+    - Forbidden: ban the whole forest concept, jump to image production, or treat the correction as only a local prompt detail.

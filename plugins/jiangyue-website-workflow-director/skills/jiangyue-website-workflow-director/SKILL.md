@@ -7,7 +7,9 @@ description: Use when Jiangyue website work needs task routing, intent clarifica
 
 ## Core Role
 
-Act as the single user-facing entry point for Jiangyue website visual and planning work. Own routing, intent checks, active task state, failure reset decisions, handoff quality, and delivery gates. Do not replace specialist skills.
+Act as the single user-facing entry point for Jiangyue website visual and planning work. Own routing, intent checks, strategic-layer control, active task state, failure reset decisions, handoff quality, and delivery gates. Do not replace specialist skills.
+
+The director owns macro-planning control, not all macro-planning content. It must decide whether the conversation is still at the brand strategy, narrative architecture, visual system, material-library, image-production, page-planning, or implementation layer before routing work to a specialist.
 
 ## Source Boundary
 
@@ -21,16 +23,85 @@ Apply the first matching rule. When multiple rules match, the lower number wins.
 |---|---|---|
 | 0 | User says stop, pause, cancel, or hold | Stop work and report state |
 | 1 | User asks to create, modify, audit, or repair a Jiangyue skill/plugin/workflow | Use `$jiangyue-skill-director` first; it decides when `skill-creator`, `superpowers:writing-skills`, `superpowers:writing-plans`, or `plugin-creator` are required |
-| 2 | Task needs creative/strategic exploration or intent is unclear | Use `superpowers:brainstorming` or ask one necessary question |
-| 3 | Same issue repeated, self-check failed, user says still wrong, or process misread happened | Use `superpowers:systematic-debugging` before another production attempt |
-| 4 | Page goal, buyer intent, SEO/AEO, CTA, claim boundary, visual direction, customer feedback, or image role is involved | Use `$jiangyue-website-planner` |
-| 5 | Strategy is clear and the request is image generation, retouching, P图, element removal, crop, export, or file packaging | Use `$jiangyue-website-imagegen` |
-| 6 | The task is to preserve approved outputs, failures, references, product facts, or workflow lessons | Use `$jiangyue-knowledge-curator` |
-| 7 | Before final delivery, commit, or "done" claim | Use `superpowers:verification-before-completion` when applicable |
+| 2 | User discusses brand core, macro planning, narrative architecture, concept hierarchy, visual worldview, strategic direction, or questions the agent's planning/execution logic | Enter **Strategic Layer Lock** before specialist routing |
+| 3 | Task needs creative/strategic exploration or intent is unclear | Use `superpowers:brainstorming` or ask one necessary question |
+| 4 | Same issue repeated, self-check failed, user says still wrong, or process misread happened | Use `superpowers:systematic-debugging` before another production attempt |
+| 5 | Page goal, buyer intent, SEO/AEO, CTA, claim boundary, visual direction, customer feedback, or image role is involved | Use `$jiangyue-website-planner` only after the strategic layer is locked or confirmed unnecessary |
+| 6 | Strategy is clear and the request is image generation, retouching, P图, element removal, crop, export, or file packaging | Use `$jiangyue-website-imagegen` |
+| 7 | The task is to preserve approved outputs, failures, references, product facts, or workflow lessons | Use `$jiangyue-knowledge-curator` |
+| 8 | Before final delivery, commit, or "done" claim | Use `superpowers:verification-before-completion` when applicable |
+
+## Strategic Layer Lock
+
+Use this before routing to planner, imagegen, curator, material collection, page work, or file edits when the user's real problem is still about macro planning.
+
+Trigger signals include:
+
+- brand core, brand essence, brand direction, brand architecture, brand narrative, macro planning, top-level strategy
+- concept relationships such as life / forest / AI / future / new oriental aesthetics / industrial credibility / OJ differentiation
+- user says the planning is not planned, the logic is wrong, the agent is biased toward details, or execution keeps drifting
+- user questions whether the current role, skill, or method is responsible for the failure
+- the next action would collect materials, create images, curate knowledge, or edit pages before the strategic relationship is agreed
+
+During Strategic Layer Lock, the director MUST:
+
+1. State the current layer:
+   - brand strategy
+   - narrative architecture
+   - visual system
+   - material library
+   - image production
+   - page planning
+   - implementation
+   - skill/process repair
+2. State the exact strategic question being decided.
+3. List which actions are allowed in this turn and which are frozen.
+4. Separate concepts into one of these roles:
+   - core business promise
+   - strategic differentiator
+   - technical capability
+   - buyer trust proof
+   - visual metaphor
+   - aesthetic constraint
+   - page/module tactic
+   - forbidden or risky interpretation
+5. Decide the next owner:
+   - stay with director for layer control and concept hierarchy
+   - route to planner for page/buyer/CTA/image-role strategy
+   - route to curator only after the user confirms a rule or material should become knowledge
+   - route to imagegen only after strategy, image role, and pass/fail criteria are locked
+   - route to skill-director when the failure is in the skill system or process rules
+6. Ask one necessary question only if the missing decision changes the layer, owner, or allowed next action.
+
+During Strategic Layer Lock, the director MUST NOT:
+
+- propose material-library structure as a substitute for unresolved brand strategy
+- create or revise images
+- create visual comparison pages
+- write formal knowledge-base entries
+- write website copy or page sections
+- hand off to imagegen
+- let planner own the whole brand worldview
+
+Use this output shape when state is at risk:
+
+```text
+Strategic Layer Lock
+- Current layer:
+- Strategic question:
+- User concern:
+- Allowed this turn:
+- Frozen this turn:
+- Concept role map:
+- Next owner:
+- Exit condition:
+```
 
 ## Hard Gates
 
 - The user should not need to choose planner, imagegen, curator, or superpowers. Decide the route first.
+- Macro planning control belongs to the director. If the strategic layer is not locked, do not route to production or curation skills.
+- If the user questions planning or execution logic, stop production advice and enter Strategic Layer Lock or `$jiangyue-skill-director` depending on whether the failure is domain strategy or skill-system design.
 - A user change request after image output is not default imagegen. Run post-image triage first.
 - If a simple local edit is returned more than twice, stop small edits and run Intent Check.
 - If the same visible defect remains after two rounds, stop imagegen and run failure reset.
@@ -89,7 +160,8 @@ Do not hand off vague instructions such as "make it better", "continue", or "opt
 
 ## Specialist Boundaries
 
-- Planner owns strategy, buyer-message fit, page role, visual role, claim boundary, and customer-feedback attribution.
+- Workflow Director owns macro-planning control, layer diagnosis, concept-role sorting, routing, and execution freeze decisions.
+- Planner owns page strategy, buyer-message fit, page role, visual role, claim boundary, and customer-feedback attribution after the strategic layer is locked or judged unnecessary.
 - Imagegen owns production method, image editing, visible quality, output files, visual QA, and reproduction archive after strategy is clear.
 - Curator owns confirmed project memory: approved materials, failures, references, product fact boundaries, and workflow lessons.
 - Superpowers own process gates: brainstorming, systematic debugging, writing skills, writing plans, and verification before completion.
