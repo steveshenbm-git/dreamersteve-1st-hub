@@ -168,9 +168,11 @@ After two failures, prohibited actions:
 Failure Reset must rebuild:
 
 1. **Analyze the problem / 分析问题:** identify the real objective, visible failure, user-named defects, baseline assets, references, and evidence checked.
-2. **Find the root cause / 找到问题:** name the failed layer: objective, image role, candidate set, reference attribution, composition contract, work sequence, verification, or route ownership.
+2. **Find the root cause / 找到问题:** name the failed layer: macro planning, core intent, intent lock, objective, strategic layer ownership, image role, candidate set, reference attribution, composition contract, work sequence, verification, or route ownership.
 3. **Propose the method / 提出方法:** choose revised planner direction, imagegen hard-gate rework, Workflow Director routing, or stop condition; state prohibited shortcuts.
 4. **Output the plan / 输出方案:** provide the next allowed action with required evidence and pass/fail criteria.
+
+The root-cause step may climb above planner. When the failure comes from unclear macro planning, unlocked core intent, or mixed strategic layers, the correct output is not a refined visual ranking or image brief. Return to Workflow Director for Strategic Layer Lock.
 
 ```text
 Failure Reset
@@ -181,6 +183,8 @@ Failure Reset
 - Candidate set or check objects:
 - Step 2 - Root cause:
 - Failed layer:
+- Root-cause climb needed: yes/no
+- If yes, target owner: Workflow Director / planner / imagegen
 - Wrong assumption:
 - Step 3 - Proposed method:
 - Work sequence:

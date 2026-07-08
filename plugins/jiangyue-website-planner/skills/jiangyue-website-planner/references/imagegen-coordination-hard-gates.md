@@ -137,9 +137,11 @@ Trigger Failure Reset when:
 Failure Reset must follow this order before any new imagegen request:
 
 1. **Analyze the problem / 分析问题:** restate the real objective, image role, visible blocking defects, baseline, reference set, and evidence checked.
-2. **Find the root cause / 找到问题:** decide whether the failed layer is page strategy, image role, Visual Composition Contract, reference attribution, imagegen method, verification, or routing. State the wrong assumption.
+2. **Find the root cause / 找到问题:** decide whether the failed layer is macro planning, core intent, intent lock, strategic layer ownership, page strategy, image role, Visual Composition Contract, reference attribution, imagegen method, verification, or routing. State the wrong assumption.
 3. **Propose the method / 提出方法:** decide whether to revise the Planner Brief, continue in imagegen with hard gates, return to Workflow Director, or stop image work. Name methods or routes that are prohibited.
 4. **Output the plan / 输出方案:** issue a revised planner brief, imagegen rework order, or stop instruction with pass/fail criteria and next allowed action.
+
+The root-cause step may climb above planner. If the real failure is unclear macro planning, unresolved brand/narrative direction, or an unlocked core intent, planner must return to Workflow Director for Strategic Layer Lock instead of producing a narrower image brief.
 
 Failure Reset must state:
 
@@ -152,6 +154,8 @@ Planner Failure Reset
 - Baseline / evidence checked:
 - Step 2 - Root cause:
 - Failed layer:
+- Root-cause climb needed: yes/no
+- If yes, target owner: Workflow Director / planner / imagegen
 - Wrong assumption:
 - Strategy assumptions to keep:
 - Strategy assumptions to revisit:
@@ -175,3 +179,4 @@ After reset, do not request a final/4K image until a draft has passed the reset 
 4. **Repeated bad visual direction:** planner must decide whether page/image role changed or production method failed; it may not keep sending "make it better".
 5. **4K requested after disputed draft:** planner must block final export unless a draft is accepted or the request is deterministic export from an accepted draft.
 6. **Semi-concrete AI/industrial field:** user asks for a silver-gray background with teal-green and blue B2-3 semi-concrete field intersection, not too hard-core industrial and not too abstract. Planner must output a visual composition contract with layers, positions, proportions, shapes, direction, buyer-readable meaning, forbidden forms, and pass/fail criteria before imagegen. It may not send only "industrial operation field + AI analysis field" as a vague concept.
+7. **Core intent not locked:** user says the failure is not only image quality, but that the macro relationship or core intent was unclear from the start. Planner must name the failed layer as macro planning / core intent / intent lock and return to Workflow Director for Strategic Layer Lock. It may not produce a narrower imagegen rework order to hide the unresolved strategic problem.

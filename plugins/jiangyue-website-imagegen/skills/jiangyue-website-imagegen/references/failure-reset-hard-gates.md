@@ -20,11 +20,24 @@ Do not continue with small adjustments until this reset is complete.
 Failure reset is a four-step workflow. Do not skip directly to a new prompt, new method, or new draft.
 
 1. **Analyze the problem / 分析问题:** state the visible failure, user-named defects, baseline version, affected image role, references, and evidence checked.
-2. **Find the root cause / 找到问题:** name the failed layer: strategy brief, visual composition contract, source/reference use, production method, edit scope, verification, or delivery judgment. State the wrong assumption and why the previous method cannot solve the defect.
+2. **Find the root cause / 找到问题:** name the failed layer. The failed layer may be above imagegen: macro planning, core intent, intent lock, strategic layer ownership, page strategy, image role, strategy brief, Visual Composition Contract, source/reference use, production method, edit scope, verification, or delivery judgment. State the wrong assumption and why the previous method cannot solve the defect.
 3. **Propose the method / 提出方法:** choose the next route and method change. State what method, structure, reference basis, mask/edit scope, or composition element must change, and which shortcuts are rejected.
 4. **Output the plan / 输出方案:** produce the next-round plan with protected elements, changed elements, pass/fail checks, draft-before-final rule, and verification evidence required before delivery.
 
 If any step cannot be answered from available evidence, stop production and return to Workflow Director or planner instead of generating another image.
+
+## Root-Cause Climb Gate
+
+The root-cause step is the core of failure reset. It must be allowed to climb above the current production skill.
+
+Before choosing a new method, ask:
+
+- Is the core intent clear enough to lock what must keep, change, avoid, and pass?
+- Is the macro planning layer clear, or is the task mixing brand strategy, visual system, page role, and image production?
+- Is the failure caused by a missing or wrong Planner Brief / Visual Composition Contract rather than image execution?
+- Is imagegen being asked to solve a decision that belongs to Workflow Director or planner?
+
+If macro planning, core intent, or intent lock is unclear, imagegen must not solve it with a new prompt or method. Return to Workflow Director for Strategic Layer Lock, or to planner when the missing decision is page/image strategy.
 
 ## Required Reset Record
 
@@ -37,6 +50,8 @@ Failure Reset
 - Baseline / evidence checked:
 - Step 2 - Root cause:
 - Failed layer:
+- Root-cause climb needed: yes/no
+- If yes, target owner: Workflow Director / planner / imagegen
 - Wrong assumption:
 - Failed method:
 - Failure category:
@@ -176,3 +191,4 @@ Use these scenarios to validate future edits to this skill:
 5. **4K export after failure:** User requests 3840 x 2160 after a disputed draft. Expected behavior: do not generate final directly; only export 4K deterministically from an accepted draft.
 6. **No visible enlargement:** User asks to expand water ripples three times and says there is no change. Expected behavior: stop small parameter edits, run Observable Change Check, and require a materially larger edited area or changed method before another draft.
 7. **Reset jumps to new draft:** A draft fails and the next response proposes a new prompt without naming the failed layer or wrong assumption. Expected behavior: block production, complete the four-step Failure Reset sequence, and only then decide whether imagegen, planner, or Workflow Director owns the next action.
+8. **Macro intent failure misread as prompt issue:** The user says the image keeps failing because the brand direction, life/AI/industrial relationship, or core intent was never locked. Expected behavior: root-cause climb to macro planning or intent lock, return to Workflow Director for Strategic Layer Lock, and forbid another image prompt as the next action.
