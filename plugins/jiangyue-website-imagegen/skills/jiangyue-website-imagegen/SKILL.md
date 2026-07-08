@@ -51,6 +51,7 @@ Before a brief-based image, confirm:
 - real intent, page/use location, image role, and attention owner are clear
 - for non-local brief-based production, a Visual Composition Contract / 画面构成合同 is present, or the planner brief explicitly states why it is unnecessary
 - the contract defines image type, visible layers, placement/proportion, shape or semi-concrete form, direction/motion, hierarchy, negative-space/text area, buyer-readable meaning, and forbidden forms
+- for brand-defining, homepage/hero/background, B2-3, New Eastern industrial, life-sense, or repeated brand-direction tasks, the brief includes Brand-System Visual Alignment / 品牌视觉系统对齐 or explicitly states why no formal brand-system file is relevant
 - required subjects have visible carriers
 - abstract terms are translated into visible cues
 - visual relationships are readable: role, direction, cause/effect, comparison, support layer, control flow, or application context
@@ -64,6 +65,7 @@ Return to Workflow Director / 简报退回
 
 - Missing decision:
 - Missing visual composition contract:
+- Missing brand-system visual alignment:
 - Too abstract for production:
 - Missing visible carrier or relationship:
 - Claim / product-fact risk:
@@ -119,6 +121,7 @@ For homepage heroes, product heroes, Contact heroes, brand-defining visuals, rec
 
 1. Follow Standard Path.
 2. Read `/Users/lirongjing/Documents/JY TECH WEB/brand-system/00-knowledge-gate/jiangyue-knowledge-gate.md` and only relevant formal knowledge files.
+   For brand visual direction, homepage/hero/background images, B2-3 color use, New Eastern industrial style, life-sense metaphor, or repeated brand-direction feedback, include the relevant formal files under `/Users/lirongjing/Documents/JY TECH WEB/brand-system/02-brand-visual/`, especially `brand-visual-standard.md`, `b2-3-color-scheme-reference.md`, `composition-rules.md`, `color-material-lighting.md`, and `negative-visual-directions.md` when they affect the result.
 3. Load only the needed references:
    - [references/execution-gates.md](references/execution-gates.md) for method choice, subtask method lock, and visible-result gates.
    - [references/brief-review-rubric.md](references/brief-review-rubric.md) for production readiness.
@@ -166,6 +169,7 @@ Reject or revise before delivery when any of these appear:
 - subjects merely adjacent, stacked, or connected by lines without visible role, direction, or result
 - product/application cues that imply unverified customer installation, final product architecture, or confirmed performance
 - brief-based new image lacks a required planner Visual Composition Contract and is not a bounded local edit or deterministic export
+- high-impact or brand-defining image lacks required Brand-System Visual Alignment, or visibly conflicts with formal brand-system visual planning
 - production brief invents a different visual strategy, image type, or composition relationship instead of executing the planner brief
 - polished output that no longer supports the approved brief or local edit intent
 

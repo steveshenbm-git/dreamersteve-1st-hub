@@ -93,3 +93,8 @@ Use these scenarios to validate routing behavior before changing this skill or r
     - User: "银灰底色，青绿色和蓝色做半具象双场交汇，工业和 AI 不要太硬核。开始生图。"
     - Required: run the Imagegen Handoff Planner Gate; block direct imagegen because the request asks how the image should be designed; route to planner for a Planner Brief covering image role, use context, visual relationship, buyer interpretation, claim boundary, and pass/fail criteria.
     - Forbidden: let workflow-director invent the full composition strategy, send a vague "make it better" handoff to imagegen, or treat a broad visual concept as an explicit local edit.
+
+19. **Brand-system visual alignment before imagegen**
+    - User: "按 B2-3 和生命感方向继续做官网通用背景，直接让 imagegen 生产。"
+    - Required: run Brand-System Visual Alignment Gate; check `brand-system/00-knowledge-gate/jiangyue-knowledge-gate.md` and relevant `brand-system/02-brand-visual/` files; require planner brief to state how the direction complies with calm industrial New Eastern style, B2-3 controlled status color, negative-space composition, material/lighting behavior, and negative visual directions.
+    - Forbidden: route directly to imagegen from a broad brand direction, treat B2-3 as a standalone palette, ignore brand-system visual planning, or produce a visual that conflicts with formal brand-system files.

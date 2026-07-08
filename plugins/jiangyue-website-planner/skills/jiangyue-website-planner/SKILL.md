@@ -22,6 +22,7 @@ Planner owns:
 - first-screen attention hierarchy
 - image role and message ownership between image and HTML/page copy
 - executable visual composition plan for imagegen: image type, visual layers, subject/support/background roles, placement, approximate proportion, shape/form language, direction, hierarchy, negative space, buyer-readable meaning, and forbidden forms
+- brand-system visual alignment for visual strategy and Planner Briefs
 - claim boundary and missing product-fact flags
 - post-image strategy review when user feedback questions credibility, brand direction, layout integration, or information hierarchy
 - strategy briefs for imagegen
@@ -42,9 +43,10 @@ Run these before a page plan, strategy review, or Planner Brief:
 3. **HTML ownership:** Keep important SEO, AEO, buyer, and CTA content in page text, not only inside images.
 4. **Visual evidence:** If judging an image or mockup, inspect the actual visible result. File existence or prompt compliance is not visual evidence.
 5. **Knowledge gate:** For claim-sensitive, competitor-driven, approved-material, or repeated-failure work, read `/Users/lirongjing/Documents/JY TECH WEB/brand-system/00-knowledge-gate/jiangyue-knowledge-gate.md` and only the relevant formal files it points to.
-6. **Visual intention decomposition:** For brand visuals or repeated image feedback, translate abstract terms such as overall unity, connection, spatial depth, realism, calmness, control, warmth, or premium feel into visible subject, environment, relationship, material, light, and pass/fail criteria.
-7. **Visual composition contract:** If the next step is imagegen and the task is not a bounded local edit, the Planner Brief MUST be concrete enough that a person could roughly sketch the composition from text alone. It must state what the image is, what visible parts it contains, where they sit, how large/important they are, what shapes/forms they use, how they relate, what stays as negative space, what a normal buyer should read, and what forms are forbidden.
-8. **Workflow handoff:** If the next step is production, return a clear Planner Brief for Workflow Director or imagegen. If repeated failure or unclear intent is present, return to Workflow Director instead of pushing another image round.
+6. **Brand-system visual alignment:** For macro visual planning, homepage/hero/background images, brand-defining visuals, B2-3 color use, New Eastern industrial style, life-sense metaphor, or repeated brand-direction feedback, align the brief with relevant files under `/Users/lirongjing/Documents/JY TECH WEB/brand-system/02-brand-visual/`. At minimum consider `brand-visual-standard.md`, `b2-3-color-scheme-reference.md`, `composition-rules.md`, `color-material-lighting.md`, and `negative-visual-directions.md`.
+7. **Visual intention decomposition:** For brand visuals or repeated image feedback, translate abstract terms such as overall unity, connection, spatial depth, realism, calmness, control, warmth, or premium feel into visible subject, environment, relationship, material, light, and pass/fail criteria.
+8. **Visual composition contract:** If the next step is imagegen and the task is not a bounded local edit, the Planner Brief MUST be concrete enough that a person could roughly sketch the composition from text alone. It must state what the image is, what visible parts it contains, where they sit, how large/important they are, what shapes/forms they use, how they relate, what stays as negative space, what a normal buyer should read, and what forms are forbidden.
+9. **Workflow handoff:** If the next step is production, return a clear Planner Brief for Workflow Director or imagegen. If repeated failure or unclear intent is present, return to Workflow Director instead of pushing another image round.
 
 ## Initial Planning
 
@@ -117,6 +119,11 @@ Planner Brief / 图片需求简报
   - 主次关系与注意力控制：
   - 普通买家的可读解释：
   - 禁止出现的形态：
+- Brand-System Visual Alignment / 品牌视觉系统对齐：
+  - 已参考的 brand-system 文件：
+  - 必须符合的视觉规则：
+  - 本轮允许偏离或不适用的规则及原因：
+  - 明确禁止的品牌偏移：
 - 真实性验收条件：
 - approved 素材不可变项：
 - 禁止暗示的 claims / 产品事实：

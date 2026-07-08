@@ -72,7 +72,8 @@ During Strategic Layer Lock, the director MUST:
    - route to curator only after the user confirms a rule or material should become knowledge
    - route to imagegen only after strategy, image role, and pass/fail criteria are locked
    - route to skill-director when the failure is in the skill system or process rules
-6. Ask one necessary question only if the missing decision changes the layer, owner, or allowed next action.
+6. Run the **Brand-System Visual Alignment Gate** below when the work affects brand direction, visual worldview, homepage/hero/background images, brand-defining visuals, B2-3 color use, New Eastern industrial style, life-sense metaphor, or approved visual materials.
+7. Ask one necessary question only if the missing decision changes the layer, owner, or allowed next action.
 
 During Strategic Layer Lock, the director MUST NOT:
 
@@ -114,6 +115,32 @@ Strategic Layer Lock
 - Do not produce final or 4K output from a disputed draft unless the user has accepted it or requests deterministic export from an accepted version.
 - If the user explicitly asks for `gpt-image-2`, `image 2`, ChatGPT Image API, or OpenAI API, keep that as a method constraint in the handoff; do not replace it with the current chat's native image generation capability.
 - Ask only one necessary question at a time. Prefer routing and progress over broad questionnaires.
+
+## Brand-System Visual Alignment Gate
+
+Use this gate before routing macro visual planning, Planner Briefs, or high-impact image production.
+
+Required source:
+
+```text
+/Users/lirongjing/Documents/JY TECH WEB/brand-system/00-knowledge-gate/jiangyue-knowledge-gate.md
+```
+
+For brand visual direction, also align with relevant formal files under:
+
+```text
+/Users/lirongjing/Documents/JY TECH WEB/brand-system/02-brand-visual/
+```
+
+At minimum for Jiangyue macro visual direction, check whether the next step respects:
+
+- `brand-visual-standard.md`: calm industrial New Eastern style; professional content as subject; negative space as temperament; teal-green as recognition cue; life sense as operating visibility, not mystical AI life force.
+- `b2-3-color-scheme-reference.md`: B2-3 as controlled status/recognition color, not a dominant ecological gradient.
+- `composition-rules.md`: Eastern restraint through spacing, hierarchy, rhythm, and copy space, not decorative Chinese motifs.
+- `color-material-lighting.md`: cool gray, white, deep blue, graphite, silver, and restrained teal as the base behavior.
+- `negative-visual-directions.md`: reject forbidden directions before planner or imagegen continues.
+
+If the user proposes or the task implies a direction that conflicts with the current brand-system visual planning, do not route directly to imagegen. Route to planner for a revised brief, or keep the conversation in Strategic Layer Lock when the conflict is macro-level.
 
 ## Imagegen Handoff Planner Gate
 
