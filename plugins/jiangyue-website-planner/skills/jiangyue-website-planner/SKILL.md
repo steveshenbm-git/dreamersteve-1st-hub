@@ -21,6 +21,7 @@ Planner owns:
 - section order, H1 direction, supporting copy direction, CTA path, and FAQ/AEO opportunities
 - first-screen attention hierarchy
 - image role and message ownership between image and HTML/page copy
+- executable visual composition plan for imagegen: image type, visual layers, subject/support/background roles, placement, approximate proportion, shape/form language, direction, hierarchy, negative space, buyer-readable meaning, and forbidden forms
 - claim boundary and missing product-fact flags
 - post-image strategy review when user feedback questions credibility, brand direction, layout integration, or information hierarchy
 - strategy briefs for imagegen
@@ -28,7 +29,7 @@ Planner owns:
 Planner does not own:
 
 - image generation, P图, crop, export, compression, or pixel-level retouching
-- final material rendering, physical composition, or exact production method
+- final material rendering, pixel-level composition, or exact production method
 - formal knowledge-base entry
 - final approval; the user owns approval
 
@@ -42,7 +43,8 @@ Run these before a page plan, strategy review, or Planner Brief:
 4. **Visual evidence:** If judging an image or mockup, inspect the actual visible result. File existence or prompt compliance is not visual evidence.
 5. **Knowledge gate:** For claim-sensitive, competitor-driven, approved-material, or repeated-failure work, read `/Users/lirongjing/Documents/JY TECH WEB/brand-system/00-knowledge-gate/jiangyue-knowledge-gate.md` and only the relevant formal files it points to.
 6. **Visual intention decomposition:** For brand visuals or repeated image feedback, translate abstract terms such as overall unity, connection, spatial depth, realism, calmness, control, warmth, or premium feel into visible subject, environment, relationship, material, light, and pass/fail criteria.
-7. **Workflow handoff:** If the next step is production, return a clear Planner Brief for Workflow Director or imagegen. If repeated failure or unclear intent is present, return to Workflow Director instead of pushing another image round.
+7. **Visual composition contract:** If the next step is imagegen and the task is not a bounded local edit, the Planner Brief MUST be concrete enough that a person could roughly sketch the composition from text alone. It must state what the image is, what visible parts it contains, where they sit, how large/important they are, what shapes/forms they use, how they relate, what stays as negative space, what a normal buyer should read, and what forms are forbidden.
+8. **Workflow handoff:** If the next step is production, return a clear Planner Brief for Workflow Director or imagegen. If repeated failure or unclear intent is present, return to Workflow Director instead of pushing another image round.
 
 ## Initial Planning
 
@@ -79,7 +81,9 @@ Do not approve a new image round when page objective, claim boundary, image role
 
 ## Planner Brief
 
-Produce a strategy-only brief. Imagegen owns production method, material rendering, exact visual structure, and file execution.
+Produce a strategy-and-composition brief. Planner must define the executable visual composition plan and acceptance criteria. Imagegen owns production method, material rendering, pixel-level composition, exact visual quality, and file execution.
+
+Planner Brief may not be handed to imagegen when it only describes concepts, mood, brand meaning, or abstract relationships. It must include a **Visual Composition Contract / 画面构成合同** unless the request is only a bounded local edit or deterministic export.
 
 ```text
 Planner Brief / 图片需求简报
@@ -100,6 +104,19 @@ Planner Brief / 图片需求简报
 - 必须出现的主体或线索：
 - 必须可见的视觉关系：
 - 空间关系 / 环境承载：
+- Visual Composition Contract / 画面构成合同：
+  - 图片类型：
+  - 画面层级：
+    - 背景层：
+    - 主视觉层：
+    - 辅助层：
+    - 留白 / 文字承托区：
+  - 元素位置与大致占比：
+  - 形状 / 半具象形式：
+  - 方向与运动感：
+  - 主次关系与注意力控制：
+  - 普通买家的可读解释：
+  - 禁止出现的形态：
 - 真实性验收条件：
 - approved 素材不可变项：
 - 禁止暗示的 claims / 产品事实：
@@ -130,6 +147,7 @@ Use after image review when strategy remains involved.
 - 下一版必须保留：
 - 下一版必须明显改善：
 - 下一版必须证明的空间 / 真实性 / 整体性变化：
+- 下一版必须证明的画面构成变化：
 - 不允许重复的旧方向：
 - 参考归因：
 - 给 imagegen 的执行方向：

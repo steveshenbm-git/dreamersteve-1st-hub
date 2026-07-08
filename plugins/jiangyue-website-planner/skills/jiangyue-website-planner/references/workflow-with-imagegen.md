@@ -32,7 +32,7 @@ Fuzzy page or image request
 
 ## Planner To Imagegen Handoff
 
-Planner hands off a strategy contract, not a production recipe.
+Planner hands off a strategy-and-composition contract, not a production recipe.
 
 Planner must define:
 
@@ -44,6 +44,7 @@ Planner must define:
 - what the image must support
 - what HTML/page copy must carry
 - required subject cues
+- visual composition contract: image type, visible layers, subject/support/background roles, placement, approximate proportion, shape/form language, direction, hierarchy, negative space, buyer-readable meaning, and forbidden forms
 - forbidden claims and product facts
 - recommended and forbidden directions
 - CTA/title/logo relationship
@@ -56,7 +57,7 @@ Imagegen then defines:
 
 - execution intent
 - must keep, remove, materially change, and avoid lists
-- subject carriers and relationship model
+- production-level subject carriers and relationship model within the planner composition contract
 - physical logic and method selection
 - production brief
 - image output, review, and archive
@@ -69,6 +70,7 @@ Planner should not send another vague instruction such as "make it more premium"
 - what visible problem must change
 - what must remain unchanged
 - whether page goal, H1, CTA, image role, or claim boundary changes
+- what composition element, placement, proportion, shape, hierarchy, or negative-space relationship must change when the problem is design-level
 - what old direction imagegen must not repeat
 - what the next draft must show to pass
 

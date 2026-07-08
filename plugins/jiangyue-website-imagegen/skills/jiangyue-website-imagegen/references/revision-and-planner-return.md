@@ -49,6 +49,8 @@ Return to `$jiangyue-website-planner` when:
 - image role conflicts with page goal, H1, CTA, logo, or conversion path
 - making the image work requires changing page copy, CTA, H1, section order, positioning, or claim boundary
 - the brief asks imagegen to imply unverified product architecture, customer installation, certifications, specs, application use, or performance
+- the planner brief lacks, contradicts, or overloads the Visual Composition Contract / 画面构成合同 for a strategy-level image or new image direction
+- imagegen would need to invent the image type, layer structure, placement/proportion, shape or semi-concrete form, direction, hierarchy, negative-space/text area, buyer-readable meaning, or forbidden forms to proceed
 - user feedback questions brand direction, layout integration, visual hierarchy, credibility for European B2B buyers, or whether the visual strategy is right
 - two structural image revisions fail for the same reason
 - the same user-stated problem remains visible after a previous imagegen revision
@@ -63,6 +65,7 @@ Imagegen return-to-planner request
 - Failure attribution: execution issue / strategy issue
 - Trigger for returning to planner:
 - Why the current image request does not hold:
+- Visual composition contract gap:
 - Visual directions already tried and why they failed:
 - Directions not recommended:
 - Planner needs to decide:

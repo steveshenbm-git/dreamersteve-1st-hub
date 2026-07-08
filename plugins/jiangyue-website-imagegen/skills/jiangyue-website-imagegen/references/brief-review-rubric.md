@@ -36,6 +36,7 @@ Score from 1 to 5. A passing brief needs every core dimension at 4 or above. Do 
 | Dimension | Pass condition |
 |---|---|
 | Intent fidelity | The brief still solves the user's original job and does not drift into a different asset |
+| Visual composition contract | For brief-based new images, the brief states image type, visible layers, placement/proportion, shape or semi-concrete form, direction/motion, hierarchy, negative-space/text area, buyer-readable meaning, and forbidden forms |
 | Carrier completeness | Every named subject has a visible carrier or a planned HTML/page-copy carrier |
 | Relationship readability | The viewer can infer roles, direction, and result without reading a long explanation |
 | Physical plausibility | Real-world objects, enclosures, PCBs, paths, materials, and supports make practical sense |
@@ -64,6 +65,8 @@ Stop before user confirmation when any of these score below 4:
 Stop before image generation when any of these are true:
 
 - the brief only works because the explanation is persuasive
+- a brief-based new image lacks a Visual Composition Contract / 画面构成合同 and is not a bounded local edit, format edit, or deterministic export
+- the production brief replaces the planner's composition contract with a new visual strategy instead of executing it
 - the structure is physically strange but planned to be fixed later
 - the visual quality relies mainly on color, glow, gradients, or background atmosphere
 - the concept uses a generic AI icon, three equal cards, decorative lines, or an arbitrary enclosure as the core idea
@@ -86,6 +89,7 @@ For a standard or high-impact brief, include a compact self-review in the produc
 ```text
 简报评分
 - 意图锁定：/5
+- 画面构成合同：/5
 - 主体承载：/5
 - 关系可读：/5
 - 物理合理性：/5
@@ -108,6 +112,7 @@ Use a one-line reason only for any score below 5. Do not turn the score section 
 Choose one correction:
 
 - **Missing intent:** ask one question about what the viewer must understand.
+- **Missing composition contract:** return to Workflow Director / planner for a revised planner brief; do not invent the image type, layer structure, placement, form, direction, hierarchy, or buyer meaning inside imagegen.
 - **Missing carrier:** assign the subject to image, visual cue, or HTML copy.
 - **Weak relationship:** switch relationship model before changing style.
 - **Physical failure:** rebuild the structure using plausible layers, enclosure, mounting, workflow, or abstract geometry.
@@ -121,3 +126,7 @@ Choose one correction:
 - **Strategy failure:** return to `$jiangyue-website-planner` with an imagegen rework request.
 
 After two failed brief reviews for the same asset, stop and offer 2-3 new structure directions only if the page strategy is still valid. If the failure involves page goal, attention hierarchy, image role, message ownership, or claim boundary, return to planner instead.
+
+## Pressure Scenario
+
+- **Planner contract missing:** User or workflow asks imagegen to make a silver-gray base with teal-green and blue B2-3 semi-concrete field intersection, but the planner brief does not define image type, layers, placement/proportion, shape, direction, hierarchy, negative-space/text area, buyer-readable meaning, and forbidden forms. Required: return to Workflow Director / planner for a revised Visual Composition Contract. Forbidden: invent the contract in imagegen and produce anyway.

@@ -55,6 +55,19 @@ Every rework handoff after user feedback must include:
 - pass/fail criteria for full-size and thumbnail review
 - whether imagegen must run its failure reset hard gates
 
+For a new image direction or strategy-level rework, every handoff must also include a visual composition contract:
+
+- image type
+- visible layers and their roles
+- element placement and approximate proportion
+- shape / semi-concrete form language
+- direction or movement
+- hierarchy and negative-space area
+- buyer-readable meaning
+- forbidden visible forms
+
+If these fields are missing, planner must revise the brief before imagegen continues.
+
 ## Visual Intention Decomposition
 
 Use this when feedback contains abstract visual goals such as overall unity, connection, spatial depth, realism, calm control, warmth, premium feel, or brand atmosphere. Planner must translate the intention into visible evidence without prescribing imagegen's exact production method.
@@ -71,6 +84,28 @@ Visual Intention Decomposition
 - Approved material that must not change:
 - Visible pass/fail criteria:
 ```
+
+## Visual Composition Contract
+
+Use this before imagegen when the request asks how an image should be designed, shown, arranged, made semi-concrete, or made readable to buyers.
+
+```text
+Visual Composition Contract
+- Image type:
+- Background layer:
+- Primary visual layer:
+- Support layer:
+- Negative-space / text-support area:
+- Placement and approximate proportion:
+- Shape / semi-concrete form:
+- Direction or movement:
+- Attention hierarchy:
+- Buyer-readable meaning:
+- Forbidden visible forms:
+- Visible pass/fail criteria:
+```
+
+Passing standard: a person should be able to roughly sketch the composition from this contract alone. If the contract only contains concept words such as "industrial life", "AI analysis", "premium", "future", "connection", or "energy" without visible placement, shape, hierarchy, and forbidden forms, it is not ready for imagegen.
 
 Examples:
 
@@ -124,3 +159,4 @@ After reset, do not request a final/4K image until a draft has passed the reset 
 3. **Imagegen self-check failed:** planner must stop vague "continue" routing and decide imagegen hard-gate reset vs revised Planner Brief.
 4. **Repeated bad visual direction:** planner must decide whether page/image role changed or production method failed; it may not keep sending "make it better".
 5. **4K requested after disputed draft:** planner must block final export unless a draft is accepted or the request is deterministic export from an accepted draft.
+6. **Semi-concrete AI/industrial field:** user asks for a silver-gray background with teal-green and blue B2-3 semi-concrete field intersection, not too hard-core industrial and not too abstract. Planner must output a visual composition contract with layers, positions, proportions, shapes, direction, buyer-readable meaning, forbidden forms, and pass/fail criteria before imagegen. It may not send only "industrial operation field + AI analysis field" as a vague concept.

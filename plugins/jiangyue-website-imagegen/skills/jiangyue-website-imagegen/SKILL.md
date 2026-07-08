@@ -11,6 +11,8 @@ Own visual execution: production method, image editing, subject structure, physi
 
 Do not own page strategy, H1, CTA hierarchy, buyer-message fit, claim boundary, or final approval. If those are unclear, return to `$jiangyue-website-workflow-director` with the missing decision.
 
+Do not replace a planner Visual Composition Contract / 画面构成合同 with imagegen's own visual strategy. For brief-based new images, imagegen executes the planner's strategy-and-composition contract; if the contract is missing or too abstract, return it before production.
+
 Use professional industrial judgment for European B2B buyers. Avoid unsupported product, certification, customer, performance, export, compliance, patent, or specification claims.
 
 ## Execution Boundary
@@ -36,7 +38,7 @@ Classify the request before production:
 | Intent | Imagegen action |
 |---|---|
 | Local edit / P图 / crop / export | Execute directly if source, target, and output are clear |
-| Brief-based new image | Review the Planner Brief, then produce a production brief |
+| Brief-based new image | Review the Planner Brief and Visual Composition Contract, then produce a production brief |
 | Post-image execution fix | Register user-named defects and revise only if strategy remains clear |
 | Repeated failure, unclear intent, or strategy drift | Return to Workflow Director before producing |
 
@@ -47,6 +49,8 @@ Ask one concise execution question only when a required file, target object, out
 Before a brief-based image, confirm:
 
 - real intent, page/use location, image role, and attention owner are clear
+- for non-local brief-based production, a Visual Composition Contract / 画面构成合同 is present, or the planner brief explicitly states why it is unnecessary
+- the contract defines image type, visible layers, placement/proportion, shape or semi-concrete form, direction/motion, hierarchy, negative-space/text area, buyer-readable meaning, and forbidden forms
 - required subjects have visible carriers
 - abstract terms are translated into visible cues
 - visual relationships are readable: role, direction, cause/effect, comparison, support layer, control flow, or application context
@@ -59,6 +63,7 @@ If not ready, return this:
 Return to Workflow Director / 简报退回
 
 - Missing decision:
+- Missing visual composition contract:
 - Too abstract for production:
 - Missing visible carrier or relationship:
 - Claim / product-fact risk:
@@ -101,9 +106,9 @@ For simple local edits, deterministic cards, format edits, crops, exports, and l
 
 For most Jiangyue website visuals:
 
-1. Create a production brief and four hard lists: must keep, must remove, must materially change, must avoid.
+1. Create a production brief from the planner strategy-and-composition contract and four hard lists: must keep, must remove, must materially change, must avoid.
 2. Choose method based on visible result quality, not convenience.
-3. Translate abstract terms into concrete subject carriers, visual relationships, physical logic, and pass/fail checks.
+3. Translate approved composition intent into concrete subject carriers, visual relationships, physical logic, and pass/fail checks without changing the planner's visual strategy.
 4. Produce one strong draft first; create variants only when they differ materially.
 5. Inspect full size, thumbnail/review size, prior draft, and references when available.
 6. Revise, reject, archive, or return to Workflow Director based on visible evidence.
@@ -160,6 +165,8 @@ Reject or revise before delivery when any of these appear:
 - multiple equal focal points with no attention hierarchy
 - subjects merely adjacent, stacked, or connected by lines without visible role, direction, or result
 - product/application cues that imply unverified customer installation, final product architecture, or confirmed performance
+- brief-based new image lacks a required planner Visual Composition Contract and is not a bounded local edit or deterministic export
+- production brief invents a different visual strategy, image type, or composition relationship instead of executing the planner brief
 - polished output that no longer supports the approved brief or local edit intent
 
 ## Text Rules
