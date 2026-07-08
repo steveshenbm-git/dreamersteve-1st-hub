@@ -107,6 +107,7 @@ Strategic Layer Lock
 - A user change request after image output is not default imagegen. Run post-image triage first.
 - If a simple local edit is returned more than twice, stop small edits and run Intent Check.
 - If the same visible defect remains after two rounds, stop imagegen and run failure reset.
+- Failure reset must run in order: analyze the problem, find the failed layer/root cause, propose the next method or route, then output the next-round plan with pass/fail checks.
 - If the user says a requested visible change did not happen, treat it as an observable-change failure, not a preference note.
 - If the user challenges the production method, such as asking whether scripts, geometric blocks, or Bezier curves were used, stop production and require method attribution before another draft.
 - If the user named or marked a defect, copy it into the active defect register and treat it as pass/fail.

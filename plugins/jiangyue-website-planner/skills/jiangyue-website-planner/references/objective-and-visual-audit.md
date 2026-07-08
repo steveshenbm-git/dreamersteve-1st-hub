@@ -167,13 +167,25 @@ After two failures, prohibited actions:
 
 Failure Reset must rebuild:
 
+1. **Analyze the problem / 分析问题:** identify the real objective, visible failure, user-named defects, baseline assets, references, and evidence checked.
+2. **Find the root cause / 找到问题:** name the failed layer: objective, image role, candidate set, reference attribution, composition contract, work sequence, verification, or route ownership.
+3. **Propose the method / 提出方法:** choose revised planner direction, imagegen hard-gate rework, Workflow Director routing, or stop condition; state prohibited shortcuts.
+4. **Output the plan / 输出方案:** provide the next allowed action with required evidence and pass/fail criteria.
+
 ```text
 Failure Reset
+- Step 1 - Problem analysis:
 - Real objective:
 - Required evidence:
 - Baseline assets:
 - Candidate set or check objects:
+- Step 2 - Root cause:
+- Failed layer:
+- Wrong assumption:
+- Step 3 - Proposed method:
 - Work sequence:
+- Rejected shortcut(s):
+- Step 4 - Output plan:
 - Pass/fail criteria:
 - User-named defect register:
 - Reference attribution:

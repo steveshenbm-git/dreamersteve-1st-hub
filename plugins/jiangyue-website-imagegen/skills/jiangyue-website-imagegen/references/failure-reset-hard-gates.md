@@ -15,18 +15,40 @@ Enter failure reset before producing another image when any of these happen:
 
 Do not continue with small adjustments until this reset is complete.
 
+## Required Sequence
+
+Failure reset is a four-step workflow. Do not skip directly to a new prompt, new method, or new draft.
+
+1. **Analyze the problem / 分析问题:** state the visible failure, user-named defects, baseline version, affected image role, references, and evidence checked.
+2. **Find the root cause / 找到问题:** name the failed layer: strategy brief, visual composition contract, source/reference use, production method, edit scope, verification, or delivery judgment. State the wrong assumption and why the previous method cannot solve the defect.
+3. **Propose the method / 提出方法:** choose the next route and method change. State what method, structure, reference basis, mask/edit scope, or composition element must change, and which shortcuts are rejected.
+4. **Output the plan / 输出方案:** produce the next-round plan with protected elements, changed elements, pass/fail checks, draft-before-final rule, and verification evidence required before delivery.
+
+If any step cannot be answered from available evidence, stop production and return to Workflow Director or planner instead of generating another image.
+
 ## Required Reset Record
 
 Before revising, write a short internal or user-visible reset record:
 
 ```text
 Failure Reset
+- Step 1 - Problem analysis:
 - User-named defect register:
+- Baseline / evidence checked:
+- Step 2 - Root cause:
+- Failed layer:
+- Wrong assumption:
 - Failed method:
 - Failure category:
 - Why small revision is invalid:
+- Step 3 - Proposed method:
 - New method or structure:
+- Rejected shortcut(s):
+- Step 4 - Output plan:
+- Protected elements:
+- Changed elements:
 - Hard pass/fail checks:
+- Verification required before delivery:
 ```
 
 Copy user-named defects verbatim when possible. A defect in this register is a blocking item.
@@ -153,3 +175,4 @@ Use these scenarios to validate future edits to this skill:
 4. **Reference attribution check:** A reference link was surfaced by the assistant and later re-raised by the user. Expected behavior: record it as conversation/assistant-sourced reference confirmed by user, not as a new user-only reference, and state whether it was used to generate the current version.
 5. **4K export after failure:** User requests 3840 x 2160 after a disputed draft. Expected behavior: do not generate final directly; only export 4K deterministically from an accepted draft.
 6. **No visible enlargement:** User asks to expand water ripples three times and says there is no change. Expected behavior: stop small parameter edits, run Observable Change Check, and require a materially larger edited area or changed method before another draft.
+7. **Reset jumps to new draft:** A draft fails and the next response proposes a new prompt without naming the failed layer or wrong assumption. Expected behavior: block production, complete the four-step Failure Reset sequence, and only then decide whether imagegen, planner, or Workflow Director owns the next action.

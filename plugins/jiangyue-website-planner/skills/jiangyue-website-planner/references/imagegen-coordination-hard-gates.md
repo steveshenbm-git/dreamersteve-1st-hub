@@ -134,18 +134,33 @@ Trigger Failure Reset when:
 - a visual problem repeats and planner cannot clearly assign strategy vs execution cause
 - references, baseline assets, or check objects were wrong or incomplete
 
+Failure Reset must follow this order before any new imagegen request:
+
+1. **Analyze the problem / 分析问题:** restate the real objective, image role, visible blocking defects, baseline, reference set, and evidence checked.
+2. **Find the root cause / 找到问题:** decide whether the failed layer is page strategy, image role, Visual Composition Contract, reference attribution, imagegen method, verification, or routing. State the wrong assumption.
+3. **Propose the method / 提出方法:** decide whether to revise the Planner Brief, continue in imagegen with hard gates, return to Workflow Director, or stop image work. Name methods or routes that are prohibited.
+4. **Output the plan / 输出方案:** issue a revised planner brief, imagegen rework order, or stop instruction with pass/fail criteria and next allowed action.
+
 Failure Reset must state:
 
 ```text
 Planner Failure Reset
+- Step 1 - Problem analysis:
 - Real objective:
 - Current image role:
 - Blocking defects:
+- Baseline / evidence checked:
+- Step 2 - Root cause:
+- Failed layer:
+- Wrong assumption:
 - Strategy assumptions to keep:
 - Strategy assumptions to revisit:
+- Step 3 - Proposed method:
+- Correct next route:
+- Rejected shortcut(s):
+- Step 4 - Output plan:
 - Required visual evidence:
 - Correct reference set:
-- Correct next route:
 - Pass/fail criteria:
 - Explicitly prohibited next actions:
 ```
