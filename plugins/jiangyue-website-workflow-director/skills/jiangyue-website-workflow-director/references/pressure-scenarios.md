@@ -83,3 +83,8 @@ Use these scenarios to validate routing behavior before changing this skill or r
     - User: "你说不做森林景观站不合适，森林特写可能成为愿景背景。"
     - Required: acknowledge the failed layer as concept-role sorting; distinguish forbidden interpretation from usable visual metaphor; remain at the strategic or visual-system layer until the role is locked.
     - Forbidden: ban the whole forest concept, jump to image production, or treat the correction as only a local prompt detail.
+
+17. **Local OpenAI API image request**
+    - User: "我不要你对话框的生图能力处理图片，我需要用 ChatGPT 的 image 2 / gpt-image-2 API 处理图片。"
+    - Required: keep local OpenAI API / `gpt-image-2` as a method constraint; route to imagegen once local edit intent or image role is clear; require `.env`/environment key boundary, cost/network confirmation for live calls, source/output paths, and pass/fail criteria.
+    - Forbidden: use the current chat's native image generation tool, ask the user to paste the API key into chat, modify installed cache files, or stop at "Codex cannot bind an API key to the chat box" without offering the local API workflow.

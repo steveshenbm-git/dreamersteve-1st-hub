@@ -27,9 +27,10 @@ Apply the first matching rule. When multiple rules match, the lower number wins.
 | 3 | Task needs creative/strategic exploration or intent is unclear | Use `superpowers:brainstorming` or ask one necessary question |
 | 4 | Same issue repeated, self-check failed, user says still wrong, or process misread happened | Use `superpowers:systematic-debugging` before another production attempt |
 | 5 | Page goal, buyer intent, SEO/AEO, CTA, claim boundary, visual direction, customer feedback, or image role is involved | Use `$jiangyue-website-planner` only after the strategic layer is locked or confirmed unnecessary |
-| 6 | Strategy is clear and the request is image generation, retouching, P图, element removal, crop, export, or file packaging | Use `$jiangyue-website-imagegen` |
-| 7 | The task is to preserve approved outputs, failures, references, product facts, or workflow lessons | Use `$jiangyue-knowledge-curator` |
-| 8 | Before final delivery, commit, or "done" claim | Use `superpowers:verification-before-completion` when applicable |
+| 6 | Strategy or local edit intent is clear and the user asks to use `gpt-image-2`, `image 2`, ChatGPT Image API, or OpenAI API for Jiangyue website images | Use `$jiangyue-website-imagegen` with a Local OpenAI API handoff; do not use the current chat's native image tool |
+| 7 | Strategy is clear and the request is image generation, retouching, P图, element removal, crop, export, or file packaging | Use `$jiangyue-website-imagegen` |
+| 8 | The task is to preserve approved outputs, failures, references, product facts, or workflow lessons | Use `$jiangyue-knowledge-curator` |
+| 9 | Before final delivery, commit, or "done" claim | Use `superpowers:verification-before-completion` when applicable |
 
 ## Strategic Layer Lock
 
@@ -109,7 +110,28 @@ Strategic Layer Lock
 - If the user challenges the production method, such as asking whether scripts, geometric blocks, or Bezier curves were used, stop production and require method attribution before another draft.
 - If the user named or marked a defect, copy it into the active defect register and treat it as pass/fail.
 - Do not produce final or 4K output from a disputed draft unless the user has accepted it or requests deterministic export from an accepted version.
+- If the user explicitly asks for `gpt-image-2`, `image 2`, ChatGPT Image API, or OpenAI API, keep that as a method constraint in the handoff; do not replace it with the current chat's native image generation capability.
 - Ask only one necessary question at a time. Prefer routing and progress over broad questionnaires.
+
+## Local OpenAI API Image Requests
+
+Use this gate when the user wants Jiangyue image work through their own OpenAI API key rather than the chat's native image tool.
+
+The director owns only routing and task-package clarity. Route to `$jiangyue-website-imagegen` when:
+
+- the user names `gpt-image-2`, `image 2`, ChatGPT Image API, OpenAI API, API key, `.env`, or local API image processing
+- the source image, target change, output stage, or image role is clear enough for production
+- any page strategy, claim boundary, or buyer-message decision has already been locked or is irrelevant to the local edit
+
+The handoff must include:
+
+- method constraint: use local OpenAI API / `gpt-image-2`
+- API key boundary: read only from project `.env` or local environment; never ask the user to paste the key into chat
+- cost/network gate: live API calls may incur cost and need explicit current-task confirmation unless the user already gave that confirmation
+- source path, output role, output stage, must keep/remove/change/avoid, and pass/fail criteria
+- output root: `/Users/lirongjing/Documents/JY TECH WEB/outputs/jiangyue-website-images`
+
+Return to planner before imagegen only when the API request depends on unresolved page strategy, buyer trust, visual role, or unsupported product claims.
 
 ## Post-Image Feedback Routing
 

@@ -69,6 +69,25 @@ Return to Workflow Director / 简报退回
 
 Use the lightest path that protects visible quality.
 
+### Local OpenAI API / gpt-image-2 Path
+
+Use this path when the handoff or user explicitly requires `gpt-image-2`, `image 2`, ChatGPT Image API, OpenAI API, API key, `.env`, or local API image processing.
+
+Hard rules:
+
+- Do not use the current chat's native image generation tool when the user requested local OpenAI API processing.
+- Read the API key only from `/Users/lirongjing/Documents/JY TECH WEB/.env` or an already configured local environment variable. Never ask the user to paste the key into chat, never print it, and never save it in skill files, archives, prompts, logs, or reproduction notes.
+- Before a live API request, state that it will contact OpenAI and may incur API cost. Get explicit current-task confirmation unless the user has already clearly approved that exact call.
+- Verify the source image path before calling the API. If the file is missing, ask for the missing path instead of guessing.
+- Save usable outputs under `/Users/lirongjing/Documents/JY TECH WEB/outputs/jiangyue-website-images`, following [references/output-and-archive.md](references/output-and-archive.md).
+- Report model/method, output path, visual checks, and limitations. Do not claim API success, image quality, or exact dimensions unless verified.
+
+Method rules:
+
+- Use image edits when modifying an existing raster image; use image generation only when creating a new image from text.
+- Keep user-provided visual constraints as pass/fail criteria, especially must keep/remove/change/avoid lists.
+- Use deterministic post-processing for text, logos, crops, compression, comparison thumbnails, and final export when that is more reliable than another API call.
+
 ### Light Path
 
 For simple local edits, deterministic cards, format edits, crops, exports, and low-risk adaptations:
@@ -156,14 +175,17 @@ Read [references/output-and-archive.md](references/output-and-archive.md) when c
 Default output root:
 
 ```text
-outputs/jiangyue-website-images/{content-type}/{short-folder-name}/
+outputs/jiangyue-website-images/{content-type}/{conversation-root-cn}/{task-folder}/
 ```
 
-Use short lowercase kebab-case folder names such as:
+Keep all files created in one Codex conversation under one Chinese conversation root folder named from the conversation title or a concise Chinese summary of the user's task. Create subfolders inside that root for each task, draft, or final export.
+
+Examples:
 
 ```text
-home-hero-a1-draft-1
-product-controller-a1-final
+outputs/jiangyue-website-images/home/首页英雄图API测试/01-方向草稿/
+outputs/jiangyue-website-images/home/首页英雄图API测试/02-局部修改/
+outputs/jiangyue-website-images/home/首页英雄图API测试/03-final/
 ```
 
 ## Delivery Report

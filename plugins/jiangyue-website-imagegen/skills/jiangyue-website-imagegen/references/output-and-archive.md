@@ -4,12 +4,12 @@ Use this reference when saving Jiangyue website image outputs.
 
 ## Folder Structure
 
-Every task uses a versioned folder under the project output area:
+Every Codex conversation uses one conversation root folder under the project output area. All drafts, sources, reviews, and finals created in that conversation must stay under that root so the user can find the whole work session in one place.
+
+Use a Chinese root folder name based on the Codex conversation title. If the exact title is unavailable, create a concise Chinese name from the user's task. Avoid vague roots such as `新建文件夹`, `图片`, `测试`, or long prompt fragments.
 
 ```text
-outputs/jiangyue-website-images/{content-type}/{YYYY-MM-DD-short-topic-trial-01}/
-outputs/jiangyue-website-images/{content-type}/{YYYY-MM-DD-short-topic-draft-01}/
-outputs/jiangyue-website-images/{content-type}/{YYYY-MM-DD-short-topic-final}/
+outputs/jiangyue-website-images/{content-type}/{conversation-root-cn}/
 ```
 
 Recommended content folders:
@@ -23,7 +23,15 @@ Recommended content folders:
 - `brand/`
 - `shared/`
 
-Use short filenames inside each task folder:
+Create a subfolder inside the conversation root for each task, draft set, revision round, or final export:
+
+```text
+outputs/jiangyue-website-images/{content-type}/{conversation-root-cn}/01-方向草稿/
+outputs/jiangyue-website-images/{content-type}/{conversation-root-cn}/02-局部修改/
+outputs/jiangyue-website-images/{content-type}/{conversation-root-cn}/03-final/
+```
+
+Use clear short filenames inside each task folder:
 
 ```text
 {page-or-section}-{position}-{draft-or-final}-{number}.{ext}
@@ -35,7 +43,7 @@ Examples:
 - `product-hero-final-01.png`
 - `contact-hero-draft-02.png`
 
-Avoid long prompt fragments, repeated company names, repeated category words, and dates inside filenames when the folder already contains that context.
+Avoid scattering files directly under `{content-type}`. Avoid creating a new top-level folder for every draft. Avoid long prompt fragments, repeated company names, repeated category words, and dates inside filenames when the conversation root already contains that context.
 
 ## Archive Levels
 
