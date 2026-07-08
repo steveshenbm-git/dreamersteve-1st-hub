@@ -26,9 +26,9 @@ Apply the first matching rule. When multiple rules match, the lower number wins.
 | 2 | User discusses brand core, macro planning, narrative architecture, concept hierarchy, visual worldview, strategic direction, or questions the agent's planning/execution logic | Enter **Strategic Layer Lock** before specialist routing |
 | 3 | Task needs creative/strategic exploration or intent is unclear | Use `superpowers:brainstorming` or ask one necessary question |
 | 4 | Same issue repeated, self-check failed, user says still wrong, or process misread happened | Use `superpowers:systematic-debugging` before another production attempt |
-| 5 | Page goal, buyer intent, SEO/AEO, CTA, claim boundary, visual direction, customer feedback, or image role is involved | Use `$jiangyue-website-planner` only after the strategic layer is locked or confirmed unnecessary |
-| 6 | Strategy or local edit intent is clear and the user asks to use `gpt-image-2`, `image 2`, ChatGPT Image API, or OpenAI API for Jiangyue website images | Use `$jiangyue-website-imagegen` with a Local OpenAI API handoff; do not use the current chat's native image tool |
-| 7 | Strategy is clear and the request is image generation, retouching, P图, element removal, crop, export, or file packaging | Use `$jiangyue-website-imagegen` |
+| 5 | Page goal, buyer intent, SEO/AEO, CTA, claim boundary, visual direction, customer feedback, image role, visual metaphor, semi-concrete form, composition strategy, or buyer interpretation is involved | Use `$jiangyue-website-planner` only after the strategic layer is locked or confirmed unnecessary |
+| 6 | Strategy or local edit intent is clear and the user asks to use `gpt-image-2`, `image 2`, ChatGPT Image API, or OpenAI API for Jiangyue website images | Use `$jiangyue-website-imagegen` with a Local OpenAI API handoff only after the Imagegen Handoff Planner Gate passes; do not use the current chat's native image tool |
+| 7 | The request is image generation, retouching, P图, element removal, crop, export, or file packaging | Use `$jiangyue-website-imagegen` only after the Imagegen Handoff Planner Gate passes |
 | 8 | The task is to preserve approved outputs, failures, references, product facts, or workflow lessons | Use `$jiangyue-knowledge-curator` |
 | 9 | Before final delivery, commit, or "done" claim | Use `superpowers:verification-before-completion` when applicable |
 
@@ -102,6 +102,7 @@ Strategic Layer Lock
 
 - The user should not need to choose planner, imagegen, curator, or superpowers. Decide the route first.
 - Macro planning control belongs to the director. If the strategic layer is not locked, do not route to production or curation skills.
+- Before handing any task to imagegen, run the **Imagegen Handoff Planner Gate** below. This is a hard rule.
 - If the user questions planning or execution logic, stop production advice and enter Strategic Layer Lock or `$jiangyue-skill-director` depending on whether the failure is domain strategy or skill-system design.
 - A user change request after image output is not default imagegen. Run post-image triage first.
 - If a simple local edit is returned more than twice, stop small edits and run Intent Check.
@@ -113,6 +114,35 @@ Strategic Layer Lock
 - If the user explicitly asks for `gpt-image-2`, `image 2`, ChatGPT Image API, or OpenAI API, keep that as a method constraint in the handoff; do not replace it with the current chat's native image generation capability.
 - Ask only one necessary question at a time. Prefer routing and progress over broad questionnaires.
 
+## Imagegen Handoff Planner Gate
+
+Use this gate before every route to `$jiangyue-website-imagegen`.
+
+Direct imagegen handoff is allowed only when at least one condition is true:
+
+- **Explicit local execution:** the user has already specified the exact visible edit, export, crop, compression, format conversion, or deterministic change, and the change does not alter image role, visual metaphor, buyer interpretation, page strategy, claim boundary, or composition concept.
+- **Accepted baseline revision:** the user has accepted the current image direction and asks for a bounded local change with clear must keep / must change / must avoid / acceptance criteria.
+- **Planner brief exists:** `$jiangyue-website-planner` has produced a current Planner Brief or Optimization Brief with image role, page/use context, visual relationship, must support / must not imply, and pass/fail criteria.
+
+Route to `$jiangyue-website-planner` before imagegen when the next output depends on any of these:
+
+- 画面怎么设计, composition strategy, subject/form choice, semi-concrete vs abstract expression, visual metaphor, or "what shape/form should it use"
+- industrial / AI / life sense relationship, B2-3 color role, buyer readability, trust fit, page role, first-screen attention, CTA/text support, or claim boundary
+- a new image direction, brand-defining visual, homepage/hero/background concept, or any production brief that is more than a local edit
+
+When this gate blocks imagegen, say:
+
+```text
+Imagegen Handoff Planner Gate
+- Direct imagegen blocked because:
+- Current owner:
+- Planner must decide:
+- Frozen:
+- Exit condition:
+```
+
+Do not bypass this gate because the visual direction "feels clear." If the task asks how the image should be designed, planner must turn it into a brief before imagegen.
+
 ## Local OpenAI API Image Requests
 
 Use this gate when the user wants Jiangyue image work through their own OpenAI API key rather than the chat's native image tool.
@@ -122,6 +152,7 @@ The director owns only routing and task-package clarity. Route to `$jiangyue-web
 - the user names `gpt-image-2`, `image 2`, ChatGPT Image API, OpenAI API, API key, `.env`, or local API image processing
 - the source image, target change, output stage, or image role is clear enough for production
 - any page strategy, claim boundary, or buyer-message decision has already been locked or is irrelevant to the local edit
+- the Imagegen Handoff Planner Gate passes
 
 The handoff must include:
 
