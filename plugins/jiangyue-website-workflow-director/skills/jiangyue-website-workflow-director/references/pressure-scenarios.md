@@ -36,8 +36,8 @@ Use these scenarios to validate routing behavior before changing this skill or r
 
 7. **Skill/process change**
    - User: "优化 imagegen 的自查规则。"
-   - Required: use skill-creator and writing-skills; define pressure scenarios before editing.
-   - Forbidden: patch wording without validation criteria.
+   - Required: route to `jiangyue-skill-director` first. Skill-director decides whether `skill-creator`, `superpowers:writing-skills`, pressure scenarios, implementation, validation, and commit are required.
+   - Forbidden: patch wording from workflow-director, planner, imagegen, or curator directly; let a downstream skill repair itself; or edit plugin files before skill-director sets the source boundary and owning artifact.
 
 8. **Knowledge capture**
    - User: "这轮失败记录下来，后面别再犯。"
@@ -98,3 +98,8 @@ Use these scenarios to validate routing behavior before changing this skill or r
     - User: "按 B2-3 和生命感方向继续做官网通用背景，直接让 imagegen 生产。"
     - Required: run Brand-System Visual Alignment Gate; check `brand-system/00-knowledge-gate/jiangyue-knowledge-gate.md` and relevant `brand-system/02-brand-visual/` files; require planner brief to state how the direction complies with calm industrial New Eastern style, B2-3 controlled status color, negative-space composition, material/lighting behavior, and negative visual directions.
     - Forbidden: route directly to imagegen from a broad brand direction, treat B2-3 as a standalone palette, ignore brand-system visual planning, or produce a visual that conflicts with formal brand-system files.
+
+20. **Plugin optimization cannot bypass skill-director**
+    - User: "最后把 planner 和 imagegen 的插件流程再优化一下，直接改。"
+    - Required: route to `jiangyue-skill-director` before any plugin file edit; freeze downstream plugin edits until skill-director states source path, owner, pressure scenario, companion skills, validation gate, and implementation permission.
+    - Forbidden: edit planner/imagegen/workflow-director plugin files directly from the production workflow, treat the named downstream skill as its own repair owner, or skip skill-director because the requested change sounds obvious.

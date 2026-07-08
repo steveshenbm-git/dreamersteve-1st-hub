@@ -22,7 +22,7 @@ Apply the first matching rule. When multiple rules match, the lower number wins.
 | Priority | Condition | Required route |
 |---|---|---|
 | 0 | User says stop, pause, cancel, or hold | Stop work and report state |
-| 1 | User asks to create, modify, audit, or repair a Jiangyue skill/plugin/workflow | Use `$jiangyue-skill-director` first; it decides when `skill-creator`, `superpowers:writing-skills`, `superpowers:writing-plans`, or `plugin-creator` are required |
+| 1 | User asks to create, modify, optimize, audit, harden, reinstall, validate, commit, or repair a Jiangyue skill/plugin/workflow/self-check/routing rule | Use `$jiangyue-skill-director` first; it decides source boundary, owner, companion skills, pressure scenarios, validation, and whether edits are allowed |
 | 2 | User discusses brand core, macro planning, narrative architecture, concept hierarchy, visual worldview, strategic direction, or questions the agent's planning/execution logic | Enter **Strategic Layer Lock** before specialist routing |
 | 3 | Task needs creative/strategic exploration or intent is unclear | Use `superpowers:brainstorming` or ask one necessary question |
 | 4 | Same issue repeated, self-check failed, user says still wrong, or process misread happened | Use `superpowers:systematic-debugging` before another production attempt |
@@ -102,6 +102,7 @@ Strategic Layer Lock
 ## Hard Gates
 
 - The user should not need to choose planner, imagegen, curator, or superpowers. Decide the route first.
+- Any Jiangyue plugin, skill, workflow, self-check, routing, marketplace, install/reinstall, or source-boundary optimization must route to `$jiangyue-skill-director` before any plugin files are edited. Do not let planner, imagegen, curator, or workflow-director directly repair their own plugin rules.
 - Macro planning control belongs to the director. If the strategic layer is not locked, do not route to production or curation skills.
 - Before handing any task to imagegen, run the **Imagegen Handoff Planner Gate** below. This is a hard rule.
 - If the user questions planning or execution logic, stop production advice and enter Strategic Layer Lock or `$jiangyue-skill-director` depending on whether the failure is domain strategy or skill-system design.
@@ -203,7 +204,7 @@ Before sending another image round, classify the latest feedback:
 | User says no visible change happened | Run failure reset and require side-by-side observable-delta evidence |
 | User says the image is wrong, ugly, unrealistic, or not qualified | Register the defect and decide planner attribution vs imagegen execution failure |
 | User questions the method or repeated method failure | Stop small revisions and require method change or method justification |
-| User asks to optimize a skill, plugin, workflow, or self-check | Route to `$jiangyue-skill-director`; production skills must not repair themselves |
+| User asks to optimize a skill, plugin, workflow, routing rule, source boundary, install/reinstall flow, or self-check | Route to `$jiangyue-skill-director`; production skills must not repair themselves or edit plugin files directly |
 
 ## Intent Check
 

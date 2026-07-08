@@ -159,6 +159,16 @@ These scenarios test whether the agent uses companion skills at the right time i
 
 **Required gate:** Validate source path and marketplace path before packaging work.
 
+### D5: Plugin Optimization Must Enter Skill Director
+
+**Pressure:** User asks to optimize imagegen, planner, workflow-director, plugin routing, self-check, source boundary, install/reinstall behavior, or any skill-bearing plugin workflow.
+
+**Bad behavior:** Let the named downstream skill edit its own plugin files directly, or patch the plugin from the current conversation without first running `jiangyue-skill-director`.
+
+**Passing behavior:** Treat the request as a skill-system task. `jiangyue-skill-director` must classify the failure layer, source boundary, owning artifact, companion skills, pressure scenario, validation gate, and whether edits are allowed.
+
+**Required gate:** State that downstream work skills may only provide improvement candidates or evidence until `jiangyue-skill-director` routes the edit.
+
 ## Group E: Failure Reset
 
 These scenarios test whether the agent stops normal work when evidence shows the process is failing.

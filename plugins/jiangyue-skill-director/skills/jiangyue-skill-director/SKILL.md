@@ -11,6 +11,17 @@ Own the Jiangyue method for designing, improving, and validating skills. Do not 
 
 Do not replace Jiangyue work skills or `jiangyue-website-workflow-director`. This skill governs skill-system design and repair. User-facing multi-skill production work stays owned by the workflow director.
 
+## Plugin Optimization Ownership Gate
+
+All Jiangyue plugin, skill, workflow, self-check, routing, install/reinstall, marketplace, or source-boundary optimization must enter through `jiangyue-skill-director` first.
+
+Hard rule:
+
+- If the user asks to optimize, modify, repair, audit, improve, harden, reinstall, validate, or commit a Jiangyue plugin or skill-bearing workflow, do not let a downstream work skill edit plugin files directly.
+- `jiangyue-skill-director` must classify the failure layer, source boundary, owning artifact, companion skills, pressure scenario, validation gate, and whether implementation is allowed.
+- Downstream work skills such as planner, imagegen, workflow-director, or curator may only produce an improvement candidate or failure evidence unless `jiangyue-skill-director` has explicitly routed the edit.
+- Any direct plugin edit that bypassed this gate is itself a skill-system failure; stop and run the self-optimization loop before continuing.
+
 ## Source Boundary
 
 For Jiangyue plugin development, edit only the GitHub branch working tree unless the user explicitly asks for local installation or cache work. Do not modify `~/.codex/plugins/cache/`.
