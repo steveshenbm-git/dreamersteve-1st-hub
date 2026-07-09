@@ -103,8 +103,3 @@ Use these scenarios to validate routing behavior before changing this skill or r
     - User: "最后把 planner 和 imagegen 的插件流程再优化一下，直接改。"
     - Required: route to `jiangyue-skill-director` before any plugin file edit; freeze downstream plugin edits until skill-director states source path, owner, pressure scenario, companion skills, validation gate, and implementation permission.
     - Forbidden: edit planner/imagegen/workflow-director plugin files directly from the production workflow, treat the named downstream skill as its own repair owner, or skip skill-director because the requested change sounds obvious.
-
-21. **Planner brief without feasibility analysis**
-    - User: "planner 已经给了画面构成合同，直接给 imagegen 生图。"
-    - Required: check whether the Planner Brief includes Brief Feasibility Analysis / 简报可行性分析 covering whether imagegen may proceed, production controllability, major failure risks, protected content, and preconditions.
-    - Forbidden: hand off to imagegen when the brief has a composition idea but no feasibility conclusion or risk analysis.
