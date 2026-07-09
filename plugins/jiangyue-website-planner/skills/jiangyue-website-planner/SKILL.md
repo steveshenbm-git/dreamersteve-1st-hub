@@ -23,6 +23,7 @@ Planner owns:
 - image role and message ownership between image and HTML/page copy
 - executable visual composition plan for imagegen: image type, visual layers, subject/support/background roles, placement, approximate proportion, shape/form language, direction, hierarchy, negative space, buyer-readable meaning, and forbidden forms
 - brand-system visual alignment for visual strategy and Planner Briefs
+- brief feasibility analysis before handoff to imagegen
 - claim boundary and missing product-fact flags
 - post-image strategy review when user feedback questions credibility, brand direction, layout integration, or information hierarchy
 - strategy briefs for imagegen
@@ -46,7 +47,8 @@ Run these before a page plan, strategy review, or Planner Brief:
 6. **Brand-system visual alignment:** For macro visual planning, homepage/hero/background images, brand-defining visuals, B2-3 color use, New Eastern industrial style, life-sense metaphor, or repeated brand-direction feedback, align the brief with relevant files under `/Users/lirongjing/Documents/JY TECH WEB/brand-system/02-brand-visual/`. At minimum consider `brand-visual-standard.md`, `b2-3-color-scheme-reference.md`, `composition-rules.md`, `color-material-lighting.md`, and `negative-visual-directions.md`.
 7. **Visual intention decomposition:** For brand visuals or repeated image feedback, translate abstract terms such as overall unity, connection, spatial depth, realism, calmness, control, warmth, or premium feel into visible subject, environment, relationship, material, light, and pass/fail criteria.
 8. **Visual composition contract:** If the next step is imagegen and the task is not a bounded local edit, the Planner Brief MUST be concrete enough that a person could roughly sketch the composition from text alone. It must state what the image is, what visible parts it contains, where they sit, how large/important they are, what shapes/forms they use, how they relate, what stays as negative space, what a normal buyer should read, and what forms are forbidden.
-9. **Workflow handoff:** If the next step is production, return a clear Planner Brief for Workflow Director or imagegen. If repeated failure or unclear intent is present, return to Workflow Director instead of pushing another image round.
+9. **Brief feasibility analysis:** Before handoff to imagegen, state whether the brief is feasible as written. Check intent completeness, composition executability, brand-system fit, claim safety, production controllability, likely failure points, and the exact condition that allows imagegen to proceed.
+10. **Workflow handoff:** If the next step is production, return a clear Planner Brief for Workflow Director or imagegen. If repeated failure or unclear intent is present, return to Workflow Director instead of pushing another image round.
 
 ## Initial Planning
 
@@ -124,6 +126,16 @@ Planner Brief / 图片需求简报
   - 必须符合的视觉规则：
   - 本轮允许偏离或不适用的规则及原因：
   - 明确禁止的品牌偏移：
+- Brief Feasibility Analysis / 简报可行性分析：
+  - 是否可交给 imagegen：是 / 否 / 需要补充一个关键决策
+  - 意图完整性：
+  - 画面构成可执行性：
+  - 品牌系统匹配度：
+  - claim / 产品事实安全性：
+  - 生产可控性：
+  - 主要失败风险：
+  - 需要 imagegen 特别保护的内容：
+  - 进入 imagegen 的前置条件：
 - 真实性验收条件：
 - approved 素材不可变项：
 - 禁止暗示的 claims / 产品事实：
