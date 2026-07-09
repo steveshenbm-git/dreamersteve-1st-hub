@@ -49,10 +49,11 @@ Ask one concise execution question only when a required file, target object, out
 Before a brief-based image, confirm:
 
 - real intent, page/use location, image role, and attention owner are clear
+- for non-local brief-based production, the brief includes Brief Reasoning Gate / 简报推理门槛 with judgment standard, accepted user direction, constrained or rejected user direction, reason, brand-system fit, and drift risk
 - for non-local brief-based production, a Visual Composition Contract / 画面构成合同 is present, or the planner brief explicitly states why it is unnecessary
-- the contract defines image type, visible layers, placement/proportion, shape or semi-concrete form, direction/motion, hierarchy, negative-space/text area, buyer-readable meaning, and forbidden forms
+- the contract defines image type, visual thesis, visual organization intent, visual relationship model, readable form language, visible layers, placement/proportion, direction/motion, hierarchy, negative-space/text area, buyer-readable meaning, misread prevention, and forbidden forms
 - for brand-defining, homepage/hero/background, B2-3, New Eastern industrial, life-sense, or repeated brand-direction tasks, the brief includes Brand-System Visual Alignment / 品牌视觉系统对齐 or explicitly states why no formal brand-system file is relevant
-- for non-local brief-based production, the brief includes Brief Feasibility Analysis / 简报可行性分析 with whether imagegen may proceed, production controllability, major failure risks, protected content, and preconditions
+- for non-local brief-based production, the brief includes Brief Feasibility Analysis / 简报可行性分析 with whether imagegen may proceed, visual relationship clarity, form-language specificity, production controllability, major failure risks, protected content, and preconditions
 - required subjects have visible carriers
 - abstract terms are translated into visible cues
 - visual relationships are readable: role, direction, cause/effect, comparison, support layer, control flow, or application context
@@ -65,6 +66,7 @@ If not ready, return this:
 Return to Workflow Director / 简报退回
 
 - Missing decision:
+- Missing brief reasoning gate:
 - Missing visual composition contract:
 - Missing brand-system visual alignment:
 - Missing brief feasibility analysis:

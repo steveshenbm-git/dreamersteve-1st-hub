@@ -36,9 +36,11 @@ Score from 1 to 5. A passing brief needs every core dimension at 4 or above. Do 
 | Dimension | Pass condition |
 |---|---|
 | Intent fidelity | The brief still solves the user's original job and does not drift into a different asset |
-| Visual composition contract | For brief-based new images, the brief states image type, visible layers, placement/proportion, shape or semi-concrete form, direction/motion, hierarchy, negative-space/text area, buyer-readable meaning, and forbidden forms |
+| Brief reasoning | For planner-led images, the brief states the judgment standard, accepted user direction, constrained or rejected user direction, reason, brand-system fit, and drift risk |
+| Visual composition contract | For brief-based new images, the brief states image type, visual thesis, visual organization intent, visual relationship model, readable form language, visible layers, placement/proportion, direction/motion, hierarchy, negative-space/text area, buyer-readable meaning, misread prevention, and forbidden forms |
 | Carrier completeness | Every named subject has a visible carrier or a planned HTML/page-copy carrier |
 | Relationship readability | The viewer can infer roles, direction, and result without reading a long explanation |
+| Form readability | The allowed form families, forbidden form families, abstraction level, buyer-readable meaning, and likely misreads are clear enough for production |
 | Physical plausibility | Real-world objects, enclosures, PCBs, paths, materials, and supports make practical sense |
 | Attention hierarchy and image role | The brief states who owns first attention and whether the image leads or supports |
 | Design strength | The structure has memorable crop, scale, silhouette, material, rhythm, or spatial tension |
@@ -66,6 +68,8 @@ Stop before image generation when any of these are true:
 
 - the brief only works because the explanation is persuasive
 - a brief-based new image lacks a Visual Composition Contract / 画面构成合同 and is not a bounded local edit, format edit, or deterministic export
+- a planner-led brief lacks Brief Reasoning Gate / 简报推理门槛 and appears to follow the latest user wording without judgment
+- the brief lacks visual organization intent, visual relationship model, readable form language, or misread prevention for an abstract or semi-concrete brand visual
 - the production brief replaces the planner's composition contract with a new visual strategy instead of executing it
 - the structure is physically strange but planned to be fixed later
 - the visual quality relies mainly on color, glow, gradients, or background atmosphere
@@ -89,9 +93,11 @@ For a standard or high-impact brief, include a compact self-review in the produc
 ```text
 简报评分
 - 意图锁定：/5
+- 简报推理：/5
 - 画面构成合同：/5
 - 主体承载：/5
 - 关系可读：/5
+- 形态可读：/5
 - 物理合理性：/5
 - 注意力层级与图片角色：/5
 - 设计强度：/5
@@ -129,4 +135,4 @@ After two failed brief reviews for the same asset, stop and offer 2-3 new struct
 
 ## Pressure Scenario
 
-- **Planner contract missing:** User or workflow asks imagegen to make a silver-gray base with teal-green and blue B2-3 semi-concrete field intersection, but the planner brief does not define image type, layers, placement/proportion, shape, direction, hierarchy, negative-space/text area, buyer-readable meaning, and forbidden forms. Required: return to Workflow Director / planner for a revised Visual Composition Contract. Forbidden: invent the contract in imagegen and produce anyway.
+- **Planner contract missing:** User or workflow asks imagegen to make a silver-gray base with teal-green and blue B2-3 semi-concrete field intersection, but the planner brief does not define brief reasoning, visual thesis, visual organization intent, visual relationship model, readable form language, layers, placement/proportion, direction, hierarchy, negative-space/text area, buyer-readable meaning, misread prevention, and forbidden forms. Required: return to Workflow Director / planner for a revised Visual Composition Contract. Forbidden: invent the contract in imagegen and produce anyway.

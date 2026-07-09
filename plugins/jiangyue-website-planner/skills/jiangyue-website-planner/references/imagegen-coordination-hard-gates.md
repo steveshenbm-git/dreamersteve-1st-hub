@@ -48,6 +48,7 @@ Every rework handoff after user feedback must include:
 - user-named defects copied verbatim
 - planner attribution for each defect
 - whether page goal, H1, CTA, image role, or claim boundary changes
+- brief reasoning: what part of the user's requested direction is accepted, constrained, or rejected, and why
 - what must remain unchanged
 - what must visibly change
 - forbidden old direction
@@ -58,13 +59,17 @@ Every rework handoff after user feedback must include:
 For a new image direction or strategy-level rework, every handoff must also include a visual composition contract:
 
 - image type
+- visual thesis / core image proposition
+- visual organization intent: attention owner, negative-space role, first/second read, and text support
+- visual relationship model: primary role, secondary role, background carrier, relationship type, relationship strength, and forbidden relationship
+- readable form language: abstraction level, allowed form families, forbidden form families, buyer-readable meaning, and likely misreads
 - visible layers and their roles
 - element placement and approximate proportion
-- shape / semi-concrete form language
 - direction or movement
 - hierarchy and negative-space area
 - buyer-readable meaning
 - forbidden visible forms
+- brief feasibility analysis: whether imagegen may proceed, production controllability, main failure risks, protected content, and preconditions
 
 If these fields are missing, planner must revise the brief before imagegen continues.
 
@@ -92,12 +97,31 @@ Use this before imagegen when the request asks how an image should be designed, 
 ```text
 Visual Composition Contract
 - Image type:
+- Visual thesis:
+- Visual organization intent:
+  - Attention owner:
+  - Negative-space / text-support role:
+  - First read:
+  - Second read:
+  - What must not steal attention:
+- Visual relationship model:
+  - Primary visual role:
+  - Secondary visual role:
+  - Background carrier role:
+  - Relationship type:
+  - Relationship strength:
+  - Forbidden relationship:
+- Readable form language:
+  - Recommended concreteness: abstract / semi-concrete / concrete
+  - Allowed form families:
+  - Forbidden form families:
+  - Buyer-readable meaning:
+  - Likely misread:
 - Background layer:
 - Primary visual layer:
 - Support layer:
 - Negative-space / text-support area:
 - Placement and approximate proportion:
-- Shape / semi-concrete form:
 - Direction or movement:
 - Attention hierarchy:
 - Buyer-readable meaning:
@@ -105,7 +129,7 @@ Visual Composition Contract
 - Visible pass/fail criteria:
 ```
 
-Passing standard: a person should be able to roughly sketch the composition from this contract alone. If the contract only contains concept words such as "industrial life", "AI analysis", "premium", "future", "connection", or "energy" without visible placement, shape, hierarchy, and forbidden forms, it is not ready for imagegen.
+Passing standard: a person should be able to roughly sketch the composition and explain the intended buyer reading from this contract alone. If the contract only contains concept words such as "industrial life", "AI analysis", "premium", "future", "connection", or "energy" without visible organization, relationship model, readable form language, hierarchy, and forbidden forms, it is not ready for imagegen.
 
 Examples:
 
@@ -178,5 +202,6 @@ After reset, do not request a final/4K image until a draft has passed the reset 
 3. **Imagegen self-check failed:** planner must stop vague "continue" routing and decide imagegen hard-gate reset vs revised Planner Brief.
 4. **Repeated bad visual direction:** planner must decide whether page/image role changed or production method failed; it may not keep sending "make it better".
 5. **4K requested after disputed draft:** planner must block final export unless a draft is accepted or the request is deterministic export from an accepted draft.
-6. **Semi-concrete AI/industrial field:** user asks for a silver-gray background with teal-green and blue B2-3 semi-concrete field intersection, not too hard-core industrial and not too abstract. Planner must output a visual composition contract with layers, positions, proportions, shapes, direction, buyer-readable meaning, forbidden forms, and pass/fail criteria before imagegen. It may not send only "industrial operation field + AI analysis field" as a vague concept.
+6. **Semi-concrete AI/industrial field:** user asks for a silver-gray background with teal-green and blue B2-3 semi-concrete field intersection, not too hard-core industrial and not too abstract. Planner must output a visual composition contract with visual thesis, visual organization intent, visual relationship model, readable form language, layers, proportions, direction, buyer-readable meaning, forbidden forms, feasibility analysis, and pass/fail criteria before imagegen. It may not send only "industrial operation field + AI analysis field" as a vague concept.
 7. **Core intent not locked:** user says the failure is not only image quality, but that the macro relationship or core intent was unclear from the start. Planner must name the failed layer as macro planning / core intent / intent lock and return to Workflow Director for Strategic Layer Lock. It may not produce a narrower imagegen rework order to hide the unresolved strategic problem.
+8. **User challenge should not cause automatic agreement:** user says one part of the planner brief "feels wrong" without specifying a replacement. Planner must classify the challenge, preserve the parts of the existing reasoning that still stand, constrain or replace only the failed part, and explain why. It may not answer with unqualified agreement or rewrite the brief around the user's wording alone.

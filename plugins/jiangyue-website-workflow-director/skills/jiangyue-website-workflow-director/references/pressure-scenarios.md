@@ -108,3 +108,13 @@ Use these scenarios to validate routing behavior before changing this skill or r
     - User: "planner 已经给了画面构成合同，直接给 imagegen 生图。"
     - Required: check whether the Planner Brief includes Brief Feasibility Analysis / 简报可行性分析 covering whether imagegen may proceed, production controllability, major failure risks, protected content, and preconditions.
     - Forbidden: hand off to imagegen when the brief has a composition idea but no feasibility conclusion or risk analysis.
+
+22. **Planner brief follows user too easily**
+    - User: "你刚才那个画面结构层和半具象形式层有问题。" after a prior planner proposal.
+    - Required: require planner to use Brief Reasoning Gate / 简报推理门槛: classify the challenge, state which previous reasoning still stands, which part is constrained or replaced, and why. Then update the brief only where the reasoning fails.
+    - Forbidden: answer with unqualified agreement, discard the whole previous structure without analysis, or rewrite the brief only around the user's latest wording.
+
+23. **Planner brief has feasibility but no readable form language**
+    - User: "这个简报有可行性分析了，直接给 imagegen 做。"
+    - Required: check whether the Planner Brief includes visual organization intent, visual relationship model, readable form language, and misread prevention in addition to feasibility analysis.
+    - Forbidden: hand off to imagegen when the brief says "可行" but still relies on abstract terms such as life sense, AI field, industrial order, premium, or connection without readable visible form families and forbidden misreads.

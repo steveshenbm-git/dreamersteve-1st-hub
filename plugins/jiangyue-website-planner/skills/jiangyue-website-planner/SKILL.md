@@ -23,6 +23,7 @@ Planner owns:
 - image role and message ownership between image and HTML/page copy
 - executable visual composition plan for imagegen: image type, visual layers, subject/support/background roles, placement, approximate proportion, shape/form language, direction, hierarchy, negative space, buyer-readable meaning, and forbidden forms
 - brand-system visual alignment for visual strategy and Planner Briefs
+- brief reasoning discipline: judge the user's requested direction against page goal, brand system, buyer readability, and production risk instead of automatically agreeing with it
 - brief feasibility analysis before handoff to imagegen
 - claim boundary and missing product-fact flags
 - post-image strategy review when user feedback questions credibility, brand direction, layout integration, or information hierarchy
@@ -46,9 +47,11 @@ Run these before a page plan, strategy review, or Planner Brief:
 5. **Knowledge gate:** For claim-sensitive, competitor-driven, approved-material, or repeated-failure work, read `/Users/lirongjing/Documents/JY TECH WEB/brand-system/00-knowledge-gate/jiangyue-knowledge-gate.md` and only the relevant formal files it points to.
 6. **Brand-system visual alignment:** For macro visual planning, homepage/hero/background images, brand-defining visuals, B2-3 color use, New Eastern industrial style, life-sense metaphor, or repeated brand-direction feedback, align the brief with relevant files under `/Users/lirongjing/Documents/JY TECH WEB/brand-system/02-brand-visual/`. At minimum consider `brand-visual-standard.md`, `b2-3-color-scheme-reference.md`, `composition-rules.md`, `color-material-lighting.md`, and `negative-visual-directions.md`.
 7. **Visual intention decomposition:** For brand visuals or repeated image feedback, translate abstract terms such as overall unity, connection, spatial depth, realism, calmness, control, warmth, or premium feel into visible subject, environment, relationship, material, light, and pass/fail criteria.
-8. **Visual composition contract:** If the next step is imagegen and the task is not a bounded local edit, the Planner Brief MUST be concrete enough that a person could roughly sketch the composition from text alone. It must state what the image is, what visible parts it contains, where they sit, how large/important they are, what shapes/forms they use, how they relate, what stays as negative space, what a normal buyer should read, and what forms are forbidden.
-9. **Brief feasibility analysis:** Before handoff to imagegen, state whether the brief is feasible as written. Check intent completeness, composition executability, brand-system fit, claim safety, production controllability, likely failure points, and the exact condition that allows imagegen to proceed.
-10. **Workflow handoff:** If the next step is production, return a clear Planner Brief for Workflow Director or imagegen. If repeated failure or unclear intent is present, return to Workflow Director instead of pushing another image round.
+8. **Brief reasoning gate:** Before turning user preference into a Planner Brief, state the judgment standard, what is accepted, what is rejected or constrained, why, and whether following the user's wording literally would drift away from the brand system or buyer readability.
+9. **Visual organization and readability:** For imagegen handoff, define visual organization intent, visual relationship model, readable form language, negative space/text support, and misread prevention. Planner owns these as strategic constraints, not pixel-level rendering.
+10. **Visual composition contract:** If the next step is imagegen and the task is not a bounded local edit, the Planner Brief MUST be concrete enough that a person could roughly sketch the composition from text alone. It must state what the image is, what visible parts it contains, how attention is organized, how visible roles relate, what forms are readable, what stays as negative space, what a normal buyer should read, and what forms are forbidden. Do not prescribe exact pixel-level layout unless the user explicitly requests deterministic layout.
+11. **Brief feasibility analysis:** Before handoff to imagegen, state whether the brief is feasible as written. Check intent completeness, visual relationship readability, form-language specificity, brand-system fit, claim safety, production controllability, likely failure points, and the exact condition that allows imagegen to proceed.
+12. **Workflow handoff:** If the next step is production, return a clear Planner Brief for Workflow Director or imagegen. If repeated failure or unclear intent is present, return to Workflow Director instead of pushing another image round.
 
 ## Initial Planning
 
@@ -108,18 +111,45 @@ Planner Brief / 图片需求简报
 - 必须出现的主体或线索：
 - 必须可见的视觉关系：
 - 空间关系 / 环境承载：
+- Brief Reasoning Gate / 简报推理门槛：
+  - 本轮判断标准：
+  - 用户意见中采纳的部分：
+  - 用户意见中不直接采纳或需要约束的部分：
+  - 判断理由：
+  - 与品牌系统的一致性：
+  - 是否存在迎合用户导致偏移的风险：
 - Visual Composition Contract / 画面构成合同：
   - 图片类型：
+  - Visual Thesis / 画面核心命题：
+  - Visual Organization Intent / 画面组织意图：
+    - 视觉重心：
+    - 留白作用：
+    - 第一眼应读到：
+    - 第二眼应读到：
+    - 不应抢注意力的内容：
+    - 标题 / CTA / Logo 的承托关系：
+  - Visual Relationship Model / 视觉关系模型：
+    - 主要视觉角色：
+    - 次要视觉角色：
+    - 背景承载角色：
+    - 关系类型：
+    - 关系强度：
+    - 不允许的关系：
+  - Readable Form Language / 形态可读性判断：
+    - 推荐具象程度：抽象 / 半具象 / 具象
+    - 允许的形态家族：
+    - 禁止的形态家族：
+    - 普通买家的可读解释：
+    - 容易误读成什么：
   - 画面层级：
     - 背景层：
     - 主视觉层：
     - 辅助层：
     - 留白 / 文字承托区：
   - 元素位置与大致占比：
-  - 形状 / 半具象形式：
   - 方向与运动感：
   - 主次关系与注意力控制：
-  - 普通买家的可读解释：
+  - Misread Prevention / 禁止误读方向：
   - 禁止出现的形态：
 - Brand-System Visual Alignment / 品牌视觉系统对齐：
   - 已参考的 brand-system 文件：
@@ -130,6 +160,8 @@ Planner Brief / 图片需求简报
   - 是否可交给 imagegen：是 / 否 / 需要补充一个关键决策
   - 意图完整性：
   - 画面构成可执行性：
+  - 视觉关系是否清楚：
+  - 形态语汇是否足够具体：
   - 品牌系统匹配度：
   - claim / 产品事实安全性：
   - 生产可控性：
@@ -147,6 +179,8 @@ Planner Brief / 图片需求简报
 - imagegen 必须退回 planner 的情况：
 - 下一版验收标准：
 ```
+
+Use this brief as a design decision record, not a prompt dump. If challenged by the user, revise by first checking which part of the current reasoning still stands, which part must be constrained, and which part must be replaced.
 
 If formal `brand-system` files were consulted, include `已参考资料库` with only files that materially affected the brief.
 

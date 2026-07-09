@@ -151,13 +151,14 @@ Direct imagegen handoff is allowed only when at least one condition is true:
 
 - **Explicit local execution:** the user has already specified the exact visible edit, export, crop, compression, format conversion, or deterministic change, and the change does not alter image role, visual metaphor, buyer interpretation, page strategy, claim boundary, or composition concept.
 - **Accepted baseline revision:** the user has accepted the current image direction and asks for a bounded local change with clear must keep / must change / must avoid / acceptance criteria.
-- **Planner brief exists:** `$jiangyue-website-planner` has produced a current Planner Brief or Optimization Brief with image role, page/use context, Visual Composition Contract / 画面构成合同, Brand-System Visual Alignment / 品牌视觉系统对齐 when relevant, Brief Feasibility Analysis / 简报可行性分析, visual relationship, must support / must not imply, and pass/fail criteria.
+- **Planner brief exists:** `$jiangyue-website-planner` has produced a current Planner Brief or Optimization Brief with image role, page/use context, Brief Reasoning Gate / 简报推理门槛, Visual Composition Contract / 画面构成合同, Brand-System Visual Alignment / 品牌视觉系统对齐 when relevant, Brief Feasibility Analysis / 简报可行性分析, visual organization intent, visual relationship model, readable form language, misread prevention, must support / must not imply, and pass/fail criteria.
 
 Route to `$jiangyue-website-planner` before imagegen when the next output depends on any of these:
 
 - 画面怎么设计, composition strategy, subject/form choice, semi-concrete vs abstract expression, visual metaphor, or "what shape/form should it use"
-- missing Visual Composition Contract / 画面构成合同: image type, visible layers, placement/proportion, shape or semi-concrete form, direction/motion, hierarchy, negative-space/text area, buyer-readable meaning, or forbidden forms
-- missing Brief Feasibility Analysis / 简报可行性分析: whether imagegen may proceed, production controllability, major failure risks, protected content, or preconditions
+- missing Brief Reasoning Gate / 简报推理门槛: judgment standard, accepted user input, constrained or rejected user input, reason, brand-system fit, or drift risk
+- missing Visual Composition Contract / 画面构成合同: image type, visual thesis, visual organization intent, visual relationship model, readable form language, visible layers, placement/proportion, direction/motion, hierarchy, negative-space/text area, buyer-readable meaning, misread prevention, or forbidden forms
+- missing Brief Feasibility Analysis / 简报可行性分析: whether imagegen may proceed, visual relationship clarity, form-language specificity, production controllability, major failure risks, protected content, or preconditions
 - industrial / AI / life sense relationship, B2-3 color role, buyer readability, trust fit, page role, first-screen attention, CTA/text support, or claim boundary
 - a new image direction, brand-defining visual, homepage/hero/background concept, or any production brief that is more than a local edit
 
