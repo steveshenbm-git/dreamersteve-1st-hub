@@ -32,6 +32,30 @@ Before edits, state:
 - risk level
 - rollback path
 
+## Skill Change Approval Workflow
+
+Skill-system changes are gated work. Do not treat design agreement, edit approval, commit approval, and install approval as the same authorization.
+
+Hard rule:
+
+- If the user asks to modify, repair, optimize, validate, commit, install, or reinstall a Jiangyue skill-bearing plugin, follow these stages in order unless the user has already given an explicit authorization for the later stage.
+- Ambiguous continuation words such as "start", "continue", "go on", "可以", "开始", "继续", or "通过" only advance to the next non-mutating explanation or plan when the previous assistant message was not an explicit yes/no request for that specific mutating action.
+- Do not edit files, commit, push, install, or reinstall from an ambiguous continuation.
+- Separate approvals are required for source edits, commits, and install/reinstall actions. Commit approval does not imply install approval. Edit approval does not imply commit approval.
+
+Stages:
+
+| Stage | Output | Mutating action allowed |
+|---|---|---|
+| 1. Problem review | Failure layer, evidence, current rule gap, owning artifact | No |
+| 2. Design direction | 1-3 candidate directions, owner, rule strength, risks | No |
+| 3. Concrete modification plan | Exact files, rule text intent, pressure scenarios, validation, rollback | No |
+| 4. Source edit | Edit only the approved source files | Only after explicit edit approval |
+| 5. Commit | Commit with Chinese title and body when requested | Only after explicit commit approval |
+| 6. Install/reinstall | Install from the stated source boundary | Only after explicit install/reinstall approval |
+
+Before any mutating action, state the current stage and the exact authorization already received. If unclear, stop and ask for the missing approval.
+
 ## Required Companion Skills
 
 Use the first matching required route. If multiple routes apply, use all required routes in the listed order.
@@ -87,7 +111,7 @@ Never design a work skill so it owns the whole multi-skill conversation. It can 
    Decide whether the user needs a new skill, an existing skill edit, plugin packaging, an AGENTS rule, a reference file, a script, a template, or only analysis.
 
 2. **Build the task ledger.**
-   Record the target skill/plugin, source path, user goal, accepted design, open failures, role owners, and next required gate.
+   Record the target skill/plugin, source path, user goal, accepted design, approval stage, open failures, role owners, and next required gate. User-approved intent is not edit approval; edit approval is not commit approval; commit approval is not install approval.
 
    ```text
    Jiangyue Skill Work State
@@ -96,6 +120,10 @@ Never design a work skill so it owns the whole multi-skill conversation. It can 
    - Work type:
    - Conversation owner:
    - Specialist owner:
+   - Approval stage:
+   - Mutating action allowed: yes/no
+   - Commit allowed: yes/no
+   - Install/reinstall allowed: yes/no
    - User-approved intent:
    - Intent lock:
      - Must keep:
@@ -267,6 +295,10 @@ Every handoff from this skill to another skill must include:
 - rule strength or inquiry gate selected
 - companion skills required
 - pressure scenarios or validation gates
+- approval stage
+- whether mutating action is allowed
+- whether commit is allowed
+- whether install/reinstall is allowed
 - whether the next step is design, edit, validation, install, or commit
 
 ## Red Flags
@@ -280,5 +312,10 @@ If any of these appear, stop and re-route:
 - making a work skill responsible for user-facing multi-skill orchestration
 - allowing a work skill to rewrite itself during production instead of producing an improvement candidate
 - adding a rule without deciding hard rule, low freedom, medium freedom, soft rule, autonomy, or ask-user gate
+- treating "start", "continue", "go on", "可以", "开始", "继续", or "通过" as edit approval when the previous step was only planning or discussion
+- treating design approval as source-edit approval
+- treating source-edit approval as commit approval
+- treating commit approval as install or reinstall approval
+- installing or reinstalling a skill when the user only approved a plan, source edit, or commit
 - no pressure scenario for a new or revised skill
 - claiming a skill is fixed without validation
