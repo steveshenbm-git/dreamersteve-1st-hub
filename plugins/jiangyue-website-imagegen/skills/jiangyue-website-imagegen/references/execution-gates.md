@@ -67,6 +67,8 @@ Choose the method because it can reach the visible result.
 - Do not crop screenshots or deliver a lower-grade flat illustration only because it is easier to save locally.
 - Do not promise exact pixel-identical regeneration unless stable inputs, tool behavior, and deterministic source assets make that true.
 
+For high-impact, cost-bearing, or repeated-failure image work, read [production-success-strategy-gate.md](production-success-strategy-gate.md) and [attempt-stop-and-method-escalation-gate.md](attempt-stop-and-method-escalation-gate.md) before production. Do not use repeated generation as the strategy.
+
 ## Subtask Method Lock
 
 Use this lock for high-impact visuals, approved-material edits, realistic natural texture, repeated failure, or method disputes. Do not force one method for the whole conversation; split the work into subtasks and choose one primary method per subtask.
@@ -119,3 +121,5 @@ Judge the rendered result first:
 5. Are user-stated defects visibly improved, not merely explained?
 
 If the result is weaker, say so and revise or reject it. Do not defend it with prompt logic, palette logic, method logic, or archive completeness.
+
+If the result passes visible defect checks but still lacks delivery value, run [candidate-delivery-gate.md](candidate-delivery-gate.md). A clean but weak result is not a delivery-ready candidate.

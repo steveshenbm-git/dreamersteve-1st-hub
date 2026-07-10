@@ -11,6 +11,9 @@ Run these gates before another imagegen round when any of these occur:
 - the same visual concern remains after one revision
 - the issue may involve page goal, image role, attention hierarchy, claim boundary, brand credibility, layout integration, or message ownership
 - planner needs to decide whether imagegen should continue or stop
+- imagegen output status, candidate delivery value, or user acceptance layer is unclear
+- a rejected candidate is being treated as the next baseline
+- repeated generation attempts are happening without a changed hypothesis, method, visual model, source basis, or edit scope
 
 ## Planner Defect Register
 
@@ -36,6 +39,7 @@ Before handing off, decide one route:
 | Continue in imagegen | Page strategy and image role are still correct; defect is execution, composition, realism, method, crop, or artifact quality | Imagegen rework brief with defect register and pass/fail checks |
 | Planner revise brief | Page goal, attention hierarchy, image role, message ownership, brand direction, layout integration, or claim boundary is unclear/wrong | Revised Planner Brief before imagegen continues |
 | Failure reset | Same defect repeated, process complaint, missed reference, or root cause unclear | Failure Reset record before any new imagegen request |
+| Analysis only | Candidate failed hard gates but contains useful evidence, anti-reference value, or discovery insight | Rejected-result analysis; no imagegen handoff unless brief/method is revised |
 | Stop image work | User pauses, approval is missing, or next action is knowledge curation/review only | No imagegen handoff |
 
 Do not send imagegen another prompt if the route is not decided.
@@ -56,6 +60,10 @@ Every rework handoff after user feedback must include:
 - reference attribution and whether each reference should be used for the next version
 - pass/fail criteria for full-size and thumbnail review
 - whether imagegen must run its failure reset hard gates
+- current output status: rejected internally, analysis only, discovery candidate, candidate for review, accepted draft, or final export
+- brief anchor: original brief, revised brief, accepted draft, or anti-reference
+- user acceptance layer: intent, brief, direction, specific draft, final export, or unknown
+- production success strategy and attempt stop rule when another generation attempt is requested
 
 For a new image direction or strategy-level rework, every handoff must also include a visual composition contract:
 
@@ -202,6 +210,37 @@ Planner Failure Reset
 
 After reset, do not request a final/4K image until a draft has passed the reset criteria.
 
+## Output Status And Brief Anchor
+
+Planner must not let imagegen output rewrite the brief.
+
+```text
+Planner Output Status Check
+- Original intent:
+- Active Planner Brief:
+- Imagegen result status:
+- Result vs brief:
+- Result vs intent:
+- Accepted direction:
+- Rejected candidate / anti-reference:
+- Next baseline:
+- User acceptance layer:
+- Next route:
+```
+
+Hard rules:
+
+- A rejected candidate is not an accepted baseline.
+- A discovery candidate requires planner/user acceptance before it becomes a revised brief.
+- A candidate that passes self-check but lacks delivery value must remain internal or analysis-only.
+- "Direction accepted" does not equal "specific draft accepted" or "final export accepted."
+
+## Attempt Stop Rule
+
+Before planner approves another generation round after failure, require a distinct production hypothesis. At least one must change: visual model, composition structure, subject carrier, crop/scale hierarchy, source/reference basis, production method, or mask/edit scope.
+
+Changing only prompt adjectives, color, glow, blur, opacity, line weight, shadow, or export size is not enough for structural failure.
+
 ## Pressure Scenarios For Planner Validation
 
 1. **User marks a curve defect in red:** planner must register the exact defect, classify it, and send imagegen a hard pass/fail item.
@@ -216,3 +255,7 @@ After reset, do not request a final/4K image until a draft has passed the reset 
 10. **Not premium enough:** user says the planner output or draft is still not high-end. Planner must diagnose the failed design fundamental: proportion, hierarchy, rhythm, restraint, information density, material credibility, space credibility, buyer readability, or brand temperament. It may not answer with only "make it more premium", "more clean", or "more refined".
 11. **Asset script confusion:** user asks whether Page Brief and Asset Production Script are separate. Planner must state that the Planner Brief is the main imagegen handoff and the Asset Production Section is an internal section, unless Workflow Director explicitly requests a multi-asset production package.
 12. **Correct judgment, weak carrier:** user accepts the Jiangyue design judgment but imagegen output is generic. Planner must revise the Asset Production Section with concrete visible carriers and QA checks before another imagegen round. It may not rewrite the whole strategy or send vague execution feedback.
+13. **Rejected output becomes baseline:** imagegen returns a drifted candidate and the next planner rework starts from it. Planner must mark it as anti-reference unless the user explicitly accepted its direction, then return to original or revised brief.
+14. **Least-bad batch:** imagegen produces several weak options. Planner must reject the batch or classify analysis-only; it may not select the least-bad option as a candidate.
+15. **Endless generation:** two attempts fail the same brief goal with the same method. Planner must block further same-method attempts and require attempt-stop analysis or a route change.
+16. **Acceptance layer:** user says "this direction can work" and asks for a small revision. Planner must record direction acceptance only; it may not approve final export or approved archive from that statement.

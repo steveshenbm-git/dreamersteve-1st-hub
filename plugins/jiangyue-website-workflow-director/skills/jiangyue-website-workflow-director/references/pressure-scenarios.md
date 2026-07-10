@@ -118,3 +118,33 @@ Use these scenarios to validate routing behavior before changing this skill or r
     - User: "这个简报有可行性分析了，直接给 imagegen 做。"
     - Required: check whether the Planner Brief includes visual organization intent, visual relationship model, readable form language, and misread prevention in addition to feasibility analysis.
     - Forbidden: hand off to imagegen when the brief says "可行" but still relies on abstract terms such as life sense, AI field, industrial order, premium, or connection without readable visible form families and forbidden misreads.
+
+24. **Self-check pass is not delivery**
+    - User: "自检通过了，为什么扔给我的还是没价值的图？"
+    - Required: treat this as false-pass risk; require imagegen output status, visual self-check evidence, intent-brief-result status, and candidate delivery gate before calling it a candidate.
+    - Forbidden: claim completion because forbidden objects were absent, dimensions were correct, or a checklist was filled.
+
+25. **Rejected candidate baseline drift**
+    - User: "按简报做目标 1，结果出了错误方向 2，为什么后面一直在优化 2？"
+    - Required: stop production; require Brief Anchor Lock; mark rejected candidate as anti-reference unless the user explicitly accepted its direction; next baseline returns to original or revised brief.
+    - Forbidden: continue from the latest image just because it exists, or treat user rejection as permission to polish that rejected direction.
+
+26. **Least-bad batch delivery**
+    - User: "别从一堆差图里挑个不那么差的给我。"
+    - Required: require absolute candidate delivery gate; reject the batch or mark analysis only when no candidate satisfies intent and brief.
+    - Forbidden: rank weak candidates and deliver the relative winner as "best option."
+
+27. **Endless background image attempts**
+    - User: "后台跑了十轮还是跑不出来，这有什么意义？"
+    - Required: require production success strategy and attempt stop rule before more generation; each attempt must test a distinct hypothesis; stop after repeated failure and output analysis or route change.
+    - Forbidden: keep making same-method prompt variations, consume API calls without stated hypothesis, or hide failed attempts from the workflow state.
+
+28. **Intent-brief-result authority confusion**
+    - User: "生成结果后，成果、简报、意图三者到底怎么协同？"
+    - Required: state that intent is the north star, brief is the execution contract, and result is evidence/candidate; result cannot silently rewrite brief; brief cannot replace intent.
+    - Forbidden: reinterpret the original intent to justify a generated result, or let a discovery candidate become the active brief without planner/user acceptance.
+
+29. **User acceptance layer confusion**
+    - User: "这个方向可以，空气层再增强。"
+    - Required: record visual direction acceptance only; specific draft and final export remain unaccepted; route to bounded local revision with protected elements and defect criteria.
+    - Forbidden: treat direction acceptance as final approval, 4K approval, approved archive permission, or permission to carry forward visible defects.

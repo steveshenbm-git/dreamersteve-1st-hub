@@ -21,7 +21,7 @@ Imagegen owns:
 
 - new image production after strategy or local edit intent is clear
 - P图, element removal, crop, cleanup, background extension, upscaling/export, and file packaging
-- production brief, hard keep/remove/change/avoid lists, visual QA, and reproduction notes
+- production brief, hard keep/remove/change/avoid lists, production success strategy, visual QA, candidate status, and reproduction notes
 - visible quality checks at full size and thumbnail/review size
 
 Imagegen does not own:
@@ -76,6 +76,33 @@ Return to Workflow Director / 简报退回
 - What imagegen can proceed with after clarification:
 ```
 
+## Image Production State Protocol
+
+Use this state chain for brief-based, high-impact, cost-bearing, or repeated-failure image work:
+
+```text
+Intent Lock
+-> Planner Brief
+-> Production Success Strategy
+-> Attempt Stop Rule
+-> Generate Candidate
+-> Visual Self-Check
+-> Intent-Brief-Result Check
+-> Outcome Classification
+-> Candidate Delivery Gate
+-> User Acceptance Layer
+-> Final Export / Archive
+```
+
+Hard rules:
+
+- A generated result may inform a future brief, but it cannot silently become the brief.
+- A brief may translate intent, but it cannot replace the original intent.
+- A visual self-check pass does not make a result deliverable; it only allows candidate delivery review.
+- A rejected candidate is not the next baseline unless the user explicitly accepts that direction.
+- A candidate from a weak batch must pass the active brief and intent on an absolute basis; do not deliver the least-bad option.
+- User acceptance must be recorded by layer: intent, brief, direction, specific draft, final export, or approved archive.
+
 ## Production Paths
 
 Use the lightest path that protects visible quality.
@@ -106,18 +133,21 @@ For simple local edits, deterministic cards, format edits, crops, exports, and l
 1. Confirm source, target change, output size, and stage.
 2. Produce the asset in the project output root.
 3. Inspect the rendered result.
-4. Report path, dimensions, method, verification, and limitations.
+4. Report path, dimensions, method, output status, verification, and limitations.
 
 ### Standard Path
 
 For most Jiangyue website visuals:
 
 1. Create a production brief from the planner strategy-and-composition contract and four hard lists: must keep, must remove, must materially change, must avoid.
-2. Choose method based on visible result quality, not convenience.
-3. Translate approved composition intent into concrete subject carriers, visual relationships, physical logic, and pass/fail checks without changing the planner's visual strategy.
-4. Produce one strong draft first; create variants only when they differ materially.
-5. Inspect full size, thumbnail/review size, prior draft, and references when available.
-6. Revise, reject, archive, or return to Workflow Director based on visible evidence.
+2. Read [references/production-success-strategy-gate.md](references/production-success-strategy-gate.md) when the asset is brief-based, high-impact, cost-bearing, or repeated-failure; state how the method and visual model can succeed before production.
+3. Read [references/attempt-stop-and-method-escalation-gate.md](references/attempt-stop-and-method-escalation-gate.md) when multiple attempts, API calls, or repeated failures are possible; do not repeat the same failed hypothesis.
+4. Choose method based on visible result quality, not convenience.
+5. Translate approved composition intent into concrete subject carriers, visual relationships, physical logic, and pass/fail checks without changing the planner's visual strategy.
+6. Produce one strong draft first; create variants only when they differ materially by production hypothesis, visual model, structure, source basis, or method.
+7. Inspect full size, thumbnail/review size, prior draft, and references when available.
+8. Run [references/visual-self-check-gate.md](references/visual-self-check-gate.md), [references/intent-brief-result-coordination-gate.md](references/intent-brief-result-coordination-gate.md), and [references/candidate-delivery-gate.md](references/candidate-delivery-gate.md) before presenting any candidate for review.
+9. Revise, reject, archive, analyze, or return to Workflow Director based on visible evidence and output status.
 
 ### High-Impact Path
 
@@ -133,6 +163,9 @@ For homepage heroes, product heroes, Contact heroes, brand-defining visuals, rec
    - [references/design-upgrade.md](references/design-upgrade.md) when the design is generic or weak.
    - [references/reference-research.md](references/reference-research.md) when category recognition or reference quality matters.
    - [references/failure-reset-hard-gates.md](references/failure-reset-hard-gates.md) when user-named defects or repeated failures appear.
+   - [references/brief-anchor-and-rework-gate.md](references/brief-anchor-and-rework-gate.md) before rework after a rejected, disputed, or drifted candidate.
+   - [references/rejected-result-analysis-gate.md](references/rejected-result-analysis-gate.md) when a candidate fails a hard gate or should only be used as analysis.
+   - [references/user-acceptance-layer-gate.md](references/user-acceptance-layer-gate.md) when the user accepts a direction, asks for a revision, or requests final export.
 
 ## Failure And Defect Rules
 
@@ -142,6 +175,9 @@ For homepage heroes, product heroes, Contact heroes, brand-defining visuals, rec
 - If the user says a requested change did not visibly happen, read [references/failure-reset-hard-gates.md](references/failure-reset-hard-gates.md) and do not deliver another draft without observable change evidence.
 - If the user says self-check failed, still wrong, not qualified, ugly, missed a reference, ignored an attachment, or marks the same defect, read [references/failure-reset-hard-gates.md](references/failure-reset-hard-gates.md) before further production.
 - Do not deliver a vetoed draft as a concept option.
+- Do not optimize a rejected candidate as the next baseline unless [references/brief-anchor-and-rework-gate.md](references/brief-anchor-and-rework-gate.md) records explicit user acceptance of that direction.
+- When a candidate fails, use [references/rejected-result-analysis-gate.md](references/rejected-result-analysis-gate.md) to turn it into analysis or an anti-reference before another production attempt.
+- If self-check passes but the result is still weak, generic, off-intent, or merely the least-bad batch option, block delivery with [references/candidate-delivery-gate.md](references/candidate-delivery-gate.md).
 
 ## Production Method Rules
 
@@ -207,11 +243,16 @@ outputs/jiangyue-website-images/home/首页英雄图API测试/03-final/
 
 Report only verified facts:
 
+- output status: rejected internally / analysis only / discovery candidate / candidate for review / accepted draft / final export
 - final file path
 - task folder path
 - reproduction archive path, or `not created yet`
 - dimensions and format
 - production method
+- production success strategy and attempt stop rule used, when applicable
+- visual self-check evidence and candidate delivery status, when applicable
+- intent-brief-result status, when applicable
+- user acceptance layer, when applicable
 - formal `brand-system` files consulted, if any
 - what was visually checked
 - what could not be verified

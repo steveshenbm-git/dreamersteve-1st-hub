@@ -12,6 +12,9 @@ Enter failure reset before producing another image when any of these happen:
 - two drafts fail for the same structural reason
 - the production method caused the defect, such as script curves used for an organic natural structure
 - the user says a requested visible change did not happen, such as repeated enlargement, cleanup, softening, or color control with no apparent result
+- a candidate passed a narrow self-check but is still visually weak, generic, off-intent, or not worth showing
+- a rejected candidate is being treated as the next baseline without explicit user acceptance
+- repeated generation attempts are happening without a changed method, visual model, source basis, edit scope, or brief
 
 Do not continue with small adjustments until this reset is complete.
 
@@ -59,6 +62,8 @@ Failure Reset
 - Step 3 - Proposed method:
 - New method or structure:
 - Rejected shortcut(s):
+- Brief anchor:
+- Next-round baseline:
 - Step 4 - Output plan:
 - Protected elements:
 - Changed elements:
@@ -107,6 +112,57 @@ Observable Change Check
 ```
 
 If the difference is not visible at full size and review size, reject the candidate internally. A third attempt for the same observable change must change method, edit scope, reference source, mask strategy, or composition structure before production.
+
+## Brief Anchor Gate
+
+Before another production attempt, decide whether the next baseline is the original brief, an accepted draft, a revised brief, or a rejected candidate used only as an anti-reference.
+
+Use [brief-anchor-and-rework-gate.md](brief-anchor-and-rework-gate.md) when any candidate was rejected, disputed, or found to drift from the brief.
+
+Hard rules:
+
+- Rejected candidates default to anti-reference status.
+- Do not optimize the latest candidate simply because it is the latest file.
+- If the next baseline is a rejected candidate, cite the user's explicit direction acceptance.
+- If the failure is brief drift, rebuild from the original brief or return to planner.
+
+## Rejected Result Analysis Gate
+
+When a candidate fails self-check, brief fit, intent fit, or delivery value, use [rejected-result-analysis-gate.md](rejected-result-analysis-gate.md) before producing again.
+
+Hard rules:
+
+- Failed outputs may be analyzed, but not delivered as usable candidates.
+- If a failed output reveals a better direction, label it as a discovery candidate and route to planner or user acceptance before changing the brief.
+- Do not ask the user to choose from a batch of rejected outputs.
+
+## False-Pass Gate
+
+When a candidate passes defect checks but still feels wrong, generic, low-grade, or off-intent, treat this as a false pass.
+
+Required response:
+
+```text
+False-Pass Review
+- What passed:
+- What still fails:
+- Missed gate: visual value / brief fit / intent fit / buyer credibility / method quality
+- Why the self-check was insufficient:
+- Candidate status: rejected internally / analysis only / discovery candidate
+- Rule or gate to strengthen:
+```
+
+Do not deliver a false-pass candidate as `Candidate for review`.
+
+## Attempt Stop Gate
+
+For high-impact, cost-bearing, or repeated-failure tasks, use [attempt-stop-and-method-escalation-gate.md](attempt-stop-and-method-escalation-gate.md).
+
+Hard rules:
+
+- Each new attempt must test a distinct hypothesis.
+- Same-method prompt retries are blocked after a repeated visible failure.
+- After the stop trigger fires, output analysis or return to planner / Workflow Director instead of generating again.
 
 ## Organic Structure Gate
 
@@ -192,3 +248,8 @@ Use these scenarios to validate future edits to this skill:
 6. **No visible enlargement:** User asks to expand water ripples three times and says there is no change. Expected behavior: stop small parameter edits, run Observable Change Check, and require a materially larger edited area or changed method before another draft.
 7. **Reset jumps to new draft:** A draft fails and the next response proposes a new prompt without naming the failed layer or wrong assumption. Expected behavior: block production, complete the four-step Failure Reset sequence, and only then decide whether imagegen, planner, or Workflow Director owns the next action.
 8. **Macro intent failure misread as prompt issue:** The user says the image keeps failing because the brand direction, life/AI/industrial relationship, or core intent was never locked. Expected behavior: root-cause climb to macro planning or intent lock, return to Workflow Director for Strategic Layer Lock, and forbid another image prompt as the next action.
+9. **A13 invisible air layer:** Brief asks for a visible silver-gray air layer, but normal review-size output shows no visible change and only amplified diff makes it detectable. Expected behavior: reject internally, record "air layer not visible" verbatim, and rebuild with changed edit scope or visual model before delivery.
+10. **False pass:** Candidate avoids forbidden objects and defects but remains generic, lifeless, or below brief quality. Expected behavior: mark false pass, block delivery, run candidate delivery or design-upgrade review.
+11. **Rejected baseline drift:** Candidate drifts from the brief, is rejected, then the next round starts optimizing that candidate. Expected behavior: treat candidate as anti-reference unless user explicitly accepts its direction; next baseline returns to original or revised brief.
+12. **Least-bad batch option:** A batch contains only weak candidates and the assistant selects the least-bad one. Expected behavior: reject the batch or mark analysis only; do not deliver a relative winner as a candidate.
+13. **Endless background attempts:** Multiple API/generation attempts repeat the same hypothesis. Expected behavior: stop after the attempt stop rule, analyze failed hypotheses, and route to method change, planner, or Workflow Director.

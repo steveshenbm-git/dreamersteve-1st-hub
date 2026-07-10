@@ -114,6 +114,9 @@ Strategic Layer Lock
 - If the user challenges the production method, such as asking whether scripts, geometric blocks, or Bezier curves were used, stop production and require method attribution before another draft.
 - If the user named or marked a defect, copy it into the active defect register and treat it as pass/fail.
 - Do not produce final or 4K output from a disputed draft unless the user has accepted it or requests deterministic export from an accepted version.
+- Do not treat a visual self-check pass as final delivery. For image outputs, require output status, visual self-check evidence, intent-brief-result status, candidate delivery status, and user acceptance layer before calling anything complete.
+- Do not let a rejected candidate become the next accepted baseline unless the user explicitly accepted that visual direction.
+- If repeated generation is happening without a distinct production hypothesis, changed method, changed visual model, changed source basis, or changed edit scope, stop production and require attempt-stop analysis.
 - If the user explicitly asks for `gpt-image-2`, `image 2`, ChatGPT Image API, or OpenAI API, keep that as a method constraint in the handoff; do not replace it with the current chat's native image generation capability.
 - Ask only one necessary question at a time. Prefer routing and progress over broad questionnaires.
 
@@ -193,6 +196,7 @@ The handoff must include:
 - cost/network gate: live API calls may incur cost and need explicit current-task confirmation unless the user already gave that confirmation
 - source path, output role, output stage, must keep/remove/change/avoid, and pass/fail criteria
 - output root: `/Users/lirongjing/Documents/JY TECH WEB/outputs/jiangyue-website-images`
+- production success strategy, attempt stop rule, and output status requirements when the work is high-impact, cost-bearing, or repeated-failure
 
 Return to planner before imagegen only when the API request depends on unresolved page strategy, buyer trust, visual role, or unsupported product claims.
 
@@ -206,6 +210,9 @@ Before sending another image round, classify the latest feedback:
 | User says no visible change happened | Run failure reset and require side-by-side observable-delta evidence |
 | User says the image is wrong, ugly, unrealistic, or not qualified | Register the defect and decide planner attribution vs imagegen execution failure |
 | User questions the method or repeated method failure | Stop small revisions and require method change or method justification |
+| Imagegen says self-check passed but output still looks weak, generic, off-intent, or only least-bad in batch | Treat as false-pass risk; require candidate delivery gate or return to planner |
+| A rejected candidate is being used as the next baseline | Stop and require Brief Anchor Lock before another production attempt |
+| Multiple attempts repeat the same hypothesis | Stop and require attempt-stop analysis before more generation |
 | User asks to optimize a skill, plugin, workflow, routing rule, source boundary, install/reinstall flow, or self-check | Route to `$jiangyue-skill-director`; production skills must not repair themselves or edit plugin files directly |
 
 ## Intent Check
@@ -225,7 +232,12 @@ Maintain this mentally or in the reply when state is at risk:
 Workflow State
 - Current stage:
 - Current route:
+- Original intent:
+- Active brief:
 - Accepted baseline:
+- Rejected candidates / anti-references:
+- Output status:
+- User acceptance layer:
 - Open user-named defects:
 - Same-issue return count:
 - Next required gate:
@@ -236,12 +248,28 @@ Workflow State
 Every specialist handoff must include:
 
 - user original words or source paths
-- current stage and accepted baseline
+- current stage, original intent, active brief, and accepted baseline
 - must keep / must remove / must change / must avoid
 - open defects and pass/fail criteria
+- rejected candidates or forbidden carry-over when relevant
+- required production success strategy and attempt stop rule when relevant
+- required output status and user acceptance layer
 - whether the next output is draft, final, archive, or analysis
 
 Do not hand off vague instructions such as "make it better", "continue", or "optimize" without visible criteria.
+
+## Final Image Delivery Gate
+
+Before saying an image task is complete, verify that the specialist output includes:
+
+- output status: rejected internally, analysis only, discovery candidate, candidate for review, accepted draft, or final export
+- visual self-check evidence when a candidate is shown
+- intent-brief-result status for brief-based, high-impact, or repeated-failure work
+- candidate delivery status when the output is shown to the user as a candidate
+- user acceptance layer before final export, 4K export, archive, or approved-material handling
+- rejected-result analysis when the output failed but still provides learning value
+
+If any required item is missing, do not say complete. Return to imagegen, planner, or skill-director based on the missing layer.
 
 ## Specialist Boundaries
 
