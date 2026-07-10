@@ -47,6 +47,7 @@ Every rework handoff after user feedback must include:
 - current version or source
 - user-named defects copied verbatim
 - planner attribution for each defect
+- failed layer when applicable: design judgment, page/content plan, image role, Visual Composition Contract, Asset Production Section, or imagegen execution
 - whether page goal, H1, CTA, image role, or claim boundary changes
 - brief reasoning: what part of the user's requested direction is accepted, constrained, or rejected, and why
 - what must remain unchanged
@@ -58,6 +59,7 @@ Every rework handoff after user feedback must include:
 
 For a new image direction or strategy-level rework, every handoff must also include a visual composition contract:
 
+- Jiangyue design judgment: design risk, quality standard, trusted subject, brand temperament, design trade-off, and anti-cheapness filter
 - image type
 - visual thesis / core image proposition
 - visual organization intent: attention owner, negative-space role, first/second read, and text support
@@ -69,9 +71,12 @@ For a new image direction or strategy-level rework, every handoff must also incl
 - hierarchy and negative-space area
 - buyer-readable meaning
 - forbidden visible forms
+- Asset Production Section: subject carriers, scene carriers, composition rules, color/material rules, negative-space/text-support rules, must include, must avoid, prompt-ready direction, QA checks, and rejection triggers
 - brief feasibility analysis: whether imagegen may proceed, production controllability, main failure risks, protected content, and preconditions
 
 If these fields are missing, planner must revise the brief before imagegen continues.
+
+The Planner Brief is the main handoff. Do not create a separate peer asset script unless Workflow Director explicitly requests a multi-asset production package.
 
 ## Visual Intention Decomposition
 
@@ -130,6 +135,8 @@ Visual Composition Contract
 ```
 
 Passing standard: a person should be able to roughly sketch the composition and explain the intended buyer reading from this contract alone. If the contract only contains concept words such as "industrial life", "AI analysis", "premium", "future", "connection", or "energy" without visible organization, relationship model, readable form language, hierarchy, and forbidden forms, it is not ready for imagegen.
+
+Design-led passing standard: words such as "premium", "professional", "restrained", "high-end", "calm", or "Jiangyue style" are insufficient unless planner states which design fundamental makes them true and how imagegen can make that visible: proportion, hierarchy, rhythm, restraint, information density, material credibility, space credibility, controlled B2-3 cue, trusted subject, or buyer-readable meaning.
 
 Examples:
 
@@ -205,3 +212,7 @@ After reset, do not request a final/4K image until a draft has passed the reset 
 6. **Semi-concrete AI/industrial field:** user asks for a silver-gray background with teal-green and blue B2-3 semi-concrete field intersection, not too hard-core industrial and not too abstract. Planner must output a visual composition contract with visual thesis, visual organization intent, visual relationship model, readable form language, layers, proportions, direction, buyer-readable meaning, forbidden forms, feasibility analysis, and pass/fail criteria before imagegen. It may not send only "industrial operation field + AI analysis field" as a vague concept.
 7. **Core intent not locked:** user says the failure is not only image quality, but that the macro relationship or core intent was unclear from the start. Planner must name the failed layer as macro planning / core intent / intent lock and return to Workflow Director for Strategic Layer Lock. It may not produce a narrower imagegen rework order to hide the unresolved strategic problem.
 8. **User challenge should not cause automatic agreement:** user says one part of the planner brief "feels wrong" without specifying a replacement. Planner must classify the challenge, preserve the parts of the existing reasoning that still stand, constrain or replace only the failed part, and explain why. It may not answer with unqualified agreement or rewrite the brief around the user's wording alone.
+9. **Homepage hero design-led brief:** user asks for a Jiangyue homepage hero direction. Planner must produce a Jiangyue Context Packet and Design Judgment before the image role or composition contract. It must identify trusted subject, page-role intensity, B2-3 role, life-sense boundary, design trade-off, claim boundary, and anti-cheapness filter. It may not only say "left text, right industrial image, premium and restrained."
+10. **Not premium enough:** user says the planner output or draft is still not high-end. Planner must diagnose the failed design fundamental: proportion, hierarchy, rhythm, restraint, information density, material credibility, space credibility, buyer readability, or brand temperament. It may not answer with only "make it more premium", "more clean", or "more refined".
+11. **Asset script confusion:** user asks whether Page Brief and Asset Production Script are separate. Planner must state that the Planner Brief is the main imagegen handoff and the Asset Production Section is an internal section, unless Workflow Director explicitly requests a multi-asset production package.
+12. **Correct judgment, weak carrier:** user accepts the Jiangyue design judgment but imagegen output is generic. Planner must revise the Asset Production Section with concrete visible carriers and QA checks before another imagegen round. It may not rewrite the whole strategy or send vague execution feedback.

@@ -7,6 +7,7 @@ Use this when imagegen fails for a strategic reason, or when the user reviews a 
 
 - 触发返工的失败类型：
 - 是执行问题还是策略问题：
+- 失败层归因：设计判断 / 页面与内容计划 / 图片角色 / 画面构成合同 / 素材生产段 / imagegen 执行
 - 用户反馈中的硬性问题：
 - Planner 缺陷登记：
   - 用户原话 / 标注：
@@ -15,6 +16,11 @@ Use this when imagegen fails for a strategic reason, or when the user reviews a 
   - 是否阻止交付：
   - 关闭缺陷所需证据：
 - 原图片需求哪里不成立：
+- 江樾设计判断是否需要修正：
+  - 设计风险诊断：
+  - 高级感判断：
+  - 设计取舍：
+  - 反低级方向拦截：
 - 页面目标是否变化：
 - 首屏注意力层级修正：
 - 图片角色修正：
@@ -23,6 +29,11 @@ Use this when imagegen fails for a strategic reason, or when the user reviews a 
 - 应移出图片、交给 HTML / 页面文案的信息：
 - 需要删除或降低优先级的信息：
 - 重新定义后的图片任务：
+- 素材生产段修正：
+  - 需要补充的可见载体：
+  - 需要收紧的生产约束：
+  - 需要新增的 QA 检查：
+  - 需要新增的拒绝触发条件：
 - 推荐的 2-3 个新图片方向：
 - 禁止 imagegen 再尝试的旧方向：
 - 参考归因：
@@ -39,8 +50,10 @@ Use this when imagegen fails for a strategic reason, or when the user reviews a 
 
 ## Rework Standard
 
-Do not return a vague instruction such as "make it better." The rework order must change task boundaries, message ownership, attention hierarchy, image role, forbidden direction, or visible pass/fail criteria.
+Do not return a vague instruction such as "make it better" or "make it more premium." The rework order must name the failed layer and change task boundaries, message ownership, attention hierarchy, image role, design judgment, Asset Production Section, forbidden direction, or visible pass/fail criteria.
 
 If the page strategy remains correct and only local visual execution is poor, send the image back to imagegen for execution fixes. If the user feedback concerns brand direction, layout integration, visual hierarchy, color system, or credibility for B2B buyers, use planner to produce a next-round optimization order before imagegen continues.
+
+If the Jiangyue design judgment is still correct but the result is generic, revise the Asset Production Section with concrete visible carriers, production constraints, and QA checks. Do not rewrite the whole strategy or send vague execution feedback.
 
 If the user named a visible defect, marked an image, challenged self-check, or disputed reference use, the rework order must include the defect register and reference attribution fields. If the same blocking defect remains after one imagegen revision, do not send another vague rework order; run planner failure reset or require imagegen hard-gate reset.

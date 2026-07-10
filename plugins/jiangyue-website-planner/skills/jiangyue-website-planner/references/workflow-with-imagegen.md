@@ -7,9 +7,9 @@ Use this reference when a Jiangyue website task crosses page strategy, visual pr
 ```text
 Fuzzy page or image request
 -> superpowers:brainstorming when the goal, buyer, message, or success criteria are unclear
--> jiangyue-website-planner defines page strategy and Planner Brief
+-> jiangyue-website-planner defines page strategy, Jiangyue design judgment, and Planner Brief
 -> user confirms the strategy contract
--> jiangyue-website-imagegen creates the Production Brief and visual asset
+-> jiangyue-website-imagegen creates the Production Brief from the Planner Brief's Asset Production Section and then produces the visual asset
 -> user reviews the draft
 -> planner classifies feedback when strategy, hierarchy, credibility, or message ownership is questioned
 -> planner records user-named defects and reference attribution when feedback names visible problems or missed references
@@ -22,7 +22,7 @@ Fuzzy page or image request
 
 | Situation | Use |
 |---|---|
-| Page goal, buyer, SEO/AEO intent, H1, CTA, section order, attention hierarchy, or image role is unclear | `superpowers:brainstorming` then `$jiangyue-website-planner` |
+| Page goal, buyer, SEO/AEO intent, H1, CTA, section order, attention hierarchy, Jiangyue design judgment, or image role is unclear | `superpowers:brainstorming` then `$jiangyue-website-planner` |
 | Planner Brief is approved and the task is visual production, image editing, export, or asset packaging | `$jiangyue-website-imagegen` |
 | User feedback challenges brand direction, credibility, visual hierarchy, layout integration, message ownership, or claim safety | `$jiangyue-website-planner` |
 | User asks for sharper crop, cleaner text, format conversion, local cleanup, or visual execution changes without strategy change | `$jiangyue-website-imagegen` |
@@ -32,13 +32,15 @@ Fuzzy page or image request
 
 ## Planner To Imagegen Handoff
 
-Planner hands off a strategy-and-composition contract, not a production recipe.
+Planner hands off one Planner Brief. The brief is a strategy, design-judgment, page/content, and composition contract with an internal Asset Production Section. Do not create a separate peer asset script for normal imagegen work.
 
 Planner must define:
 
 - page and page goal
 - target buyer and search/AEO intent when relevant
 - core page message
+- Jiangyue Context Packet: page-role intensity, business job, trusted subject, formal sources, approved materials when relevant, forbidden directions, and claim boundary
+- Jiangyue Design Judgment: design risk, quality standard, design trade-off, brand fit, B2-3 role, life-sense boundary, and anti-cheapness filter
 - first-screen attention owner
 - image role
 - what the image must support
@@ -48,6 +50,7 @@ Planner must define:
 - forbidden claims and product facts
 - recommended and forbidden directions
 - CTA/title/logo relationship
+- Asset Production Section: subject carriers, scene carriers, composition rules, color/material rules, negative-space/text-support rules, must include, must avoid, prompt-ready direction, QA checks, and rejection triggers
 - output ratio or usage position
 - visible pass/fail criteria
 - user-named defects and whether each is blocking, when this is a rework
@@ -57,7 +60,7 @@ Imagegen then defines:
 
 - execution intent
 - must keep, remove, materially change, and avoid lists
-- production-level subject carriers and relationship model within the planner composition contract
+- production-level subject carriers and relationship model within the Planner Brief's Visual Composition Contract and Asset Production Section
 - physical logic and method selection
 - production brief
 - image output, review, and archive
@@ -76,6 +79,8 @@ Planner should not send another vague instruction such as "make it more premium"
 
 If the page strategy remains correct and the issue is execution quality, return the draft to imagegen. If the image can only work by changing page message, attention hierarchy, CTA, H1, or claim boundary, revise the Planner Brief first.
 
+If the design judgment is correct but imagegen did not receive concrete visible carriers, revise the Asset Production Section inside the Planner Brief. If the brief has concrete carriers and the result is still visibly weak, return to imagegen with execution defects.
+
 ## Hard Handoff Rules
 
 Before planner sends a rework back to imagegen after user feedback, decide and state one route:
@@ -91,6 +96,7 @@ For rework after a user-named defect, planner must include:
 
 - exact user wording or marked defect
 - planner classification: strategy, hierarchy, image role, claim, layout integration, brand direction, or execution
+- failed layer when applicable: design judgment, page/content plan, Visual Composition Contract, Asset Production Section, or imagegen execution
 - whether the defect blocks delivery
 - what evidence closes the defect
 - references that must be used or must not be implied

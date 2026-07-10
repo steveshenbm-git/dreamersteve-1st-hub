@@ -1,4 +1,4 @@
 interface:
   display_name: "Jiangyue Website Planner"
-  short_description: "Lock Jiangyue page strategy and image roles"
-  default_prompt: "Use $jiangyue-website-planner to lock Jiangyue page strategy, claim boundaries, first-screen attention, image role, and strategy-only image briefs."
+  short_description: "Lock Jiangyue page strategy, design judgment, and image roles"
+  default_prompt: "Use $jiangyue-website-planner to lock Jiangyue page strategy, claim boundaries, first-screen attention, design judgment, image role, and Planner Briefs for imagegen."
