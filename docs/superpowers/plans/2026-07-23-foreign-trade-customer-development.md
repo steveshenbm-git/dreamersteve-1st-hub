@@ -10,7 +10,7 @@
 
 ## Global Constraints
 
-- Source branch: `add-foreign-trade-customer-development`; do not edit installed plugin caches.
+- Source branch: `ft-customer-dev`; do not edit installed plugin caches.
 - Approved specification: `docs/superpowers/specs/2026-07-23-foreign-trade-customer-development-design.md`.
 - Plugin and skill name: `foreign-trade-customer-development`.
 - Keep `foreign-trade-email-assistant` unchanged in this implementation; expose a stable handoff package from the new skill only.
@@ -1024,7 +1024,7 @@ Public-data safety scan: pass/fail
 Long-term project success rate: unverified
 Install/reinstall performed: no
 Push/publication performed: no
-Rollback: revert the implementation commits on add-foreign-trade-customer-development
+Rollback: revert the implementation commits on ft-customer-dev
 ```
 
 Ask separately whether the user wants installation testing, push, or pull-request publication. Do not infer any of those permissions from implementation approval.

@@ -10,7 +10,7 @@
 
 目标仓库：`/Users/lirongjing/Documents/传统外贸/github/dreamersteve-1st-hub`
 
-目标分支：`add-foreign-trade-customer-development`
+目标分支：`ft-customer-dev`
 
 ## 1. 真实业务目标
 
@@ -555,7 +555,7 @@ AI不得仅凭一句简短回复自行决定客户价值或最终状态。
 
 ## 18. 实现与发布顺序
 
-1. 在 `add-foreign-trade-customer-development` 分支保留本规格。
+1. 在 `ft-customer-dev` 分支保留本规格。
 2. 用户复核并批准本书面规格。
 3. 编写详细实现计划。
 4. 先运行无技能基线测试。
