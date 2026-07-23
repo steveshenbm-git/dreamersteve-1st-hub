@@ -1,0 +1,33 @@
+{
+  "name": "foreign-trade-email-assistant",
+  "version": "0.1.0",
+  "description": "Codex skill plugin for evidence-bound foreign-trade email analysis, bilingual reply drafting, natural-language revision, and controlled handling of serious communication issues.",
+  "author": {
+    "name": "steveshenbm-git"
+  },
+  "repository": "https://github.com/steveshenbm-git/dreamersteve-1st-hub",
+  "keywords": [
+    "foreign-trade",
+    "email",
+    "b2b-sales",
+    "bilingual",
+    "risk-communication"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Foreign Trade Email Assistant",
+    "shortDescription": "Prepare evidence-bound bilingual foreign-trade replies.",
+    "longDescription": "A salesperson-controlled assistant for analyzing complete customer email threads, preparing reply recommendations and bilingual drafts, revising from natural-language feedback, and handling explicit quality, contract, or payment issues without taking over business judgment or sending authority.",
+    "developerName": "steveshenbm-git",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive"
+    ],
+    "brandColor": "#147DFF",
+    "defaultPrompt": [
+      "Analyze this complete customer email thread and prepare a bilingual reply draft.",
+      "Revise this foreign-trade reply using my feedback and the full thread context.",
+      "Prepare a controlled review package for this quality, contract, or payment issue."
+    ]
+  }
+}

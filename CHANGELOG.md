@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.0 - 2026-07-23
+
+- Added `foreign-trade-email-assistant` as a public Codex plugin.
+- Added evidence-bound standard reply, natural-language revision, and serious-issue handling contracts.
+- Kept business importance, final wording, and sending authority with the salesperson.
+- Excluded company knowledge, customer records, mailbox data, and test-company materials from the public package.
+
 ## 0.2.2 - 2026-06-20
 
 - Changed imagegen output handling so exploratory trial images only need local test images and optional short notes.
