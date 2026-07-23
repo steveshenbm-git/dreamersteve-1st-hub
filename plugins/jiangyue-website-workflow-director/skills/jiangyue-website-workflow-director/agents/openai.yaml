@@ -1,0 +1,4 @@
+interface:
+  display_name: "Jiangyue Website Workflow Director"
+  short_description: "Route Jiangyue website work through the right skills"
+  default_prompt: "Use $jiangyue-website-workflow-director to route my Jiangyue website task, clarify intent, triage image feedback, and choose the right next skill."

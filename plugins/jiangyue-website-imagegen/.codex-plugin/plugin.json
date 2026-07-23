@@ -1,7 +1,7 @@
 {
   "name": "jiangyue-website-imagegen",
-  "version": "0.1.0",
-  "description": "Codex skill plugin for Jiangyue Technology website image direction and production briefs.",
+  "version": "0.2.2+codex.20260629022334",
+  "description": "Codex skill plugin for Jiangyue website visual production, image editing, exporting, QA, and archive discipline after strategy or local edit intent is clear.",
   "author": {
     "name": "Hangzhou Jiangyue Technology Co., Ltd."
   },
@@ -16,8 +16,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Jiangyue Website Imagegen",
-    "shortDescription": "Create precise Jiangyue industrial website visuals.",
-    "longDescription": "A Jiangyue Technology Codex skill for clarifying website image intent, forming production briefs, and guiding image generation or deterministic SVG/canvas composition for B2B industrial brand assets.",
+    "shortDescription": "Produce and package QA-gated website visuals.",
+    "longDescription": "A Jiangyue Technology Codex skill for producing, editing, exporting, reviewing, and packaging website visuals from clear strategy or local edit intent, with physical plausibility, visual hard stops, rendered-result inspection, and reproduction archives.",
     "developerName": "Jiangyue Technology",
     "category": "Design",
     "capabilities": [
@@ -26,9 +26,9 @@
     ],
     "brandColor": "#147DFF",
     "defaultPrompt": [
-      "Use $jiangyue-website-imagegen to clarify and create a website visual.",
-      "Use $jiangyue-website-imagegen to turn a rough image idea into a production brief.",
-      "Use $jiangyue-website-imagegen to review and improve a Jiangyue website image."
+      "Use $jiangyue-website-imagegen to create a Jiangyue website visual from a confirmed image request brief.",
+      "Use $jiangyue-website-imagegen to turn a confirmed image brief into a production brief.",
+      "Use $jiangyue-website-imagegen to revise a Jiangyue website visual when the requested edit is clear."
     ]
   }
 }

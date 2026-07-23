@@ -1,0 +1,34 @@
+{
+  "name": "jiangyue-knowledge-curator",
+  "version": "0.1.0+codex.20260629024345",
+  "description": "Codex skill plugin for curating confirmed Jiangyue website outputs, visual evidence, approved materials, failure cases, product fact boundaries, and competitor references into the local brand-system.",
+  "author": {
+    "name": "Hangzhou Jiangyue Technology Co., Ltd."
+  },
+  "repository": "https://github.com/steveshenbm-git/dreamersteve-1st-hub",
+  "keywords": [
+    "jiangyue",
+    "knowledge-curation",
+    "brand-system",
+    "visual-evidence",
+    "website-planning"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Jiangyue Knowledge Curator",
+    "shortDescription": "Curate confirmed website knowledge and evidence.",
+    "longDescription": "A Jiangyue Technology Codex skill for collecting confirmed website task outputs, image failures, approved reference materials, product fact boundaries, visual standards, and competitor references into the local brand-system after user confirmation.",
+    "developerName": "Jiangyue Technology",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "brandColor": "#147DFF",
+    "defaultPrompt": [
+      "Use $jiangyue-knowledge-curator to organize confirmed Jiangyue outputs into the brand-system.",
+      "Use $jiangyue-knowledge-curator to turn a completed image task into a short curation card for user confirmation.",
+      "Use $jiangyue-knowledge-curator to update approved materials and failure cases after confirmation."
+    ]
+  }
+}

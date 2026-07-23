@@ -1,227 +1,261 @@
 ---
 name: jiangyue-website-imagegen
-description: Use when creating, editing, or reviewing website visuals for Jiangyue Technology, including Chinese or English page graphics, industrial product imagery, AI-assisted motor-control concepts, application scenes, technical-resource images, card graphics, hero images, and WordPress-ready visual assets.
+description: Use when producing, editing, reviewing, exporting, or packaging Jiangyue website visual assets after page strategy, image role, or local image-editing intent is clear.
 ---
 
 # Jiangyue Website Imagegen
 
-## Core Standard
+## Core Role
 
-Create bright, minimal, precise industrial B2B visuals that support technical credibility. Every image needs one clear visual hammer and must avoid unsupported product, certification, customer, or performance claims.
+Own visual execution: production method, image editing, subject structure, physical plausibility, composition quality, deterministic text/layout overlays, output files, visual QA, and reproduction archive.
 
-Use the shortest production path that preserves quality. Do not create an HTML preview, browser mockup, design document, competitor review, or multiple deliverables unless the user asks for them or they are necessary to judge the requested asset.
+Do not own page strategy, H1, CTA hierarchy, buyer-message fit, claim boundary, or final approval. If those are unclear, return to `$jiangyue-website-workflow-director` with the missing decision.
 
-## Brief Intake
+Do not replace a planner Visual Composition Contract / 画面构成合同 with imagegen's own visual strategy. For brief-based new images, imagegen executes the planner's strategy-and-composition contract; if the contract is missing or too abstract, return it before production.
 
-For every new image, use [references/image-brief-template.md](references/image-brief-template.md).
+Use professional industrial judgment for European B2B buyers. Avoid unsupported product, certification, customer, performance, export, compliance, patent, or specification claims.
 
-- Do not dump the full questionnaire on the user.
-- Ask only the highest-value missing question, one at a time.
-- Infer low-risk production details from the brand rules and existing assets.
-- Before production, return a concise production brief that states the intended message, subject relationship, visual hammer, copy placement, method, and constraints.
-- Generate only after the user confirms the brief or has already provided equivalent clear instructions.
+## Execution Boundary
 
-## Choose the Production Method First
+Imagegen owns:
 
-Classify the request before generating anything:
+- new image production after strategy or local edit intent is clear
+- P图, element removal, crop, cleanup, background extension, upscaling/export, and file packaging
+- production brief, hard keep/remove/change/avoid lists, production success strategy, visual QA, candidate status, and reproduction notes
+- visible quality checks at full size and thumbnail/review size
+
+Imagegen does not own:
+
+- page objective, buyer intent, SEO/AEO, H1, CTA, section order, or claim boundary
+- deciding whether user feedback is a strategy problem after repeated failure
+- formal knowledge-base entry
+- final approval
+
+## Intake
+
+Classify the request before production:
+
+| Intent | Imagegen action |
+|---|---|
+| Local edit / P图 / crop / export | Execute directly if source, target, and output are clear |
+| Brief-based new image | Review the Planner Brief and Visual Composition Contract, then produce a production brief |
+| Post-image execution fix | Register user-named defects and revise only if strategy remains clear |
+| Repeated failure, unclear intent, or strategy drift | Return to Workflow Director before producing |
+
+Ask one concise execution question only when a required file, target object, output size, or draft/final stage is missing.
+
+## Planner Brief Readiness
+
+Before a brief-based image, confirm:
+
+- real intent, page/use location, image role, and attention owner are clear
+- for non-local brief-based production, the brief includes Brief Reasoning Gate / 简报推理门槛 with judgment standard, accepted user direction, constrained or rejected user direction, reason, brand-system fit, and drift risk
+- for non-local brief-based production, a Visual Composition Contract / 画面构成合同 is present, or the planner brief explicitly states why it is unnecessary
+- the contract defines image type, visual thesis, visual organization intent, visual relationship model, readable form language, visible layers, placement/proportion, direction/motion, hierarchy, negative-space/text area, buyer-readable meaning, misread prevention, and forbidden forms
+- for brand-defining, homepage/hero/background, B2-3, New Eastern industrial, life-sense, or repeated brand-direction tasks, the brief includes Brand-System Visual Alignment / 品牌视觉系统对齐 or explicitly states why no formal brand-system file is relevant
+- for non-local brief-based production, the brief includes Brief Feasibility Analysis / 简报可行性分析 with whether imagegen may proceed, visual relationship clarity, form-language specificity, production controllability, major failure risks, protected content, and preconditions
+- required subjects have visible carriers
+- abstract terms are translated into visible cues
+- visual relationships are readable: role, direction, cause/effect, comparison, support layer, control flow, or application context
+- forbidden claims and product-fact risks are explicit
+- output ratio, stage, and pass/fail criteria are clear
+
+If not ready, return this:
+
+```text
+Return to Workflow Director / 简报退回
+
+- Missing decision:
+- Missing brief reasoning gate:
+- Missing visual composition contract:
+- Missing brand-system visual alignment:
+- Missing brief feasibility analysis:
+- Too abstract for production:
+- Missing visible carrier or relationship:
+- Claim / product-fact risk:
+- What imagegen can proceed with after clarification:
+```
+
+## Image Production State Protocol
+
+Use this state chain for brief-based, high-impact, cost-bearing, or repeated-failure image work:
+
+```text
+Intent Lock
+-> Planner Brief
+-> Production Success Strategy
+-> Attempt Stop Rule
+-> Generate Candidate
+-> Visual Self-Check
+-> Intent-Brief-Result Check
+-> Outcome Classification
+-> Candidate Delivery Gate
+-> User Acceptance Layer
+-> Final Export / Archive
+```
+
+Hard rules:
+
+- A generated result may inform a future brief, but it cannot silently become the brief.
+- A brief may translate intent, but it cannot replace the original intent.
+- A visual self-check pass does not make a result deliverable; it only allows candidate delivery review.
+- A rejected candidate is not the next baseline unless the user explicitly accepts that direction.
+- A candidate from a weak batch must pass the active brief and intent on an absolute basis; do not deliver the least-bad option.
+- User acceptance must be recorded by layer: intent, brief, direction, specific draft, final export, or approved archive.
+
+## Production Paths
+
+Use the lightest path that protects visible quality.
+
+### Local OpenAI API / gpt-image-2 Path
+
+Use this path when the handoff or user explicitly requires `gpt-image-2`, `image 2`, ChatGPT Image API, OpenAI API, API key, `.env`, or local API image processing.
+
+Hard rules:
+
+- Do not use the current chat's native image generation tool when the user requested local OpenAI API processing.
+- Read the API key only from `/Users/lirongjing/Documents/JY TECH WEB/.env` or an already configured local environment variable. Never ask the user to paste the key into chat, never print it, and never save it in skill files, archives, prompts, logs, or reproduction notes.
+- Before a live API request, state that it will contact OpenAI and may incur API cost. Get explicit current-task confirmation unless the user has already clearly approved that exact call.
+- Verify the source image path before calling the API. If the file is missing, ask for the missing path instead of guessing.
+- Save usable outputs under `/Users/lirongjing/Documents/JY TECH WEB/outputs/jiangyue-website-images`, following [references/output-and-archive.md](references/output-and-archive.md).
+- Report model/method, output path, visual checks, and limitations. Do not claim API success, image quality, or exact dimensions unless verified.
+
+Method rules:
+
+- Use image edits when modifying an existing raster image; use image generation only when creating a new image from text.
+- Keep user-provided visual constraints as pass/fail criteria, especially must keep/remove/change/avoid lists.
+- Use deterministic post-processing for text, logos, crops, compression, comparison thumbnails, and final export when that is more reliable than another API call.
+
+### Light Path
+
+For simple local edits, deterministic cards, format edits, crops, exports, and low-risk adaptations:
+
+1. Confirm source, target change, output size, and stage.
+2. Produce the asset in the project output root.
+3. Inspect the rendered result.
+4. Report path, dimensions, method, output status, verification, and limitations.
+
+### Standard Path
+
+For most Jiangyue website visuals:
+
+1. Create a production brief from the planner strategy-and-composition contract and four hard lists: must keep, must remove, must materially change, must avoid.
+2. Read [references/production-success-strategy-gate.md](references/production-success-strategy-gate.md) when the asset is brief-based, high-impact, cost-bearing, or repeated-failure; state how the method and visual model can succeed before production.
+3. Read [references/attempt-stop-and-method-escalation-gate.md](references/attempt-stop-and-method-escalation-gate.md) when multiple attempts, API calls, or repeated failures are possible; do not repeat the same failed hypothesis.
+4. Choose method based on visible result quality, not convenience.
+5. Translate approved composition intent into concrete subject carriers, visual relationships, physical logic, and pass/fail checks without changing the planner's visual strategy.
+6. Produce one strong draft first; create variants only when they differ materially by production hypothesis, visual model, structure, source basis, or method.
+7. Inspect full size, thumbnail/review size, prior draft, and references when available.
+8. Run [references/visual-self-check-gate.md](references/visual-self-check-gate.md), [references/intent-brief-result-coordination-gate.md](references/intent-brief-result-coordination-gate.md), and [references/candidate-delivery-gate.md](references/candidate-delivery-gate.md) before presenting any candidate for review.
+9. Revise, reject, archive, analyze, or return to Workflow Director based on visible evidence and output status.
+
+### High-Impact Path
+
+For homepage heroes, product heroes, Contact heroes, brand-defining visuals, recognition-sensitive images, or repeated failures:
+
+1. Follow Standard Path.
+2. Read `/Users/lirongjing/Documents/JY TECH WEB/brand-system/00-knowledge-gate/jiangyue-knowledge-gate.md` and only relevant formal knowledge files.
+   For brand visual direction, homepage/hero/background images, B2-3 color use, New Eastern industrial style, life-sense metaphor, or repeated brand-direction feedback, include the relevant formal files under `/Users/lirongjing/Documents/JY TECH WEB/brand-system/02-brand-visual/`, especially `brand-visual-standard.md`, `b2-3-color-scheme-reference.md`, `composition-rules.md`, `color-material-lighting.md`, and `negative-visual-directions.md` when they affect the result.
+3. Load only the needed references:
+   - [references/execution-gates.md](references/execution-gates.md) for method choice, subtask method lock, and visible-result gates.
+   - [references/brief-review-rubric.md](references/brief-review-rubric.md) for production readiness.
+   - [references/visual-structure-patterns.md](references/visual-structure-patterns.md) for abstract or multi-subject structure.
+   - [references/design-upgrade.md](references/design-upgrade.md) when the design is generic or weak.
+   - [references/reference-research.md](references/reference-research.md) when category recognition or reference quality matters.
+   - [references/failure-reset-hard-gates.md](references/failure-reset-hard-gates.md) when user-named defects or repeated failures appear.
+   - [references/brief-anchor-and-rework-gate.md](references/brief-anchor-and-rework-gate.md) before rework after a rejected, disputed, or drifted candidate.
+   - [references/rejected-result-analysis-gate.md](references/rejected-result-analysis-gate.md) when a candidate fails a hard gate or should only be used as analysis.
+   - [references/user-acceptance-layer-gate.md](references/user-acceptance-layer-gate.md) when the user accepts a direction, asks for a revision, or requests final export.
+
+## Failure And Defect Rules
+
+- Copy user-named defects into a defect register.
+- A revised image may not be delivered if a registered defect remains visible at full size or thumbnail size.
+- If the same registered defect remains twice, stop the method and return to Workflow Director.
+- If the user says a requested change did not visibly happen, read [references/failure-reset-hard-gates.md](references/failure-reset-hard-gates.md) and do not deliver another draft without observable change evidence.
+- If the user says self-check failed, still wrong, not qualified, ugly, missed a reference, ignored an attachment, or marks the same defect, read [references/failure-reset-hard-gates.md](references/failure-reset-hard-gates.md) before further production.
+- Do not deliver a vetoed draft as a concept option.
+- Do not optimize a rejected candidate as the next baseline unless [references/brief-anchor-and-rework-gate.md](references/brief-anchor-and-rework-gate.md) records explicit user acceptance of that direction.
+- When a candidate fails, use [references/rejected-result-analysis-gate.md](references/rejected-result-analysis-gate.md) to turn it into analysis or an anti-reference before another production attempt.
+- If self-check passes but the result is still weak, generic, off-intent, or merely the least-bad batch option, block delivery with [references/candidate-delivery-gate.md](references/candidate-delivery-gate.md).
+
+## Production Method Rules
+
+For high-impact visuals, repeated failures, approved-material protection, or method disputes, use a subtask method lock from [references/execution-gates.md](references/execution-gates.md). A complex image task may have multiple subtasks, but each subtask must have one primary method.
 
 | Request | Default method |
 |---|---|
-| Product, application, lab, equipment, or atmospheric scene | Use image generation |
-| Simple geometric card, icon-like graphic, diagram, label system, or text-led composition | Build as SVG/canvas and export PNG |
-| Existing raster image modification | Use image editing |
-| Visible Chinese or English copy in a graphic | Generate the visual base without text, then typeset real text programmatically |
-| Website implementation or responsive page testing | Use HTML/CSS only when explicitly requested |
+| Product, application, lab, equipment, or atmospheric scene | Image generation or image editing |
+| Simple geometric card, icon-like graphic, diagram, label system, or text-led composition | SVG/canvas or deterministic composition |
+| Existing raster image modification | Image editing |
+| Important Chinese or English text in a graphic | Generate base without text, then typeset real text programmatically |
+| Website implementation or responsive preview | HTML/CSS only when explicitly requested |
 
-Do not use an image model for deterministic geometry or important text when SVG/canvas can produce a cleaner and more controllable result.
+Never downgrade a requested realistic, photographic, atmospheric, product, lab, equipment, or brand-defining hero into a flat illustration or screenshot workaround without user approval.
 
-## Fast Workflow
+For natural or organic structures such as water ripples, leaves, leaf veins, branches, plants, people, natural textures, or natural material details, do not use deterministic vector/Python/SVG geometry, Bezier curves, or geometric color blocks as the final visual method unless the user explicitly requests a flat/vector style. Deterministic tools may support masks, crops, text, export, comparison thumbnails, and color matching.
 
-1. Identify the asset type, crop, purpose, visual hammer, and required text.
-2. When the brief contains multiple subjects, confirm their semantic relationship before choosing a visual form.
-3. Run a content-sufficiency check before choosing a layout.
-4. Check only directly relevant project assets.
-5. Choose image generation, image editing, or deterministic SVG/canvas composition.
-6. Produce one strong draft first. Create variants only when they test a meaningful visual difference.
-7. Inspect the actual output at full size using a separate review pass.
-8. Reject and redo any output that hits a quality veto or design-upgrade trigger.
-9. Save the accepted asset in the project and report its path, dimensions, method, and unverified limitations.
+## Quality Hard Stops
 
-For a clear simple request, do not conduct an extended questionnaire. Infer low-risk details, return the concise production brief, and proceed after confirmation. If meaning or subject relationships remain ambiguous, wait for the answer.
+Reject or revise before delivery when any of these appear:
 
-## Mixed-Autonomy Design Mode
+- registered user defect still visible
+- generic honeycomb, hexagon infographic, stock-vector, app-dashboard, or PowerPoint-template look
+- dark cyberpunk, neon-purple, excessive glow, decorative circuitry, glowing pipes, transparent sci-fi tubing, or impossible energy paths
+- busy factory drama, sparks, smoke, clutter, or heavy machinery scenes that reduce B2B credibility
+- fake specifications, UI values, certifications, customer logos, readable labels, compliance marks, or generated text
+- distorted Chinese or English text when the text must be readable
+- multiple equal focal points with no attention hierarchy
+- subjects merely adjacent, stacked, or connected by lines without visible role, direction, or result
+- product/application cues that imply unverified customer installation, final product architecture, or confirmed performance
+- brief-based new image lacks a required planner Visual Composition Contract and is not a bounded local edit or deterministic export
+- high-impact or brand-defining image lacks required Brand-System Visual Alignment, or visibly conflicts with formal brand-system visual planning
+- production brief invents a different visual strategy, image type, or composition relationship instead of executing the planner brief
+- polished output that no longer supports the approved brief or local edit intent
 
-Use mixed autonomy by default:
+## Text Rules
 
-- Adjust composition, spacing, scale, crop, asymmetry, material, color balance, abstract lines, and non-semantic brand accents without asking.
-- Ask one concise, highest-value question before adding new copy, products, application objects, people, technical symbols, or claim-like meaning.
-- When the requested content is too thin for a strong composition, do not hide the weakness with decoration. Propose a specific content addition or structural change.
-- If the user declines additional content, solve the asset through proportion, typography, negative space, material contrast, cropping, or a stronger silhouette.
-- Ask one question at a time. Explain what visual problem the answer will solve.
+Important website copy should remain HTML whenever possible. Text inside images is acceptable for labels or mockups only when the same meaning is available through page content, alt text, or surrounding copy.
 
-Read [references/design-upgrade.md](references/design-upgrade.md) when the asset is based on one simple element, feels visually thin, needs active art direction, or fails the first review.
+Use exact user-provided wording. Typeset important text with real fonts. Do not ask the image model to create important readable text.
 
-## Multi-Subject Relationship Gate
+## Output And Archive
 
-Before designing two or more named subjects, determine:
+Read [references/output-and-archive.md](references/output-and-archive.md) when creating reusable drafts or finals. For full reproduction notes, use [references/reproduction-archive-template.md](references/reproduction-archive-template.md).
 
-1. **Foundation:** what provides credibility, stability, or input?
-2. **Driver:** what creates movement, transformation, or differentiation?
-3. **Outcome:** what delivers value, continuation, or closure?
-4. **Flow:** what moves between them, in what direction, and whether it returns as a loop?
+Default output root:
 
-If the brief does not answer these questions, ask one question first:
+```text
+outputs/jiangyue-website-images/{content-type}/{conversation-root-cn}/{task-folder}/
+```
 
-> What is the most important relationship or result this image should show?
+Keep all files created in one Codex conversation under one Chinese conversation root folder named from the conversation title or a concise Chinese summary of the user's task. Create subfolders inside that root for each task, draft, or final export.
 
-Offer 2–3 concrete relationship models when useful. Do not begin production until the user chooses or clearly describes the intended relationship.
+Examples:
 
-Do not treat proximity, interlocking geometry, equal-size labels, or a connecting line as proof of collaboration. The visual must show role, direction, and result.
+```text
+outputs/jiangyue-website-images/home/首页英雄图API测试/01-方向草稿/
+outputs/jiangyue-website-images/home/首页英雄图API测试/02-局部修改/
+outputs/jiangyue-website-images/home/首页英雄图API测试/03-final/
+```
 
-## Content-Sufficiency Check
+## Delivery Report
 
-Before production, classify the brief:
+Report only verified facts:
 
-- **Sufficient:** clear subject, hierarchy, purpose, and crop. Proceed.
-- **Thin but solvable:** few elements, but typography, silhouette, scale, or material can carry the design. Proceed with an intentional minimal composition.
-- **Semantically incomplete:** a stronger design requires meaning not supplied by the user. Ask one question before adding it.
-- **Overloaded:** too many equal messages or subjects. Recommend what to remove or subordinate before producing.
-
-Minimal does not mean placing a small object in empty space. A minimal asset still needs deliberate scale, tension, rhythm, and hierarchy.
-
-## Visual Direction
-
-- Mood: calm, precise, credible, modern, technical.
-- Brand feel: bright, minimal, focused, AI-native, quietly ambitious.
-- Palette: white and very light gray, graphite, sparse vivid blue, cyan, and green.
-- Suggested colors: `#FFFFFF`, `#F7F9FC`, `#E9EEF4`, `#0F172A`, `#147DFF`, `#18C7D8`, `#61D345`.
-- Lighting: bright studio or clean industrial lighting with restrained reflections.
-- Composition: generous negative space, strong hierarchy, few objects.
-- Materials: matte coated metal, anodized aluminum, ceramic, precise glass details used sparingly.
-- AI cues: a few energy nodes, fine data lines, or controlled luminous edges.
-
-Industrial technology should feel engineered, not theatrical.
-
-## Visual Hammer
-
-The visual hammer is the first and dominant form the viewer notices.
-
-- Use one focal object or one tightly unified object group.
-- When several subjects jointly form the hammer, their silhouette must read as one compact symbol.
-- Secondary lines, grids, glows, labels, icons, and scenery must remain weaker.
-- If a decorative effect attracts attention before the subject, remove it.
-- For multiple subjects, make the relationship itself the visual hammer, not merely the collection of objects.
-
-## Text and Chinese Typography
-
-- Use exact user-provided wording.
-- Typeset important text with a real installed font.
-- Keep text editable in the SVG source when practical.
-- Prefer clean sans-serif Chinese fonts such as PingFang SC, Source Han Sans, Noto Sans CJK, or Heiti.
-- Avoid bevelled 3D lettering, excessive shadows, outlined display type, or model-generated text.
-- Never add unrequested slogans, English labels, numbers, or microcopy.
-
-For WordPress, important SEO copy should remain HTML. Text inside an image is acceptable only when the image itself is a labeled graphic and the same meaning is available in page content or alt text.
-
-## Quality Vetoes
-
-Reject the draft immediately if any of these appear:
-
-- generic honeycomb or hexagon infographic
-- glowing pipes, excessive circuitry, or transparent sci-fi tubing
-- PowerPoint template, stock-vector, dashboard, or app-button appearance
-- generic rounded pills used as the main visual idea
-- dark cyberpunk, neon purple, excessive glow, or large decorative gradients
-- busy factory scenes, sparks, smoke, clutter, or heavy machinery drama
-- generated or distorted Chinese text
-- fake device labels, certification marks, specifications, customer logos, or status claims
-- several equal focal points with no clear visual hammer
-- multiple subjects that appear merely adjacent, stacked, or mechanically interlocked without visible cause and effect
-- decorative grids or lines that make the image look busier rather than more precise
-
-Do not deliver a vetoed draft as a “concept option.” Redo it.
-
-## Design-Upgrade Triggers
-
-Rework the concept when:
-
-- the design is technically clean but generic
-- the focal object could belong to any technology company
-- every element has similar scale, weight, or spacing
-- the composition depends on centered symmetry without a reason
-- empty space feels accidental rather than controlled
-- added decoration does not increase meaning, hierarchy, or recognition
-- the first draft only changes color, shadow, or border treatment from a common template
-
-Change the composition idea, content relationship, or medium. Do not merely polish the same weak layout.
-
-## Review Separation
-
-Review the rendered asset without relying on the production rationale. Score:
-
-1. visual hammer
-2. hierarchy and typography
-3. brand specificity
-4. composition and negative space
-5. template resistance
-6. legibility at website-card size
-7. semantic clarity: foundation, driver, outcome, and flow are understandable without reading the design explanation
-
-Any score below acceptable requires revision. For an important asset or repeated failure, request permission to use an independent reviewer or additional reference research rather than approving the work through self-justification.
-
-
-## Subject Guidance
-
-### Hero
-
-Use one minimal control-core, product form, or compact system symbol. Keep space for HTML headline and CTA.
-
-### Product
-
-Show a conceptual controller clearly on a light background. Emphasize enclosure, interface, terminals, and thermal design without invented labels or specifications.
-
-### Application
-
-Show a clear controller-to-fan, pump, OEM equipment, or industrial system relationship. Keep the environment clean and secondary.
-
-### Technical Resources
-
-Use organized documents, connectors, diagrams, or abstract unlabeled diagnostic UI. Do not fabricate readable values or compliance marks.
-
-### Geometric Cards and Brand Graphics
-
-Prefer custom silhouettes, asymmetric facets, precise spacing, and controlled material contrast. Avoid default hexagon clusters and ordinary UI badges. Build deterministic geometry directly rather than asking an image model to invent it.
-
-## Product and Claim Safety
-
-When no verified product photo exists, describe the result as a conceptual visual. Do not imply:
-
-- final enclosure design
-- exact electrical specifications
-- certifications or compliance
-- verified test results
-- customer installations
-- patents, export markets, or mass-production status
-
-Use supplied brand marks or product photos only when the user provides or verifies them.
-
-## Output Rules
-
-- Default to one PNG plus an editable source when the source is SVG or another practical native format.
-- Produce a clean image and a full mockup only when both are useful or explicitly requested.
-- Use descriptive filenames and never overwrite existing assets without permission.
-- Save project-bound assets inside the workspace.
-- Inspect dimensions, legibility, spelling, composition, and visible artifacts before delivery.
-- Do not claim browser, mobile, SEO, compression, or WordPress behavior that was not checked.
-
-## Delivery
-
-Report:
-
+- output status: rejected internally / analysis only / discovery candidate / candidate for review / accepted draft / final export
 - final file path
+- task folder path
+- reproduction archive path, or `not created yet`
 - dimensions and format
 - production method
-- what was visually verified
-- any limitation that remains
+- production success strategy and attempt stop rule used, when applicable
+- visual self-check evidence and candidate delivery status, when applicable
+- intent-brief-result status, when applicable
+- user acceptance layer, when applicable
+- formal `brand-system` files consulted, if any
+- what was visually checked
+- what could not be verified
+- remaining limitation, if any
 
-Add at most one short visual-only improvement note when it is genuinely useful.
+Correct dimensions, a saved path, or a successful script run are not visual verification. Inspect the rendered output before claiming a visual pass.

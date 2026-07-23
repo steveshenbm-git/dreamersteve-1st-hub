@@ -1,0 +1,34 @@
+{
+  "name": "jiangyue-skill-director",
+  "version": "0.1.0",
+  "description": "Codex skill plugin for designing, auditing, pressure-testing, and improving Jiangyue skills and skill-bearing plugins.",
+  "author": {
+    "name": "Hangzhou Jiangyue Technology Co., Ltd."
+  },
+  "repository": "https://github.com/steveshenbm-git/dreamersteve-1st-hub",
+  "keywords": [
+    "jiangyue",
+    "skills",
+    "workflow",
+    "plugin-development",
+    "skill-validation"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Jiangyue Skill Director",
+    "shortDescription": "Design and validate Jiangyue skills.",
+    "longDescription": "A Jiangyue Technology Codex skill for creating, redesigning, auditing, pressure-testing, and improving Jiangyue skills and skill-bearing plugins. It routes work through skill-creator, superpowers process skills, and plugin-creator while preserving Jiangyue source boundaries and validation gates.",
+    "developerName": "Jiangyue Technology",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "brandColor": "#147DFF",
+    "defaultPrompt": [
+      "Use $jiangyue-skill-director to design a Jiangyue skill.",
+      "Use $jiangyue-skill-director to audit a Jiangyue skill failure.",
+      "Use $jiangyue-skill-director to plan a Jiangyue skill improvement."
+    ]
+  }
+}

@@ -8,7 +8,7 @@ Identify the real problem before adding anything:
 
 | Symptom | Likely cause | Preferred response |
 |---|---|---|
-| Empty and weak | Subject is too small or lacks tension | Increase scale, crop, overlap, or edge interaction |
+| Empty and weak | Subject is too small, or the image role is unclear | Clarify whether the image leads attention or supports atmosphere; then adjust scale, crop, overlap, or space |
 | Clean but generic | No Jiangyue-specific design logic | Introduce control-layer relationships, precise material contrast, or sparse AI signal behavior |
 | Looks like a template | Familiar card, hexagon, badge, or dashboard pattern | Change the silhouette and spatial relationship, not just styling |
 | Text looks pasted on | Typography is not part of the geometry | Align type to planes, axes, rhythm, or material boundaries |
@@ -16,6 +16,12 @@ Identify the real problem before adding anything:
 | Too static | Everything is centered and evenly spaced | Use directional balance, controlled asymmetry, crop, or staggered rhythm |
 | Too complicated | Too many equal elements | Remove, group, or subordinate elements |
 | Subjects touch but do not collaborate | Shape connection replaced semantic connection | Define foundation, driver, outcome, and flow before redrawing |
+| Physically strange | Parts were chosen for symbolism, not assembly logic | Rebuild as plausible layers, enclosure, mounting, signal, or workflow relationships |
+| Flow feels fake | Light path reads as impossible electricity or decorative energy | Reframe as control signal, data path, feedback path, or remove it |
+| Correction causes drift | Later feedback replaces the original job | Re-lock the original intent and treat the feedback as a constrained correction |
+| Revision looks the same | Same silhouette, same focal relationship, same composition | Change the visual model, not the rendering polish |
+| Method downgraded quality | The method was chosen because it can save or reproduce files, not because it can reach the brief's visual grade | Stop and choose a quality-appropriate method, or report the limitation |
+| Safe but lifeless | Brand rules became a rigid style template | Open creative range through crop, material, physical context, or a stronger visual metaphor |
 
 ## Relationship Before Form
 
@@ -34,6 +40,14 @@ Translate the sentence into visual behavior:
 
 Use size, position, direction, transformation, and feedback to show collaboration. Shared color or physical contact alone is insufficient.
 
+For each named subject, identify the carrier before drawing:
+
+- **Explicit element:** the subject is visible as an object, label, or clear symbol.
+- **Implicit cue:** the subject is visible through material, motion, light behavior, support structure, or composition.
+- **HTML/page copy:** the subject is not in the image and must be stated in page text.
+
+Do not proceed if a named subject has no carrier. Do not let a later subject-recognition correction remove an existing carrier.
+
 ### Relationship Models
 
 - **Foundation → Driver → Outcome → Feedback:** use when one capability enables another and service sustains the system.
@@ -44,11 +58,20 @@ Use size, position, direction, transformation, and feedback to show collaboratio
 
 Ask the user to select the intended model when more than one is plausible.
 
+For high-impact visuals, choose from or adapt the structure library in [visual-structure-patterns.md](visual-structure-patterns.md). Each candidate structure must be expressed as:
+
+- **Relationship model:** the roles and direction of value.
+- **Variable parameters:** the carriers, crop, medium, specificity, material, and text ownership that can change.
+- **Forbidden boundary:** what would make the structure physically fake, generic, over-specific, or off-intent.
+
+This framework should widen the useful design space. If it makes the image safe but plain, change the parameters or relationship model; do not treat the first reliable option as final.
+
 ## Upgrade Order
 
 Attempt improvements in this order:
 
-1. **Scale:** Make the visual hammer decisively larger or use intentional cropping.
+0. **Intent:** Confirm the draft still serves the original user goal and message responsibility.
+1. **Scale:** If the image owns attention, make the visual hammer larger or use intentional cropping. If headline, CTA, or logo owns attention, protect clear space and strengthen professional atmosphere instead.
 2. **Relationship:** Change how elements connect, overlap, align, repeat, or oppose each other.
 3. **Silhouette:** Create a memorable outer contour before adding internal detail.
 4. **Typography:** Use size, weight, spacing, alignment, and line breaks as structural design.
@@ -58,6 +81,45 @@ Attempt improvements in this order:
 8. **Accent:** Add the smallest useful blue, cyan, green, or warm signal.
 
 Do not begin with glow, shadows, grids, circuit traces, or background decoration.
+
+## Real-Range Creativity
+
+Creativity is allowed when it remains physically and commercially plausible for Jiangyue's industrial market.
+
+Use creative freedom to change:
+
+- crop: close product fragments, edge tension, partial application-equipment or control-system context
+- spatial model: layered control field, feedback loop, product-to-application relationship, engineering workspace
+- material: cast or anodized metal, matte coating, controlled reflections, heat-sink rhythm
+- metaphor: adaptive control, service feedback, precision handoff, airflow-to-control relationship
+- palette: neutral industrial base with restrained technical or environmental accents
+
+Do not use creativity to add unsupported claims, fake interfaces, unrealistic sci-fi machinery, over-complex environments, or generic decorative tech patterns.
+
+A reliable visual structure is only the baseline. High-impact hero images still need at least one strong design decision. When the image owns attention, this may be a memorable silhouette, decisive crop, clear material contrast, unusual but credible spatial relationship, or compact system symbol. When headline, CTA, or logo owns attention, this may be controlled negative space, professional atmosphere, material credibility, brand mood, or restrained depth.
+
+Do not use physical objects as arbitrary symbols. A transparent shell, base, PCB, heat sink, frame, enclosure, cable, fan, pump, connector, or chip must have a plausible reason to exist in the object:
+
+- **Enclosure:** complete cover, partial access panel, gasket line, screw points, thickness, clearance, or realistic open-state logic.
+- **Base:** mounting, heat transfer, isolation, test fixture, or support role.
+- **PCB/chip:** signal/control relationship, layout discipline, thermal or connector context.
+- **Light path:** control signal, sensing, data path, feedback path, or diagnostic cue; not impossible external electricity.
+
+If the metaphor requires a half shell, floating frame, arbitrary metal platform, or unexplained energy loop, change the visual model before generating.
+
+For motor-control or application-specific visuals, the best creative solution usually combines one recognizable hardware/control cue with one clear control, application, or service relationship. It should not become either a plain product photo or an abstract AI poster.
+
+If the previous draft failed for visual quality, the next draft must change at least one of:
+
+- visual model
+- silhouette
+- subject relationship
+- crop/scale hierarchy
+- medium or production method
+
+Changing only color, glow, line weight, material sheen, or background atmosphere is not a valid revision.
+
+For a user-requested rebuild, remake, or complete redesign, changing only element positions, text placement, panel count, color palette, line style, crop, or local contrast is not enough. The new draft must visibly change at least one core structure: visual model, composition structure, subject relationship, crop/scale hierarchy, medium, or production method. If the full-size or thumbnail comparison still reads as the same direction, reject the draft before delivery.
 
 ## Brand-Safe Autonomous Additions
 
@@ -71,14 +133,14 @@ These may be added without asking when they remain abstract and non-semantic:
 - abstract waveform or diagnostic rhythm without values or status claims
 - one small warm accent used only for balance
 
-Keep additions subordinate to the visual hammer.
+Keep additions subordinate to the chosen attention hierarchy. If the image supports the headline, CTA, or logo, additions must not steal first attention.
 
 ## Additions That Require One Question
 
 Ask before adding:
 
 - a headline, subtitle, caption, slogan, or explanatory phrase
-- a motor controller, fan, pump, machine, application, or human figure not requested
+- a motor controller or application object not requested, such as a fan, pump, machine, equipment scene, or human figure
 - a symbol that implies diagnostics, Bluetooth, AI monitoring, safety, certification, or performance
 - specific product architecture, interface behavior, data, values, or claims
 - a new brand metaphor that may affect positioning
@@ -107,7 +169,8 @@ Explain the trade-off in one sentence.
 
 Use additional help when:
 
-- two materially different drafts fail the same review criterion
+- two drafts fail the same review criterion
+- two drafts are not materially different from each other
 - the design remains generic after changing composition, not just styling
 - the asset is a major homepage, campaign, or brand-defining visual
 - the request depends on a design discipline not represented in current project assets
@@ -125,27 +188,43 @@ Additional help should challenge the concept, not merely confirm it.
 
 Score each item from 1 to 5:
 
-- **Visual hammer:** noticed immediately and connected to the message
+- **Intent fidelity:** still serves the original request and does not become a different asset
+- **Carrier completeness:** every named subject is visible through an image cue or planned page copy
+- **Attention hierarchy and image role:** first attention owner is clear, and the image either leads or supports intentionally
 - **Hierarchy:** one dominant level, clear secondary level, no accidental competition
 - **Typography:** integrated, legible, correctly spaced, appropriate to the geometry
 - **Brand fit:** bright, calm, precise, industrial, AI-native, not generic sci-fi
+- **Physical plausibility:** parts, enclosure, mounting, material, and signal paths look possible in the real world
 - **Composition:** controlled negative space, purposeful balance, strong silhouette
 - **Originality:** not a stock infographic, default card system, or familiar technology template
+- **Creative vitality:** visually memorable within real industrial boundaries, not merely compliant
 - **Restraint:** every decorative element earns its place
 - **Small-size performance:** remains clear at approximate website-card display size
 - **Semantic collaboration:** roles, direction, and outcome are visible rather than explained after the fact
 
 Revise when any item scores below 4. Do not average away a serious weakness.
 
+If intent fidelity or carrier completeness scores below 4, stop production and return to the brief. Do not fix it with visual polish.
+
 ## Iteration Rule
 
 Each revision must name one structural change:
 
+- original intent re-lock
 - new hierarchy
 - new relationship
 - new silhouette
 - new crop
 - new typography system
 - new medium
+- quality-appropriate production method
 
 Color-only, shadow-only, border-only, and glow-only revisions do not count as design progress.
+
+Before delivering a revised draft, compare it with the rejected draft in one sentence:
+
+> Structural delta: changed [old visual model] into [new visual model] to fix [failure category].
+
+If this sentence is not true, the revision is not valid.
+
+If the reason for the change is file saving, reproducibility, or local controllability rather than visual quality and brief fidelity, the revision is not valid for a high-impact hero. Stop and report the production limitation instead of delivering a lower-grade substitute.
