@@ -9,8 +9,8 @@ Choose the lightest review path that protects the asset:
 | Path | Use when | Required review |
 |---|---|---|
 | Light | Small card, simple crop, minor edit, deterministic graphic | Quick pass/fail on intent, carrier, physical logic, text risk |
-| Standard | Most website visuals | Score the core dimensions below before confirmation |
-| High-impact | Homepage hero, Contact hero, product hero, abstract advantage visual, repeated failure, or recognition-sensitive visual | Run the high-impact dual path, then score the selected brief |
+| Standard | Most website visuals | Run the compact pass/fail review below before confirmation |
+| High-impact | Homepage hero, Contact hero, product hero, abstract advantage visual, repeated failure, or recognition-sensitive visual | Run the high-impact dual path, then the compact pass/fail review |
 
 Do not use the high-impact path to make every asset slow. Use it when a weak structure would damage brand credibility or waste generation rounds.
 
@@ -29,49 +29,29 @@ Each direction must state:
 
 The options must differ by structure, not by color, glow, camera angle, or mood. After the user chooses or confirms a direction, write the normal production brief and score it.
 
-## Score Dimensions
+## Compact Review Dimensions
 
-Score from 1 to 5. A passing brief needs every core dimension at 4 or above. Do not average away a serious weakness.
+Review each dimension as pass/fail. Do not average away a serious weakness or output a second long scoring contract.
 
 | Dimension | Pass condition |
 |---|---|
 | Intent fidelity | The brief still solves the user's original job and does not drift into a different asset |
-| Brief reasoning | For planner-led images, the brief states the judgment standard, accepted user direction, constrained or rejected user direction, reason, brand-system fit, and drift risk |
-| Visual composition contract | For brief-based new images, the brief states image type, visual thesis, visual organization intent, visual relationship model, readable form language, visible layers, placement/proportion, direction/motion, hierarchy, negative-space/text area, buyer-readable meaning, misread prevention, and forbidden forms |
-| Carrier completeness | Every named subject has a visible carrier or a planned HTML/page-copy carrier |
-| Relationship readability | The viewer can infer roles, direction, and result without reading a long explanation |
-| Form readability | The allowed form families, forbidden form families, abstraction level, buyer-readable meaning, and likely misreads are clear enough for production |
-| Physical plausibility | Real-world objects, enclosures, PCBs, paths, materials, and supports make practical sense |
-| Attention hierarchy and image role | The brief states who owns first attention and whether the image leads or supports |
-| Design strength | The structure has memorable crop, scale, silhouette, material, rhythm, or spatial tension |
-| Creative vitality | The image is not merely safe, generic, template-like, or mechanically compliant |
-| Brand and buyer fit | It feels calm, technical, credible, and suitable for industrial B2B buyers |
-| Claim safety | It avoids fake specs, certifications, customer use, interfaces, performance, and product architecture |
-| Text safety | Important text will be typeset directly, kept in HTML, or omitted from image generation |
-| Production controllability | The selected method can realistically produce the needed geometry, text, local asset handling, and required visual quality |
-| Production success strategy | For high-impact, cost-bearing, or repeated-failure work, the method, visual model, likely failures, and prevention plan are clear before production |
-| Execution intent | The brief correctly distinguishes new image, brief-based rebuild, local edit, format edit, and page/mockup work |
-| Rebuild delta | For remake/rebuild tasks, the brief states what will be kept, removed, materially changed, and avoided |
-| User defect closure | For revisions, every user-named defect is registered and has a visible pass/fail check |
-| Method fit | The method matches the visual structure; organic natural structures are not planned as final vector/script geometry unless explicitly requested |
+| Formula authority and currency | The brief cites the formal outline section 4 and the Formula Decision matches the active intent/baseline |
+| `S` credibility | Subject, selection, close-view detail, fact/material basis, and physical plausibility are production-ready |
+| `R` readability | The assigned relationship, direction, continuing process, and human understanding/participation carrier are observable without a long defense |
+| `O` usefulness | Attention, reveal, hierarchy, rhythm, depth, and actual text/layout space are clear |
+| `A/I` control | Atmosphere and identification amplify established content and do not substitute for `S/R/O` |
+| `N` and claim safety | Misreads, unsupported facts, fake evidence, important text handling, and vetoes are explicit |
+| Responsibility and prompt readiness | Every field has an exact image/text/layout/UI owner; image-owned parts compile into visible instructions and checks |
+| Feasibility and method fit | The method can reach the needed grade; risks, protected content, preconditions, and conditional rework controls are clear |
 
 ## Hard Stops
-
-Stop before user confirmation when any of these score below 4:
-
-- intent fidelity
-- carrier completeness
-- relationship readability
-- physical plausibility
-- attention hierarchy and image role
 
 Stop before image generation when any of these are true:
 
 - the brief only works because the explanation is persuasive
-- a brief-based new image lacks a Visual Composition Contract / 画面构成合同 and is not a bounded local edit, format edit, or deterministic export
-- a planner-led brief lacks Brief Reasoning Gate / 简报推理门槛 and appears to follow the latest user wording without judgment
-- the brief lacks visual organization intent, visual relationship model, readable form language, or misread prevention for an abstract or semi-concrete brand visual
-- the production brief replaces the planner's composition contract with a new visual strategy instead of executing it
+- a semantic task lacks a current Formula Decision, formula authority, decided field, or named responsibility owner
+- the production brief replaces, reinterprets, or transfers planner formula decisions instead of executing them
 - the structure is physically strange but planned to be fixed later
 - the visual quality relies mainly on color, glow, gradients, or background atmosphere
 - the concept uses a generic AI icon, three equal cards, decorative lines, or an arbitrary enclosure as the core idea
@@ -90,37 +70,28 @@ Stop before image generation when any of these are true:
 
 ## Efficient Review Format
 
-For a standard or high-impact brief, include a compact self-review in the production brief:
+For a standard or high-impact brief, include only this compact self-review:
 
 ```text
-简报评分
-- 意图锁定：/5
-- 简报推理：/5
-- 画面构成合同：/5
-- 主体承载：/5
-- 关系可读：/5
-- 形态可读：/5
-- 物理合理性：/5
-- 注意力层级与图片角色：/5
-- 设计强度：/5
-- 创意活性：/5
-- 品牌与买家匹配：/5
-- 方法与视觉等级：/5
-- 方法适配：/5
-- 重做结构差异：/5（仅重做/返工任务）
-- 用户缺陷闭合：/5（仅返工/投诉/标注问题）
-- claim / 文字风险：/5
-- 结论：通过 / 需要重构 / 需要再问一个问题
+Brief Readiness
+- Intent and formula source: pass/fail
+- S/R/O executable: pass/fail
+- A/I controlled: pass/fail
+- N, fact, and claim safety: pass/fail
+- Responsibility and prompt readiness: pass/fail
+- Feasibility and method fit: pass/fail
+- Triggered rework/defect checks: pass/fail/not triggered
+- Conclusion: proceed / return to planner / ask one execution question
 ```
 
-Use a one-line reason only for any score below 5. Do not turn the score section into a long design essay.
+Use a one-line reason only for a failure. Omit the rework line when its trigger is absent.
 
 ## If The Brief Fails
 
 Choose one correction:
 
 - **Missing intent:** ask one question about what the viewer must understand.
-- **Missing composition contract:** return to Workflow Director / planner for a revised planner brief; do not invent the image type, layer structure, placement, form, direction, hierarchy, or buyer meaning inside imagegen.
+- **Missing Formula Decision or owner:** return to Workflow Director / planner; do not invent or transfer formula judgments inside imagegen.
 - **Missing carrier:** assign the subject to image, visual cue, or HTML copy.
 - **Weak relationship:** switch relationship model before changing style.
 - **Physical failure:** rebuild the structure using plausible layers, enclosure, mounting, workflow, or abstract geometry.
@@ -138,4 +109,4 @@ After two failed brief reviews for the same asset, stop and offer 2-3 new struct
 
 ## Pressure Scenario
 
-- **Planner contract missing:** User or workflow asks imagegen to make a silver-gray base with teal-green and blue B2-3 semi-concrete field intersection, but the planner brief does not define brief reasoning, visual thesis, visual organization intent, visual relationship model, readable form language, layers, placement/proportion, direction, hierarchy, negative-space/text area, buyer-readable meaning, misread prevention, and forbidden forms. Required: return to Workflow Director / planner for a revised Visual Composition Contract. Forbidden: invent the contract in imagegen and produce anyway.
+- **Formula Decision missing:** User or workflow asks imagegen to create a silver-gray B2-3 semi-concrete visual but provides only mood and color. Required: return to Workflow Director / planner for the compact Formula Decision with all fields, exact owners, feasibility, and visible checks. Forbidden: let imagegen infer `S/R/O` from style words or use `A/I` as substitutes.

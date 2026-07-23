@@ -23,7 +23,7 @@ Do not continue with small adjustments until this reset is complete.
 Failure reset is a four-step workflow. Do not skip directly to a new prompt, new method, or new draft.
 
 1. **Analyze the problem / 分析问题:** state the visible failure, user-named defects, baseline version, affected image role, references, and evidence checked.
-2. **Find the root cause / 找到问题:** name the failed layer. The failed layer may be above imagegen: macro planning, core intent, intent lock, strategic layer ownership, page strategy, image role, strategy brief, Visual Composition Contract, source/reference use, production method, edit scope, verification, or delivery judgment. State the wrong assumption and why the previous method cannot solve the defect.
+2. **Find the root cause / 找到问题:** name the failed layer. The failed layer may be above imagegen: macro planning, core intent, intent lock, strategic layer ownership, page strategy, image role, Formula Decision field/owner, source/reference use, production method, edit scope, verification, or delivery judgment. State the wrong assumption and why the previous method cannot solve the defect.
 3. **Propose the method / 提出方法:** choose the next route and method change. State what method, structure, reference basis, mask/edit scope, or composition element must change, and which shortcuts are rejected.
 4. **Output the plan / 输出方案:** produce the next-round plan with protected elements, changed elements, pass/fail checks, draft-before-final rule, and verification evidence required before delivery.
 
@@ -37,7 +37,7 @@ Before choosing a new method, ask:
 
 - Is the core intent clear enough to lock what must keep, change, avoid, and pass?
 - Is the macro planning layer clear, or is the task mixing brand strategy, visual system, page role, and image production?
-- Is the failure caused by a missing or wrong Planner Brief / Visual Composition Contract rather than image execution?
+- Is the failure caused by a missing, wrong, or drifted Formula Decision or responsibility owner rather than image execution?
 - Is imagegen being asked to solve a decision that belongs to Workflow Director or planner?
 
 If macro planning, core intent, or intent lock is unclear, imagegen must not solve it with a new prompt or method. Return to Workflow Director for Strategic Layer Lock, or to planner when the missing decision is page/image strategy.

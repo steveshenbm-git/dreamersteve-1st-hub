@@ -16,6 +16,9 @@ Use these templates only after the user confirms an entry should be written to t
 - 用户反馈：
 - 可见失败：
 - 根本原因：
+- 公式决策来源（如适用）：
+- 失败字段 / 责任载体（如适用）：
+- 静态或可见证据：
 - 禁止重复：
 - 可接受替代方向：
 - 关联资料：

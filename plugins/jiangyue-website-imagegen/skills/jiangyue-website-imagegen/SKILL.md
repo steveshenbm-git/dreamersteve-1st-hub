@@ -11,7 +11,7 @@ Own visual execution: production method, image editing, subject structure, physi
 
 Do not own page strategy, H1, CTA hierarchy, buyer-message fit, claim boundary, or final approval. If those are unclear, return to `$jiangyue-website-workflow-director` with the missing decision.
 
-Do not replace a planner Visual Composition Contract / 画面构成合同 with imagegen's own visual strategy. For brief-based new images, imagegen executes the planner's strategy-and-composition contract; if the contract is missing or too abstract, return it before production.
+Do not replace the planner's Formula Decision with imagegen's own visual strategy or formula interpretation. For semantic new images or meaning-changing edits, inherit the accepted `T → S → R → O → A → I → N` decision and its exact image/text/layout ownership; if it is missing, stale, ownerless, or too abstract to execute, return it before production.
 
 Use professional industrial judgment for European B2B buyers. Avoid unsupported product, certification, customer, performance, export, compliance, patent, or specification claims.
 
@@ -37,8 +37,8 @@ Classify the request before production:
 
 | Intent | Imagegen action |
 |---|---|
-| Local edit / P图 / crop / export | Execute directly if source, target, and output are clear |
-| Brief-based new image | Review the Planner Brief and Visual Composition Contract, then produce a production brief |
+| Bounded local edit / crop / export | Execute directly only when it inherits an accepted visual baseline and cannot change visual meaning or the Formula Decision |
+| Brief-based new image or meaning-changing edit | Review the Planner Brief and Formula Decision, then compile a production brief |
 | Post-image execution fix | Register user-named defects and revise only if strategy remains clear |
 | Repeated failure, unclear intent, or strategy drift | Return to Workflow Director before producing |
 
@@ -49,14 +49,10 @@ Ask one concise execution question only when a required file, target object, out
 Before a brief-based image, confirm:
 
 - real intent, page/use location, image role, and attention owner are clear
-- for non-local brief-based production, the brief includes Brief Reasoning Gate / 简报推理门槛 with judgment standard, accepted user direction, constrained or rejected user direction, reason, brand-system fit, and drift risk
-- for non-local brief-based production, a Visual Composition Contract / 画面构成合同 is present, or the planner brief explicitly states why it is unnecessary
-- the contract defines image type, visual thesis, visual organization intent, visual relationship model, readable form language, visible layers, placement/proportion, direction/motion, hierarchy, negative-space/text area, buyer-readable meaning, misread prevention, and forbidden forms
-- for brand-defining, homepage/hero/background, B2-3, New Eastern industrial, life-sense, or repeated brand-direction tasks, the brief includes Brand-System Visual Alignment / 品牌视觉系统对齐 or explicitly states why no formal brand-system file is relevant
-- for non-local brief-based production, the brief includes Brief Feasibility Analysis / 简报可行性分析 with whether imagegen may proceed, visual relationship clarity, form-language specificity, production controllability, major failure risks, protected content, and preconditions
-- required subjects have visible carriers
-- abstract terms are translated into visible cues
-- visual relationships are readable: role, direction, cause/effect, comparison, support layer, control flow, or application context
+- the brief cites the formal brand outline section 4 as formula authority
+- the current Formula Decision makes a judgment for `T/S/R/O/A/I/N` and names the exact image, text, layout, or UI owner for every field
+- image-owned decisions have prompt-ready visible carriers; non-image-owned decisions name the concrete external mechanism and the space/structure imagegen must preserve
+- production direction, feasibility, protected content, preconditions, major failure risks, and visible pass/fail criteria are clear
 - forbidden claims and product-fact risks are explicit
 - output ratio, stage, and pass/fail criteria are clear
 
@@ -66,10 +62,9 @@ If not ready, return this:
 Return to Workflow Director / 简报退回
 
 - Missing decision:
-- Missing brief reasoning gate:
-- Missing visual composition contract:
-- Missing brand-system visual alignment:
-- Missing brief feasibility analysis:
+- Missing or stale Formula Decision:
+- Missing formula authority or field owner:
+- Missing production direction / feasibility:
 - Too abstract for production:
 - Missing visible carrier or relationship:
 - Claim / product-fact risk:
@@ -83,6 +78,7 @@ Use this state chain for brief-based, high-impact, cost-bearing, or repeated-fai
 ```text
 Intent Lock
 -> Planner Brief
+-> Formula Decision
 -> Production Success Strategy
 -> Attempt Stop Rule
 -> Generate Candidate
@@ -130,20 +126,21 @@ Method rules:
 
 For simple local edits, deterministic cards, format edits, crops, exports, and low-risk adaptations:
 
-1. Confirm source, target change, output size, and stage.
-2. Produce the asset in the project output root.
-3. Inspect the rendered result.
-4. Report path, dimensions, method, output status, verification, and limitations.
+1. Confirm source, target change, output size, stage, accepted baseline, and inherited Formula Decision.
+2. Confirm the operation cannot change subject trust, relationship meaning, composition/attention order, atmosphere role, identification role, claim boundary, or any `N` boundary. If it can, return to planner.
+3. Produce the asset in the project output root.
+4. Inspect the rendered result.
+5. Report path, dimensions, method, output status, verification, and limitations.
 
 ### Standard Path
 
 For most Jiangyue website visuals:
 
-1. Create a production brief from the planner strategy-and-composition contract and four hard lists: must keep, must remove, must materially change, must avoid.
+1. Read [references/visual-formula-execution.md](references/visual-formula-execution.md), inherit the planner's Formula Decision, and compile one production brief with four hard lists: must keep, must remove, must materially change, must avoid.
 2. Read [references/production-success-strategy-gate.md](references/production-success-strategy-gate.md) when the asset is brief-based, high-impact, cost-bearing, or repeated-failure; state how the method and visual model can succeed before production.
 3. Read [references/attempt-stop-and-method-escalation-gate.md](references/attempt-stop-and-method-escalation-gate.md) when multiple attempts, API calls, or repeated failures are possible; do not repeat the same failed hypothesis.
 4. Choose method based on visible result quality, not convenience.
-5. Translate approved composition intent into concrete subject carriers, visual relationships, physical logic, and pass/fail checks without changing the planner's visual strategy.
+5. Compile the seven-stage decision into a coherent natural prompt, negative constraints, deterministic post-processing instructions, and result checks without copying labels mechanically or changing planner ownership.
 6. Produce one strong draft first; create variants only when they differ materially by production hypothesis, visual model, structure, source basis, or method.
 7. Inspect full size, thumbnail/review size, prior draft, and references when available.
 8. Run [references/visual-self-check-gate.md](references/visual-self-check-gate.md), [references/intent-brief-result-coordination-gate.md](references/intent-brief-result-coordination-gate.md), and [references/candidate-delivery-gate.md](references/candidate-delivery-gate.md) before presenting any candidate for review.
@@ -154,7 +151,7 @@ For most Jiangyue website visuals:
 For homepage heroes, product heroes, Contact heroes, brand-defining visuals, recognition-sensitive images, or repeated failures:
 
 1. Follow Standard Path.
-2. Read `/Users/lirongjing/Documents/JY TECH WEB/brand-system/00-knowledge-gate/jiangyue-knowledge-gate.md` and only relevant formal knowledge files.
+2. Read `/Users/lirongjing/Documents/JY TECH WEB/brand-system/00-knowledge-gate/jiangyue-knowledge-gate.md`, the formal brand outline section 4, and only relevant derived knowledge files. The outline remains the sole formula semantic authority.
    For brand visual direction, homepage/hero/background images, B2-3 color use, New Eastern industrial style, life-sense metaphor, or repeated brand-direction feedback, include the relevant formal files under `/Users/lirongjing/Documents/JY TECH WEB/brand-system/02-brand-visual/`, especially `brand-visual-standard.md`, `b2-3-color-scheme-reference.md`, `composition-rules.md`, `color-material-lighting.md`, and `negative-visual-directions.md` when they affect the result.
 3. Load only the needed references:
    - [references/execution-gates.md](references/execution-gates.md) for method choice, subtask method lock, and visible-result gates.
@@ -208,7 +205,9 @@ Reject or revise before delivery when any of these appear:
 - multiple equal focal points with no attention hierarchy
 - subjects merely adjacent, stacked, or connected by lines without visible role, direction, or result
 - product/application cues that imply unverified customer installation, final product architecture, or confirmed performance
-- brief-based new image lacks a required planner Visual Composition Contract and is not a bounded local edit or deterministic export
+- brief-based new image or meaning-changing edit lacks a current planner Formula Decision and is not a bounded local edit or deterministic export
+- any `T/S/R/O/A/I/N` field is undecided, assigned only as "outside the image", or has no named observable owner
+- atmosphere or identification cues substitute for an unresolved subject, relationship, or spatial-order decision
 - high-impact or brand-defining image lacks required Brand-System Visual Alignment, or visibly conflicts with formal brand-system visual planning
 - production brief invents a different visual strategy, image type, or composition relationship instead of executing the planner brief
 - polished output that no longer supports the approved brief or local edit intent

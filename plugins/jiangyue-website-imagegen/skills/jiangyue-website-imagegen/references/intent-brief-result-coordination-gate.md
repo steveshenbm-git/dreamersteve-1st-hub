@@ -17,6 +17,9 @@ Intent-Brief-Result Check
 - Original intent:
 - Active brief:
 - Generated result:
+- Formula Decision version/source:
+- Result vs Formula Decision: pass / partial / fail
+- Formula drift: none / execution drift / ownership drift / brief deficiency
 - Result vs brief: pass / partial / fail
 - Result vs intent: pass / partial / fail
 - If result conflicts with brief:
@@ -44,3 +47,4 @@ Intent-Brief-Result Check
 - A brief may translate intent, but it cannot replace intent.
 - A result that satisfies brief wording but misses the original intent is still a failure.
 - Do not reinterpret the user's original job to make a generated result look successful.
+- If the prompt or result changes a formula judgment or transfers responsibility between image, text, layout, and UI, classify it as drift; imagegen cannot approve that change.

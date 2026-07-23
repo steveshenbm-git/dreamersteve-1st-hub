@@ -213,8 +213,14 @@ Never design a work skill so it owns the whole multi-skill conversation. It can 
    - Validation or pressure scenario needed:
    ```
 
-8. **Write pressure scenarios before approving the skill.**
-   Use [references/pressure-scenarios.md](references/pressure-scenarios.md) when creating or revising Jiangyue skills. If subagents are not explicitly authorized, use observed failures from the current conversation as baseline evidence and state that live subagent forward-testing was not run.
+8. **Build the failure-scenario -> rule-change -> static-review evidence chain before approving the skill.**
+   Use [references/pressure-scenarios.md](references/pressure-scenarios.md) when creating or revising Jiangyue skills.
+   - **RED — failure scenario:** record the observed or constructed failure, owning layer, current rule gap, expected failing behavior, and baseline evidence before editing.
+   - **GREEN — rule change:** change the smallest owning artifact and map each material change to at least one RED scenario.
+   - **STATIC REVIEW — independent checks:** verify required wording/links/ownership, run skill and plugin validators, inspect the diff, and rerun the baseline scenario as a static contract check.
+   - **REFACTOR:** remove duplicated rules or bloated inline templates, then rerun static review.
+
+   Static review is evidence that the written contract changed, not proof that live behavior or image quality works. If subagents are not explicitly authorized, use observed failures from the current conversation as baseline evidence and state that live forward-testing was not run. If real production testing is intentionally deferred, record it as deferred rather than `PASS`.
 
 9. **Validate before delivery.**
    A Jiangyue skill is not complete until:
@@ -224,6 +230,7 @@ Never design a work skill so it owns the whole multi-skill conversation. It can 
    - role ownership is clear when the skill participates in multi-skill workflows
    - hard rules, low-freedom rules, soft rules, autonomy, and user-inquiry gates are separated where relevant
    - pressure scenarios exist for the skill-design failure class being fixed
+   - every material rule change maps to a RED scenario and a recorded static review result
    - no scaffold placeholders remain
    - skill validation and plugin validation pass when applicable
 

@@ -48,7 +48,15 @@ Common source locations:
 /Users/lirongjing/Documents/JY TECH WEB/市场调研/
 ```
 
-Formal authority lives under `brand-system/01-*` through `brand-system/06-*`. Do not treat `90-inbox/` or `91-daily-curation-log/` as formal authority.
+Confirmed operational knowledge lives under `brand-system/01-*` through `brand-system/06-*`. Do not treat `90-inbox/` or `91-daily-curation-log/` as formal authority.
+
+The five-layer brand visual formula and its `T → S → R → O → A → I → N` execution expansion have one semantic authority only:
+
+```text
+/Users/lirongjing/Documents/JY TECH WEB/website-content-brand-plan/网站全案/品牌全案/江樾科技品牌大纲-2026-正式版.md — 第四章
+```
+
+Entries under `brand-system/` may operationalize, reference, test, or limit that formula. They must not copy it as a second definition, shorten it into a replacement formula, or change field meanings. If an entry conflicts with the formal outline, keep the outline authoritative and classify the derived entry for repair.
 
 `brand-source/_approved-library/` is the centralized reusable asset library for user-confirmed `approved` final visuals.
 
@@ -68,6 +76,13 @@ collect evidence -> classify -> curation card -> user confirmation -> formal ent
 6. **Formal Entry:** After confirmation, write confirmed items using [references/formal-entry-templates.md](references/formal-entry-templates.md).
 7. **Approved Asset Library:** If a final website visual is confirmed as `approved`, run the approved-library rules below.
 8. **Verification:** Verify paths, claim safety, status labels, and destination.
+
+For formula-related visual standards or failure lessons, also verify:
+
+- the entry cites the formal outline section and the active Formula Decision instead of restating formula semantics;
+- observed failure is attributed to the failed field, owner, execution mechanism, or veto boundary with evidence;
+- a single candidate or failure does not become a universal formula rewrite;
+- any proposed semantic change returns to brand planning and explicit user confirmation rather than entering `brand-system` through routine curation.
 
 ## Destinations
 
@@ -174,4 +189,5 @@ Stop and ask for confirmation before formal entry when:
 - a failure case will become a future hard negative reference
 - material implies product structure, application, certification, performance, customer case, export market, patent, compliance, or verified specification
 - a competitor reference could be mistaken for a Jiangyue-owned rule
+- a derived visual lesson could redefine, shorten, or contradict the formal visual formula
 - the source path is missing or user feedback is ambiguous

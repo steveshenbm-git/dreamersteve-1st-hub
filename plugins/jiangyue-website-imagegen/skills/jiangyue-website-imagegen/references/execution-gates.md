@@ -47,15 +47,13 @@ A later correction must not replace the original job. If the correction would ch
 
 Before generation or editing, confirm:
 
-1. The planner brief or user request gives a page/use context, image role, output ratio or placement, and required subject cues.
-2. For brief-based new images that are not bounded local edits, format edits, or deterministic exports, the planner brief includes a Visual Composition Contract / 画面构成合同.
-3. The contract defines image type, visible layers, placement/proportion, shape or semi-concrete form, direction/motion, hierarchy, negative-space/text area, buyer-readable meaning, and forbidden forms.
-4. Every named subject has either a visible carrier, an implicit visual cue, or a planned HTML/page-copy carrier.
-5. Multi-subject visuals show foundation, driver, outcome, and flow or feedback when those roles matter.
-6. Required text is either left in HTML or typeset deterministically after image generation.
-7. Forbidden claims and product-fact boundaries are clear enough to avoid accidental fake evidence.
+1. A bounded technical operation cites an accepted baseline and inherited Formula Decision and cannot change meaning; otherwise it is a semantic task.
+2. A semantic new image or meaning-changing edit has one current planner Formula Decision citing the formal brand outline section 4.
+3. `T/S/R/O/A/I/N` all contain decisions, and every non-image responsibility names an exact text, layout, or UI carrier.
+4. Image-owned decisions are concrete enough to compile into subject, relationship, composition, atmosphere, identity, negative constraints, and observable checks.
+5. Product facts, physical logic, required deterministic text, protected content, risks, preconditions, and pass/fail criteria are clear.
 
-If these fail because of page strategy or a missing Visual Composition Contract, return to planner. If they fail because of one missing execution detail, ask one question.
+If these fail because of page strategy, formula judgment, or ownership, return to planner. If they fail because of one local execution parameter, ask one question.
 
 ## Method Quality Gate
 

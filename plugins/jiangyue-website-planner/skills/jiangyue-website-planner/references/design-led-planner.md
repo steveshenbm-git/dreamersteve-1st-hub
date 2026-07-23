@@ -12,7 +12,7 @@ The output must not become a longer checklist. Every design judgment that affect
 design judgment -> visible carrier -> production constraint -> QA check
 ```
 
-If a judgment cannot be translated into a visible carrier or a page/content decision, keep it as reasoning only. Do not place it in the Asset Production Section.
+If a judgment cannot be translated into a visible carrier or a page/content decision, keep it as reasoning only. Do not turn it into another output field.
 
 ## Task Intensity
 
@@ -20,7 +20,7 @@ If a judgment cannot be translated into a visible carrier or a page/content deci
 |---|---|---|
 | Micro | small title, CTA, local wording, one-module adjustment | short Jiangyue design check plus decision |
 | Standard | section plan, image direction, module order, page copy direction | Jiangyue Context Packet, Design Judgment, Page Brief |
-| High-impact | homepage hero, product/application page, brand-defining visual, imagegen handoff, repeated failure, "not premium enough" feedback | full design-led Planner Brief with Asset Production Section |
+| High-impact | homepage hero, product/application page, brand-defining visual, imagegen handoff, repeated failure, "not premium enough" feedback | full design judgment compiled into one Formula Decision plus triggered conditional modules |
 
 Do not use full-length output for every small task. Do not skip the design check when the task looks small but affects first-screen attention, buyer trust, SEO/AEO, or visual direction.
 
@@ -85,41 +85,17 @@ Reject if: it reads as renewable energy, forest ecology, or neon technology.
 
 ## Planner Brief Relationship
 
-The Planner Brief is the single main handoff to imagegen. The Asset Production Section lives inside the Planner Brief.
+The Planner Brief is the single main handoff to imagegen. Design judgment is reasoning input to the Formula Decision, not a parallel contract.
 
 Use this internal order:
 
-1. Context: page role, goal, audience, SEO/AEO, claim boundary.
-2. Jiangyue Design Judgment: why the direction fits Jiangyue and what must be rejected.
-3. Page And Content Plan: H1, support copy, CTA, module order, HTML-owned information.
-4. Image Role: what the image supports, what it must not carry, first-screen attention relationship.
-5. Visual Composition Contract: visible organization, relationship, form language, hierarchy, negative space, forbidden forms.
-6. Asset Production Section: production-facing carriers, constraints, prompt-ready direction, QA, rejection triggers.
-7. Feasibility and handoff: whether imagegen may proceed and when it must return to planner.
+1. Run the Jiangyue design judgment internally and keep only decisions that change visible execution or page ownership.
+2. Add the complete-page module only for complete-page work; do not output H1, CTA, SEO/AEO, or module-order placeholders for an image-only task.
+3. Compile trusted subject and fact basis into `S`; readable interaction into `R`; hierarchy, rhythm, reveal, and useful negative space into `O`; controlled amplification into `A`; recognition use into `I`; cheapness, claims, and misreads into `N`.
+4. Name the exact image, text, layout, or UI owner; do not add separate composition and asset-production contracts.
+5. Put prompt-ready direction, protected content, deterministic work, QA, rejection triggers, and feasibility in the compact Formula Decision.
 
-## Asset Production Section
-
-The Asset Production Section is not a second brief. It compiles the design and page decisions into production-ready constraints:
-
-```text
-Asset Production Section / 素材生产段
-- Source design decisions:
-- Asset role:
-- Output type and ratio:
-- Subject carriers:
-- Scene carriers:
-- Composition rules:
-- Color / material rules:
-- Negative-space and HTML text-support rules:
-- Must include:
-- Must avoid:
-- Prompt-ready direction:
-- Deterministic post-processing:
-- QA checks:
-- Rejection triggers:
-```
-
-Write production constraints, not final pixels. Imagegen owns method, rendering, local retouching, and exact output files.
+Write production constraints, not final pixels. Imagegen owns prompt compilation, method, rendering, local retouching, and exact output files.
 
 ## Failure Attribution
 
@@ -129,7 +105,7 @@ When feedback arrives, assign the failure to the lowest correct layer:
 |---|---|---|
 | wrong business goal, buyer, CTA, claim boundary | page strategy | revise Planner Brief |
 | generic, cheap, not Jiangyue, wrong temperament | design judgment | revise Jiangyue Design Judgment |
-| right judgment but missing visible subject/carrier | Asset Production Section | revise carriers and constraints |
+| right judgment but missing visible subject/carrier or owner | Formula Decision | revise the failed field and responsibility |
 | right brief but poor realism, artifacts, crop, lighting, execution | imagegen execution | return to imagegen with hard defects |
 | macro relationship or brand worldview unclear | Workflow Director strategic layer | return to Workflow Director |
 
@@ -141,5 +117,5 @@ These scenarios should pass after the skill revision:
 
 1. **Homepage hero request:** planner reads relevant Jiangyue brand context, identifies trusted industrial subject, design risk, B2-3 role, and claim boundary before composing the brief.
 2. **"Not premium enough" feedback:** planner diagnoses proportion, hierarchy, rhythm, restraint, density, material/space credibility, or buyer readability instead of only saying "more premium".
-3. **Imagegen failure:** planner decides whether failure belongs to design judgment, page brief, Asset Production Section, or imagegen execution before another production round.
-4. **Script confusion:** planner does not hand imagegen a separate peer script when a Planner Brief with Asset Production Section is sufficient.
+3. **Imagegen failure:** planner decides whether failure belongs to design judgment, page module, Formula Decision, or imagegen execution before another production round.
+4. **Contract confusion:** planner does not hand imagegen separate reasoning, composition, asset-production, and feasibility contracts when one Formula Decision is sufficient.

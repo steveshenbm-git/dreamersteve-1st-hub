@@ -95,29 +95,29 @@ Use these scenarios to validate routing behavior before changing this skill or r
     - Forbidden: let workflow-director invent the full composition strategy, send a vague "make it better" handoff to imagegen, or treat a broad visual concept as an explicit local edit.
 
 19. **Brand-system visual alignment before imagegen**
-    - User: "按 B2-3 和生命感方向继续做官网通用背景，直接让 imagegen 生产。"
-    - Required: run Brand-System Visual Alignment Gate; check `brand-system/00-knowledge-gate/jiangyue-knowledge-gate.md` and relevant `brand-system/02-brand-visual/` files; require planner brief to state how the direction complies with calm industrial New Eastern style, B2-3 controlled status color, negative-space composition, material/lighting behavior, and negative visual directions.
-    - Forbidden: route directly to imagegen from a broad brand direction, treat B2-3 as a standalone palette, ignore brand-system visual planning, or produce a visual that conflicts with formal brand-system files.
+   - User: "按 B2-3 和生命感方向继续做官网通用背景，直接让 imagegen 生产。"
+   - Required: run Brand-System Visual Alignment Gate; check the formal outline section 4, the knowledge gate, and relevant `brand-system/02-brand-visual/` files; require planner to deliver the compact Formula Decision and assign B2-3 only to the controlled `I` role.
+   - Forbidden: route directly to imagegen from a broad brand direction, let the director reinterpret `S` through `N`, treat B2-3 as atmosphere or a standalone palette, or ignore the sole formula authority.
 
 20. **Plugin optimization cannot bypass skill-director**
     - User: "最后把 planner 和 imagegen 的插件流程再优化一下，直接改。"
     - Required: route to `jiangyue-skill-director` before any plugin file edit; freeze downstream plugin edits until skill-director states source path, owner, pressure scenario, companion skills, validation gate, and implementation permission.
     - Forbidden: edit planner/imagegen/workflow-director plugin files directly from the production workflow, treat the named downstream skill as its own repair owner, or skip skill-director because the requested change sounds obvious.
 
-21. **Planner brief without feasibility analysis**
-    - User: "planner 已经给了画面构成合同，直接给 imagegen 生图。"
-    - Required: check whether the Planner Brief includes Brief Feasibility Analysis / 简报可行性分析 covering whether imagegen may proceed, production controllability, major failure risks, protected content, and preconditions.
-    - Forbidden: hand off to imagegen when the brief has a composition idea but no feasibility conclusion or risk analysis.
+21. **Formula decision without feasibility analysis**
+   - User: "planner 已经把 T/S/R/O/A/I/N 填了，直接给 imagegen 生图。"
+   - Required: verify that the compact Formula Decision also states whether production may proceed, its major failure risks, protected content, preconditions, and visible pass/fail criteria.
+   - Forbidden: treat seven populated labels as a production-ready handoff.
 
 22. **Planner brief follows user too easily**
-    - User: "你刚才那个画面结构层和半具象形式层有问题。" after a prior planner proposal.
-    - Required: require planner to use Brief Reasoning Gate / 简报推理门槛: classify the challenge, state which previous reasoning still stands, which part is constrained or replaced, and why. Then update the brief only where the reasoning fails.
-    - Forbidden: answer with unqualified agreement, discard the whole previous structure without analysis, or rewrite the brief only around the user's latest wording.
+   - User: "你刚才那个画面结构层和半具象形式层有问题。" after a prior planner proposal.
+   - Required: require planner to classify the challenge, state which Formula Decision fields and owners still stand, which are constrained or replaced, and why; then update only the failed fields and dependent pass/fail criteria.
+   - Forbidden: answer with unqualified agreement, discard the whole previous structure without analysis, or rewrite the brief only around the user's latest wording.
 
-23. **Planner brief has feasibility but no readable form language**
-    - User: "这个简报有可行性分析了，直接给 imagegen 做。"
-    - Required: check whether the Planner Brief includes visual organization intent, visual relationship model, readable form language, and misread prevention in addition to feasibility analysis.
-    - Forbidden: hand off to imagegen when the brief says "可行" but still relies on abstract terms such as life sense, AI field, industrial order, premium, or connection without readable visible form families and forbidden misreads.
+23. **Formula field has no visible execution or named owner**
+   - User: "R 和 O 不用放进图里，后面再说。"
+   - Required: block handoff until planner names the exact image, text, layout, or UI mechanism that carries each field and states its observable pass/fail evidence.
+   - Forbidden: accept "outside the image", blank values, or repeated abstract words as ownership and execution evidence.
 
 24. **Self-check pass is not delivery**
     - User: "自检通过了，为什么扔给我的还是没价值的图？"
@@ -147,4 +147,14 @@ Use these scenarios to validate routing behavior before changing this skill or r
 29. **User acceptance layer confusion**
     - User: "这个方向可以，空气层再增强。"
     - Required: record visual direction acceptance only; specific draft and final export remain unaccepted; route to bounded local revision with protected elements and defect criteria.
-    - Forbidden: treat direction acceptance as final approval, 4K approval, approved archive permission, or permission to carry forward visible defects.
+   - Forbidden: treat direction acceptance as final approval, 4K approval, approved archive permission, or permission to carry forward visible defects.
+
+30. **Bounded technical operation should stay lean**
+   - User: "把已通过的图裁成 16:9，主体和文案安全区都别变。"
+   - Required: inherit the accepted Formula Decision, load only technical-operation parameters and protected-content rules, then route to imagegen.
+   - Forbidden: require complete page planning, SEO/AEO, Hero definition, product claims, reference research, or empty conditional-module fields.
+
+31. **Semantic change disguised as a crop**
+   - User: "裁成竖版时把主体移到角落，让 B2-3 发光成为第一视觉。"
+   - Required: treat this as a meaning-changing task; route to planner for a new Formula Decision because `O`, `A`, and `I` change.
+   - Forbidden: treat the request as bounded technical execution or let imagegen silently revise the accepted formula ownership.

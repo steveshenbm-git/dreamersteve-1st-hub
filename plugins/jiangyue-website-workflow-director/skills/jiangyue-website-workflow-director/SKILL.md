@@ -105,6 +105,7 @@ Strategic Layer Lock
 - Any Jiangyue plugin, skill, workflow, self-check, routing, marketplace, install/reinstall, or source-boundary optimization must route to `$jiangyue-skill-director` before any plugin files are edited. Do not let planner, imagegen, curator, or workflow-director directly repair their own plugin rules.
 - Macro planning control belongs to the director. If the strategic layer is not locked, do not route to production or curation skills.
 - Before handing any task to imagegen, run the **Imagegen Handoff Planner Gate** below. This is a hard rule.
+- The director may collect raw `T` inputs: visual unit, placement, task, first-attention candidate, and excluded information. It must not decide `S` through `N`, compile the production prompt, or assign image/text/layout responsibility; those decisions belong to planner.
 - If the user questions planning or execution logic, stop production advice and enter Strategic Layer Lock or `$jiangyue-skill-director` depending on whether the failure is domain strategy or skill-system design.
 - A user change request after image output is not default imagegen. Run post-image triage first.
 - If a simple local edit is returned more than twice, stop small edits and run Intent Check.
@@ -128,6 +129,7 @@ Required source:
 
 ```text
 /Users/lirongjing/Documents/JY TECH WEB/brand-system/00-knowledge-gate/jiangyue-knowledge-gate.md
+/Users/lirongjing/Documents/JY TECH WEB/website-content-brand-plan/网站全案/品牌全案/江樾科技品牌大纲-2026-正式版.md — 第四章
 ```
 
 For brand visual direction, also align with relevant formal files under:
@@ -135,6 +137,8 @@ For brand visual direction, also align with relevant formal files under:
 ```text
 /Users/lirongjing/Documents/JY TECH WEB/brand-system/02-brand-visual/
 ```
+
+The formal outline is the sole semantic authority for the five-layer brand formula and its `T → S → R → O → A → I → N` execution expansion. The director checks provenance and routes the decision; it does not restate or reinterpret the formula.
 
 At minimum for Jiangyue macro visual direction, check whether the next step respects:
 
@@ -152,16 +156,15 @@ Use this gate before every route to `$jiangyue-website-imagegen`.
 
 Direct imagegen handoff is allowed only when at least one condition is true:
 
-- **Explicit local execution:** the user has already specified the exact visible edit, export, crop, compression, format conversion, or deterministic change, and the change does not alter image role, visual metaphor, buyer interpretation, page strategy, claim boundary, or composition concept.
-- **Accepted baseline revision:** the user has accepted the current image direction and asks for a bounded local change with clear must keep / must change / must avoid / acceptance criteria.
-- **Planner brief exists:** `$jiangyue-website-planner` has produced a current Planner Brief or Optimization Brief with image role, page/use context, Brief Reasoning Gate / 简报推理门槛, Visual Composition Contract / 画面构成合同, Brand-System Visual Alignment / 品牌视觉系统对齐 when relevant, Brief Feasibility Analysis / 简报可行性分析, visual organization intent, visual relationship model, readable form language, misread prevention, must support / must not imply, and pass/fail criteria.
+- **Explicit bounded execution:** the user has specified an exact crop, compression, format conversion, export, or deterministic local edit that inherits an accepted visual baseline and cannot alter image meaning, role, claim boundary, buyer interpretation, formula decision, or composition concept.
+- **Accepted baseline revision:** the user has accepted the current direction and asks for a bounded change with clear must keep / must change / must avoid / pass-fail criteria; the accepted Formula Decision remains valid.
+- **Planner brief exists:** `$jiangyue-website-planner` has produced a current compact Formula Decision with authority source, `T/S/R/O/A/I/N` judgments, exact image/text/layout ownership, production direction, feasibility, and pass/fail criteria.
 
 Route to `$jiangyue-website-planner` before imagegen when the next output depends on any of these:
 
 - 画面怎么设计, composition strategy, subject/form choice, semi-concrete vs abstract expression, visual metaphor, or "what shape/form should it use"
-- missing Brief Reasoning Gate / 简报推理门槛: judgment standard, accepted user input, constrained or rejected user input, reason, brand-system fit, or drift risk
-- missing Visual Composition Contract / 画面构成合同: image type, visual thesis, visual organization intent, visual relationship model, readable form language, visible layers, placement/proportion, direction/motion, hierarchy, negative-space/text area, buyer-readable meaning, misread prevention, or forbidden forms
-- missing Brief Feasibility Analysis / 简报可行性分析: whether imagegen may proceed, visual relationship clarity, form-language specificity, production controllability, major failure risks, protected content, or preconditions
+- a missing or stale Formula Decision, missing formula authority, undecided `T/S/R/O/A/I/N` field, or responsibility assigned only as "outside the image" without naming the exact text/layout/UI owner
+- an unresolved production direction, feasibility result, protected content, failure risk, precondition, or visible pass/fail criterion
 - industrial / AI / life sense relationship, B2-3 color role, buyer readability, trust fit, page role, first-screen attention, CTA/text support, or claim boundary
 - a new image direction, brand-defining visual, homepage/hero/background concept, or any production brief that is more than a local edit
 
@@ -249,6 +252,7 @@ Every specialist handoff must include:
 
 - user original words or source paths
 - current stage, original intent, active brief, and accepted baseline
+- formula authority, current Formula Decision, and exact image/text/layout owners when the task can change visual meaning
 - must keep / must remove / must change / must avoid
 - open defects and pass/fail criteria
 - rejected candidates or forbidden carry-over when relevant
@@ -274,8 +278,8 @@ If any required item is missing, do not say complete. Return to imagegen, planne
 ## Specialist Boundaries
 
 - Workflow Director owns macro-planning control, layer diagnosis, concept-role sorting, routing, and execution freeze decisions.
-- Planner owns page strategy, buyer-message fit, page role, visual role, claim boundary, and customer-feedback attribution after the strategic layer is locked or judged unnecessary.
-- Imagegen owns production method, image editing, visible quality, output files, visual QA, and reproduction archive after strategy is clear.
+- Planner owns page strategy, buyer-message fit, page role, visual role, claim boundary, customer-feedback attribution, the complete Formula Decision, and image/text/layout responsibility after the strategic layer is locked or judged unnecessary.
+- Imagegen inherits the accepted Formula Decision and owns prompt compilation, production method, image editing, visible quality, output files, visual QA, and reproduction archive after strategy is clear. It does not redefine formula semantics.
 - Curator owns confirmed project memory: approved materials, failures, references, product fact boundaries, and workflow lessons.
 - Superpowers own process gates: brainstorming, systematic debugging, writing skills, writing plans, and verification before completion.
 

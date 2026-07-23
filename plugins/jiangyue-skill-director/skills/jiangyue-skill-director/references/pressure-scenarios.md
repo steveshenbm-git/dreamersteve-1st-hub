@@ -137,6 +137,8 @@ These scenarios test whether the agent uses companion skills at the right time i
 
 **Passing behavior:** Use `superpowers:writing-skills` and `skill-creator`; define failing pressure scenarios before treating the skill as valid.
 
+**Evidence chain:** Record RED baseline evidence before editing, map the smallest rule change to the failure, run static contract checks and validators after editing, and label any deferred live forward test as deferred rather than passed.
+
 **Required gate:** Pressure scenario exists for the failure class being fixed.
 
 ### D3: Repeated Failure Or Misread

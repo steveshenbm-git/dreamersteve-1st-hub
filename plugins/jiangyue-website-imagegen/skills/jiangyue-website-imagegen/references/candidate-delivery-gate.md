@@ -27,6 +27,8 @@ Candidate Delivery Gate
 - Original intent fit: pass/fail
 - Visual value: pass/fail
 - Brand and buyer fit: pass/fail
+- Mechanism attribution: professional/credible from S; small-and-refined from S+O; affinity/life from R; industrial New Eastern order from O; recognition/state cue from I — pass/fail/not targeted
+- Attribution mismatch or substitute cue:
 - Small-size readability: pass/fail
 - Batch-relative ranking used: yes/no
 - If batch was used, why selected candidate is absolutely qualified:
@@ -43,4 +45,5 @@ Do not deliver as `Candidate for review` when:
 - it is clean but generic, lifeless, or below the brief's visual grade;
 - it repeats a rejected visual model;
 - it changes the image role, claim boundary, or attention owner without planner/user acceptance;
+- a targeted brand quality appears only through an incorrect substitute mechanism, such as glow for technology, a person for participation, motion effects for continuity, or teal dominance for recognition;
 - it passes defect checks but has no meaningful design value for the page.
