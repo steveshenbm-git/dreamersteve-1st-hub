@@ -21,6 +21,8 @@ User Acceptance Layer
 - Next allowed action:
 ```
 
+Prompt review is intentionally not an acceptance layer.
+
 ## Interpretation Rules
 
 | User signal | Safe interpretation |
@@ -36,5 +38,8 @@ User Acceptance Layer
 
 - Do not infer final approval from direction approval.
 - Do not infer install, commit, archive, or approved-material status from image draft acceptance.
+- Do not create or record a prompt-approval layer.
+- Receiving, commenting on, or confirming a prompt does not accept the brief, visual direction, specific draft, final export, or approved archive.
+- If prompt feedback changes `T/S/R/O/A/I/N` or its image/text/layout/UI owner, return to planner. Execution wording remains with imagegen when the accepted decision is unchanged.
 - Do not use an accepted direction to carry forward defects that were explicitly rejected.
 - If acceptance is unclear and changes the next action, ask one concise question or return to Workflow Director.

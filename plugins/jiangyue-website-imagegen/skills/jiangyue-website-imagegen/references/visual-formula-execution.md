@@ -53,6 +53,23 @@ Compile decisions in this order:
 
 The final model prompt should read as coherent natural instructions. Do not paste seven labels as slogans, repeat the same decision under multiple headings, or ask the model to render decisions owned by text/layout/UI. Convert `N` to explicit negative constraints and QA checks. Keep important copy and deterministic overlays outside the image model.
 
+## Prompt And Client Review Boundary
+
+Client review package = accepted Formula Decision before generation + visible candidate after generation. The compiled prompt and Formula Production Trace are internal execution artifacts, not an additional client approval layer.
+
+- For high-risk work, use fact, claim, and formula checks.
+- For cost-bearing work, use explicit cost confirmation, production success strategy, and attempt stop rules.
+- For repeated failure, use defect attribution, method escalation, and failure reset.
+- For external execution, provide the exact prompt when the executor needs it. This is production handoff, not client approval.
+- If the user explicitly requests the prompt, provide the exact prompt or archive reference for transparency or reproduction. Receiving, commenting on, or confirming it does not accept the brief, visual direction, candidate, final export, or approved archive.
+- If prompt feedback changes a Formula Decision field or its image/text/layout/UI owner, return to planner before production. Imagegen may adjust execution wording only when the accepted decision remains unchanged.
+
+## Pressure Scenario — Prompt Review Creep
+
+- Pressure: the task is high-risk, costly, assigned to an external supplier, or has failed repeatedly.
+- Pass: keep client review on the Formula Decision before generation and the visible candidate after generation; invoke the matching existing risk gate; provide a prompt only on explicit request or executor handoff and label its status.
+- Fail: create a full or summarized prompt-approval step, or treat prompt approval as acceptance of any visual layer.
+
 ## Bounded Technical Operations
 
 Crop, resize, compress, format conversion, deterministic typesetting, and export may use a light trace that cites the accepted baseline and Formula Decision. Load only source, target, protected elements, technical parameters, and checks.
