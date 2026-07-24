@@ -63,6 +63,10 @@ content_status: 草稿, 业务员批准, 计划触达, 实际发送, 实际回�
 handoff_status: 未触发, 触达已暂停, 待邮件助手, 已移交, 业务员已决定
 ```
 
+`客户总览.risk_gate`、`风险核验.gate_status` 和 `移交记录.risk_gate_status` 必须使用同一组 `risk_gate` 受控值。风险硬门命中时，在同一待写入包或获授权的写入中，将 `客户总览.risk_gate` 与对应 `风险核验.gate_status` 都设为 `暂停待业务员审核`；在业务员明确审核并将风险门批准为 `业务员批准继续` 前，不得恢复推荐、准备触达材料或继续触达。
+
+只有在实际创建移交快照时，才写入该条 `移交记录.risk_gate_status`，并保存快照创建时的同一受控风险状态。不得只为同步风险门而新建或改写移交记录；尚未发生移交时，风险状态只传播到客户总览和对应风险记录。
+
 ## 稳定编号
 
 使用 customer_id、research_id、opportunity_id、contact_id、evidence_id、trade_record_id、risk_id、touch_id 和 handoff_id。公司名称不是唯一键。
