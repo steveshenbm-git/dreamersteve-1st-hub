@@ -29,19 +29,33 @@ REQUIRED_WORKBOOK_FIELDS = {
     "证据来源": ["source_region_or_jurisdiction"],
 }
 
-FULL_DD_GATE_TERMS = [
-    "salesperson_classification = 潜力客户",
-    "明确启动完整背调",
-    "两个条件同时满足",
-    "普通候选",
-    "不得启动完整背调",
-]
+FULL_DD_CLASSIFICATION = re.compile(
+    r"salesperson_classification\s*=\s*潜力客户"
+)
+FULL_DD_EXPLICIT_START = re.compile(
+    r"(?:明确|显式)[^\n。；;]{0,30}(?:启动|开始)[^\n。；;]{0,20}(?:完整背调|full due diligence)",
+    flags=re.IGNORECASE,
+)
+FULL_DD_CONJUNCTION = re.compile(
+    r"必须同时满足|只有同时满足|仅当[^\n。；;]{0,20}同时满足|"
+    r"两个条件[^\n。；;]{0,12}(?:同时满足|缺一不可)|"
+    r"两项[^\n。；;]{0,12}(?:均满足|缺一不可)"
+)
+ORDINARY_CANDIDATE_BLOCK = re.compile(
+    r"普通候选[^\n。；;]{0,80}(?:不得|不能|不允许)[^\n。；;]{0,30}(?:启动|进入|开始)[^\n。；;]{0,20}(?:完整背调|full due diligence)",
+    flags=re.IGNORECASE,
+)
 
-ROUTING_DESCRIPTION_TERMS = [
-    "pre-reply or unanswered prospect-development outreach",
-    "received customer replies",
-    "foreign-trade-email-assistant",
-]
+PRE_REPLY_SCOPE = re.compile(
+    r"pre-reply|unanswered[^.;]{0,40}(?:prospect|outreach|development)",
+    flags=re.IGNORECASE,
+)
+RECEIVED_REPLY_EXCLUSION_AND_ROUTE = re.compile(
+    r"received customer (?:replies|messages|emails)[^.;]{0,60}"
+    r"(?:are )?(?:excluded|outside|not handled|not for)[^.;]{0,80}"
+    r"(?:routed|route|belong|use)[^.;]{0,40}foreign-trade-email-assistant",
+    flags=re.IGNORECASE,
+)
 
 REFERENCE_FILES = {
     "research": REFERENCE_ROOT / "research-and-sources.md",
@@ -99,6 +113,17 @@ def markdown_section(text: str, heading: str) -> str:
     return match.group(1) if match else ""
 
 
+def has_full_dd_dual_gate(text: str) -> bool:
+    paragraphs = re.split(r"\n\s*\n", text)
+    has_joint_conditions = any(
+        FULL_DD_CLASSIFICATION.search(paragraph)
+        and FULL_DD_EXPLICIT_START.search(paragraph)
+        and FULL_DD_CONJUNCTION.search(paragraph)
+        for paragraph in paragraphs
+    )
+    return has_joint_conditions and ORDINARY_CANDIDATE_BLOCK.search(text) is not None
+
+
 def main() -> int:
     references = load_references()
     skill_text = load_skill()
@@ -112,23 +137,33 @@ def main() -> int:
             terms,
         )
 
-    require_terms(
-        diagnostics,
-        "research.full_due_diligence_dual_gate",
-        references["research"],
-        FULL_DD_GATE_TERMS,
-    )
+    if not has_full_dd_dual_gate(references["research"]):
+        diagnostics.append(
+            "research.full_due_diligence_dual_gate: missing one connected rule that "
+            "requires both salesperson_classification = 潜力客户 and an explicit "
+            "full-due-diligence start, and blocks 普通候选"
+        )
 
     skill_description = frontmatter_description(skill_text)
     if not skill_description:
         diagnostics.append("skill.routing_description: missing frontmatter description")
     else:
-        require_terms(
-            diagnostics,
-            "skill.routing_description",
-            skill_description,
-            ROUTING_DESCRIPTION_TERMS,
+        missing_scope = PRE_REPLY_SCOPE.search(skill_description) is None
+        missing_exclusion_route = (
+            RECEIVED_REPLY_EXCLUSION_AND_ROUTE.search(skill_description) is None
         )
+        if missing_scope or missing_exclusion_route:
+            missing_parts = []
+            if missing_scope:
+                missing_parts.append("pre-reply or unanswered prospect scope")
+            if missing_exclusion_route:
+                missing_parts.append(
+                    "one explicit clause excluding received customer replies and routing "
+                    "them to foreign-trade-email-assistant"
+                )
+            diagnostics.append(
+                "skill.routing_description: missing " + "; ".join(missing_parts)
+            )
 
     require_terms(
         diagnostics,

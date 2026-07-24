@@ -1,5 +1,6 @@
 from hashlib import sha256
 from pathlib import Path
+from shutil import copyfile
 import subprocess
 import sys
 from tempfile import TemporaryDirectory
@@ -53,10 +54,39 @@ def assert_rejected(result: subprocess.CompletedProcess[str], diagnostic: str) -
             f"validator false-passed mutation {diagnostic!r}:\n{result.stdout}{result.stderr}"
         )
     combined = result.stdout + result.stderr
-    if diagnostic not in combined:
+    diagnostics = [
+        line
+        for line in combined.splitlines()
+        if line.startswith("FAIL ") and not line.startswith("FAIL:")
+    ]
+    if len(diagnostics) != 1 or not diagnostics[0].startswith(f"FAIL {diagnostic}"):
         raise AssertionError(
-            f"validator rejected mutation without named diagnostic {diagnostic!r}:\n{combined}"
+            f"validator did not isolate mutation diagnostic {diagnostic!r}:\n{combined}"
         )
+
+
+def assert_accepted(result: subprocess.CompletedProcess[str], label: str) -> None:
+    if result.returncode != 0 or not result.stdout.startswith("PASS:"):
+        raise AssertionError(
+            f"validator rejected GREEN control {label!r}:\n{result.stdout}{result.stderr}"
+        )
+
+
+def create_green_control(destination: Path) -> None:
+    workbook = load_workbook(WORKBOOK_PATH, data_only=False)
+    validations = [
+        validation
+        for sheet in workbook.worksheets
+        for validation in sheet.data_validations.dataValidation
+    ]
+    if len(validations) != 13:
+        raise AssertionError(
+            f"expected 13 controlled validations in source workbook, observed {len(validations)}"
+        )
+    for validation in validations:
+        validation.showErrorMessage = True
+        validation.errorStyle = "stop"
+    workbook.save(destination)
 
 
 def main() -> int:
@@ -65,8 +95,18 @@ def main() -> int:
     with TemporaryDirectory(prefix="ft-workbook-mutations-") as temp_dir:
         temp_root = Path(temp_dir)
 
+        green_control_path = temp_root / "green-control.xlsx"
+        create_green_control(green_control_path)
+        assert_accepted(run_validator(green_control_path), "all 13 enforced validations")
+
+        screening_green_control_path = temp_root / "screening-green-control.xlsx"
+        copyfile(green_control_path, screening_green_control_path)
+        assert_accepted(
+            run_validator(screening_green_control_path),
+            "screening mutation baseline",
+        )
         wrong_screening_path = temp_root / "wrong-screening-list.xlsx"
-        workbook = load_workbook(WORKBOOK_PATH, data_only=False)
+        workbook = load_workbook(screening_green_control_path, data_only=False)
         validation = validation_by_range(workbook["客户总览"], "G3:G5000")
         validation.formula1 = '"待业务员筛选,已确认,NOT_A_VALID_SCREENING_STATE,已关闭"'
         workbook.save(wrong_screening_path)
@@ -75,8 +115,14 @@ def main() -> int:
             "客户总览.screening_status",
         )
 
+        risk_green_control_path = temp_root / "risk-green-control.xlsx"
+        copyfile(green_control_path, risk_green_control_path)
+        assert_accepted(
+            run_validator(risk_green_control_path),
+            "risk-alert mutation baseline",
+        )
         disabled_risk_alert_path = temp_root / "disabled-risk-alert.xlsx"
-        workbook = load_workbook(WORKBOOK_PATH, data_only=False)
+        workbook = load_workbook(risk_green_control_path, data_only=False)
         validation = validation_by_range(workbook["客户总览"], "J3:J5000")
         validation.showErrorMessage = False
         workbook.save(disabled_risk_alert_path)
@@ -88,7 +134,7 @@ def main() -> int:
     if file_sha256(WORKBOOK_PATH) != source_hash:
         raise AssertionError("source workbook changed during mutation tests")
 
-    print("PASS: validator rejects non-risk list and disabled risk-alert mutations")
+    print("PASS: GREEN control validates and both isolated mutations are rejected")
     return 0
 
 
