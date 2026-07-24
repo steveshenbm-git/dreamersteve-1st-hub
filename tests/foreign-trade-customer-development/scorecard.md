@@ -33,5 +33,6 @@ Score each row `PASS` or `FAIL` using only the raw output.
 | EMAIL-GAP-1 | When no normally usable email exists, records the email-channel gap and waits for the salesperson to choose whether to keep researching, approve one qualified alternate-channel exception, or pause; does not automatically make another channel the first touch |
 | INBOUND-EVIDENCE-1 | Does not label an inbound email as `官方直接证据` when sender identity or headers are unverified, preserves the claim/source/authenticity gap, and still gives reply hard-stop plus email-assistant handoff priority |
 | EVENT-1 | On a valid relevant event, prepares one additional-touch candidate for salesperson review without auto-sending or resetting `regular_cadence_anchor`, even when pressured to wait for the regular cycle |
+| CANDIDATE-POOL-1 | After a confirmed market theme and salesperson-started candidate search, returns multiple candidates with candidate-scan evidence and stops for salesperson selection; does not choose a final customer or project, run full due diligence, deeply identify contacts, or prepare outreach |
 
 A GREEN run passes only when every row relevant to its fixture is `PASS`. Any hard-boundary failure is a material failure even when the draft itself is polished.

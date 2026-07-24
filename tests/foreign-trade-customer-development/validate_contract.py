@@ -13,6 +13,13 @@ REFERENCE_ROOT = (
     / "references"
 )
 SKILL_PATH = REFERENCE_ROOT.parent / "SKILL.md"
+DESIGN_PATH = (
+    REPO_ROOT
+    / "docs"
+    / "superpowers"
+    / "specs"
+    / "2026-07-23-foreign-trade-customer-development-design.md"
+)
 
 REQUIRED_RESEARCH_TERMS = {
     "public_default": ["公开可访问的来源是默认范围", "不得要求业务员授权公开来源"],
@@ -51,6 +58,19 @@ EVENT_TOUCH_CANONICAL_CLAUSE = (
     "发现有效事件时，AI 必须准备一份待业务员审核的额外触达候选材料；"
     "不得自动发送，且事件触达不得重置 regular_cadence_anchor。"
 )
+SKILL_OUTPUT_BY_LEVEL_CANONICAL_CLAUSE = (
+    "输出必须按 research_level 分流：candidate_scan 只输出候选池或候选初查并停止；"
+    "full_due_diligence 才可输出一个最终项目推荐或明确证据不足结论。"
+)
+DESIGN_SELECTION_GATE_CANONICAL_CLAUSE = (
+    "业务员从候选池中选择公司，只表示进入 candidate_scan；"
+    "选择公司不等于 salesperson_classification = 潜力客户，也不等于业务员明确启动完整背调，"
+    "未同时满足这两个条件不得进入 full_due_diligence。"
+)
+DESIGN_EVENT_INDEPENDENCE_CANONICAL_CLAUSE = (
+    "有效事件候选不得因临近常规触达日期而延迟、省略或并入常规触达；"
+    "事件触达独立准备、独立记录，且不重置 regular_cadence_anchor。"
+)
 
 FULL_DD_OPPOSITE_COUNTEREXAMPLE = (
     "salesperson_classification = 潜力客户 与业务员明确启动完整背调并非必须同时满足，"
@@ -77,6 +97,41 @@ EVENT_TOUCH_OPPOSITE_COUNTEREXAMPLE = (
     "发现有效事件时，AI 可不准备额外触达候选材料，"
     "也可自动发送并重置 regular_cadence_anchor。"
 )
+SKILL_OUTPUT_BY_LEVEL_OPPOSITE_COUNTEREXAMPLES = [
+    (
+        "Return Chinese analysis, one final recommendation or an explicit "
+        "evidence-insufficient conclusion, source/date/evidence labels, salesperson "
+        "decisions still required, and a verified workbook update status."
+    ),
+    (
+        "输出必须按 research_level 分流：candidate_scan 可以输出一个最终项目推荐；"
+        "full_due_diligence 再补充更详细的推荐。"
+    ),
+    (
+        "candidate_scan 可直接选定最终客户并输出最终项目，"
+        "无需等待 full_due_diligence。"
+    ),
+    "无论 research_level 为何，都输出一个最终项目推荐。",
+]
+DESIGN_SELECTION_GATE_OPPOSITE_COUNTEREXAMPLES = [
+    "业务员选择后，AI才可对入选公司进行联系人识别和完整背调。",
+    "业务员从候选池中选择公司后，即可进入 full_due_diligence。",
+    (
+        "候选公司一旦被业务员选中，自动视为 salesperson_classification = 潜力客户 "
+        "且已明确启动完整背调。"
+    ),
+    (
+        "选择公司、salesperson_classification = 潜力客户 或业务员明确启动完整背调，"
+        "任一条件即足以进入 full_due_diligence。"
+    ),
+]
+DESIGN_EVENT_INDEPENDENCE_OPPOSITE_COUNTEREXAMPLES = [
+    "额外触达与固定日期过近时，可合并为一次更有价值的沟通。",
+    "有效事件候选临近常规触达日期时，可延迟到常规日期再准备。",
+    "有效事件候选临近常规触达日期时，可省略独立事件触达。",
+    "有效事件候选可并入常规触达，无需独立准备或记录。",
+    "事件触达实际发送后，应重置 regular_cadence_anchor。",
+]
 
 REFERENCE_FILES = {
     "research": REFERENCE_ROOT / "research-and-sources.md",
@@ -102,6 +157,14 @@ def load_skill() -> str:
         return SKILL_PATH.read_text(encoding="utf-8")
     except (OSError, UnicodeError) as exc:
         print(f"FAIL skill_file: cannot read UTF-8 file {SKILL_PATH}: {exc}")
+        sys.exit(2)
+
+
+def load_design() -> str:
+    try:
+        return DESIGN_PATH.read_text(encoding="utf-8")
+    except (OSError, UnicodeError) as exc:
+        print(f"FAIL design_file: cannot read UTF-8 file {DESIGN_PATH}: {exc}")
         sys.exit(2)
 
 
@@ -196,6 +259,30 @@ def has_event_touch_contract(text: str) -> bool:
     )
 
 
+def has_skill_output_by_level_contract(text: str) -> bool:
+    return has_uncontradicted_canonical_clause(
+        text,
+        SKILL_OUTPUT_BY_LEVEL_CANONICAL_CLAUSE,
+        SKILL_OUTPUT_BY_LEVEL_OPPOSITE_COUNTEREXAMPLES,
+    )
+
+
+def has_design_selection_gate_contract(text: str) -> bool:
+    return has_uncontradicted_canonical_clause(
+        text,
+        DESIGN_SELECTION_GATE_CANONICAL_CLAUSE,
+        DESIGN_SELECTION_GATE_OPPOSITE_COUNTEREXAMPLES,
+    )
+
+
+def has_design_event_independence_contract(text: str) -> bool:
+    return has_uncontradicted_canonical_clause(
+        text,
+        DESIGN_EVENT_INDEPENDENCE_CANONICAL_CLAUSE,
+        DESIGN_EVENT_INDEPENDENCE_OPPOSITE_COUNTEREXAMPLES,
+    )
+
+
 def contract_matcher_self_check() -> list[str]:
     failures = []
     if not has_full_dd_dual_gate(FULL_DD_CANONICAL_CLAUSE):
@@ -238,6 +325,24 @@ def contract_matcher_self_check() -> list[str]:
             EVENT_TOUCH_CANONICAL_CLAUSE,
             [EVENT_TOUCH_OPPOSITE_COUNTEREXAMPLE],
         ),
+        (
+            "skill-output-by-level",
+            has_skill_output_by_level_contract,
+            SKILL_OUTPUT_BY_LEVEL_CANONICAL_CLAUSE,
+            SKILL_OUTPUT_BY_LEVEL_OPPOSITE_COUNTEREXAMPLES,
+        ),
+        (
+            "design-selection-gate",
+            has_design_selection_gate_contract,
+            DESIGN_SELECTION_GATE_CANONICAL_CLAUSE,
+            DESIGN_SELECTION_GATE_OPPOSITE_COUNTEREXAMPLES,
+        ),
+        (
+            "design-event-independence",
+            has_design_event_independence_contract,
+            DESIGN_EVENT_INDEPENDENCE_CANONICAL_CLAUSE,
+            DESIGN_EVENT_INDEPENDENCE_OPPOSITE_COUNTEREXAMPLES,
+        ),
     ]
     for name, matcher, canonical, opposites in new_contracts:
         if not matcher(canonical):
@@ -262,6 +367,7 @@ def main() -> int:
 
     references = load_references()
     skill_text = load_skill()
+    design_text = load_design()
     diagnostics: list[str] = []
 
     for contract, terms in REQUIRED_RESEARCH_TERMS.items():
@@ -330,6 +436,25 @@ def main() -> int:
         diagnostics.append(
             "opportunity.valid_event_candidate: missing canonical mandatory-candidate, "
             "no-auto-send, and no-anchor-reset clause"
+        )
+
+    if not has_skill_output_by_level_contract(skill_text):
+        diagnostics.append(
+            "skill.output_by_research_level: missing canonical candidate-pool versus "
+            "full-due-diligence output split, or a listed opposite clause is present"
+        )
+
+    if not has_design_selection_gate_contract(design_text):
+        diagnostics.append(
+            "design.candidate_selection_dual_gate: missing canonical selected-company "
+            "candidate-scan and full-DD dual-gate clause, or a listed opposite clause is present"
+        )
+
+    if not has_design_event_independence_contract(design_text):
+        diagnostics.append(
+            "design.event_touch_independence: missing canonical no-delay, no-omission, "
+            "no-merge, independent-record, and no-anchor-reset clause, or a listed opposite "
+            "clause is present"
         )
 
     workbook_text = references["workbook"]
