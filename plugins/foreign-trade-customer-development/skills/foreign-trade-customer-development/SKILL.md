@@ -1,6 +1,6 @@
 ---
 name: foreign-trade-customer-development
-description: Use when a foreign-trade salesperson needs to identify or research prospect companies, compare candidates, perform evidence-bound company or contact due diligence, prepare one product-fit development recommendation, create first-touch or follow-up materials, or maintain a salesperson-controlled prospect workbook.
+description: Use when a foreign-trade salesperson needs pre-reply prospect research, company or contact due diligence, a product-fit recommendation, first-touch or unanswered follow-up materials, or a salesperson-controlled prospect workbook. This skill is limited to pre-reply or unanswered prospect-development outreach; received customer replies are excluded and routed to foreign-trade-email-assistant.
 ---
 
 # Foreign Trade Customer Development
@@ -14,7 +14,7 @@ Research and prepare prospect development work while leaving target selection, c
 - For a named company, run candidate scan first.
 - For a market theme, require salesperson confirmation before search.
 - Stop after the candidate pool until the salesperson selects companies.
-- Run full due diligence only for salesperson-confirmed potential customers.
+- Run full due diligence only when the salesperson has both classified the company as a potential customer and explicitly started full due diligence.
 
 ## Required references
 
