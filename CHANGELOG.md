@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.0 - 2026-07-23
+
+- Added `foreign-trade-customer-development` as an independent public Codex plugin.
+- Added business-model-specific prospect research across official, industrial, social, retail, review, customs, and authorized logged-in sources.
+- Added salesperson gates for candidate selection, potential-customer due diligence, restricted contacts, final recommendations, channels, and sending.
+- Added an empty local Excel workbook template and a handoff contract for `foreign-trade-email-assistant`.
+- Kept company facts, customer data, licensed database exports, correspondence, and logged-in captures outside the public plugin.
+
 ## 0.3.0 - 2026-07-23
 
 - Added `foreign-trade-email-assistant` as a public Codex plugin.

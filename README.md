@@ -10,6 +10,7 @@ The package currently includes:
 - `jiangyue-knowledge-curator` maintains reusable Jiangyue website knowledge and approved-material references.
 - `jiangyue-skill-director` governs Jiangyue skill design, repair, and release checks.
 - `foreign-trade-email-assistant` analyzes complete customer email threads and prepares salesperson-reviewed bilingual reply drafts.
+- `foreign-trade-customer-development` researches salesperson-selected prospect companies, prepares one evidence-bound product-fit development recommendation, supports controlled follow-up planning, and maintains a local prospect workbook.
 
 The user remains the final reviewer for page strategy, claims, visual approval, business judgment, email wording, and sending.
 
@@ -29,6 +30,11 @@ plugins/foreign-trade-email-assistant/.codex-plugin/plugin.json
 plugins/foreign-trade-email-assistant/skills/foreign-trade-email-assistant/SKILL.md
 plugins/foreign-trade-email-assistant/skills/foreign-trade-email-assistant/agents/openai.yaml
 plugins/foreign-trade-email-assistant/skills/foreign-trade-email-assistant/references/
+plugins/foreign-trade-customer-development/.codex-plugin/plugin.json
+plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development/SKILL.md
+plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development/agents/openai.yaml
+plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development/references/
+plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development/assets/prospect-development-workbook.xlsx
 ```
 
 ## Install From This Repository
@@ -46,6 +52,7 @@ codex plugin marketplace add /absolute/path/to/dreamersteve-1st-hub
 codex plugin add jiangyue-website-planner@jiangyue-team
 codex plugin add jiangyue-website-imagegen@jiangyue-team
 codex plugin add foreign-trade-email-assistant@jiangyue-team
+codex plugin add foreign-trade-customer-development@jiangyue-team
 ```
 
 4. Start a new Codex thread and use:
@@ -54,6 +61,7 @@ codex plugin add foreign-trade-email-assistant@jiangyue-team
 Use $jiangyue-website-planner to plan a Jiangyue website page and image brief.
 Use $jiangyue-website-imagegen to help me create a Jiangyue website visual.
 Use $foreign-trade-email-assistant to analyze a complete customer email thread and prepare a bilingual reply draft.
+Use $foreign-trade-customer-development to research this prospect company and prepare one evidence-bound development recommendation.
 ```
 
 ## Recommended Workflow
@@ -63,6 +71,14 @@ Use $foreign-trade-email-assistant to analyze a complete customer email thread a
 3. Hand the confirmed image request brief to `jiangyue-website-imagegen`.
 4. If imagegen fails because of visual execution, continue structural image revision inside imagegen.
 5. If imagegen fails because the image request conflicts with page strategy, attention hierarchy, image role, or claim boundaries, return to planner with an `Imagegen 返工请求`.
+
+## Foreign Trade Customer Development Workflow
+
+1. Confirm a market theme or named prospect with the salesperson.
+2. Run a candidate scan and wait for the salesperson to select which candidates to develop.
+3. Run full due diligence only for salesperson-confirmed potential customers.
+4. Write prospect research and development records only to the local workbook.
+5. Hand any customer reply to `foreign-trade-email-assistant` for reply preparation.
 
 ## Foreign Trade Email Workflow
 
