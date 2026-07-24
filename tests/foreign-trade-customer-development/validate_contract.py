@@ -12,6 +12,7 @@ REFERENCE_ROOT = (
     / "foreign-trade-customer-development"
     / "references"
 )
+SKILL_PATH = REFERENCE_ROOT.parent / "SKILL.md"
 
 REQUIRED_RESEARCH_TERMS = {
     "public_default": ["公开可访问的来源是默认范围", "不得要求业务员授权公开来源"],
@@ -27,6 +28,20 @@ REQUIRED_WORKBOOK_FIELDS = {
     "联系人": ["employer_or_entity", "entity_match_basis", "contact_source_reference", "uncertainty_note"],
     "证据来源": ["source_region_or_jurisdiction"],
 }
+
+FULL_DD_GATE_TERMS = [
+    "salesperson_classification = 潜力客户",
+    "明确启动完整背调",
+    "两个条件同时满足",
+    "普通候选",
+    "不得启动完整背调",
+]
+
+ROUTING_DESCRIPTION_TERMS = [
+    "pre-reply or unanswered prospect-development outreach",
+    "received customer replies",
+    "foreign-trade-email-assistant",
+]
 
 REFERENCE_FILES = {
     "research": REFERENCE_ROOT / "research-and-sources.md",
@@ -45,6 +60,23 @@ def load_references() -> dict[str, str]:
             print(f"FAIL reference_file.{name}: cannot read UTF-8 file {path}: {exc}")
             sys.exit(2)
     return loaded
+
+
+def load_skill() -> str:
+    try:
+        return SKILL_PATH.read_text(encoding="utf-8")
+    except (OSError, UnicodeError) as exc:
+        print(f"FAIL skill_file: cannot read UTF-8 file {SKILL_PATH}: {exc}")
+        sys.exit(2)
+
+
+def frontmatter_description(text: str) -> str:
+    match = re.search(
+        r"\A---\s*$\n.*?^description:\s*(.+?)\s*$\n.*?^---\s*$",
+        text,
+        flags=re.MULTILINE | re.DOTALL,
+    )
+    return match.group(1).strip() if match else ""
 
 
 def require_terms(
@@ -69,6 +101,7 @@ def markdown_section(text: str, heading: str) -> str:
 
 def main() -> int:
     references = load_references()
+    skill_text = load_skill()
     diagnostics: list[str] = []
 
     for contract, terms in REQUIRED_RESEARCH_TERMS.items():
@@ -77,6 +110,24 @@ def main() -> int:
             f"research.{contract}",
             references["research"],
             terms,
+        )
+
+    require_terms(
+        diagnostics,
+        "research.full_due_diligence_dual_gate",
+        references["research"],
+        FULL_DD_GATE_TERMS,
+    )
+
+    skill_description = frontmatter_description(skill_text)
+    if not skill_description:
+        diagnostics.append("skill.routing_description: missing frontmatter description")
+    else:
+        require_terms(
+            diagnostics,
+            "skill.routing_description",
+            skill_description,
+            ROUTING_DESCRIPTION_TERMS,
         )
 
     require_terms(

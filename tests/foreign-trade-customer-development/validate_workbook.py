@@ -27,12 +27,43 @@ EXPECTED_ZH = {
     "移交记录": ["移交记录编号", "客户编号", "触发渠道", "触发触达记录编号", "回复内容引用", "客户开发快照引用", "未解决问题", "风险门状态", "目标技能", "移交状态", "业务员决定", "决定日期"],
 }
 
+SCREENING_STATES = ["待业务员筛选", "已确认", "已暂停", "已关闭"]
+CLASSIFICATION_STATES = ["不继续", "普通候选", "潜力客户"]
+RELIABILITY_STATES = [
+    "资料充分且一致",
+    "整体可信但存在缺口",
+    "存在重大冲突需要核验",
+    "证据不足无法判断",
+]
+EVIDENCE_STATES = [
+    "官方直接证据",
+    "多来源相互印证",
+    "单一来源待验证",
+    "合理推断",
+    "来源相互冲突",
+    "信息已经过期",
+    "来源不明隔离待核实",
+]
+USAGE_PERMISSION_STATES = ["正常使用", "限制使用", "隔离待核实"]
 RISK_STATES = ["未触发", "待核验", "暂停待业务员审核", "业务员批准继续", "已关闭"]
-RISK_FIELDS = (
-    ("客户总览", "risk_gate"),
-    ("风险核验", "gate_status"),
-    ("移交记录", "risk_gate_status"),
-)
+CONTENT_STATES = ["草稿", "业务员批准", "计划触达", "实际发送", "实际回复"]
+HANDOFF_STATES = ["未触发", "触达已暂停", "待邮件助手", "已移交", "业务员已决定"]
+
+CONTROLLED_VALIDATIONS = {
+    ("客户总览", "screening_status"): ("G3:G5000", SCREENING_STATES),
+    ("客户总览", "salesperson_classification"): ("H3:H5000", CLASSIFICATION_STATES),
+    ("客户总览", "information_reliability"): ("I3:I5000", RELIABILITY_STATES),
+    ("客户总览", "risk_gate"): ("J3:J5000", RISK_STATES),
+    ("客户总览", "handoff_status"): ("Q3:Q5000", HANDOFF_STATES),
+    ("公司研究", "evidence_state"): ("H3:H5000", EVIDENCE_STATES),
+    ("联系人", "usage_permission"): ("K3:K5000", USAGE_PERMISSION_STATES),
+    ("证据来源", "evidence_state"): ("L3:L5000", EVIDENCE_STATES),
+    ("风险核验", "evidence_state"): ("K3:K5000", EVIDENCE_STATES),
+    ("风险核验", "gate_status"): ("M3:M5000", RISK_STATES),
+    ("触达记录", "content_status"): ("F3:F5000", CONTENT_STATES),
+    ("移交记录", "risk_gate_status"): ("H3:H5000", RISK_STATES),
+    ("移交记录", "handoff_status"): ("J3:J5000", HANDOFF_STATES),
+}
 
 
 def list_values(formula):
@@ -101,7 +132,7 @@ for name, expected_headers in EXPECTED.items():
                     f"{name}.data_validation: {validation.sqref} must begin exactly at row 3"
                 )
 
-for sheet_name, field_name in RISK_FIELDS:
+for (sheet_name, field_name), (expected_range, expected_values) in CONTROLLED_VALIDATIONS.items():
     sheet = workbook[sheet_name]
     observed_headers = [cell.value for cell in sheet[1]]
     if field_name not in observed_headers:
@@ -116,17 +147,40 @@ for sheet_name, field_name in RISK_FIELDS:
         )
         continue
     validation = validations[0]
+    if str(validation.sqref) != expected_range:
+        failures.append(
+            f"{sheet_name}.{field_name}: expected exact range {expected_range!r}, "
+            f"observed {str(validation.sqref)!r}"
+        )
     if validation.type != "list":
         failures.append(
             f"{sheet_name}.{field_name}: expected list validation, observed {validation.type!r}"
         )
-        continue
     observed_states = list_values(validation.formula1)
-    if observed_states != RISK_STATES:
+    if observed_states != expected_values:
         failures.append(
-            f"{sheet_name}.{field_name}: expected {RISK_STATES!r}, "
+            f"{sheet_name}.{field_name}: expected {expected_values!r}, "
             f"observed {observed_states!r}"
         )
+    if validation.showErrorMessage is not True:
+        failures.append(
+            f"{sheet_name}.{field_name}: expected showErrorMessage=True, "
+            f"observed {validation.showErrorMessage!r}"
+        )
+    if validation.errorStyle != "stop":
+        failures.append(
+            f"{sheet_name}.{field_name}: expected errorStyle='stop', "
+            f"observed {validation.errorStyle!r}"
+        )
+
+observed_validation_count = sum(
+    len(sheet.data_validations.dataValidation) for sheet in workbook.worksheets
+)
+if observed_validation_count != len(CONTROLLED_VALIDATIONS):
+    failures.append(
+        "controlled_validations.count: expected "
+        f"{len(CONTROLLED_VALIDATIONS)}, observed {observed_validation_count}"
+    )
 
 if failures:
     for failure in failures:
@@ -134,5 +188,5 @@ if failures:
     print(f"FAIL: {len(failures)} workbook contract diagnostics")
     raise SystemExit(1)
 
-print("PASS: workbook structure, bilingual headers, empty-data boundary, "
-      "freeze panes, filters, and risk validations")
+print("PASS: workbook structure, bilingual headers, empty-data boundary, freeze panes, "
+      "filters, and all controlled validations with stop-style enforcement")

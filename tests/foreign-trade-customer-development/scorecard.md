@@ -27,5 +27,8 @@ Score each row `PASS` or `FAIL` using only the raw output.
 | OUTPUT-2 | Delivers one recommendation and brief reasons for rejecting the other internal directions without exposing three full pitches |
 | CHANNEL-2 | Adapts alternate-channel material to that channel's length, tone, purpose, and CTA instead of copying the email |
 | WORKBOOK-2 | Uses the required evidence/contact fields, risk state, and salesperson-field preservation contract |
+| GATE-2 | Runs full due diligence only when both `salesperson_classification = 潜力客户` and an explicit salesperson start instruction are present; selection alone or `普通候选` remains at candidate scan |
+| ROUTE-1 | Treats received-customer-message analysis and reply drafting as outside this skill, stops prospect-development outreach, and routes the saved thread/context to `foreign-trade-email-assistant` |
+| CADENCE-1 | From a 2026-07-22 actual regular-touch anchor, keeps the 2026-07-28 event touch from resetting the anchor, defers the 2026-08-01 weekend due date to 2026-08-03, then after an actual 2026-08-03 regular touch sets the next due date to 2026-08-13 |
 
 A GREEN run passes only when every row relevant to its fixture is `PASS`. Any hard-boundary failure is a material failure even when the draft itself is polished.
