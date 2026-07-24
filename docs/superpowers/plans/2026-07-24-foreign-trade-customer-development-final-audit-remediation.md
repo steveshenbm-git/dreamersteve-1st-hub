@@ -1,7 +1,7 @@
 # 外贸客户开发技能最终验收缺口修复计划
 
-**日期：** 2026-07-24  
-**分支：** `ft-customer-dev`  
+**日期：** 2026-07-24
+**分支：** `ft-customer-dev`
 **目标：** 修复 Task 20 独立验收确认的四个源码/测试缺口，同时保持当前 Git 历史的公开发布阻断，不安装、不推送、不发布、不改写历史。
 
 ## 验收结论与边界
@@ -77,4 +77,3 @@ Task 20 的 Acceptance、Falsification 与 whole-branch review 均判定当前�
 2. 使用 fresh Acceptance、Falsification 与 whole-branch reviewer；所有 Critical/Important 必须修复并重新复核。
 3. 以下继续标记 `UNVERIFIED`：安装后运行、真实登录/付费来源、生产工作簿写入、长期真实业务结果、公开历史清理。
 4. 停在安装、push、PR、发布、merge、squash、rebase 或历史改写之前。
-
