@@ -1,0 +1,34 @@
+{
+  "name": "foreign-trade-customer-development",
+  "version": "0.1.0",
+  "description": "Codex skill plugin for salesperson-controlled prospect discovery, evidence-bound company due diligence, product-fit development recommendations, and local workbook handoff.",
+  "author": {
+    "name": "steveshenbm-git"
+  },
+  "repository": "https://github.com/steveshenbm-git/dreamersteve-1st-hub",
+  "keywords": [
+    "foreign-trade",
+    "customer-development",
+    "prospect-research",
+    "due-diligence",
+    "sales-workbook"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Foreign Trade Customer Development",
+    "shortDescription": "Research prospects and prepare controlled development plans.",
+    "longDescription": "A salesperson-controlled assistant for finding and researching prospect companies, analyzing company and contact evidence, checking public trade and risk signals, preparing one product-fit development recommendation, and maintaining a local prospect workbook without making final business or sending decisions.",
+    "developerName": "steveshenbm-git",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "brandColor": "#147DFF",
+    "defaultPrompt": [
+      "Research this prospect company and prepare one evidence-bound development recommendation.",
+      "Build a candidate company list for this salesperson-confirmed market theme.",
+      "Perform full due diligence on this salesperson-confirmed potential customer and update the local workbook."
+    ]
+  }
+}
