@@ -96,9 +96,9 @@ for name, expected_headers in EXPECTED.items():
         )
     for validation in sheet.data_validations.dataValidation:
         for _, min_row, _, _ in validation_ranges(validation):
-            if min_row < 3:
+            if min_row != 3:
                 failures.append(
-                    f"{name}.data_validation: {validation.sqref} begins before row 3"
+                    f"{name}.data_validation: {validation.sqref} must begin exactly at row 3"
                 )
 
 for sheet_name, field_name in RISK_FIELDS:
