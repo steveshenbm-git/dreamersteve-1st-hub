@@ -566,6 +566,7 @@ git commit -m "实现外贸客户开发技能工作流"
 - Create: `plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development/assets/prospect-development-workbook.xlsx`
 - Create: `tests/foreign-trade-customer-development/validate_workbook.py`
 - Modify: `plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development/references/workbook-and-handoff.md`
+- Modify: `docs/superpowers/plans/2026-07-23-foreign-trade-customer-development.md`
 
 **Interfaces:**
 - Consumes: workbook table names and stable IDs from Task 4.
@@ -587,7 +588,7 @@ Read and follow the bundled Spreadsheets skill before any `.xlsx` creation. Add 
 移交记录
 ```
 
-Use these exact header rows:
+Use these exact row-1 English machine/schema headers:
 
 ```text
 客户总览: customer_id, company_name, legal_name, website, country, business_model, screening_status, salesperson_classification, information_reliability, risk_gate, recommended_opportunity_id, primary_contact_id, last_research_date, last_touch_date, next_action, next_action_date, handoff_status, salesperson_notes
@@ -601,7 +602,9 @@ Use these exact header rows:
 移交记录: handoff_id, customer_id, trigger_channel, trigger_touch_id, response_reference, development_snapshot_reference, open_questions, risk_gate_status, target_skill, handoff_status, salesperson_decision, decision_date
 ```
 
-For every worksheet, the asset contract is: freeze row 1, enable an auto-filter on the header row, use readable column widths, wrap long-text columns, and apply a consistent header style. Leave every data row empty.
+Row 2 must use the exact per-column Chinese business explanations defined under the workbook header contract in `references/workbook-and-handoff.md`; that mapping is the single reproducible source for both the asset and validator.
+
+For every worksheet, the asset contract is: style row 1 as the machine/schema header and row 2 as a clearly distinct Chinese business header; freeze the top two rows at `A3`; enable a worksheet-level auto-filter with the exact row-2 range `A2:<last-column>2`; size columns from both labels; wrap where needed; and keep both header rows legible and unclipped. Data begins at row 3, but the public template contains no data rows, so `max_row` is 2. Controlled-state data validations begin at row 3 and never cover row 2.
 
 Use ISO `YYYY-MM-DD` for dates and ISO 8601 timestamps with an explicit UTC offset for sent/reply timestamps. Leave unknown values blank rather than guessing. Add validation lists for these controlled states:
 
@@ -624,6 +627,7 @@ Create `validate_workbook.py` with:
 from pathlib import Path
 import sys
 from openpyxl import load_workbook
+from openpyxl.utils import get_column_letter
 
 EXPECTED = {
     "客户总览": ["customer_id", "company_name", "legal_name", "website", "country", "business_model", "screening_status", "salesperson_classification", "information_reliability", "risk_gate", "recommended_opportunity_id", "primary_contact_id", "last_research_date", "last_touch_date", "next_action", "next_action_date", "handoff_status", "salesperson_notes"],
@@ -637,6 +641,18 @@ EXPECTED = {
     "移交记录": ["handoff_id", "customer_id", "trigger_channel", "trigger_touch_id", "response_reference", "development_snapshot_reference", "open_questions", "risk_gate_status", "target_skill", "handoff_status", "salesperson_decision", "decision_date"],
 }
 
+EXPECTED_ZH = {
+    "客户总览": ["客户编号", "公司常用名称", "法定注册名称", "公司网站", "国家或地区", "商业模式", "筛选状态", "业务员客户分类", "信息可靠性", "风险门状态", "推荐机会编号", "主要联系人编号", "最近研究日期", "最近触达日期", "下一步行动", "下一步行动日期", "移交状态", "业务员备注"],
+    "公司研究": ["研究记录编号", "客户编号", "研究层级", "研究章节", "原文研究发现", "研究发现中文摘要", "证据编号", "证据状态", "来源发布日期", "观察记录时间", "信息缺口或冲突", "业务员确认状态"],
+    "项目机会": ["机会编号", "客户编号", "已确认客户事实", "应用或采购场景", "已批准产品引用", "匹配依据", "待验证问题", "主要联系人编号", "推荐状态", "业务员决定", "决定日期"],
+    "联系人": ["联系人编号", "客户编号", "联系人姓名", "职务名称", "可能承担的角色", "角色证据编号", "联系渠道", "联系方式内容", "真实性状态", "来源可靠性", "使用许可", "联系顺序", "排序依据", "观察记录时间", "业务员批准状态"],
+    "证据来源": ["证据编号", "客户编号", "来源类型", "来源标题", "来源网址或本地引用", "来源主体", "来源语言", "原文摘录", "中文摘要", "来源发布日期", "观察记录时间", "证据状态", "访问范围", "冲突说明"],
+    "海关与贸易": ["贸易记录编号", "客户编号", "数据来源", "访问范围", "覆盖国家或地区", "覆盖期间", "观察到的企业名称", "观察到的企业地址", "主体匹配依据", "贸易方向", "货运期间", "可见交易频次", "产品描述", "海关编码", "数量", "数量单位", "重量", "重量单位", "申报价值", "申报币种", "贸易伙伴或国家", "数据局限说明", "观察记录时间", "证据编号"],
+    "风险核验": ["风险记录编号", "客户编号", "风险类型", "匹配到的主体", "主体匹配依据", "指控或记录内容", "证据编号", "管辖地区", "记录日期", "观察记录时间", "证据状态", "误匹配风险", "风险门状态", "审核人决定", "决定日期"],
+    "触达记录": ["触达记录编号", "客户编号", "联系人编号", "触达渠道", "触达阶段", "内容状态", "计划日期", "实际发送时间", "实发内容或本地引用", "回复状态", "回复时间", "下一步行动", "下一步行动日期", "业务员批准状态"],
+    "移交记录": ["移交记录编号", "客户编号", "触发渠道", "触发触达记录编号", "回复内容引用", "客户开发快照引用", "未解决问题", "风险门状态", "目标技能", "移交状态", "业务员决定", "决定日期"],
+}
+
 path = Path(sys.argv[1])
 workbook = load_workbook(path, data_only=False)
 assert workbook.sheetnames == list(EXPECTED), workbook.sheetnames
@@ -644,10 +660,12 @@ assert workbook.sheetnames == list(EXPECTED), workbook.sheetnames
 for name, expected_headers in EXPECTED.items():
     sheet = workbook[name]
     headers = [cell.value for cell in sheet[1]]
+    zh_headers = [cell.value for cell in sheet[2]]
     assert headers == expected_headers, f"{name}: {headers}"
-    assert sheet.freeze_panes == "A2", f"{name}: freeze_panes"
-    assert sheet.auto_filter.ref is not None, f"{name}: auto_filter"
-    assert sheet.max_row == 1, f"{name}: workbook must contain no real rows"
+    assert zh_headers == EXPECTED_ZH[name], f"{name}: {zh_headers}"
+    assert sheet.freeze_panes == "A3", f"{name}: freeze_panes"
+    assert sheet.auto_filter.ref == f"A2:{get_column_letter(len(expected_headers))}2", f"{name}: auto_filter"
+    assert sheet.max_row == 2, f"{name}: workbook must contain no real rows from row 3"
 
 print("PASS: workbook structure, empty-data boundary, freeze panes, and filters")
 ```
@@ -660,11 +678,11 @@ Run:
 '/Users/lirongjing/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3' tests/foreign-trade-customer-development/validate_workbook.py plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development/assets/prospect-development-workbook.xlsx
 ```
 
-Expected: FAIL with `FileNotFoundError` because the workbook asset does not exist.
+Expected for the superseded one-row asset: FAIL because row 2 is missing (and the old freeze/filter/max-row contract is no longer accepted). Preserve this RED before rebuilding.
 
 - [ ] **Step 4: Create the empty workbook through the Spreadsheets skill**
 
-Create `assets/prospect-development-workbook.xlsx` using the sheet order, exact headers, freeze panes, filters, wrapping, widths, and empty-data boundary defined in Step 1. Do not use a general-purpose script to generate the workbook.
+Create `assets/prospect-development-workbook.xlsx` using the sheet order, exact English row 1, exact Chinese row 2, distinct header styles, `A3` freeze, row-2 worksheet filters, wrapping, widths based on both labels, validation ranges beginning at row 3, and the empty-data boundary defined in Step 1. Do not use a general-purpose script to generate the workbook.
 
 - [ ] **Step 5: Run GREEN structural and visual verification**
 
@@ -680,7 +698,7 @@ Expected:
 PASS: workbook structure, empty-data boundary, freeze panes, and filters
 ```
 
-Check every worksheet for readable headers, frozen top row, filters, wrapped long-text columns, no clipped first-row labels, and no data rows. Save no preview images inside the public plugin.
+Check every worksheet for readable English and Chinese headers, frozen top two rows, row-2 filters, wrapped long-text columns, no clipped labels in either header row, and no data rows from row 3. Save no preview images inside the public plugin.
 
 Inspect the workbook package metadata and cell XML:
 
@@ -693,7 +711,7 @@ Expected: no match.
 - [ ] **Step 6: Commit the workbook contract and asset**
 
 ```bash
-git add plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development/assets/prospect-development-workbook.xlsx plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development/references/workbook-and-handoff.md tests/foreign-trade-customer-development/validate_workbook.py
+git add docs/superpowers/plans/2026-07-23-foreign-trade-customer-development.md plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development/assets/prospect-development-workbook.xlsx plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development/references/workbook-and-handoff.md tests/foreign-trade-customer-development/validate_workbook.py
 git commit -m "增加客户开发共享工作簿模板"
 ```
 
