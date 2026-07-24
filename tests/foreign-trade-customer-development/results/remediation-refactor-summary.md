@@ -14,7 +14,7 @@ Because there was no observed failure to repair, the planned stop condition appl
 - no variant retest was run;
 - no plugin reference was modified;
 - no production repair was made;
-- no Git commit was created.
+- no failure-specific refactor raw, production repair, or repair commit was required. The GREEN raw outputs and summaries were subsequently committed as test evidence.
 
 The detailed raw-only scoring evidence remains in `results/remediation-green-summary.md`.
 
@@ -35,7 +35,7 @@ The following SHA-256 values were calculated after independent scoring, from the
 - Known execution-process fact supplied to the scorer: each remediation-GREEN raw output was written to disk by its isolated runner before the scorer began scoring.
 - Direct scorer observation: all five raw files already existed when the scoring stage began. The scorer read them and did not write, patch, format, rename, or otherwise modify them during scoring.
 - The hashes above are a post-scoring snapshot of the files currently on disk. No pre-scoring hash was recorded in this scoring stage, so the hashes alone do not prove before/after identity.
-- The raw files are currently untracked. `git status` can show that state, but it cannot establish when an untracked file was created or independently prove the runner-before-scorer sequence. The sequence statement therefore relies on the supplied execution protocol plus the scorer's direct observation and actions, not on Git history.
+- At the runner-to-scorer handoff, the raw files were still untracked. That observation could not establish when each file was created or independently prove the runner-before-scorer sequence; the files were subsequently committed as test evidence. The sequence statement therefore relies on the supplied execution protocol plus the scorer's direct observation and actions, not on Git history.
 
 ## Final status
 
