@@ -22,6 +22,7 @@ DESIGN_PATH = (
     / "specs"
     / "2026-07-23-foreign-trade-customer-development-design.md"
 )
+README_PATH = REPO_ROOT / "README.md"
 
 REQUIRED_RESEARCH_TERMS = {
     "public_default": ["公开可访问的来源是默认范围", "不得要求业务员授权公开来源"],
@@ -111,6 +112,58 @@ FINAL_RECOMMENDATION_SCOPE_CANONICAL_CLAUSE = (
     "且完整背调双门槛通过后生成；candidate_scan 和 outreach_task "
     "都不得生成最终项目推荐。outreach_task 只基于已有候选初查证据、"
     "已批准产品事实和可用联系证据准备有限触达材料。"
+)
+README_CANDIDATE_SCAN_BOUNDARY_CANONICAL_CLAUSES = [
+    (
+        "- `foreign-trade-customer-development` runs `candidate_scan` for a "
+        "salesperson-confirmed market theme or named prospect, returns a candidate "
+        "pool or candidate-scan findings, and stops for salesperson selection. It "
+        "prepares a final development recommendation only after "
+        "`salesperson_classification = 潜力客户` and the salesperson explicitly "
+        "starts `full_due_diligence`."
+    ),
+    (
+        "Use $foreign-trade-customer-development to run candidate_scan for this "
+        "salesperson-confirmed market theme or named prospect, return a candidate "
+        "pool or candidate-scan findings, and stop for salesperson selection. "
+        "Prepare a final development recommendation only after "
+        "salesperson_classification = 潜力客户 and the salesperson explicitly "
+        "starts full_due_diligence."
+    ),
+    (
+        "For a confirmed market theme or named prospect, run `candidate_scan`, "
+        "return a candidate pool or candidate-scan findings, and stop for "
+        "salesperson selection. Run `full_due_diligence` and prepare a final "
+        "development recommendation only after `salesperson_classification = 潜力客户` "
+        "and the salesperson explicitly starts `full_due_diligence`."
+    ),
+]
+README_CANDIDATE_SCAN_BOUNDARY_CANONICAL_TEXT = (
+    README_CANDIDATE_SCAN_BOUNDARY_CANONICAL_CLAUSES[0]
+    + "\n\n## Package Structure\n\n"
+    + "Plugin paths.\n\n## Install From This Repository\n\n"
+    + README_CANDIDATE_SCAN_BOUNDARY_CANONICAL_CLAUSES[1]
+    + "\n\n## Foreign Trade Customer Development Workflow\n\n"
+    + README_CANDIDATE_SCAN_BOUNDARY_CANONICAL_CLAUSES[2]
+)
+RISK_EVENT_PRIORITY_CANONICAL_CLAUSE = (
+    "risk_gate_status = 暂停待业务员审核 时，风险硬门优先于有效事件："
+    "只记录事件证据和待办，不生成联系材料。业务员明确批准继续后，若事件仍相关，"
+    "立即准备事件触达候选，且不得重置 regular_cadence_anchor。"
+)
+APPROVED_RESTRICTED_CONTACT_CANONICAL_CLAUSE = (
+    "没有使用权限为“正常使用”的联系人时，未取得业务员对该具体联系方式的逐项批准前，"
+    "禁止准备或执行联系；已逐项批准的“限制使用”或“隔离待核实”条目可作为"
+    "“已批准受限例外”进入候选联系顺序和联系材料。原有联系信息来源、真实性、来源可靠性"
+    "和使用权限必须保持不变，且不得冒充“正常使用”。"
+)
+ALTERNATE_FIRST_TOUCH_NO_REPLY_CANONICAL_CLAUSE = (
+    "经业务员明确批准的其他渠道首次触达例外实际发送后仍无回复时，必须暂停并交业务员选择："
+    "继续寻找可正常使用的邮箱；再明确批准一个受控后续动作；或关闭。不得自动进入三轮邮件后"
+    "的渠道切换、返回邮件或 10 日定期节奏。"
+)
+WORKBOOK_REFERENCE_HANDOFF_STATUS_CANONICAL_CLAUSE = (
+    "handoff_status: 未触发, 待邮件助手, 已移交, 业务员已决定"
 )
 
 FULL_DD_OPPOSITE_COUNTEREXAMPLE = (
@@ -227,6 +280,50 @@ FINAL_RECOMMENDATION_SCOPE_OPPOSITE_COUNTEREXAMPLES = [
     "outreach_task 必须内部比较三个候选方向并输出一个最终推荐。",
     "candidate_scan 可以直接生成最终项目推荐。",
 ]
+README_CANDIDATE_SCAN_BOUNDARY_OPPOSITE_COUNTEREXAMPLES = [
+    (
+        "- `foreign-trade-customer-development` researches salesperson-selected "
+        "prospect companies, prepares one evidence-bound product-fit development "
+        "recommendation, supports controlled follow-up planning, and maintains a "
+        "local prospect workbook."
+    ),
+    (
+        "Use $foreign-trade-customer-development to research this prospect company "
+        "and prepare one evidence-bound development recommendation."
+    ),
+    (
+        "Run full due diligence for any salesperson-selected customer and prepare "
+        "the final recommendation without a separate potential-customer "
+        "classification or explicit full-due-diligence start."
+    ),
+]
+RISK_EVENT_PRIORITY_OPPOSITE_COUNTEREXAMPLES = [
+    "risk_gate_status = 暂停待业务员审核 时，仍须立即生成有效事件联系材料。",
+    "风险硬门只暂停常规推荐，不暂停事件触达候选材料。",
+    "业务员批准继续后，可等到下一个常规日期再准备仍相关的事件候选。",
+    "业务员批准继续后，事件触达可以重置 regular_cadence_anchor。",
+]
+APPROVED_RESTRICTED_CONTACT_OPPOSITE_COUNTEREXAMPLES = [
+    (
+        "不得将“限制使用”或“隔离待核实”的信息提升为主要或候补联系人，"
+        "不得猜测或编造姓名、职位、雇主关系或联系信息来填补空缺。"
+    ),
+    "即使业务员逐项批准，限制使用或隔离待核实条目也不得进入候选联系顺序或联系材料。",
+    "业务员逐项批准后，可将联系信息来源从来源不明改为公开职业来源。",
+    "业务员逐项批准后，可将使用权限改为正常使用。",
+    "业务员逐项批准来源不明条目后，可将真实性和来源可靠性改为已核实。",
+]
+ALTERNATE_FIRST_TOUCH_NO_REPLY_OPPOSITE_COUNTEREXAMPLES = [
+    "其他渠道首次触达例外实际发送后无回复，自动视为三轮邮件已完成并进入渠道切换。",
+    "其他渠道首次触达例外实际发送后无回复，可以自动准备返回邮件。",
+    "其他渠道首次触达例外实际发送后无回复，可以直接启动 10 日定期节奏。",
+    "其他渠道首次触达例外实际发送后无回复，AI 可继续准备下一个渠道动作，无需业务员再次批准。",
+]
+WORKBOOK_REFERENCE_HANDOFF_STATUS_OPPOSITE_COUNTEREXAMPLES = [
+    "handoff_status: 未触发, 触达已暂停, 待邮件助手, 已移交, 业务员已决定",
+    "handoff_status: 未触发, 待邮件助手, 已移交, 业务员已决定, 触达已暂停",
+    "handoff_status: 未触发, 待邮件助手, 已移交, 业务员已决定, 自造状态",
+]
 
 REFERENCE_FILES = {
     "research": REFERENCE_ROOT / "research-and-sources.md",
@@ -274,6 +371,14 @@ def load_design() -> str:
         return DESIGN_PATH.read_text(encoding="utf-8")
     except (OSError, UnicodeError) as exc:
         print(f"FAIL design_file: cannot read UTF-8 file {DESIGN_PATH}: {exc}")
+        sys.exit(2)
+
+
+def load_readme() -> str:
+    try:
+        return README_PATH.read_text(encoding="utf-8")
+    except (OSError, UnicodeError) as exc:
+        print(f"FAIL readme_file: cannot read UTF-8 file {README_PATH}: {exc}")
         sys.exit(2)
 
 
@@ -432,6 +537,63 @@ def has_final_recommendation_scope_contract(text: str) -> bool:
     )
 
 
+def has_readme_candidate_scan_boundary_contract(text: str) -> bool:
+    package_intro = text.split("## Package Structure", maxsplit=1)[0]
+    install_section = markdown_section(text, "Install From This Repository")
+    workflow_section = markdown_section(
+        text, "Foreign Trade Customer Development Workflow"
+    )
+    scoped_sections = [package_intro, install_section, workflow_section]
+    has_all_canonical = all(
+        normalize_contract_text(clause) in normalize_contract_text(section)
+        for clause, section in zip(
+            README_CANDIDATE_SCAN_BOUNDARY_CANONICAL_CLAUSES,
+            scoped_sections,
+        )
+    )
+    normalized_text = normalize_contract_text(text)
+    has_listed_opposite = any(
+        normalize_contract_text(opposite) in normalized_text
+        for opposite in README_CANDIDATE_SCAN_BOUNDARY_OPPOSITE_COUNTEREXAMPLES
+    )
+    return has_all_canonical and not has_listed_opposite
+
+
+def has_risk_event_priority_contract(text: str) -> bool:
+    return has_uncontradicted_canonical_clause(
+        text,
+        RISK_EVENT_PRIORITY_CANONICAL_CLAUSE,
+        RISK_EVENT_PRIORITY_OPPOSITE_COUNTEREXAMPLES,
+    )
+
+
+def has_approved_restricted_contact_contract(text: str) -> bool:
+    return has_uncontradicted_canonical_clause(
+        text,
+        APPROVED_RESTRICTED_CONTACT_CANONICAL_CLAUSE,
+        APPROVED_RESTRICTED_CONTACT_OPPOSITE_COUNTEREXAMPLES,
+    )
+
+
+def has_alternate_first_touch_no_reply_contract(text: str) -> bool:
+    return has_uncontradicted_canonical_clause(
+        text,
+        ALTERNATE_FIRST_TOUCH_NO_REPLY_CANONICAL_CLAUSE,
+        ALTERNATE_FIRST_TOUCH_NO_REPLY_OPPOSITE_COUNTEREXAMPLES,
+    )
+
+
+def has_workbook_reference_handoff_status_contract(text: str) -> bool:
+    handoff_lines = [
+        normalize_contract_text(line)
+        for line in text.splitlines()
+        if normalize_contract_text(line).startswith("handoff_status:")
+    ]
+    return handoff_lines == [
+        normalize_contract_text(WORKBOOK_REFERENCE_HANDOFF_STATUS_CANONICAL_CLAUSE)
+    ]
+
+
 def contract_matcher_self_check() -> list[str]:
     failures = []
     if not has_full_dd_dual_gate(FULL_DD_CANONICAL_CLAUSE):
@@ -516,6 +678,36 @@ def contract_matcher_self_check() -> list[str]:
             FINAL_RECOMMENDATION_SCOPE_CANONICAL_CLAUSE,
             FINAL_RECOMMENDATION_SCOPE_OPPOSITE_COUNTEREXAMPLES,
         ),
+        (
+            "readme-candidate-scan-boundary",
+            has_readme_candidate_scan_boundary_contract,
+            README_CANDIDATE_SCAN_BOUNDARY_CANONICAL_TEXT,
+            README_CANDIDATE_SCAN_BOUNDARY_OPPOSITE_COUNTEREXAMPLES,
+        ),
+        (
+            "risk-event-priority",
+            has_risk_event_priority_contract,
+            RISK_EVENT_PRIORITY_CANONICAL_CLAUSE,
+            RISK_EVENT_PRIORITY_OPPOSITE_COUNTEREXAMPLES,
+        ),
+        (
+            "approved-restricted-contact",
+            has_approved_restricted_contact_contract,
+            APPROVED_RESTRICTED_CONTACT_CANONICAL_CLAUSE,
+            APPROVED_RESTRICTED_CONTACT_OPPOSITE_COUNTEREXAMPLES,
+        ),
+        (
+            "alternate-first-touch-no-reply",
+            has_alternate_first_touch_no_reply_contract,
+            ALTERNATE_FIRST_TOUCH_NO_REPLY_CANONICAL_CLAUSE,
+            ALTERNATE_FIRST_TOUCH_NO_REPLY_OPPOSITE_COUNTEREXAMPLES,
+        ),
+        (
+            "workbook-reference-handoff-status",
+            has_workbook_reference_handoff_status_contract,
+            WORKBOOK_REFERENCE_HANDOFF_STATUS_CANONICAL_CLAUSE,
+            WORKBOOK_REFERENCE_HANDOFF_STATUS_OPPOSITE_COUNTEREXAMPLES,
+        ),
     ]
     for name, matcher, canonical, opposites in new_contracts:
         if not matcher(canonical):
@@ -542,6 +734,7 @@ def main() -> int:
     skill_text = load_skill()
     plugin_interface_text = load_plugin_interface()
     design_text = load_design()
+    readme_text = load_readme()
     diagnostics: list[str] = []
 
     for contract, terms in REQUIRED_RESEARCH_TERMS.items():
@@ -666,6 +859,46 @@ def main() -> int:
             "design.final_recommendation_scope: missing canonical full-DD-only "
             "final-recommendation and limited ordinary-candidate outreach-task clause, "
             "or a listed opposite clause is present"
+        )
+
+    if not has_readme_candidate_scan_boundary_contract(readme_text):
+        diagnostics.append(
+            "readme.candidate_scan_boundary: plugin description, starter prompt, and "
+            "workflow must all require candidate-scan output and stop; final "
+            "recommendations require both potential-customer classification and an "
+            "explicit full-DD start, or a listed opposite clause is present"
+        )
+
+    if not has_risk_event_priority_contract(
+        references["evidence"] + "\n" + references["opportunity"]
+    ):
+        diagnostics.append(
+            "risk.event_priority: missing canonical risk-gate-over-event stop, "
+            "record-only pending state, post-approval immediate preparation, and "
+            "no-anchor-reset clause, or a listed opposite clause is present"
+        )
+
+    if not has_approved_restricted_contact_contract(references["evidence"]):
+        diagnostics.append(
+            "contact.approved_restricted_exception: missing canonical item-specific "
+            "approval gate, approved-restricted-exception candidate/material route, "
+            "and unchanged evidence/permission labels, or a listed opposite clause "
+            "is present"
+        )
+
+    if not has_alternate_first_touch_no_reply_contract(references["opportunity"]):
+        diagnostics.append(
+            "opportunity.alternate_first_touch_no_reply: missing canonical post-send "
+            "no-reply pause with three salesperson choices and prohibition on "
+            "automatic post-three-email or 10-day progression, or a listed opposite "
+            "clause is present"
+        )
+
+    if not has_workbook_reference_handoff_status_contract(references["workbook"]):
+        diagnostics.append(
+            "workbook.reference_handoff_status: controlled reference must use exactly "
+            "未触发, 待邮件助手, 已移交, 业务员已决定 in that order and must not "
+            "include 触达已暂停"
         )
 
     workbook_text = references["workbook"]

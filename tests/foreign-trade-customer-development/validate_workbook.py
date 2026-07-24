@@ -47,7 +47,7 @@ EVIDENCE_STATES = [
 USAGE_PERMISSION_STATES = ["正常使用", "限制使用", "隔离待核实"]
 RISK_STATES = ["未触发", "待核验", "暂停待业务员审核", "业务员批准继续", "已关闭"]
 CONTENT_STATES = ["草稿", "业务员批准", "计划触达", "实际发送", "实际回复"]
-HANDOFF_STATES = ["未触发", "触达已暂停", "待邮件助手", "已移交", "业务员已决定"]
+HANDOFF_STATES = ["未触发", "待邮件助手", "已移交", "业务员已决定"]
 
 CONTROLLED_VALIDATIONS = {
     ("客户总览", "screening_status"): ("G3:G5000", SCREENING_STATES),

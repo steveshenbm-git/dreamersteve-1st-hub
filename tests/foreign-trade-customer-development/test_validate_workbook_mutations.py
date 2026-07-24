@@ -19,6 +19,12 @@ WORKBOOK_PATH = (
     / "prospect-development-workbook.xlsx"
 )
 VALIDATOR_PATH = Path(__file__).with_name("validate_workbook.py")
+HANDOFF_TARGETS = (
+    ("客户总览", "Q3:Q5000"),
+    ("移交记录", "J3:J5000"),
+)
+EXPECTED_HANDOFF_FORMULA = '"未触发,待邮件助手,已移交,业务员已决定"'
+OBSOLETE_HANDOFF_FORMULA = '"未触发,触达已暂停,待邮件助手,已移交,业务员已决定"'
 
 
 def file_sha256(path: Path) -> str:
@@ -87,6 +93,9 @@ def create_green_control(destination: Path) -> None:
         validation.showErrorMessage = True
         validation.errorStyle = "stop"
         validation.allowBlank = True
+    for sheet_name, expected_range in HANDOFF_TARGETS:
+        validation = validation_by_range(workbook[sheet_name], expected_range)
+        validation.formula1 = EXPECTED_HANDOFF_FORMULA
     workbook.save(destination)
 
 
@@ -148,10 +157,27 @@ def main() -> int:
             "客户总览.screening_status: expected allowBlank=True",
         )
 
+        for index, (sheet_name, expected_range) in enumerate(HANDOFF_TARGETS, start=1):
+            handoff_green_control_path = temp_root / f"handoff-green-control-{index}.xlsx"
+            copyfile(green_control_path, handoff_green_control_path)
+            assert_accepted(
+                run_validator(handoff_green_control_path),
+                f"{sheet_name}.handoff_status mutation baseline",
+            )
+            obsolete_handoff_state_path = temp_root / f"obsolete-handoff-state-{index}.xlsx"
+            workbook = load_workbook(handoff_green_control_path, data_only=False)
+            validation = validation_by_range(workbook[sheet_name], expected_range)
+            validation.formula1 = OBSOLETE_HANDOFF_FORMULA
+            workbook.save(obsolete_handoff_state_path)
+            assert_rejected(
+                run_validator(obsolete_handoff_state_path),
+                f"{sheet_name}.handoff_status",
+            )
+
     if file_sha256(WORKBOOK_PATH) != source_hash:
         raise AssertionError("source workbook changed during mutation tests")
 
-    print("PASS: GREEN control validates and all three isolated mutations are rejected")
+    print("PASS: GREEN control validates and all five isolated mutations are rejected")
     return 0
 
 
