@@ -13,11 +13,16 @@ This file defines execution traceability, not formula semantics.
 Accept production only when planner supplies one current Formula Decision containing:
 
 - authority and visual-unit intent;
+- an explicit `Planner Handoff Verdict: PROCEED` supported by semantic compatibility evidence;
 - judgments for `T/S/R/O/A/I/N`;
 - one exact image, text, layout, or UI owner for each decision;
 - production direction, feasibility, protected content, risks, preconditions, and visible pass/fail checks.
 
-Do not fill missing strategic decisions inside imagegen. Return ownerless, stale, contradictory, or abstract decisions to Workflow Director.
+Do not fill missing strategic decisions inside imagegen. Return `RETURN`, ownerless, stale, contradictory, unsupported, or abstract decisions to Workflow Director.
+
+## Observable Preflight
+
+Immediately before a semantic generation or meaning-changing edit tool call, emit `Imagegen Preflight` with Formula Decision source/identifier, `READY/BLOCKED`, production method, and primary veto. Use `READY` only after planner `PROCEED` and an executable inherited contract. `BLOCKED` makes no tool call; a backfilled/reconstructed preflight is invalid and its result is `analysis only`.
 
 ## Production Trace
 
@@ -25,7 +30,7 @@ Maintain one compact internal trace. Do not expose it as a second brief.
 
 ```text
 Formula Production Trace
-- Formula Decision source/version:
+- Formula Decision source / identifier:
 - T: accepted task and excluded information
 - S: planner decision / image evidence / external owner / prompt clause / result observation
 - R: planner decision / image evidence / external owner / prompt clause / result observation
@@ -85,3 +90,16 @@ After rendering, record observed evidence rather than prompt intent:
 - confirm `A` and `I` did not replace missing `S/R/O` mechanisms;
 - apply `N` as a misread and veto check;
 - classify any changed decision or owner as formula drift and return it to planner.
+
+Keep visible-quality, Intent-Brief-Result, and candidate-delivery decisions distinct internally. Consolidate only the user-facing report:
+
+```text
+Imagegen Verdict
+- Review object: standalone asset / image base / desktop composite / mobile composite
+- Result vs intent: pass / fail
+- Blocking observation:
+- Delivery status:
+- Next route:
+```
+
+Use only: `rejected internally`, `analysis only`, `discovery candidate`, `image-base candidate`, `candidate for review`, `accepted draft`, or `final export`. If HTML/layout owns core category, differentiation, or interaction meaning, a bitmap is only an `image-base candidate`; full Hero acceptance requires assembled desktop and mobile review objects.

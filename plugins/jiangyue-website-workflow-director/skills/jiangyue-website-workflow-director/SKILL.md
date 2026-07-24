@@ -106,18 +106,11 @@ Strategic Layer Lock
 - Macro planning control belongs to the director. If the strategic layer is not locked, do not route to production or curation skills.
 - Before handing any task to imagegen, run the **Imagegen Handoff Planner Gate** below. This is a hard rule.
 - The director may collect raw `T` inputs: visual unit, placement, task, first-attention candidate, and excluded information. It must not decide `S` through `N`, compile the production prompt, or assign image/text/layout responsibility; those decisions belong to planner.
-- If the user questions planning or execution logic, stop production advice and enter Strategic Layer Lock or `$jiangyue-skill-director` depending on whether the failure is domain strategy or skill-system design.
-- A user change request after image output is not default imagegen. Run post-image triage first.
-- If a simple local edit is returned more than twice, stop small edits and run Intent Check.
-- If the same visible defect remains after two rounds, stop imagegen and run failure reset.
-- Failure reset must run in order: analyze the problem, find the failed layer/root cause, propose the next method or route, then output the next-round plan with pass/fail checks. The root-cause step may climb above the active skill to macro planning, core intent, intent lock, or Strategic Layer Lock.
-- If the user says a requested visible change did not happen, treat it as an observable-change failure, not a preference note.
-- If the user challenges the production method, such as asking whether scripts, geometric blocks, or Bezier curves were used, stop production and require method attribution before another draft.
-- If the user named or marked a defect, copy it into the active defect register and treat it as pass/fail.
-- Do not produce final or 4K output from a disputed draft unless the user has accepted it or requests deterministic export from an accepted version.
-- Do not treat a visual self-check pass as final delivery. For image outputs, require output status, visual self-check evidence, intent-brief-result status, candidate delivery status, and user acceptance layer before calling anything complete.
-- Do not let a rejected candidate become the next accepted baseline unless the user explicitly accepted that visual direction.
-- If repeated generation is happening without a distinct production hypothesis, changed method, changed visual model, changed source basis, or changed edit scope, stop production and require attempt-stop analysis.
+- Route planning/execution-logic challenges to Strategic Layer Lock or `$jiangyue-skill-director`; post-image changes require triage before imagegen.
+- After two failed local edits or repeated visible defects, register the defect and run root-cause failure reset before another draft. Missing visible change or challenged method also stops production and requires evidence/attribution.
+- Disputed or rejected drafts cannot become final/4K output or the next baseline without explicit acceptance.
+- Self-check alone is not delivery. Require output status, visible evidence, intent-brief-result, candidate value, and user acceptance layer.
+- Stop repeated generation without a distinct hypothesis, method, visual model, source basis, or edit scope.
 - If the user explicitly asks for `gpt-image-2`, `image 2`, ChatGPT Image API, or OpenAI API, keep that as a method constraint in the handoff; do not replace it with the current chat's native image generation capability.
 - Ask only one necessary question at a time. Prefer routing and progress over broad questionnaires.
 
@@ -158,12 +151,12 @@ Direct imagegen handoff is allowed only when at least one condition is true:
 
 - **Explicit bounded execution:** the user has specified an exact crop, compression, format conversion, export, or deterministic local edit that inherits an accepted visual baseline and cannot alter image meaning, role, claim boundary, buyer interpretation, formula decision, or composition concept.
 - **Accepted baseline revision:** the user has accepted the current direction and asks for a bounded change with clear must keep / must change / must avoid / pass-fail criteria; the accepted Formula Decision remains valid.
-- **Planner brief exists:** `$jiangyue-website-planner` has produced a current compact Formula Decision with authority source, `T/S/R/O/A/I/N` judgments, exact image/text/layout ownership, production direction, feasibility, and pass/fail criteria.
+- **Planner brief exists:** `$jiangyue-website-planner` has produced a current compact Formula Decision with authority source, `T/S/R/O/A/I/N` judgments, exact image/text/layout ownership, production direction, feasibility, pass/fail criteria, and an explicit `Planner Handoff Verdict: PROCEED`.
 
 Route to `$jiangyue-website-planner` before imagegen when the next output depends on any of these:
 
 - 画面怎么设计, composition strategy, subject/form choice, semi-concrete vs abstract expression, visual metaphor, or "what shape/form should it use"
-- a missing or stale Formula Decision, missing formula authority, undecided `T/S/R/O/A/I/N` field, or responsibility assigned only as "outside the image" without naming the exact text/layout/UI owner
+- a `RETURN`, missing or stale Formula Decision, missing formula authority, undecided `T/S/R/O/A/I/N` field, or responsibility assigned only as "outside the image" without naming the exact text/layout/UI owner
 - an unresolved production direction, feasibility result, protected content, failure risk, precondition, or visible pass/fail criterion
 - industrial / AI / life sense relationship, B2-3 color role, buyer readability, trust fit, page role, first-screen attention, CTA/text support, or claim boundary
 - a new image direction, brand-defining visual, homepage/hero/background concept, or any production brief that is more than a local edit
@@ -180,6 +173,10 @@ Imagegen Handoff Planner Gate
 ```
 
 Do not bypass this gate because the visual direction "feels clear." If the task asks how the image should be designed, planner must turn it into a brief before imagegen.
+
+### Execution Order Evidence
+
+For semantic new images and meaning-changing edits, enforce `Planner PROCEED -> Imagegen READY -> tool call -> internal result checks -> Imagegen Verdict`. A tool call before `READY` or a backfilled preflight makes the process `FAIL` and result `analysis only`. Workflow verifies order/status; it does not repeat specialist judgments.
 
 ## Local OpenAI API Image Requests
 
@@ -250,15 +247,10 @@ Workflow State
 
 Every specialist handoff must include:
 
-- user original words or source paths
-- current stage, original intent, active brief, and accepted baseline
-- formula authority, current Formula Decision, and exact image/text/layout owners when the task can change visual meaning
-- must keep / must remove / must change / must avoid
-- open defects and pass/fail criteria
-- rejected candidates or forbidden carry-over when relevant
-- required production success strategy and attempt stop rule when relevant
-- required output status and user acceptance layer
-- whether the next output is draft, final, archive, or analysis
+- source request/paths, current stage, intent, active brief, and accepted baseline
+- formula authority, current decision, and image/text/layout owners for meaning-changing work
+- keep/remove/change/avoid, defects, pass/fail criteria, and forbidden carry-over
+- production success/stop rules when needed, required output status, acceptance layer, and next output type
 
 Do not hand off vague instructions such as "make it better", "continue", or "optimize" without visible criteria.
 
@@ -266,6 +258,7 @@ Do not hand off vague instructions such as "make it better", "continue", or "opt
 
 Before saying an image task is complete, verify that the specialist output includes:
 
+- review object: `standalone asset`, `image base`, `desktop composite`, or `mobile composite`
 - output status: rejected internally, analysis only, discovery candidate, candidate for review, accepted draft, or final export
 - visual self-check evidence when a candidate is shown
 - intent-brief-result status for brief-based, high-impact, or repeated-failure work
@@ -274,6 +267,8 @@ Before saying an image task is complete, verify that the specialist output inclu
 - rejected-result analysis when the output failed but still provides learning value
 
 If any required item is missing, do not say complete. Return to imagegen, planner, or skill-director based on the missing layer.
+
+When HTML/layout owns core category, differentiation, or interaction responsibility, a raw bitmap is only an `image-base candidate`; full Home Hero status requires reviewed desktop and mobile composites. Consolidate user-facing status instead of repeating specialist tables.
 
 ## Specialist Boundaries
 

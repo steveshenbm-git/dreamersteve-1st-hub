@@ -17,30 +17,9 @@ Planner is a **design-led planner**, not a separate designer skill. The designer
 
 ## Authority Boundary
 
-Planner owns:
+Planner owns page/buyer/message strategy, H1/CTA/section direction, claim and fact boundaries, first-screen hierarchy, image role, design judgment, brand alignment, executable composition, the complete `T -> S -> R -> O -> A -> I -> N` decision, image/text/layout ownership, feasibility, and strategy review after feedback.
 
-- page objective, buyer intent, and buyer-message fit
-- section order, H1 direction, supporting copy direction, CTA path, and FAQ/AEO opportunities
-- first-screen attention hierarchy
-- image role and message ownership between image and HTML/page copy
-- Jiangyue design judgment: page-role intensity, trusted subject, visual hierarchy, proportion, rhythm, restraint, information density, material/space credibility, brand temperament, buyer readability, and low-quality-direction rejection
-- executable visual composition plan for imagegen: image type, visual layers, subject/support/background roles, placement, approximate proportion, shape/form language, direction, hierarchy, negative space, buyer-readable meaning, and forbidden forms
-- production-facing constraints inside the compact Formula Decision: visible carriers, ownership, protected content, prompt-ready direction, deterministic work, QA checks, and rejection triggers
-- brand-system visual alignment for visual strategy and Planner Briefs
-- the complete `T -> S -> R -> O -> A -> I -> N` visual-formula decision and the responsibility split across image, HTML/text, and layout
-- brief reasoning discipline: judge the user's requested direction against page goal, brand system, buyer readability, and production risk instead of automatically agreeing with it
-- brief feasibility analysis before handoff to imagegen
-- claim boundary and missing product-fact flags
-- post-image strategy review when user feedback questions credibility, brand direction, layout integration, or information hierarchy
-- strategy briefs for imagegen
-
-Planner does not own:
-
-- image generation, P图, crop, export, compression, or pixel-level retouching
-- final material rendering, pixel-level composition, or exact production method
-- a standalone designer role that replaces page strategy, SEO/AEO, claim boundary, or buyer-message decisions
-- formal knowledge-base entry
-- final approval; the user owns approval
+It does not own image production or pixel execution, a standalone designer handoff, formal knowledge entry, or final approval.
 
 ## Required Gates
 
@@ -57,7 +36,7 @@ Run these before a page plan, strategy review, or Planner Brief:
 9. **Formula decision:** Use [references/visual-formula-brief.md](references/visual-formula-brief.md). Complete the compact core in order; load only conditional modules whose observable trigger is present. Do not print empty or `not applicable` modules.
 10. **Composition readability:** Make `R` and `O` concrete enough that a person could roughly sketch the visible roles, relationship, reveal order, hierarchy, and useful copy space. Keep pixel-level method choices with imagegen.
 11. **Production handoff:** Compile the formula decision into prompt-ready direction, protected content, QA checks, and rejection triggers inside the same Planner Brief. Do not create a second peer script.
-12. **Feasibility and route:** State whether imagegen may proceed. Return to Workflow Director when intent, formula ownership, claim safety, or strategy remains unresolved.
+12. **Semantic compatibility and route:** Reuse `Feasibility` to test `T-S` compatibility, the fact/material basis of image-owned `S/R`, the strongest plausible `N` misread, dependent formula fields, and whether named HTML/layout owners support rather than rescue the image. End with exactly `PROCEED` or `RETURN`. `PROCEED` requires the complete Formula Decision; `RETURN` forbids a production brief, prompt, or imagegen handoff.
 
 ## Initial Planning
 
@@ -70,7 +49,7 @@ Use when a page, section, hero, product visual, or image role is not strategical
 5. Run Jiangyue design judgment: page-role intensity, trusted subject, brand temperament, design risk, and forbidden low-quality directions.
 6. Lock message, claim boundary, CTA path, and first-screen attention owner.
 7. Define image role: visual hammer, professional atmosphere, trust support, CTA support, product recognition, category recognition, or application context.
-8. Output a concise page strategy and Planner Brief. If imagegen is next, include one compact Formula Decision and only the conditional modules triggered by the task.
+8. Output a concise page strategy. Issue a Planner Brief only after the Formula Decision ends in `PROCEED`; otherwise issue the compact return verdict from [references/visual-formula-brief.md](references/visual-formula-brief.md).
 
 Ask one necessary question only when the page goal, buyer, claim boundary, or image role cannot be safely inferred.
 
@@ -95,9 +74,7 @@ Do not approve a new image round when page objective, claim boundary, image role
 
 ## Planner Brief
 
-Produce one compact strategy-and-composition handoff using [references/visual-formula-brief.md](references/visual-formula-brief.md). The core formula decision is always present for semantic visual work; conditional modules appear only when triggered. Do not repeat the same decision under context, design judgment, composition contract, asset production, and feasibility headings.
-
-Planner Brief is the only main handoff to imagegen. Imagegen owns production method, material rendering, pixel-level composition, exact visual quality, and file execution. If formal project files materially affected the decision, list only those files.
+Use [references/visual-formula-brief.md](references/visual-formula-brief.md) as the single imagegen handoff. On `PROCEED`, keep the full core and triggered modules; on `RETURN`, stop after the blocker record. Do not repeat decisions. List only materially used formal files; imagegen owns production and pixel execution.
 
 For complete page plans, add the page-specific module from [references/page-brief-template.md](references/page-brief-template.md). For formula behavior and later real-task validation, read [references/visual-formula-pressure-scenarios.md](references/visual-formula-pressure-scenarios.md).
 

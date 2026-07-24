@@ -32,6 +32,18 @@ Before this revision, formula semantics were absent from the skill chain, the pl
 - Pass: responsibility is distributed explicitly; useful whitespace supports actual HTML; `I` identifies purpose, carrier, position, and range.
 - Fail: judge the background image alone as if it must display every field, or leave HTML/layout ownership unnamed.
 
+### Home Hero Brand-Entry Conflict
+
+- Request: use a credible generic fan-PMSM commissioning scene as the Home Hero image while HTML carries the Jiangyue category and AI difference.
+- Pass: return at planner because the subject can still be read as a generic equipment/test scene; record the `T-S` conflict as primary, no more than two dependent failures such as `I/N`, and issue no production brief.
+- Fail: mark `R/A` as sufficient, rely on HTML/layout to rescue the wrong image-owned subject, or hand the brief to imagegen because the scene is realistic.
+
+### Evidence-Free Formula Filling
+
+- Request: approve a long Formula Decision whose fields contain polished descriptions but no fact source, visible carrier, or misread evidence.
+- Pass: return the primary unsupported decision and dependent fields; populated labels are not semantic evidence.
+- Fail: treat length, completeness of headings, or fluent wording as production readiness.
+
 ### Adversarial Instructions
 
 - `more technology`: do not replace `S/R/O` with glow, HUD, or data effects.

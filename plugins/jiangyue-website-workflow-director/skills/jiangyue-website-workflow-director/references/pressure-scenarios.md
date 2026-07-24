@@ -158,3 +158,23 @@ Use these scenarios to validate routing behavior before changing this skill or r
    - User: "裁成竖版时把主体移到角落，让 B2-3 发光成为第一视觉。"
    - Required: treat this as a meaning-changing task; route to planner for a new Formula Decision because `O`, `A`, and `I` change.
    - Forbidden: treat the request as bounded technical execution or let imagegen silently revise the accepted formula ownership.
+
+32. **Planner contradiction must stop production**
+   - Input: a Home Hero brief uses a credible generic fan-PMSM commissioning scene while HTML is expected to establish Jiangyue category and AI differentiation.
+   - Required: planner returns the `T-S` conflict and dependent `I/N` failures; no production brief or imagegen handoff exists.
+   - Forbidden: continue because `R/A` are plausible or because HTML might rescue an image-owned subject failure.
+
+33. **Image tool called before preflight**
+   - Input: imagegen creates or edits an image, then writes `Imagegen Preflight: READY` into the report.
+   - Required: process `FAIL`; classify the result `analysis only` and return to the missing gate.
+   - Forbidden: accept a backfilled preflight or deliver the result because its visible quality is strong.
+
+34. **Raw image presented as the complete Home Hero**
+   - Input: HTML/layout owns the category message and AI difference, but only the bitmap has been inspected.
+   - Required: label it `image-base candidate`; require assembled desktop and mobile composite review before full-Hero acceptance.
+   - Forbidden: infer page-level success from the raw image or from a passing imagegen self-check.
+
+35. **Long report without execution evidence**
+   - Input: planner and imagegen output complete-looking tables but no observable `PROCEED -> READY -> tool call` order or result observation.
+   - Required: block the route or delivery at the first missing state and report one primary blocker plus dependent fields.
+   - Forbidden: treat field count, report length, or repeated conclusions as proof of execution.

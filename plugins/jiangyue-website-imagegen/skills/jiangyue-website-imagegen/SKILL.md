@@ -17,19 +17,9 @@ Use professional industrial judgment for European B2B buyers. Avoid unsupported 
 
 ## Execution Boundary
 
-Imagegen owns:
+Imagegen owns production/editing, P图, crop/export/package work, the execution brief and hard lists, visible QA at full/review size, candidate status, and reproduction notes.
 
-- new image production after strategy or local edit intent is clear
-- P图, element removal, crop, cleanup, background extension, upscaling/export, and file packaging
-- production brief, hard keep/remove/change/avoid lists, production success strategy, visual QA, candidate status, and reproduction notes
-- visible quality checks at full size and thumbnail/review size
-
-Imagegen does not own:
-
-- page objective, buyer intent, SEO/AEO, H1, CTA, section order, or claim boundary
-- deciding whether user feedback is a strategy problem after repeated failure
-- formal knowledge-base entry
-- final approval
+It does not own page objective, buyer intent, SEO/AEO, H1/CTA/section order, claim boundary, repeated-failure strategy attribution, formal knowledge entry, or final approval.
 
 ## Intake
 
@@ -50,24 +40,21 @@ Before a brief-based image, confirm:
 
 - real intent, page/use location, image role, and attention owner are clear
 - the brief cites the formal brand outline section 4 as formula authority
+- planner has issued an explicit `Planner Handoff Verdict: PROCEED`; `RETURN`, silence, or a reconstructed verdict blocks production
 - the current Formula Decision makes a judgment for `T/S/R/O/A/I/N` and names the exact image, text, layout, or UI owner for every field
 - image-owned decisions have prompt-ready visible carriers; non-image-owned decisions name the concrete external mechanism and the space/structure imagegen must preserve
 - production direction, feasibility, protected content, preconditions, major failure risks, and visible pass/fail criteria are clear
 - forbidden claims and product-fact risks are explicit
 - output ratio, stage, and pass/fail criteria are clear
 
-If not ready, return this:
+If any item fails, return one blocker and at most two dependent fields. Do not reconstruct strategy or output a production prompt:
 
 ```text
 Return to Workflow Director / 简报退回
 
-- Missing decision:
-- Missing or stale Formula Decision:
-- Missing formula authority or field owner:
-- Missing production direction / feasibility:
-- Too abstract for production:
-- Missing visible carrier or relationship:
-- Claim / product-fact risk:
+- Primary blocker:
+- Dependent formula fields: maximum two
+- Evidence:
 - What imagegen can proceed with after clarification:
 ```
 
@@ -75,23 +62,12 @@ Return to Workflow Director / 简报退回
 
 Use this state chain for brief-based, high-impact, cost-bearing, or repeated-failure image work:
 
-```text
-Intent Lock
--> Planner Brief
--> Formula Decision
--> Production Success Strategy
--> Attempt Stop Rule
--> Generate Candidate
--> Visual Self-Check
--> Intent-Brief-Result Check
--> Outcome Classification
--> Candidate Delivery Gate
--> User Acceptance Layer
--> Final Export / Archive
-```
+`Intent Lock -> Planner Brief -> Formula Decision -> Production Success Strategy -> Attempt Stop Rule -> Imagegen Preflight -> Generate Candidate -> Visual Self-Check -> Intent-Brief-Result Check -> Outcome Classification -> Candidate Delivery Gate -> User Acceptance Layer -> Final Export / Archive`
 
 Hard rules:
 
+- For semantic new images and meaning-changing edits, emit the observable `Imagegen Preflight` from [references/visual-formula-execution.md](references/visual-formula-execution.md) before any image generation or edit tool call. `READY` is authorization to execute; `BLOCKED` returns without a tool call.
+- A preflight written or reconstructed after the tool call is invalid. Treat its result as `analysis only`; do not deliver it as a candidate.
 - A generated result may inform a future brief, but it cannot silently become the brief.
 - A brief may translate intent, but it cannot replace the original intent.
 - A visual self-check pass does not make a result deliverable; it only allows candidate delivery review.
@@ -136,15 +112,15 @@ For simple local edits, deterministic cards, format edits, crops, exports, and l
 
 For most Jiangyue website visuals:
 
-1. Read [references/visual-formula-execution.md](references/visual-formula-execution.md), inherit the planner's Formula Decision, and compile one production brief with four hard lists: must keep, must remove, must materially change, must avoid.
+1. Read [references/visual-formula-execution.md](references/visual-formula-execution.md), verify planner `PROCEED`, and compile one production brief with four hard lists: must keep, must remove, must materially change, must avoid.
 2. Read [references/production-success-strategy-gate.md](references/production-success-strategy-gate.md) when the asset is brief-based, high-impact, cost-bearing, or repeated-failure; state how the method and visual model can succeed before production.
 3. Read [references/attempt-stop-and-method-escalation-gate.md](references/attempt-stop-and-method-escalation-gate.md) when multiple attempts, API calls, or repeated failures are possible; do not repeat the same failed hypothesis.
 4. Choose method based on visible result quality, not convenience.
 5. Compile the seven-stage decision into a coherent natural prompt, negative constraints, deterministic post-processing instructions, and result checks without copying labels mechanically or changing planner ownership.
-6. Produce one strong draft first; create variants only when they differ materially by production hypothesis, visual model, structure, source basis, or method.
+6. Emit `Imagegen Preflight: READY` with the selected method immediately before the tool call, then produce one strong draft. Stop without a tool call on `BLOCKED`; create variants only for materially different hypotheses, models, structures, sources, or methods.
 7. Inspect full size, thumbnail/review size, prior draft, and references when available.
-8. Run [references/visual-self-check-gate.md](references/visual-self-check-gate.md), [references/intent-brief-result-coordination-gate.md](references/intent-brief-result-coordination-gate.md), and [references/candidate-delivery-gate.md](references/candidate-delivery-gate.md) before presenting any candidate for review.
-9. Revise, reject, archive, analyze, or return to Workflow Director based on visible evidence and output status.
+8. Run [references/visual-self-check-gate.md](references/visual-self-check-gate.md), [references/intent-brief-result-coordination-gate.md](references/intent-brief-result-coordination-gate.md), and [references/candidate-delivery-gate.md](references/candidate-delivery-gate.md) as distinct internal decisions before presenting a candidate.
+9. Emit the single compact `Imagegen Verdict` from [references/visual-formula-execution.md](references/visual-formula-execution.md); revise, reject, archive, analyze, or return based on observed evidence.
 
 ### High-Impact Path
 
@@ -166,15 +142,11 @@ For homepage heroes, product heroes, Contact heroes, brand-defining visuals, rec
 
 ## Failure And Defect Rules
 
-- Copy user-named defects into a defect register.
-- A revised image may not be delivered if a registered defect remains visible at full size or thumbnail size.
-- If the same registered defect remains twice, stop the method and return to Workflow Director.
-- If the user says a requested change did not visibly happen, read [references/failure-reset-hard-gates.md](references/failure-reset-hard-gates.md) and do not deliver another draft without observable change evidence.
-- If the user says self-check failed, still wrong, not qualified, ugly, missed a reference, ignored an attachment, or marks the same defect, read [references/failure-reset-hard-gates.md](references/failure-reset-hard-gates.md) before further production.
-- Do not deliver a vetoed draft as a concept option.
-- Do not optimize a rejected candidate as the next baseline unless [references/brief-anchor-and-rework-gate.md](references/brief-anchor-and-rework-gate.md) records explicit user acceptance of that direction.
-- When a candidate fails, use [references/rejected-result-analysis-gate.md](references/rejected-result-analysis-gate.md) to turn it into analysis or an anti-reference before another production attempt.
-- If self-check passes but the result is still weak, generic, off-intent, or merely the least-bad batch option, block delivery with [references/candidate-delivery-gate.md](references/candidate-delivery-gate.md).
+- Register user-named defects; do not deliver while one remains visible at full or review size.
+- After the same defect twice, or any claimed change without visible evidence, stop the method and use [references/failure-reset-hard-gates.md](references/failure-reset-hard-gates.md).
+- Do not deliver vetoed drafts or use rejected work as baseline without explicit direction acceptance recorded through [references/brief-anchor-and-rework-gate.md](references/brief-anchor-and-rework-gate.md).
+- Convert failures to analysis/anti-references through [references/rejected-result-analysis-gate.md](references/rejected-result-analysis-gate.md).
+- Block weak, generic, off-intent, or least-bad results through [references/candidate-delivery-gate.md](references/candidate-delivery-gate.md), even after self-check passes.
 
 ## Production Method Rules
 
@@ -230,31 +202,10 @@ outputs/jiangyue-website-images/{content-type}/{conversation-root-cn}/{task-fold
 
 Keep all files created in one Codex conversation under one Chinese conversation root folder named from the conversation title or a concise Chinese summary of the user's task. Create subfolders inside that root for each task, draft, or final export.
 
-Examples:
-
-```text
-outputs/jiangyue-website-images/home/首页英雄图API测试/01-方向草稿/
-outputs/jiangyue-website-images/home/首页英雄图API测试/02-局部修改/
-outputs/jiangyue-website-images/home/首页英雄图API测试/03-final/
-```
+Example: `outputs/jiangyue-website-images/home/首页英雄图API测试/01-方向草稿/`
 
 ## Delivery Report
 
-Report only verified facts:
+For semantic work, report one `Imagegen Verdict`; keep the full Formula Production Trace and the three internal result checks internal unless the user requests them. Include verified file path, dimensions, method, and material limitations only when relevant. Correct dimensions, a saved path, or a successful script run are not visual verification.
 
-- output status: rejected internally / analysis only / discovery candidate / candidate for review / accepted draft / final export
-- final file path
-- task folder path
-- reproduction archive path, or `not created yet`
-- dimensions and format
-- production method
-- production success strategy and attempt stop rule used, when applicable
-- visual self-check evidence and candidate delivery status, when applicable
-- intent-brief-result status, when applicable
-- user acceptance layer, when applicable
-- formal `brand-system` files consulted, if any
-- what was visually checked
-- what could not be verified
-- remaining limitation, if any
-
-Correct dimensions, a saved path, or a successful script run are not visual verification. Inspect the rendered output before claiming a visual pass.
+Classify the reviewed object precisely: `standalone asset`, `image base`, `desktop composite`, or `mobile composite`. When HTML/layout owns core category, differentiation, or interaction responsibility, a bitmap can be only an `image-base candidate`; it cannot pass as the complete Hero.

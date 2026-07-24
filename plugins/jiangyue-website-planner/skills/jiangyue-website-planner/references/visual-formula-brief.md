@@ -28,12 +28,28 @@ Visual Formula Decision / 视觉公式判断
 - N | Misread and veto: likely misread, forbidden content, direct rejection trigger
 - Responsibility: image / HTML or text / layout; name the exact owner for every non-image field
 - Production direction: one prompt-ready visual statement, protected content, deterministic text/layout work
-- Feasibility: proceed / return; main risk; imagegen freedom; pass/fail evidence
+- Feasibility and route: semantic compatibility evidence; main risk; imagegen freedom; pass/fail evidence; final decision `PROCEED` or `RETURN`
 ```
 
 Every field needs a decision. A field may be carried outside the asset, but `not applicable`, an empty value, or an unnamed "page will handle it" is not a decision. Name the actual text, layout position, UI element, or surrounding visual unit that owns it.
 
 The final model prompt may use natural language and combine sentences. The production record must still map its constraints back to all seven decisions without dropping, replacing, or reinterpreting them.
+
+## Semantic Compatibility Preflight
+
+Before handoff, decide whether `T-S` serve the same page job, image-owned `S/R` have a public identifiable fact/material basis, the strongest plausible `N` misread remains likely, which fields depend on the primary conflict, and named HTML/text/layout owners support rather than rescue a failed image-owned `S` or triggered `N`.
+
+- `PROCEED`: keep the complete Formula Decision and compile the production handoff.
+- `RETURN`: issue no production brief, prompt, or imagegen instruction; record only the primary blocker, no more than two dependent fields, evidence, and next owner.
+
+```text
+Planner Handoff Verdict
+- Decision: PROCEED / RETURN
+- Primary blocker:
+- Dependent fields: maximum two
+- Evidence:
+- Next owner:
+```
 
 ## Conditional Modules
 
@@ -52,4 +68,4 @@ If a bounded operation changes attention, subject meaning, relationship, reveal 
 
 ## Handoff Failure
 
-Return to Workflow Director when intent or task ownership is unresolved. Return from imagegen to planner when the formula decision is missing, contradictory, unsupported by facts, too abstract to sketch, or assigns a field to text/layout without naming the carrier.
+Return to Workflow Director when intent or task ownership is unresolved. Imagegen returns a handoff that lacks `PROCEED`, is contradictory, unsupported, too abstract to sketch, or assigns a field to text/layout without naming the carrier.
