@@ -2,6 +2,17 @@
 
 Run this before pushing the package to a public repository.
 
+## Public-history hard gate
+
+- A final-tree or final-diff scan is necessary but not sufficient: deleted content may remain in Git history.
+- The current development branch is known to contain personal absolute local paths in early commit history. Do not push it to a public remote until that history has been cleaned and rechecked.
+- Before any public push, obtain separate explicit user approval to create a clean squash/rebase release history. Do not rewrite the current development branch history as part of this checklist update.
+- Inspect the contents of every commit intended for publication, then run sensitive-data and personal-path scans against both those commit contents and the final tree.
+- Treat any uncleaned commit, unreviewed commit, or unresolved scan match as a publication blocker.
+- Approval of the written specification or completion of this checklist does not authorize installation, push, pull request creation, publication, merge, squash, rebase, or any other history rewrite.
+
+## Package checks
+
 - No personal absolute paths are present.
 - Personal macOS user-path scans use the actual username shape `/Users/[[:alnum:]_.-]+/`, so the scan catches real absolute paths without matching its own regular-expression text.
 - No private customer names, private project names, or private quotations are present.
