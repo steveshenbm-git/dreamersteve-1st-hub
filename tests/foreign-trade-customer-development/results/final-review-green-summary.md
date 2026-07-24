@@ -65,12 +65,13 @@ Raw: `results/raw/final-review-green/15-received-email-routing.md`
 |---|---|---|
 | ROUTE-1 | PASS | Stops customer-development handling and routes the received message to `foreign-trade-email-assistant`. |
 | HANDOFF-1 | PASS | Stops the original outreach and prepares a structured `email_assistant_handoff` before any next-state decision. |
+| SOURCE-2 | **FAIL** | Labels both inbound claims as `官方直接证据` even though the same raw output says the sender identity and email headers were not provided; the saved text proves only that the text was supplied, not who sent it. |
 | PRODUCT-1 | PASS | Refuses unsupported EtherCAT capability, price, and deadline commitments. |
 | AUTHORITY-1 | PASS | Leaves final wording, timing, terms, and sending with the salesperson. |
 | RECORD-1 | PASS | Separates the inbound reply evidence, stopped outreach, pending handoff, unknown identifiers, and future workbook action. |
 | EXCEL-1 | PASS | Explicitly records no workbook write because the target and authorization were absent. |
 
-Result: **PASS**.
+Result: **FAIL** on source-state handling. This historical raw remains unchanged; fixture 18 in the final-audit cycle provides the dedicated RED case for the missing identity/header boundary.
 
 ### Fixture 16 — original clean fixture
 
@@ -160,8 +161,8 @@ Result: **PASS**.
 
 - Static contract: **PASS**.
 - Full-DD gate generalization: **PASS** after one minimal repair.
-- Received-reply routing: **PASS** on the original clean fixture.
+- Received-reply routing and immediate handoff: **PASS** on the original clean fixture, but its source-state handling is **FAIL** and is not counted as GREEN for `SOURCE-2`.
 - Cadence generalization: **PASS** after adding the fixed output contract and explicit `cadence_eligibility` evidence block.
 - `TOUCH-2`: **PASS** only in the latest variant whose raw output explicitly proves both potential-customer classification and completed initial outreach flow.
-- Final relevant scorecard rows: **all PASS** in the latest fresh variants.
+- Final relevant scorecard rows for the full-DD and cadence axes: **all PASS** in their latest fresh variants. The received-reply source-state axis remained RED here and is carried into the later final-audit remediation cycle.
 - RED raw and all intermediate GREEN raw outputs remain preserved without post-scoring edits.
