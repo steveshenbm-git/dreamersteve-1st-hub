@@ -7,7 +7,7 @@ Run this before pushing the package to a public repository.
 - No private customer names, private project names, or private quotations are present.
 - No credentials, API keys, cookies, tokens, or account IDs are present.
 - Automated sensitive-data scans target credential-shaped assignments or headers rather than standalone prohibition words such as `Cookie`; check cookie or authorization headers with values, token or password assignments with values, and private-key blocks.
-- Before release, run `git diff -U0 origin/main..HEAD | rg '^\+.*(/Users/[[:alnum:]_.-]+/|Cookie[=:][^[:space:]]|access_token[=:][^[:space:]]|refresh_token[=:][^[:space:]]|BEGIN[[:space:]]+(RSA[[:space:]]+|EC[[:space:]]+|OPENSSH[[:space:]]+)?PRIVATE[[:space:]]+KEY)'`.
+- Before release, run `git diff -U0 origin/main..HEAD | rg --pcre2 '^\+.*(/[U]sers/[[:alnum:]_.-]+/|C[o]okie[[:space:]]*[:=][[:space:]]*[^[:space:]]+|(?:[a]ccess_token|[r]efresh_token|[a]pi[_-]key|[p]assword)[[:space:]]*[:=][[:space:]]*[^[:space:]]+|A[u]thorization[[:space:]]*:[[:space:]]*(?:Bearer|Basic)[[:space:]]+[^[:space:]]+|B[E]GIN[[:space:]]+(?:(?:RSA|EC|DSA|OPENSSH|ENCRYPTED)[[:space:]]+)?PRIVATE[[:space:]]+KEY)'`.
 - Every sensitive-data scan match is manually reviewed before release; a pattern match is a lead, not proof that a secret is present.
 - No unverified certifications, compliance marks, test results, patents, export markets, or customer cases are present.
 - No licensed customs, trade, credit, social, or commercial-database export is included.
