@@ -259,7 +259,7 @@ Do not add an installation, cache, push, or publication action.
 Run:
 
 ```bash
-python3 /Users/lirongjing/.codex/skills/.system/skill-creator/scripts/init_skill.py foreign-trade-customer-development --path plugins/foreign-trade-customer-development/skills --resources references,assets --interface 'display_name=外贸客户开发' --interface 'short_description=研究潜在客户并准备证据化开发方案' --interface 'default_prompt=使用 $foreign-trade-customer-development 调查这家潜在客户，整理证据，并准备一份由业务员审核的开发建议。'
+python3 /Users/lirongjing/.codex/skills/.system/skill-creator/scripts/init_skill.py foreign-trade-customer-development --path plugins/foreign-trade-customer-development/skills --resources references,assets --interface 'display_name=外贸客户开发' --interface 'short_description=研究潜在客户、核验企业证据并准备业务员审核的开发建议' --interface 'default_prompt=使用 $foreign-trade-customer-development 调查这家潜在客户，整理证据，并准备一份由业务员审核的开发建议。'
 ```
 
 Expected: a new skill directory with `SKILL.md`, `agents/openai.yaml`, `references/`, and `assets/`.
@@ -539,7 +539,7 @@ Return Chinese analysis, one final recommendation or an explicit evidence-insuff
 Run:
 
 ```bash
-python3 /Users/lirongjing/.codex/skills/.system/skill-creator/scripts/generate_openai_yaml.py plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development --interface 'display_name=外贸客户开发' --interface 'short_description=研究潜在客户并准备证据化开发方案' --interface 'default_prompt=使用 $foreign-trade-customer-development 调查这家潜在客户，整理证据，并准备一份由业务员审核的开发建议。'
+python3 /Users/lirongjing/.codex/skills/.system/skill-creator/scripts/generate_openai_yaml.py plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development --interface 'display_name=外贸客户开发' --interface 'short_description=研究潜在客户、核验企业证据并准备业务员审核的开发建议' --interface 'default_prompt=使用 $foreign-trade-customer-development 调查这家潜在客户，整理证据，并准备一份由业务员审核的开发建议。'
 ```
 
 Expected `agents/openai.yaml`:
@@ -547,7 +547,7 @@ Expected `agents/openai.yaml`:
 ```yaml
 interface:
   display_name: "外贸客户开发"
-  short_description: "研究潜在客户并准备证据化开发方案"
+  short_description: "研究潜在客户、核验企业证据并准备业务员审核的开发建议"
   default_prompt: "使用 $foreign-trade-customer-development 调查这家潜在客户，整理证据，并准备一份由业务员审核的开发建议。"
 ```
 
