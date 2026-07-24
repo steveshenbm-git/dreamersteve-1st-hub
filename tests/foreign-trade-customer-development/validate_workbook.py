@@ -172,6 +172,11 @@ for (sheet_name, field_name), (expected_range, expected_values) in CONTROLLED_VA
             f"{sheet_name}.{field_name}: expected errorStyle='stop', "
             f"observed {validation.errorStyle!r}"
         )
+    if validation.allowBlank is not True:
+        failures.append(
+            f"{sheet_name}.{field_name}: expected allowBlank=True, "
+            f"observed {validation.allowBlank!r}"
+        )
 
 observed_validation_count = sum(
     len(sheet.data_validations.dataValidation) for sheet in workbook.worksheets
@@ -189,4 +194,4 @@ if failures:
     raise SystemExit(1)
 
 print("PASS: workbook structure, bilingual headers, empty-data boundary, freeze panes, "
-      "filters, and all controlled validations with stop-style enforcement")
+      "filters, and all controlled validations with stop-style enforcement and blank allowance")

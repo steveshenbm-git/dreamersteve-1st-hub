@@ -39,6 +39,19 @@ ROUTING_CANONICAL_CLAUSE = (
     "received customer replies are excluded and routed to foreign-trade-email-assistant."
 )
 
+EMAIL_GAP_CANONICAL_CLAUSE = (
+    "没有可正常使用的邮箱时，不得由 AI 自动把其他渠道作为首次触达；"
+    "必须先记录邮件渠道缺口并等待业务员决定。"
+)
+INBOUND_EVIDENCE_CANONICAL_CLAUSE = (
+    "未核验发件人身份或邮件头的入站邮件不得标为官方直接证据；"
+    "无论证据状态如何，回复硬停和邮件助手移交始终优先。"
+)
+EVENT_TOUCH_CANONICAL_CLAUSE = (
+    "发现有效事件时，AI 必须准备一份待业务员审核的额外触达候选材料；"
+    "不得自动发送，且事件触达不得重置 regular_cadence_anchor。"
+)
+
 FULL_DD_OPPOSITE_COUNTEREXAMPLE = (
     "salesperson_classification = 潜力客户 与业务员明确启动完整背调并非必须同时满足，"
     "任一条件即可。普通候选不得启动完整背调。"
@@ -46,6 +59,23 @@ FULL_DD_OPPOSITE_COUNTEREXAMPLE = (
 ROUTING_OPPOSITE_COUNTEREXAMPLE = (
     "Received customer replies are not handled outside this skill and route here before "
     "foreign-trade-email-assistant."
+)
+EMAIL_GAP_OPPOSITE_COUNTEREXAMPLE = (
+    "没有可正常使用的邮箱时，AI 可自动把其他渠道作为首次触达，"
+    "无需等待业务员决定。"
+)
+INBOUND_EVIDENCE_OPPOSITE_COUNTEREXAMPLE = (
+    "未核验发件人身份或邮件头的入站邮件仍可标为官方直接证据。"
+)
+INBOUND_HANDOFF_DELAY_OPPOSITE_COUNTEREXAMPLE = (
+    "只有保存真实回复和发送历史后，才可准备 email_assistant_handoff"
+)
+INBOUND_IDENTITY_DELAY_OPPOSITE_COUNTEREXAMPLE = (
+    "必须先核验发件人身份或邮件头，之后才可移交 foreign-trade-email-assistant。"
+)
+EVENT_TOUCH_OPPOSITE_COUNTEREXAMPLE = (
+    "发现有效事件时，AI 可不准备额外触达候选材料，"
+    "也可自动发送并重置 regular_cadence_anchor。"
 )
 
 REFERENCE_FILES = {
@@ -108,16 +138,62 @@ def normalize_contract_text(text: str) -> str:
     return re.sub(r"\s+", " ", text.replace("`", "")).strip()
 
 
-def has_canonical_clause(text: str, canonical_clause: str) -> bool:
-    return normalize_contract_text(canonical_clause) in normalize_contract_text(text)
+def has_uncontradicted_canonical_clause(
+    text: str,
+    canonical_clause: str,
+    opposite_clauses: list[str],
+) -> bool:
+    normalized_text = normalize_contract_text(text)
+    if normalize_contract_text(canonical_clause) not in normalized_text:
+        return False
+    return not any(
+        normalize_contract_text(opposite_clause) in normalized_text
+        for opposite_clause in opposite_clauses
+    )
 
 
 def has_full_dd_dual_gate(text: str) -> bool:
-    return has_canonical_clause(text, FULL_DD_CANONICAL_CLAUSE)
+    return has_uncontradicted_canonical_clause(
+        text,
+        FULL_DD_CANONICAL_CLAUSE,
+        [FULL_DD_OPPOSITE_COUNTEREXAMPLE],
+    )
 
 
 def has_routing_description_contract(text: str) -> bool:
-    return has_canonical_clause(text, ROUTING_CANONICAL_CLAUSE)
+    return has_uncontradicted_canonical_clause(
+        text,
+        ROUTING_CANONICAL_CLAUSE,
+        [ROUTING_OPPOSITE_COUNTEREXAMPLE],
+    )
+
+
+def has_email_gap_contract(text: str) -> bool:
+    return has_uncontradicted_canonical_clause(
+        text,
+        EMAIL_GAP_CANONICAL_CLAUSE,
+        [EMAIL_GAP_OPPOSITE_COUNTEREXAMPLE],
+    )
+
+
+def has_inbound_evidence_contract(text: str) -> bool:
+    return has_uncontradicted_canonical_clause(
+        text,
+        INBOUND_EVIDENCE_CANONICAL_CLAUSE,
+        [
+            INBOUND_EVIDENCE_OPPOSITE_COUNTEREXAMPLE,
+            INBOUND_HANDOFF_DELAY_OPPOSITE_COUNTEREXAMPLE,
+            INBOUND_IDENTITY_DELAY_OPPOSITE_COUNTEREXAMPLE,
+        ],
+    )
+
+
+def has_event_touch_contract(text: str) -> bool:
+    return has_uncontradicted_canonical_clause(
+        text,
+        EVENT_TOUCH_CANONICAL_CLAUSE,
+        [EVENT_TOUCH_OPPOSITE_COUNTEREXAMPLE],
+    )
 
 
 def contract_matcher_self_check() -> list[str]:
@@ -126,10 +202,53 @@ def contract_matcher_self_check() -> list[str]:
         failures.append("full-DD canonical clause was rejected")
     if has_full_dd_dual_gate(FULL_DD_OPPOSITE_COUNTEREXAMPLE):
         failures.append("full-DD opposite counterexample was accepted")
+    if has_full_dd_dual_gate(
+        FULL_DD_CANONICAL_CLAUSE + "\n" + FULL_DD_OPPOSITE_COUNTEREXAMPLE
+    ):
+        failures.append("full-DD canonical-plus-opposite counterexample was accepted")
     if not has_routing_description_contract(ROUTING_CANONICAL_CLAUSE):
         failures.append("routing canonical clause was rejected")
     if has_routing_description_contract(ROUTING_OPPOSITE_COUNTEREXAMPLE):
         failures.append("routing opposite counterexample was accepted")
+    if has_routing_description_contract(
+        ROUTING_CANONICAL_CLAUSE + "\n" + ROUTING_OPPOSITE_COUNTEREXAMPLE
+    ):
+        failures.append("routing canonical-plus-opposite counterexample was accepted")
+
+    new_contracts = [
+        (
+            "email-gap",
+            has_email_gap_contract,
+            EMAIL_GAP_CANONICAL_CLAUSE,
+            [EMAIL_GAP_OPPOSITE_COUNTEREXAMPLE],
+        ),
+        (
+            "inbound-evidence",
+            has_inbound_evidence_contract,
+            INBOUND_EVIDENCE_CANONICAL_CLAUSE,
+            [
+                INBOUND_EVIDENCE_OPPOSITE_COUNTEREXAMPLE,
+                INBOUND_HANDOFF_DELAY_OPPOSITE_COUNTEREXAMPLE,
+                INBOUND_IDENTITY_DELAY_OPPOSITE_COUNTEREXAMPLE,
+            ],
+        ),
+        (
+            "event-touch",
+            has_event_touch_contract,
+            EVENT_TOUCH_CANONICAL_CLAUSE,
+            [EVENT_TOUCH_OPPOSITE_COUNTEREXAMPLE],
+        ),
+    ]
+    for name, matcher, canonical, opposites in new_contracts:
+        if not matcher(canonical):
+            failures.append(f"{name} canonical clause was rejected")
+        for opposite in opposites:
+            if matcher(opposite):
+                failures.append(f"{name} opposite counterexample was accepted")
+            if matcher(canonical + "\n" + opposite):
+                failures.append(
+                    f"{name} canonical-plus-opposite counterexample was accepted"
+                )
     return failures
 
 
@@ -186,6 +305,32 @@ def main() -> int:
         references["opportunity"],
         REQUIRED_OPPORTUNITY_TERMS,
     )
+
+    if not has_email_gap_contract(references["opportunity"]):
+        diagnostics.append(
+            "opportunity.email_gap_first_touch: missing canonical no-email "
+            "salesperson-decision clause"
+        )
+
+    inbound_contract_text = "\n".join(
+        [
+            references["evidence"],
+            references["workbook"],
+            references["opportunity"],
+        ]
+    )
+    if not has_inbound_evidence_contract(inbound_contract_text):
+        diagnostics.append(
+            "evidence.unverified_inbound_email: missing canonical inbound-evidence "
+            "and immediate reply-handoff clause, or a conflicting delayed-handoff "
+            "clause is present"
+        )
+
+    if not has_event_touch_contract(references["opportunity"]):
+        diagnostics.append(
+            "opportunity.valid_event_candidate: missing canonical mandatory-candidate, "
+            "no-auto-send, and no-anchor-reset clause"
+        )
 
     workbook_text = references["workbook"]
     for sheet, fields in REQUIRED_WORKBOOK_FIELDS.items():

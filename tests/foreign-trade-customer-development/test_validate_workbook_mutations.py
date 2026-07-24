@@ -86,6 +86,7 @@ def create_green_control(destination: Path) -> None:
     for validation in validations:
         validation.showErrorMessage = True
         validation.errorStyle = "stop"
+        validation.allowBlank = True
     workbook.save(destination)
 
 
@@ -131,10 +132,26 @@ def main() -> int:
             "客户总览.risk_gate: expected showErrorMessage=True",
         )
 
+        blank_green_control_path = temp_root / "blank-green-control.xlsx"
+        copyfile(green_control_path, blank_green_control_path)
+        assert_accepted(
+            run_validator(blank_green_control_path),
+            "blank-allowance mutation baseline",
+        )
+        disabled_blank_allowance_path = temp_root / "disabled-blank-allowance.xlsx"
+        workbook = load_workbook(blank_green_control_path, data_only=False)
+        validation = validation_by_range(workbook["客户总览"], "G3:G5000")
+        validation.allowBlank = False
+        workbook.save(disabled_blank_allowance_path)
+        assert_rejected(
+            run_validator(disabled_blank_allowance_path),
+            "客户总览.screening_status: expected allowBlank=True",
+        )
+
     if file_sha256(WORKBOOK_PATH) != source_hash:
         raise AssertionError("source workbook changed during mutation tests")
 
-    print("PASS: GREEN control validates and both isolated mutations are rejected")
+    print("PASS: GREEN control validates and all three isolated mutations are rejected")
     return 0
 
 
