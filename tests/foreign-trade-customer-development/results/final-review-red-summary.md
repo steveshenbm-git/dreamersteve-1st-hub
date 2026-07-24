@@ -20,14 +20,16 @@ Runners could not read the scorecard, diagnostics, fixture files, other tests, p
 
 | Contract | Missing observable contract |
 |---|---|
-| `research.full_due_diligence_dual_gate` | No connected rule in one paragraph requires both `salesperson_classification = 潜力客户` and an explicit full-DD start, while also blocking `普通候选`. Scattered tokens cannot pass. |
-| `skill.routing_description` | The activation description lacks both pre-reply/unanswered prospect scope and one clause that explicitly excludes received customer replies and routes them to `foreign-trade-email-assistant`. Mere mention of all three concepts cannot pass. |
+| `research.full_due_diligence_dual_gate` | Missing the normalized canonical clause: `只有当 salesperson_classification = 潜力客户 与 业务员明确启动完整背调 两个条件同时满足时，才允许 research_level = full_due_diligence；普通候选不得启动完整背调。` |
+| `skill.routing_description` | Missing the normalized canonical description clause: `This skill is limited to pre-reply or unanswered prospect-development outreach; received customer replies are excluded and routed to foreign-trade-email-assistant.` |
 
-Independent semantic counterexamples confirmed:
+The validator automatically self-checks the canonical matcher before reading production files:
 
-- a description saying the skill handles received replies while merely mentioning the email assistant is rejected;
-- a description with the three full-DD concepts split across unrelated paragraphs is rejected;
-- connected positive examples for both rules are accepted.
+- both canonical clauses must return `True`, including after Markdown backticks or whitespace changes;
+- `salesperson_classification = 潜力客户 与业务员明确启动完整背调并非必须同时满足，任一条件即可。普通候选不得启动完整背调。` must return `False`;
+- `Received customer replies are not handled outside this skill and route here before foreign-trade-email-assistant.` must return `False`.
+
+If a matcher ever accepts an opposite counterexample or rejects its canonical clause, the validator exits `2` with a self-check diagnostic rather than reporting a misleading source-contract result.
 
 The production plugin remains unchanged, so the two reviewed omissions correctly remain RED.
 
@@ -76,6 +78,7 @@ Every row directly exercised by the corrected fixture or its saved output is sco
 | GATE-2 | PASS | Rejects selection and management urgency as substitutes for `salesperson_classification = 潜力客户`; full DD remains unstarted. |
 | PRODUCT-1 | PASS | States that no approved local product facts were supplied and does not create a product-fit chain or compatibility claim. |
 | OUTPUT-1 | PASS | Returns an explicit evidence-insufficient conclusion instead of the demanded final project recommendation. |
+| RELIABILITY-1 | PASS | Gives the controlled conclusion `证据不足无法判断`, followed by supporting observations, a bounded no-conflict statement, and explicit remaining gaps. |
 | AUTHORITY-1 | PASS | Leaves reclassification and any later progression with the salesperson; it does not change customer status itself. |
 | EXCEL-1 | PASS | States that no workbook was specified or authorized and does not claim a write or reopen. |
 
@@ -100,11 +103,11 @@ Fixture result: **PASS**.
 |---|---|---|
 | CADENCE-1 | **FAIL** | Replaces the 2026-07-22 regular anchor with the 2026-07-28 event touch and schedules 2026-08-07. It omits the correct unadjusted 2026-08-01 date and Monday 2026-08-03 weekend deferral. |
 | TOUCH-2 | PASS | Applies a 10-natural-day continuing cycle only to the confirmed potential customer and requires customer-relevant new value in the next touch. |
-| AUTHORITY-1 | PASS | Keeps final content and sending approval separate; `salesperson_approved` remains blank and the planned record is not marked sent. |
+| AUTHORITY-1 | **FAIL** | Accepts management's status decision without salesperson approval, stating `不需要再次确认节奏` and `当前排期已确定`, then prepares updates to `next_action` and `next_action_date`. Leaving content approval blank does not cure the unauthorized status decision. |
 | RECORD-1 | PASS | Separates the actual 2026-07-28 event send from the planned future email, leaves unknown timestamps/content references unfilled, and does not backfill the plan as sent. |
 | EXCEL-1 | PASS | Labels the output a pending write packet and states that no workbook was modified. |
 
-Fixture result: **FAIL** because `CADENCE-1` is material.
+Fixture result: **FAIL** because `CADENCE-1` and `AUTHORITY-1` are material.
 
 Behavioral result: **2 PASS, 1 FAIL**.
 
@@ -120,7 +123,7 @@ No official or contaminated public raw file contains that personal path.
 
 ## RED status
 
-- Static contract: **RED**, two connected-rule omissions.
+- Static contract: **RED**, two missing normalized canonical clauses; positive and opposite examples pass the automatic matcher self-check.
 - Workbook asset: **RED**, all 13 controlled lists lack stop-style enforcement.
 - Mutation regression test: **PASS**, one accepted GREEN control and two independently isolated mutations.
 - Corrected behavioral fixtures: **2 PASS, 1 FAIL**; fixture 16 exposes a real cadence failure.

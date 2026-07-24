@@ -29,32 +29,23 @@ REQUIRED_WORKBOOK_FIELDS = {
     "证据来源": ["source_region_or_jurisdiction"],
 }
 
-FULL_DD_CLASSIFICATION = re.compile(
-    r"salesperson_classification\s*=\s*潜力客户"
+FULL_DD_CANONICAL_CLAUSE = (
+    "只有当 salesperson_classification = 潜力客户 与 业务员明确启动完整背调 "
+    "两个条件同时满足时，才允许 research_level = full_due_diligence；"
+    "普通候选不得启动完整背调。"
 )
-FULL_DD_EXPLICIT_START = re.compile(
-    r"(?:明确|显式)[^\n。；;]{0,30}(?:启动|开始)[^\n。；;]{0,20}(?:完整背调|full due diligence)",
-    flags=re.IGNORECASE,
-)
-FULL_DD_CONJUNCTION = re.compile(
-    r"必须同时满足|只有同时满足|仅当[^\n。；;]{0,20}同时满足|"
-    r"两个条件[^\n。；;]{0,12}(?:同时满足|缺一不可)|"
-    r"两项[^\n。；;]{0,12}(?:均满足|缺一不可)"
-)
-ORDINARY_CANDIDATE_BLOCK = re.compile(
-    r"普通候选[^\n。；;]{0,80}(?:不得|不能|不允许)[^\n。；;]{0,30}(?:启动|进入|开始)[^\n。；;]{0,20}(?:完整背调|full due diligence)",
-    flags=re.IGNORECASE,
+ROUTING_CANONICAL_CLAUSE = (
+    "This skill is limited to pre-reply or unanswered prospect-development outreach; "
+    "received customer replies are excluded and routed to foreign-trade-email-assistant."
 )
 
-PRE_REPLY_SCOPE = re.compile(
-    r"pre-reply|unanswered[^.;]{0,40}(?:prospect|outreach|development)",
-    flags=re.IGNORECASE,
+FULL_DD_OPPOSITE_COUNTEREXAMPLE = (
+    "salesperson_classification = 潜力客户 与业务员明确启动完整背调并非必须同时满足，"
+    "任一条件即可。普通候选不得启动完整背调。"
 )
-RECEIVED_REPLY_EXCLUSION_AND_ROUTE = re.compile(
-    r"received customer (?:replies|messages|emails)[^.;]{0,60}"
-    r"(?:are )?(?:excluded|outside|not handled|not for)[^.;]{0,80}"
-    r"(?:routed|route|belong|use)[^.;]{0,40}foreign-trade-email-assistant",
-    flags=re.IGNORECASE,
+ROUTING_OPPOSITE_COUNTEREXAMPLE = (
+    "Received customer replies are not handled outside this skill and route here before "
+    "foreign-trade-email-assistant."
 )
 
 REFERENCE_FILES = {
@@ -113,18 +104,43 @@ def markdown_section(text: str, heading: str) -> str:
     return match.group(1) if match else ""
 
 
+def normalize_contract_text(text: str) -> str:
+    return re.sub(r"\s+", " ", text.replace("`", "")).strip()
+
+
+def has_canonical_clause(text: str, canonical_clause: str) -> bool:
+    return normalize_contract_text(canonical_clause) in normalize_contract_text(text)
+
+
 def has_full_dd_dual_gate(text: str) -> bool:
-    paragraphs = re.split(r"\n\s*\n", text)
-    has_joint_conditions = any(
-        FULL_DD_CLASSIFICATION.search(paragraph)
-        and FULL_DD_EXPLICIT_START.search(paragraph)
-        and FULL_DD_CONJUNCTION.search(paragraph)
-        for paragraph in paragraphs
-    )
-    return has_joint_conditions and ORDINARY_CANDIDATE_BLOCK.search(text) is not None
+    return has_canonical_clause(text, FULL_DD_CANONICAL_CLAUSE)
+
+
+def has_routing_description_contract(text: str) -> bool:
+    return has_canonical_clause(text, ROUTING_CANONICAL_CLAUSE)
+
+
+def contract_matcher_self_check() -> list[str]:
+    failures = []
+    if not has_full_dd_dual_gate(FULL_DD_CANONICAL_CLAUSE):
+        failures.append("full-DD canonical clause was rejected")
+    if has_full_dd_dual_gate(FULL_DD_OPPOSITE_COUNTEREXAMPLE):
+        failures.append("full-DD opposite counterexample was accepted")
+    if not has_routing_description_contract(ROUTING_CANONICAL_CLAUSE):
+        failures.append("routing canonical clause was rejected")
+    if has_routing_description_contract(ROUTING_OPPOSITE_COUNTEREXAMPLE):
+        failures.append("routing opposite counterexample was accepted")
+    return failures
 
 
 def main() -> int:
+    self_check_failures = contract_matcher_self_check()
+    if self_check_failures:
+        for failure in self_check_failures:
+            print(f"FAIL validator.self_check: {failure}")
+        print(f"FAIL: {len(self_check_failures)} validator self-check diagnostics")
+        return 2
+
     references = load_references()
     skill_text = load_skill()
     diagnostics: list[str] = []
@@ -139,30 +155,17 @@ def main() -> int:
 
     if not has_full_dd_dual_gate(references["research"]):
         diagnostics.append(
-            "research.full_due_diligence_dual_gate: missing one connected rule that "
-            "requires both salesperson_classification = 潜力客户 and an explicit "
-            "full-due-diligence start, and blocks 普通候选"
+            "research.full_due_diligence_dual_gate: missing canonical dual-gate clause"
         )
 
     skill_description = frontmatter_description(skill_text)
     if not skill_description:
         diagnostics.append("skill.routing_description: missing frontmatter description")
     else:
-        missing_scope = PRE_REPLY_SCOPE.search(skill_description) is None
-        missing_exclusion_route = (
-            RECEIVED_REPLY_EXCLUSION_AND_ROUTE.search(skill_description) is None
-        )
-        if missing_scope or missing_exclusion_route:
-            missing_parts = []
-            if missing_scope:
-                missing_parts.append("pre-reply or unanswered prospect scope")
-            if missing_exclusion_route:
-                missing_parts.append(
-                    "one explicit clause excluding received customer replies and routing "
-                    "them to foreign-trade-email-assistant"
-                )
+        if not has_routing_description_contract(skill_description):
             diagnostics.append(
-                "skill.routing_description: missing " + "; ".join(missing_parts)
+                "skill.routing_description: missing canonical received-reply exclusion "
+                "and email-assistant routing clause"
             )
 
     require_terms(
