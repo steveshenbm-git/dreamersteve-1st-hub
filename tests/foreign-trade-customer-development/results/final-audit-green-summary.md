@@ -1,5 +1,7 @@
 # Final-Audit GREEN Test Summary
 
+> **Superseded release evidence:** This report preserves historical behavior from an earlier contract. Under the current four-value `handoff_status` contract, `raw/final-audit-green/18-unverified-inbound-email-evidence.md` is FAIL where it proposes `触达已暂停` as a handoff status alongside `待邮件助手`. The historical `HANDOFF-1`, `RECORD-1`, and `WORKBOOK-2` PASS rows for that raw must not be used as current release evidence. Use `task29-behavior-green-summary.md` and the current static/workbook validators for the latest release decision; the original raw remains unchanged.
+
 ## Protocol
 
 Production references changed only after Task 21 had established exactly three static RED diagnostics and three failing behavior fixtures. The original RED raw files remain byte-identical:

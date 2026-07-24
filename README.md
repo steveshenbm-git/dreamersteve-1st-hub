@@ -10,7 +10,7 @@ The package currently includes:
 - `jiangyue-knowledge-curator` maintains reusable Jiangyue website knowledge and approved-material references.
 - `jiangyue-skill-director` governs Jiangyue skill design, repair, and release checks.
 - `foreign-trade-email-assistant` analyzes complete customer email threads and prepares salesperson-reviewed bilingual reply drafts.
-- `foreign-trade-customer-development` researches salesperson-selected prospect companies, prepares one evidence-bound product-fit development recommendation, supports controlled follow-up planning, and maintains a local prospect workbook.
+- `foreign-trade-customer-development` runs `candidate_scan` for a salesperson-confirmed market theme or named prospect, returns a candidate pool or candidate-scan findings, and stops for salesperson selection. It prepares a final development recommendation only after `salesperson_classification = 潜力客户` and the salesperson explicitly starts `full_due_diligence`.
 
 The user remains the final reviewer for page strategy, claims, visual approval, business judgment, email wording, and sending.
 
@@ -61,7 +61,7 @@ codex plugin add foreign-trade-customer-development@jiangyue-team
 Use $jiangyue-website-planner to plan a Jiangyue website page and image brief.
 Use $jiangyue-website-imagegen to help me create a Jiangyue website visual.
 Use $foreign-trade-email-assistant to analyze a complete customer email thread and prepare a bilingual reply draft.
-Use $foreign-trade-customer-development to research this prospect company and prepare one evidence-bound development recommendation.
+Use $foreign-trade-customer-development to run candidate_scan for this salesperson-confirmed market theme or named prospect, return a candidate pool or candidate-scan findings, and stop for salesperson selection. Prepare a final development recommendation only after salesperson_classification = 潜力客户 and the salesperson explicitly starts full_due_diligence.
 ```
 
 ## Recommended Workflow
@@ -74,9 +74,9 @@ Use $foreign-trade-customer-development to research this prospect company and pr
 
 ## Foreign Trade Customer Development Workflow
 
-1. Confirm a market theme or named prospect with the salesperson.
-2. Run a candidate scan and wait for the salesperson to select which candidates to develop.
-3. Run full due diligence only for salesperson-confirmed potential customers.
+1. For a confirmed market theme or named prospect, run `candidate_scan`, return a candidate pool or candidate-scan findings, and stop for salesperson selection. Run `full_due_diligence` and prepare a final development recommendation only after `salesperson_classification = 潜力客户` and the salesperson explicitly starts `full_due_diligence`.
+2. Keep salesperson selection separate from potential-customer classification and the explicit start of full due diligence.
+3. Run full due diligence only after both gates are recorded.
 4. Write prospect research and development records only to the local workbook.
 5. Hand any customer reply to `foreign-trade-email-assistant` for reply preparation.
 

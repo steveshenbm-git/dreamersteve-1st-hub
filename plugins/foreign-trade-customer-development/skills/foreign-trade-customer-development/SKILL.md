@@ -32,7 +32,12 @@ Research and prepare prospect development work while leaving target selection, c
 - Use approved local product facts only.
 - Do not generate a composite customer score or final development priority.
 - Do not turn inference, social metrics, reviews, or customs visibility into unsupported facts.
+- Keep a source's publication or record date separate from the query or observation date. If the source date is not supplied or visible, write `未知`; never backfill it from the query, observation, receipt, or task date.
+- Treat `field complete` or `field present` as a schema statement only; it does not mean the underlying verification question was answered, the gap was resolved, or the reliability conclusion was established.
+- Every `full_due_diligence` output must include existing supply direction, cooperation barriers, alternative opportunities, current-product opportunity, future-new-product opportunity, long-term watch topics, continuing-touch rationale, and unresolved questions; when evidence is absent, keep the section and state the gap instead of omitting it.
 - Stop normal recommendations at the risk gate.
+- When `risk_gate_status = 暂停待业务员审核`, record only evidence, verification tasks, and any existing cadence anchor as a historical value. Do not prepare contact content or channels, and do not calculate or display any event or regular next-touch date until the salesperson explicitly approves continuation.
+- After an approved alternate-channel first-touch exception is actually sent without a reply, return exactly and only these three salesperson choices: `继续寻找可正常使用的邮箱`, `另行逐项批准一个明确的下一受控动作`, or `关闭当前触达`. Do not broaden, combine, rename, or add choices.
 - Do not send or contact anyone.
 - On any reply, pause outreach and prepare the email-assistant handoff.
 

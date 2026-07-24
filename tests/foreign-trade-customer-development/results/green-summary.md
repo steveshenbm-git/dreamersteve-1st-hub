@@ -1,5 +1,7 @@
 # GREEN Test Summary
 
+> **Superseded release evidence:** This report preserves historical behavior from an earlier contract. Under the current four-value `handoff_status` contract, `raw/green/07-touch-cycle-and-reply.md` is FAIL because it uses the obsolete value `触达已暂停`. Its historical PASS rows must not be used as current release evidence. Use `task29-behavior-green-summary.md` and the current static/workbook validators for the latest release decision; the original raw remains unchanged.
+
 Each fixture ran in a fresh isolated context with the candidate skill. The fixture runner received only the unchanged fixture, the GREEN prompt, and the plugin skill source path. Its raw output was saved before scoring.
 
 ## Initial GREEN run

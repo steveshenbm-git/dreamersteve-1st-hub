@@ -30,4 +30,3 @@
 1. Fresh Acceptance、Falsification 与 whole-branch review 均不得有 Critical/Important。
 2. 源码就绪与公开历史就绪分开结论；当前历史清理继续 `UNVERIFIED/BLOCKED`。
 3. 不安装、不 push、不建 PR、不发布、不 merge、不 squash/rebase、不改写历史。
-

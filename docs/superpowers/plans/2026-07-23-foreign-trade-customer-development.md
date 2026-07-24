@@ -614,9 +614,9 @@ salesperson_classification: 不继续, 普通候选, 潜力客户
 information_reliability: 资料充分且一致, 整体可信但存在缺口, 存在重大冲突需要核验, 证据不足无法判断
 evidence_state: 官方直接证据, 多来源相互印证, 单一来源待验证, 合理推断, 来源相互冲突, 信息已经过期, 来源不明隔离待核实
 usage_permission: 正常使用, 限制使用, 隔离待核实
-risk_gate: 未触发, 待核验, 业务员批准继续, 已关闭
+risk_gate: 未触发, 待核验, 暂停待业务员审核, 业务员批准继续, 已关闭
 content_status: 草稿, 业务员批准, 计划触达, 实际发送, 实际回复
-handoff_status: 未触发, 触达已暂停, 待邮件助手, 已移交, 业务员已决定
+handoff_status: 未触发, 待邮件助手, 已移交, 业务员已决定
 ```
 
 - [ ] **Step 2: Write the workbook validator before creating the asset**

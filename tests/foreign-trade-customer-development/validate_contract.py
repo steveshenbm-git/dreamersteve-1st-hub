@@ -148,8 +148,31 @@ README_CANDIDATE_SCAN_BOUNDARY_CANONICAL_TEXT = (
 )
 RISK_EVENT_PRIORITY_CANONICAL_CLAUSE = (
     "risk_gate_status = 暂停待业务员审核 时，风险硬门优先于有效事件："
-    "只记录事件证据和待办，不生成联系材料。业务员明确批准继续后，若事件仍相关，"
+    "只记录事件证据、待办和既有 regular_cadence_anchor 历史值，不生成联系材料或渠道，"
+    "也不计算或展示事件触达、常规触达的下一建议日期。业务员明确批准继续后，若事件仍相关，"
     "立即准备事件触达候选，且不得重置 regular_cadence_anchor。"
+)
+SOURCE_DATE_SEPARATION_CANONICAL_CLAUSE = (
+    "Keep a source's publication or record date separate from the query or observation date. "
+    "If the source date is not supplied or visible, write 未知; never backfill it from the query, "
+    "observation, receipt, or task date."
+)
+FULL_DD_INTERPRETATION_CANONICAL_CLAUSES = [
+    (
+        "Treat field complete or field present as a schema statement only; it does not mean the "
+        "underlying verification question was answered, the gap was resolved, or the reliability "
+        "conclusion was established."
+    ),
+    (
+        "Every full_due_diligence output must include existing supply direction, cooperation "
+        "barriers, alternative opportunities, current-product opportunity, future-new-product "
+        "opportunity, long-term watch topics, continuing-touch rationale, and unresolved "
+        "questions; when evidence is absent, keep the section and state the gap instead of "
+        "omitting it."
+    ),
+]
+FULL_DD_INTERPRETATION_CANONICAL_TEXT = "\n".join(
+    FULL_DD_INTERPRETATION_CANONICAL_CLAUSES
 )
 APPROVED_RESTRICTED_CONTACT_CANONICAL_CLAUSE = (
     "没有使用权限为“正常使用”的联系人时，未取得业务员对该具体联系方式的逐项批准前，"
@@ -159,7 +182,8 @@ APPROVED_RESTRICTED_CONTACT_CANONICAL_CLAUSE = (
 )
 ALTERNATE_FIRST_TOUCH_NO_REPLY_CANONICAL_CLAUSE = (
     "经业务员明确批准的其他渠道首次触达例外实际发送后仍无回复时，必须暂停并交业务员选择："
-    "继续寻找可正常使用的邮箱；再明确批准一个受控后续动作；或关闭。不得自动进入三轮邮件后"
+    "继续寻找可正常使用的邮箱；另行逐项批准一个明确的下一受控动作；或关闭当前触达。"
+    "只可原样列出这三项，不得增加、合并、重命名或扩展选项。不得自动进入三轮邮件后"
     "的渠道切换、返回邮件或 10 日定期节奏。"
 )
 WORKBOOK_REFERENCE_HANDOFF_STATUS_CANONICAL_CLAUSE = (
@@ -302,6 +326,15 @@ RISK_EVENT_PRIORITY_OPPOSITE_COUNTEREXAMPLES = [
     "风险硬门只暂停常规推荐，不暂停事件触达候选材料。",
     "业务员批准继续后，可等到下一个常规日期再准备仍相关的事件候选。",
     "业务员批准继续后，事件触达可以重置 regular_cadence_anchor。",
+    "risk_gate_status = 暂停待业务员审核 时，仍可计算并展示常规触达的下一建议日期。",
+]
+SOURCE_DATE_SEPARATION_OPPOSITE_COUNTEREXAMPLES = [
+    "If a source date is missing, use the query or observation date as the publication date.",
+    "A record receipt date may be copied into the source record date when the source date is unknown.",
+]
+FULL_DD_INTERPRETATION_OPPOSITE_COUNTEREXAMPLES = [
+    "A complete remaining-verification-question field means that the question was answered and the gap is resolved.",
+    "A full_due_diligence output may omit required sections when no evidence is available.",
 ]
 APPROVED_RESTRICTED_CONTACT_OPPOSITE_COUNTEREXAMPLES = [
     (
@@ -318,6 +351,8 @@ ALTERNATE_FIRST_TOUCH_NO_REPLY_OPPOSITE_COUNTEREXAMPLES = [
     "其他渠道首次触达例外实际发送后无回复，可以自动准备返回邮件。",
     "其他渠道首次触达例外实际发送后无回复，可以直接启动 10 日定期节奏。",
     "其他渠道首次触达例外实际发送后无回复，AI 可继续准备下一个渠道动作，无需业务员再次批准。",
+    "其他渠道首次触达例外实际发送后无回复，可把选项扩大为继续寻找可用邮箱或联系人。",
+    "其他渠道首次触达例外实际发送后无回复，可把关闭改写为暂停或关闭。",
 ]
 WORKBOOK_REFERENCE_HANDOFF_STATUS_OPPOSITE_COUNTEREXAMPLES = [
     "handoff_status: 未触发, 触达已暂停, 待邮件助手, 已移交, 业务员已决定",
@@ -567,6 +602,27 @@ def has_risk_event_priority_contract(text: str) -> bool:
     )
 
 
+def has_source_date_separation_contract(text: str) -> bool:
+    return has_uncontradicted_canonical_clause(
+        text,
+        SOURCE_DATE_SEPARATION_CANONICAL_CLAUSE,
+        SOURCE_DATE_SEPARATION_OPPOSITE_COUNTEREXAMPLES,
+    )
+
+
+def has_full_dd_interpretation_contract(text: str) -> bool:
+    normalized_text = normalize_contract_text(text)
+    has_all_canonical = all(
+        normalize_contract_text(clause) in normalized_text
+        for clause in FULL_DD_INTERPRETATION_CANONICAL_CLAUSES
+    )
+    has_listed_opposite = any(
+        normalize_contract_text(opposite) in normalized_text
+        for opposite in FULL_DD_INTERPRETATION_OPPOSITE_COUNTEREXAMPLES
+    )
+    return has_all_canonical and not has_listed_opposite
+
+
 def has_approved_restricted_contact_contract(text: str) -> bool:
     return has_uncontradicted_canonical_clause(
         text,
@@ -689,6 +745,18 @@ def contract_matcher_self_check() -> list[str]:
             has_risk_event_priority_contract,
             RISK_EVENT_PRIORITY_CANONICAL_CLAUSE,
             RISK_EVENT_PRIORITY_OPPOSITE_COUNTEREXAMPLES,
+        ),
+        (
+            "source-date-separation",
+            has_source_date_separation_contract,
+            SOURCE_DATE_SEPARATION_CANONICAL_CLAUSE,
+            SOURCE_DATE_SEPARATION_OPPOSITE_COUNTEREXAMPLES,
+        ),
+        (
+            "full-dd-interpretation",
+            has_full_dd_interpretation_contract,
+            FULL_DD_INTERPRETATION_CANONICAL_TEXT,
+            FULL_DD_INTERPRETATION_OPPOSITE_COUNTEREXAMPLES,
         ),
         (
             "approved-restricted-contact",
@@ -876,6 +944,20 @@ def main() -> int:
             "risk.event_priority: missing canonical risk-gate-over-event stop, "
             "record-only pending state, post-approval immediate preparation, and "
             "no-anchor-reset clause, or a listed opposite clause is present"
+        )
+
+    if not has_source_date_separation_contract(skill_text):
+        diagnostics.append(
+            "evidence.source_date_separation: source publication or record dates must "
+            "remain separate from query, observation, receipt, and task dates; missing "
+            "source dates must stay unknown"
+        )
+
+    if not has_full_dd_interpretation_contract(skill_text):
+        diagnostics.append(
+            "skill.full_dd_interpretation: field completeness must not imply resolved "
+            "questions or reliability, and every full-DD output must retain all required "
+            "analysis sections or explicit evidence gaps"
         )
 
     if not has_approved_restricted_contact_contract(references["evidence"]):
