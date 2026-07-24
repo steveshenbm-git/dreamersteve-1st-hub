@@ -24,7 +24,7 @@
 | Manifest exactness | PASS | Independent JSON comparison against every object, array, and string in the brief returned `manifest_matches_brief=true`. |
 | Required scaffold paths | PASS | `SKILL.md`, `agents/openai.yaml`, `references/`, and `assets/` all existed after setup; the interface string check returned `required_scaffold_paths_and_exact_interface=true`. |
 | JSON and YAML syntax | PASS | Ruby standard-library parsing returned `json_and_yaml_parse=true` for `plugin.json`, `SKILL.md`, and `agents/openai.yaml`. |
-| Private/example-data scan | PASS | `rg -n '/Users/|Cookie|token|password|客户名称|真实邮箱' plugins/foreign-trade-customer-development` returned no matches (exit status 1). |
+| Private/example-data scan | PASS | A repository-relative scan for personal absolute paths, credential-shaped assignments or headers, customer names, and real emails returned no matches (exit status 1); any future match requires manual review. |
 | Whitespace/error check | PASS | `git diff --cached --check` passed before the scaffold commit; `git show --check HEAD` passed afterwards. |
 | `quick_validate.py` and `validate_plugin.py` | UNVERIFIED | Both supplied validators stopped before validation because the environment lacks the `yaml` Python module (`ModuleNotFoundError: No module named 'yaml'`). No dependency was installed because this task explicitly prohibits installation. |
 
@@ -56,7 +56,7 @@ The approved replacement resolves the UI-description length conflict. The suppli
 - Regenerated the UI metadata with the prescribed generator, adding its supported `--name foreign-trade-customer-development` override only because the local Python environment lacks PyYAML for reading `SKILL.md` frontmatter:
 
   ```bash
-  python3 /Users/lirongjing/.codex/skills/.system/skill-creator/scripts/generate_openai_yaml.py plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development --name foreign-trade-customer-development --interface 'display_name=外贸客户开发' --interface 'short_description=研究潜在客户、核验企业证据并准备业务员审核的开发建议' --interface 'default_prompt=使用 $foreign-trade-customer-development 调查这家潜在客户，整理证据，并准备一份由业务员审核的开发建议。'
+  python3 "${CODEX_HOME}/skills/.system/skill-creator/scripts/generate_openai_yaml.py" plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development --name foreign-trade-customer-development --interface 'display_name=外贸客户开发' --interface 'short_description=研究潜在客户、核验企业证据并准备业务员审核的开发建议' --interface 'default_prompt=使用 $foreign-trade-customer-development 调查这家潜在客户，整理证据，并准备一份由业务员审核的开发建议。'
   ```
 
 - Relevant output: `[OK] Created agents/openai.yaml`; exact-value and default-prompt check passed; `short_description_length=26`; YAML parsing passed; search for the superseded string returned no match; `git diff --check` passed.

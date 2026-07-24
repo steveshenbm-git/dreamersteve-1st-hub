@@ -259,7 +259,7 @@ Do not add an installation, cache, push, or publication action.
 Run:
 
 ```bash
-python3 /Users/lirongjing/.codex/skills/.system/skill-creator/scripts/init_skill.py foreign-trade-customer-development --path plugins/foreign-trade-customer-development/skills --resources references,assets --interface 'display_name=外贸客户开发' --interface 'short_description=研究潜在客户、核验企业证据并准备业务员审核的开发建议' --interface 'default_prompt=使用 $foreign-trade-customer-development 调查这家潜在客户，整理证据，并准备一份由业务员审核的开发建议。'
+python3 "${CODEX_HOME}/skills/.system/skill-creator/scripts/init_skill.py" foreign-trade-customer-development --path plugins/foreign-trade-customer-development/skills --resources references,assets --interface 'display_name=外贸客户开发' --interface 'short_description=研究潜在客户、核验企业证据并准备业务员审核的开发建议' --interface 'default_prompt=使用 $foreign-trade-customer-development 调查这家潜在客户，整理证据，并准备一份由业务员审核的开发建议。'
 ```
 
 Expected: a new skill directory with `SKILL.md`, `agents/openai.yaml`, `references/`, and `assets/`.
@@ -311,7 +311,7 @@ Run:
 
 ```bash
 find plugins/foreign-trade-customer-development -type f -maxdepth 6 -print
-rg -n '/Users/|Cookie|token|password|客户名称|真实邮箱' plugins/foreign-trade-customer-development
+rg -n --pcre2 '/[U]sers/[^/]+/|C[o]okie[[:space:]]*[:=][[:space:]]*[^[:space:]]+|(?:access_token|refresh_token|api[_-]?key|password)[[:space:]]*[:=][[:space:]]*[^[:space:]]+|Authorization[[:space:]]*:[[:space:]]*(?:Bearer|Basic)[[:space:]]+[^[:space:]]+|BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY|客户名称|真实邮箱' plugins/foreign-trade-customer-development
 ```
 
 Expected: only scaffold/manifest files are listed; `rg` returns no match.
@@ -539,7 +539,7 @@ Return Chinese analysis, one final recommendation or an explicit evidence-insuff
 Run:
 
 ```bash
-python3 /Users/lirongjing/.codex/skills/.system/skill-creator/scripts/generate_openai_yaml.py plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development --name foreign-trade-customer-development --interface 'display_name=外贸客户开发' --interface 'short_description=研究潜在客户、核验企业证据并准备业务员审核的开发建议' --interface 'default_prompt=使用 $foreign-trade-customer-development 调查这家潜在客户，整理证据，并准备一份由业务员审核的开发建议。'
+python3 "${CODEX_HOME}/skills/.system/skill-creator/scripts/generate_openai_yaml.py" plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development --name foreign-trade-customer-development --interface 'display_name=外贸客户开发' --interface 'short_description=研究潜在客户、核验企业证据并准备业务员审核的开发建议' --interface 'default_prompt=使用 $foreign-trade-customer-development 调查这家潜在客户，整理证据，并准备一份由业务员审核的开发建议。'
 ```
 
 Expected `agents/openai.yaml`:
@@ -675,10 +675,12 @@ print("PASS: workbook structure, empty-data boundary, freeze panes, and filters"
 Run:
 
 ```bash
-'/Users/lirongjing/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3' tests/foreign-trade-customer-development/validate_workbook.py plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development/assets/prospect-development-workbook.xlsx
+python3 tests/foreign-trade-customer-development/validate_workbook.py plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development/assets/prospect-development-workbook.xlsx
 ```
 
 Expected for the superseded one-row asset: FAIL because row 2 is missing (and the old freeze/filter/max-row contract is no longer accepted). Preserve this RED before rebuilding.
+
+If the active workspace Python reports that `openpyxl` is unavailable, use the workspace's dependency-equipped Python and record that executable generically; do not add a personal absolute path to public documentation.
 
 - [ ] **Step 4: Create the empty workbook through the Spreadsheets skill**
 
@@ -689,7 +691,7 @@ Create `assets/prospect-development-workbook.xlsx` using the sheet order, exact 
 Run the validator again:
 
 ```bash
-'/Users/lirongjing/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3' tests/foreign-trade-customer-development/validate_workbook.py plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development/assets/prospect-development-workbook.xlsx
+python3 tests/foreign-trade-customer-development/validate_workbook.py plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development/assets/prospect-development-workbook.xlsx
 ```
 
 Expected:
@@ -703,7 +705,7 @@ Check every worksheet for readable English and Chinese headers, frozen top two r
 Inspect the workbook package metadata and cell XML:
 
 ```bash
-unzip -p plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development/assets/prospect-development-workbook.xlsx | rg -n '/Users/|Cookie|access_token|refresh_token|真实客户|真实邮箱'
+unzip -p plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development/assets/prospect-development-workbook.xlsx | rg -n --pcre2 '/[U]sers/[^/]+/|C[o]okie[[:space:]]*[:=][[:space:]]*[^[:space:]]+|(?:access_token|refresh_token|api[_-]?key|password)[[:space:]]*[:=][[:space:]]*[^[:space:]]+|Authorization[[:space:]]*:[[:space:]]*(?:Bearer|Basic)[[:space:]]+[^[:space:]]+|BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY|真实客户|真实邮箱'
 ```
 
 Expected: no match.
@@ -811,17 +813,19 @@ Expected: formatted JSON and exit code `0`.
 The currently available Python runtimes do not include PyYAML. Use a task-specific temporary directory:
 
 ```bash
-python3 -m pip install --target /private/tmp/foreign-trade-customer-development-validation pyyaml
+FTD_VALIDATION_TMP="$(mktemp -d "${TMPDIR:-/tmp}/foreign-trade-customer-development-validation.XXXXXX")"
+python3 -m pip install --target "$FTD_VALIDATION_TMP" pyyaml
 ```
 
 If network access is blocked, request approval for this exact temporary dependency installation. Do not install into the repository or a global Python environment.
+Keep this task-specific temporary path outside the repository and reuse it only for the validation commands in this task.
 
 - [ ] **Step 3: Run `quick_validate.py`**
 
 Run:
 
 ```bash
-PYTHONPATH=/private/tmp/foreign-trade-customer-development-validation python3 /Users/lirongjing/.codex/skills/.system/skill-creator/scripts/quick_validate.py plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development
+PYTHONPATH="$FTD_VALIDATION_TMP" python3 "${CODEX_HOME}/skills/.system/skill-creator/scripts/quick_validate.py" plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development
 ```
 
 Expected:
@@ -846,7 +850,7 @@ Expected: names and UI labels agree; placeholder scan returns no match.
 Run:
 
 ```bash
-'/Users/lirongjing/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3' tests/foreign-trade-customer-development/validate_workbook.py plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development/assets/prospect-development-workbook.xlsx
+python3 tests/foreign-trade-customer-development/validate_workbook.py plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development/assets/prospect-development-workbook.xlsx
 ```
 
 Expected: `PASS`.
@@ -1000,10 +1004,10 @@ Run:
 git diff origin/main --check
 python3 -m json.tool plugins/foreign-trade-customer-development/.codex-plugin/plugin.json
 python3 -m json.tool .agents/plugins/marketplace.json
-PYTHONPATH=/private/tmp/foreign-trade-customer-development-validation python3 /Users/lirongjing/.codex/skills/.system/skill-creator/scripts/quick_validate.py plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development
-'/Users/lirongjing/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3' tests/foreign-trade-customer-development/validate_workbook.py plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development/assets/prospect-development-workbook.xlsx
-rg -n '/Users/|Cookie|access_token|refresh_token|BEGIN PRIVATE KEY|真实客户|真实邮箱' plugins/foreign-trade-customer-development
-unzip -p plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development/assets/prospect-development-workbook.xlsx | rg -n '/Users/|Cookie|access_token|refresh_token|真实客户|真实邮箱'
+PYTHONPATH="$FTD_VALIDATION_TMP" python3 "${CODEX_HOME}/skills/.system/skill-creator/scripts/quick_validate.py" plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development
+python3 tests/foreign-trade-customer-development/validate_workbook.py plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development/assets/prospect-development-workbook.xlsx
+rg -n --pcre2 '/[U]sers/[^/]+/|C[o]okie[[:space:]]*[:=][[:space:]]*[^[:space:]]+|(?:access_token|refresh_token|api[_-]?key|password)[[:space:]]*[:=][[:space:]]*[^[:space:]]+|Authorization[[:space:]]*:[[:space:]]*(?:Bearer|Basic)[[:space:]]+[^[:space:]]+|BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY|真实客户|真实邮箱' plugins/foreign-trade-customer-development
+unzip -p plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development/assets/prospect-development-workbook.xlsx | rg -n --pcre2 '/[U]sers/[^/]+/|C[o]okie[[:space:]]*[:=][[:space:]]*[^[:space:]]+|(?:access_token|refresh_token|api[_-]?key|password)[[:space:]]*[:=][[:space:]]*[^[:space:]]+|Authorization[[:space:]]*:[[:space:]]*(?:Bearer|Basic)[[:space:]]+[^[:space:]]+|BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY|真实客户|真实邮箱'
 rg -n 'T[B]D|T[O]DO|implement[[:space:]]+later|fill[[:space:]]+in[[:space:]]+details' plugins/foreign-trade-customer-development tests/foreign-trade-customer-development
 git status --short --branch
 ```
@@ -1014,7 +1018,7 @@ Expected:
 - Both JSON commands: exit code `0`.
 - `quick_validate.py`: `Skill is valid!`.
 - Workbook validator: `PASS`.
-- Sensitive-data and placeholder scans: no match.
+- Sensitive-data and placeholder scans: no match. Manually review every sensitive-data scan match before deciding whether it is a real secret, a safe prohibition, or another false positive.
 - Git status: clean branch ahead of `origin/main` only by intended commits.
 
 - [ ] **Step 4: Review all plugin changes before claiming completion**

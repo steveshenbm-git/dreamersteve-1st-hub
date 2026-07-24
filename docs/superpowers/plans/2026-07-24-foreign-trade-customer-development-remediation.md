@@ -295,7 +295,7 @@ Keep the prohibition on cookies and credentials. Update the release validation w
 
 ```bash
 git diff origin/main --check
-git diff -U0 origin/main..HEAD | rg '^\+.*(/Users/[^/]+/|Cookie[=:][^[:space:]]|access_token[=:][^[:space:]]|refresh_token[=:][^[:space:]]|BEGIN PRIVATE KEY)'
+git diff -U0 origin/main..HEAD | rg '^\+.*(/Users/[[:alnum:]_.-]+/|Cookie[=:][^[:space:]]|access_token[=:][^[:space:]]|refresh_token[=:][^[:space:]]|BEGIN[[:space:]]+(RSA[[:space:]]+|EC[[:space:]]+|OPENSSH[[:space:]]+)?PRIVATE[[:space:]]+KEY)'
 ```
 
 Expected: both checks produce no match/output; the second `rg` exits `1`.

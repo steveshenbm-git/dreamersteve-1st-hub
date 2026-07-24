@@ -1,0 +1,2 @@
+# Pressure-test raw outputs are preserved verbatim, including Markdown hard-break spaces.
+tests/foreign-trade-customer-development/results/raw/** -whitespace

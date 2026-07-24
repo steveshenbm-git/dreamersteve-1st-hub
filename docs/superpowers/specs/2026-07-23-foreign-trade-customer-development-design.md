@@ -8,7 +8,7 @@
 
 状态：对话设计已逐段批准，等待用户复核本书面规格
 
-目标仓库：`/Users/lirongjing/Documents/传统外贸/github/dreamersteve-1st-hub`
+目标仓库：仓库根目录
 
 目标分支：`ft-customer-dev`
 
