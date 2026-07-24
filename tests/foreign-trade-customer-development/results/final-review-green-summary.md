@@ -135,10 +135,24 @@ Raw: `results/raw/final-review-green/16-variant4-ten-day-cadence-weekend-event.m
 | Scorecard ID | Result | Raw-output evidence |
 |---|---|---|
 | CADENCE-1 | PASS | Preserves the 2026-11-04 anchor, ignores the 2026-11-10 event for anchor changes, defers 2026-11-14 to 2026-11-16, and previews 2026-11-16 as the conditional new anchor with 2026-11-26 next due. |
-| TOUCH-2 | PASS | Applies the cycle only to the confirmed potential customer and records the missing new-value evidence instead of preparing repetitive content. |
+| TOUCH-2 | **FAIL** | Records the missing new-value evidence, but the raw output does not explicitly restate the potential-customer classification and completed initial email/alternate-channel/return-email flow; eligibility therefore cannot be scored from raw evidence alone. |
 | AUTHORITY-1 | PASS | Keeps `next_action` and `next_action_date` pending salesperson decision; management and single-event approval do not substitute. |
 | RECORD-1 | PASS | Separates the return-email anchor, event actual, conditional regular transition, pending status, and stable-ID gaps. |
 | EXCEL-1 | PASS | Reports `workbook_status: 未写入` and no reopen verification. |
+
+Result: **FAIL** on the explicit-evidence standard. The next repair adds a required cadence-eligibility block instead of inferring eligibility from the fixture or the existence of an anchor.
+
+### Fixture 16 — fresh variant 5 with explicit eligibility evidence
+
+Raw: `results/raw/final-review-green/16-variant5-ten-day-cadence-weekend-event.md`
+
+| Scorecard ID | Result | Raw-output evidence |
+|---|---|---|
+| CADENCE-1 | PASS | Preserves the 2026-12-02 return-email anchor, keeps the 2026-12-08 event separate, defers 2026-12-12 to 2026-12-14, and previews 2026-12-14 as the conditional new anchor with 2026-12-24 next due. |
+| TOUCH-2 | PASS | The raw `cadence_eligibility` block explicitly records salesperson classification as `潜力客户`, completion of the initial email sequence, actual alternate-channel attempt, actual return-email send, and `eligible: 是`; it separately records the missing new-value evidence and refuses repetitive content. |
+| AUTHORITY-1 | PASS | Keeps cadence status, `next_action`, and `next_action_date` pending the salesperson; management and event-send approval do not substitute. |
+| RECORD-1 | PASS | Separates eligibility evidence, return-email anchor, event actual, conditional future transition, missing stable identifiers, and pending field decisions. |
+| EXCEL-1 | PASS | Reports `workbook_status: 未写入`, no write authorization, and no reopen verification. |
 
 Result: **PASS**.
 
@@ -147,6 +161,7 @@ Result: **PASS**.
 - Static contract: **PASS**.
 - Full-DD gate generalization: **PASS** after one minimal repair.
 - Received-reply routing: **PASS** on the original clean fixture.
-- Cadence generalization: **PASS** after replacing variable prose reminders with a fixed output contract.
+- Cadence generalization: **PASS** after adding the fixed output contract and explicit `cadence_eligibility` evidence block.
+- `TOUCH-2`: **PASS** only in the latest variant whose raw output explicitly proves both potential-customer classification and completed initial outreach flow.
 - Final relevant scorecard rows: **all PASS** in the latest fresh variants.
 - RED raw and all intermediate GREEN raw outputs remain preserved without post-scoring edits.

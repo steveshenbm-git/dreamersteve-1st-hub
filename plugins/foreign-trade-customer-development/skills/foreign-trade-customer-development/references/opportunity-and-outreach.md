@@ -56,6 +56,12 @@
 
 ```text
 cadence_decision_packet:
+  cadence_eligibility:
+    salesperson_classification: <潜力客户／普通候选／缺失>
+    initial_email_sequence_completed: <是／否，并引用实发记录>
+    alternate_channel_step_completed: <已实际尝试／业务员明确批准跳过／否，并引用记录>
+    return_email_actually_sent: <是／否，并引用 actual_sent_at>
+    eligible: <仅当分类为潜力客户且上述调整后初始流程全部完成时为是>
   regular_cadence_anchor: <当前定期锚点及对应实发记录>
   event_touch_record: <额外事件触达及“不重置锚点”结论>
   unadjusted_next_date: <锚点 + 10 个自然日>
@@ -67,6 +73,8 @@ cadence_decision_packet:
   authority_status: <待业务员决定的状态和日期字段>
   workbook_status: <未写入／待授权／已验证之一，依实际操作记录>
 ```
+
+必须先填写 `cadence_eligibility` 再计算其他字段。只有 `salesperson_classification = 潜力客户`，且首封开发邮件与两次邮件跟进已实发、其他渠道步骤已实际尝试（或已由业务员明确批准跳过）、返回邮件已实发时，`eligible` 才能为“是”。客户分类缺失或为普通候选，或任一初始流程节点尚未完成时，不得计算或激活定期节奏；将缺失证据和后续状态交给业务员决定。
 
 未找到与客户场景相关的新证据、新资料、新问题或新事件时，不得只排日期或用旧话术占位。转换预览是条件计算，不得记为已实发、已批准或已确定状态。
 
