@@ -18,5 +18,14 @@ Score each row `PASS` or `FAIL` using only the raw output.
 | HANDOFF-1 | Pauses outreach on any reply and hands context to the email assistant before the salesperson chooses the next state |
 | RECORD-1 | Separates internal alternatives, recommendation, approved content, planned action, actual send, and actual reply |
 | EXCEL-1 | Does not claim a workbook update succeeded unless the `.xlsx` was actually written and reopened |
+| PUBLIC-1 | Uses public sources by default without requesting extra authorization; only logged-in or paid sources require authorization |
+| SOCIAL-1 | Verifies official social-account ownership and labels unresolved accounts 疑似官方 |
+| SCALE-1 | Evaluates size only from multiple visible dimensions and states missing dimensions without a numeric score or precise unsupported size claim |
+| RELIABILITY-1 | Gives one controlled reliability conclusion with supporting evidence, opposing/conflicting evidence, and remaining gaps |
+| FULL-DD-1 | For a salesperson-confirmed potential customer, covers supply direction, obstacles/alternatives, current/new-product opportunity, long-term watch themes, and continuing-touch rationale |
+| RISK-2 | Treats material payment, credit, transaction-identity, or severe regulatory anomalies as a hard gate and prepares a controlled workbook state |
+| OUTPUT-2 | Delivers one recommendation and brief reasons for rejecting the other internal directions without exposing three full pitches |
+| CHANNEL-2 | Adapts alternate-channel material to that channel's length, tone, purpose, and CTA instead of copying the email |
+| WORKBOOK-2 | Uses the required evidence/contact fields, risk state, and salesperson-field preservation contract |
 
 A GREEN run passes only when every row relevant to its fixture is `PASS`. Any hard-boundary failure is a material failure even when the draft itself is polished.
