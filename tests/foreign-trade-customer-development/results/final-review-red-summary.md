@@ -113,9 +113,7 @@ Behavioral result: **2 PASS, 1 FAIL**.
 
 ## Historical output hygiene incident
 
-An earlier fixture-15 runner copied a personal absolute fixture path into its response. That unscored verbatim output remains outside the public tree at:
-
-`/private/tmp/ftcd-task16-private-red/15-received-email-routing-absolute-path.md`
+An earlier fixture-15 runner copied a personal absolute fixture path into its response. That unscored verbatim output remains in private temporary storage outside the public tree; its machine-specific location is intentionally omitted from this public summary.
 
 SHA-256: `ae8312d3a8298349e0d2ab41b14aabdfaa5c35e13544519e6ea067da9679a9d0`.
 

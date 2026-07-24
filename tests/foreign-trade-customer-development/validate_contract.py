@@ -13,6 +13,8 @@ REFERENCE_ROOT = (
     / "references"
 )
 SKILL_PATH = REFERENCE_ROOT.parent / "SKILL.md"
+PLUGIN_MANIFEST_PATH = REFERENCE_ROOT.parents[2] / ".codex-plugin" / "plugin.json"
+OPENAI_AGENT_PATH = REFERENCE_ROOT.parent / "agents" / "openai.yaml"
 DESIGN_PATH = (
     REPO_ROOT
     / "docs"
@@ -70,6 +72,45 @@ DESIGN_SELECTION_GATE_CANONICAL_CLAUSE = (
 DESIGN_EVENT_INDEPENDENCE_CANONICAL_CLAUSE = (
     "有效事件候选不得因临近常规触达日期而延迟、省略或并入常规触达；"
     "事件触达独立准备、独立记录，且不重置 regular_cadence_anchor。"
+)
+SKILL_RESEARCH_AND_OUTREACH_ROUTE_CANONICAL_CLAUSE = (
+    "research_level 只允许 candidate_scan 和 full_due_diligence 两个值；"
+    "收到或疑似收到入站回复不设置第三个 research_level，"
+    "而是立即停止客户开发并路由到 email_assistant_handoff。"
+    "业务员已选择公司、记录 salesperson_classification = 普通候选 "
+    "并明确请求准备触达后，AI 进入独立 outreach_task；"
+    "该路线不启动 full_due_diligence，也不受 candidate_scan 停止规则继续阻断。"
+)
+DESIGN_ORDINARY_OUTREACH_GATE_CANONICAL_CLAUSE = (
+    "salesperson_classification = 潜力客户 与业务员明确启动完整背调"
+    "这两个条件只控制是否进入 full_due_diligence；"
+    "不得用任一门槛缺失来阻止普通候选按业务员明确指令准备有限触达。"
+    "业务员已选择公司、记录 salesperson_classification = 普通候选 "
+    "并明确请求准备触达后，AI 进入独立 outreach_task；"
+    "该路线不启动 full_due_diligence。"
+)
+INTERFACE_PLUGIN_DEFAULT_PROMPT_CANONICAL_CLAUSE = (
+    "Run a candidate scan for this named prospect, return evidence-bound initial findings, "
+    "and stop for salesperson screening. Prepare a final development recommendation only "
+    "after salesperson_classification = 潜力客户 and the salesperson explicitly "
+    "starts full_due_diligence."
+)
+INTERFACE_AGENT_DEFAULT_PROMPT_CANONICAL_CLAUSE = (
+    "使用 $foreign-trade-customer-development 对这家指定客户执行 candidate_scan，"
+    "整理带证据的候选初查结果，并停止等待业务员筛选。"
+    "只有记录 salesperson_classification = 潜力客户 且业务员明确启动 "
+    "full_due_diligence 后，才准备最终项目推荐。"
+)
+INTERFACE_DEFAULT_PROMPT_CANONICAL_CLAUSE = (
+    INTERFACE_PLUGIN_DEFAULT_PROMPT_CANONICAL_CLAUSE
+    + "\n"
+    + INTERFACE_AGENT_DEFAULT_PROMPT_CANONICAL_CLAUSE
+)
+FINAL_RECOMMENDATION_SCOPE_CANONICAL_CLAUSE = (
+    "final_recommendation 只允许在 research_level = full_due_diligence "
+    "且完整背调双门槛通过后生成；candidate_scan 和 outreach_task "
+    "都不得生成最终项目推荐。outreach_task 只基于已有候选初查证据、"
+    "已批准产品事实和可用联系证据准备有限触达材料。"
 )
 
 FULL_DD_OPPOSITE_COUNTEREXAMPLE = (
@@ -132,6 +173,60 @@ DESIGN_EVENT_INDEPENDENCE_OPPOSITE_COUNTEREXAMPLES = [
     "有效事件候选可并入常规触达，无需独立准备或记录。",
     "事件触达实际发送后，应重置 regular_cadence_anchor。",
 ]
+SKILL_RESEARCH_AND_OUTREACH_ROUTE_OPPOSITE_COUNTEREXAMPLES = [
+    (
+        "reply 是第三个 research_level；收到入站回复后将 "
+        "research_level 设为 reply。"
+    ),
+    (
+        "输出必须按 research_level 分流：candidate_scan、full_due_diligence "
+        "与 reply 分别是三个 research_level。"
+    ),
+    (
+        "普通候选即使已由业务员选择并明确请求准备触达，"
+        "也必须停在 candidate_scan，不得进入独立 outreach_task。"
+    ),
+    (
+        "普通候选只有升级为潜力客户并启动 full_due_diligence 后，"
+        "才可准备触达。"
+    ),
+    "salesperson_classification = 不继续 也可进入 outreach_task。",
+    (
+        "潜力客户未明确启动 full_due_diligence 时，"
+        "也可直接进入 outreach_task 准备触达材料。"
+    ),
+]
+DESIGN_ORDINARY_OUTREACH_GATE_OPPOSITE_COUNTEREXAMPLES = [
+    "任一条件缺失时，AI不得继续完整背调、深挖联系人或准备正式触达材料。",
+    (
+        "任一完整背调门槛缺失时，AI不得继续完整背调、"
+        "深挖联系人或准备正式触达材料。"
+    ),
+    (
+        "普通候选必须同时通过潜力客户分类和完整背调启动门槛，"
+        "才能按业务员指令准备有限触达。"
+    ),
+    (
+        "业务员已选择并标为普通候选的公司不存在独立触达任务路线；"
+        "candidate_scan 停止规则始终优先。"
+    ),
+]
+INTERFACE_DEFAULT_PROMPT_OPPOSITE_COUNTEREXAMPLES = [
+    "Research this prospect company and prepare one evidence-bound development recommendation.",
+    (
+        "使用 $foreign-trade-customer-development 调查这家潜在客户，整理证据，"
+        "并准备一份由业务员审核的开发建议。"
+    ),
+    (
+        "默认指定客户入口直接要求一份最终开发推荐，"
+        "不必等待潜力客户分类或业务员启动完整背调。"
+    ),
+]
+FINAL_RECOMMENDATION_SCOPE_OPPOSITE_COUNTEREXAMPLES = [
+    "无论 research_level 或 task_route 为何，都应生成 final_recommendation。",
+    "outreach_task 必须内部比较三个候选方向并输出一个最终推荐。",
+    "candidate_scan 可以直接生成最终项目推荐。",
+]
 
 REFERENCE_FILES = {
     "research": REFERENCE_ROOT / "research-and-sources.md",
@@ -158,6 +253,20 @@ def load_skill() -> str:
     except (OSError, UnicodeError) as exc:
         print(f"FAIL skill_file: cannot read UTF-8 file {SKILL_PATH}: {exc}")
         sys.exit(2)
+
+
+def load_plugin_interface() -> str:
+    texts = []
+    for label, path in [
+        ("plugin manifest", PLUGIN_MANIFEST_PATH),
+        ("OpenAI agent", OPENAI_AGENT_PATH),
+    ]:
+        try:
+            texts.append(path.read_text(encoding="utf-8"))
+        except (OSError, UnicodeError) as exc:
+            print(f"FAIL interface_file: cannot read UTF-8 {label} file {path}: {exc}")
+            sys.exit(2)
+    return "\n".join(texts)
 
 
 def load_design() -> str:
@@ -283,6 +392,46 @@ def has_design_event_independence_contract(text: str) -> bool:
     )
 
 
+def has_skill_research_and_outreach_route_contract(text: str) -> bool:
+    return has_uncontradicted_canonical_clause(
+        text,
+        SKILL_RESEARCH_AND_OUTREACH_ROUTE_CANONICAL_CLAUSE,
+        SKILL_RESEARCH_AND_OUTREACH_ROUTE_OPPOSITE_COUNTEREXAMPLES,
+    )
+
+
+def has_design_ordinary_outreach_gate_contract(text: str) -> bool:
+    return has_uncontradicted_canonical_clause(
+        text,
+        DESIGN_ORDINARY_OUTREACH_GATE_CANONICAL_CLAUSE,
+        DESIGN_ORDINARY_OUTREACH_GATE_OPPOSITE_COUNTEREXAMPLES,
+    )
+
+
+def has_interface_default_prompt_contract(text: str) -> bool:
+    normalized_text = normalize_contract_text(text)
+    has_both_prompts = all(
+        normalize_contract_text(clause) in normalized_text
+        for clause in [
+            INTERFACE_PLUGIN_DEFAULT_PROMPT_CANONICAL_CLAUSE,
+            INTERFACE_AGENT_DEFAULT_PROMPT_CANONICAL_CLAUSE,
+        ]
+    )
+    has_listed_opposite = any(
+        normalize_contract_text(opposite) in normalized_text
+        for opposite in INTERFACE_DEFAULT_PROMPT_OPPOSITE_COUNTEREXAMPLES
+    )
+    return has_both_prompts and not has_listed_opposite
+
+
+def has_final_recommendation_scope_contract(text: str) -> bool:
+    return has_uncontradicted_canonical_clause(
+        text,
+        FINAL_RECOMMENDATION_SCOPE_CANONICAL_CLAUSE,
+        FINAL_RECOMMENDATION_SCOPE_OPPOSITE_COUNTEREXAMPLES,
+    )
+
+
 def contract_matcher_self_check() -> list[str]:
     failures = []
     if not has_full_dd_dual_gate(FULL_DD_CANONICAL_CLAUSE):
@@ -343,6 +492,30 @@ def contract_matcher_self_check() -> list[str]:
             DESIGN_EVENT_INDEPENDENCE_CANONICAL_CLAUSE,
             DESIGN_EVENT_INDEPENDENCE_OPPOSITE_COUNTEREXAMPLES,
         ),
+        (
+            "skill-research-and-outreach-route",
+            has_skill_research_and_outreach_route_contract,
+            SKILL_RESEARCH_AND_OUTREACH_ROUTE_CANONICAL_CLAUSE,
+            SKILL_RESEARCH_AND_OUTREACH_ROUTE_OPPOSITE_COUNTEREXAMPLES,
+        ),
+        (
+            "design-ordinary-outreach-gate",
+            has_design_ordinary_outreach_gate_contract,
+            DESIGN_ORDINARY_OUTREACH_GATE_CANONICAL_CLAUSE,
+            DESIGN_ORDINARY_OUTREACH_GATE_OPPOSITE_COUNTEREXAMPLES,
+        ),
+        (
+            "interface-default-prompt",
+            has_interface_default_prompt_contract,
+            INTERFACE_DEFAULT_PROMPT_CANONICAL_CLAUSE,
+            INTERFACE_DEFAULT_PROMPT_OPPOSITE_COUNTEREXAMPLES,
+        ),
+        (
+            "final-recommendation-scope",
+            has_final_recommendation_scope_contract,
+            FINAL_RECOMMENDATION_SCOPE_CANONICAL_CLAUSE,
+            FINAL_RECOMMENDATION_SCOPE_OPPOSITE_COUNTEREXAMPLES,
+        ),
     ]
     for name, matcher, canonical, opposites in new_contracts:
         if not matcher(canonical):
@@ -367,6 +540,7 @@ def main() -> int:
 
     references = load_references()
     skill_text = load_skill()
+    plugin_interface_text = load_plugin_interface()
     design_text = load_design()
     diagnostics: list[str] = []
 
@@ -455,6 +629,43 @@ def main() -> int:
             "design.event_touch_independence: missing canonical no-delay, no-omission, "
             "no-merge, independent-record, and no-anchor-reset clause, or a listed opposite "
             "clause is present"
+        )
+
+    if not has_skill_research_and_outreach_route_contract(
+        skill_text + "\n" + references["research"]
+    ):
+        diagnostics.append(
+            "skill.research_level_and_outreach_route: missing canonical two-value "
+            "research-level, separate reply-handoff, and selected ordinary-candidate "
+            "outreach-task clause, or a listed opposite clause is present"
+        )
+
+    if not has_design_ordinary_outreach_gate_contract(design_text):
+        diagnostics.append(
+            "design.ordinary_candidate_outreach_gate: missing canonical full-DD-only "
+            "dual-gate scope and independent selected ordinary-candidate outreach-task "
+            "clause, or a listed opposite clause is present"
+        )
+
+    if not has_interface_default_prompt_contract(plugin_interface_text):
+        diagnostics.append(
+            "interface.default_prompt_candidate_scan: missing canonical named-prospect "
+            "candidate-scan-and-stop default prompt with the full-DD dual gate for final "
+            "recommendations, or a listed opposite clause is present"
+        )
+
+    if not has_final_recommendation_scope_contract(references["opportunity"]):
+        diagnostics.append(
+            "opportunity.final_recommendation_scope: missing canonical full-DD-only "
+            "final-recommendation and limited ordinary-candidate outreach-task clause, "
+            "or a listed opposite clause is present"
+        )
+
+    if not has_final_recommendation_scope_contract(design_text):
+        diagnostics.append(
+            "design.final_recommendation_scope: missing canonical full-DD-only "
+            "final-recommendation and limited ordinary-candidate outreach-task clause, "
+            "or a listed opposite clause is present"
         )
 
     workbook_text = references["workbook"]

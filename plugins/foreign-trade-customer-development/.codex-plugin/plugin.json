@@ -17,7 +17,7 @@
   "interface": {
     "displayName": "Foreign Trade Customer Development",
     "shortDescription": "Research prospects and prepare controlled development plans.",
-    "longDescription": "A salesperson-controlled assistant for finding and researching prospect companies, analyzing company and contact evidence, checking public trade and risk signals, preparing one product-fit development recommendation, and maintaining a local prospect workbook without making final business or sending decisions.",
+    "longDescription": "A salesperson-controlled assistant for candidate scans, stage-gated due diligence, evidence-bound outreach preparation, and local prospect workbook maintenance without making final business or sending decisions.",
     "developerName": "steveshenbm-git",
     "category": "Productivity",
     "capabilities": [
@@ -26,7 +26,7 @@
     ],
     "brandColor": "#147DFF",
     "defaultPrompt": [
-      "Research this prospect company and prepare one evidence-bound development recommendation.",
+      "Run a candidate scan for this named prospect, return evidence-bound initial findings, and stop for salesperson screening. Prepare a final development recommendation only after salesperson_classification = 潜力客户 and the salesperson explicitly starts full_due_diligence.",
       "Build a candidate company list for this salesperson-confirmed market theme.",
       "Perform full due diligence on this salesperson-confirmed potential customer and update the local workbook."
     ]

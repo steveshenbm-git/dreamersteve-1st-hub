@@ -90,7 +90,7 @@ site:<电商或零售平台域名> "<品牌名>" <型号|品类>
 
 ## 完整背调
 
-只有在上述双门槛已满足、且 `research_plan` 已记录 `research_level = full_due_diligence` 时，才执行完整背调。普通候选即使已被业务员选中，仍停留在 `candidate_scan`。完整背调必须覆盖：
+只有在上述双门槛已满足、且 `research_plan` 已记录 `research_level = full_due_diligence` 时，才执行完整背调。对研究层级而言，被选中的普通候选仍保持 `research_level = candidate_scan`；该停止点只结束本次 `research_task`。业务员已选择公司、记录 `salesperson_classification = 普通候选` 并另行明确请求准备有限触达后，可进入独立 `outreach_task`；该任务不改变 `research_level`，也不启动完整背调。完整背调必须覆盖：
 
 1. 法定主体、品牌、域名、分支、母子公司、关联主体和采购主体关系。
 2. 产品、应用、市场、地区和渠道。

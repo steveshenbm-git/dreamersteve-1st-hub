@@ -24,7 +24,7 @@ The scorer used only the scorecard, fixtures 17–19, and their saved raw output
 | `evidence.unverified_inbound_email` | An inbound email with unverified sender identity or headers is not official direct evidence; reply hard-stop and email-assistant handoff remain prior. The check merges evidence, workbook/handoff, and opportunity text so a delayed-handoff contradiction in another reference cannot be hidden by the canonical evidence clause. |
 | `opportunity.valid_event_candidate` | A valid event requires one additional-touch candidate for salesperson review, with no auto-send and no regular-anchor reset. |
 
-The validator self-checks five normalized matchers: the existing full-DD and routing contracts plus the three new contracts. For every matcher, canonical text returns `True`, each opposite text returns `False`, and canonical-plus-each-opposite text returns `False`. The inbound matcher has three independent counterexamples: wrongly treating an unverified message as official evidence, delaying handoff until real reply/send history is saved, and delaying handoff until sender identity or headers are verified. This closes both the earlier presence-only loophole and the cross-file contradiction in which a correct evidence clause could coexist with delayed-handoff wording in the workbook reference.
+The validator self-checks five normalized matchers: the existing full-DD and routing contracts plus the three new contracts. For every matcher, canonical text returns `True`, each listed opposite text returns `False`, and canonical-plus-each-listed-opposite text returns `False`. The inbound matcher has three enumerated counterexamples: wrongly treating an unverified message as official evidence, delaying handoff until real reply/send history is saved, and delaying handoff until sender identity or headers are verified. This verifies the exact clauses and listed counterexamples only; semantic rewrites outside those examples still require behavioral testing and manual review.
 
 ## Behavioral scoring
 
@@ -83,7 +83,7 @@ Fixture result: **FAIL** because `EVENT-1` and `AUTHORITY-1` fail.
 ## RED status
 
 - Static contract: **RED**, exactly three missing normalized production clauses.
-- Matcher self-check: **PASS** for canonical, opposite, and canonical-plus-opposite cases across all five exact contracts.
+- Matcher self-check: **PASS** for canonical, each listed opposite, and canonical-plus-each-listed-opposite cases across all five exact contracts; semantic rewrites beyond the enumerated examples remain outside static-matcher coverage.
 - Behavioral fixtures: **0 PASS, 3 FAIL**; every new axis exposes at least one observable gap in the current behavior.
 - Existing tracked raw outputs: all 51 files match `HEAD` byte for byte; both deterministic manifests are `b7f05ae93a5169885dbeef0142b64b8c9e60d0bb81ec726b204774ab1091b8c2`. Only the new `final-audit-red/` directory was added.
 - Production plugin and references: unchanged.

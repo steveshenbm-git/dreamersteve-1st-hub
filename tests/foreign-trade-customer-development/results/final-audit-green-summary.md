@@ -118,7 +118,7 @@ Raw: `results/raw/final-audit-green/19-variant3-valid-event-must-prepare.md`
 
 Date check: 2026-07-20 + 10 natural days = 2026-07-30. A conditional actual regular send on 2026-07-30 would produce 2026-08-09, then defer Sunday to 2026-08-10. The event candidate does not alter the 2026-07-20 anchor.
 
-Result: **PASS**. The scorer noted a minor raw-label ambiguity in “人工建议验证问题”; the production contract itself uses the explicit field `ai_suggested_validation_question`, so future outputs distinguish the AI proposal from salesperson or customer facts.
+Result: **PASS** for the scored behavior. The scorer noted a historical raw-label ambiguity in “人工建议验证问题”; that raw file remains unchanged. The production contract now requires the exact field label `ai_suggested_validation_question`; fresh behavioral review is still needed to verify that future executors comply.
 
 ## GREEN status
 
