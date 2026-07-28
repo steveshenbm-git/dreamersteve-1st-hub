@@ -9,8 +9,9 @@ The package currently includes:
 - `jiangyue-website-workflow-director` routes Jiangyue website work across planning, image production, and knowledge curation.
 - `jiangyue-knowledge-curator` maintains reusable Jiangyue website knowledge and approved-material references.
 - `jiangyue-skill-director` governs Jiangyue skill design, repair, and release checks.
-- `foreign-trade-email-assistant` analyzes complete customer email threads and prepares salesperson-reviewed bilingual reply drafts.
-- `foreign-trade-customer-development` runs `candidate_scan` for a salesperson-confirmed market theme or named prospect, returns a candidate pool or candidate-scan findings, and stops for salesperson selection. It prepares a final development recommendation only after `salesperson_classification = 潜力客户` and the salesperson explicitly starts `full_due_diligence`.
+- `foreign-trade-email-assistant` remains an optional compatibility plugin for standalone complete-email-thread analysis. Do not run it alongside `foreign-trade-customer-operations` for the same reply.
+- `foreign-trade-customer-development` starts with product-led direction discovery, validates a direction before scanning, returns all qualified candidate companies in the declared scope, and prepares an evidence-bound communication handoff without drafting or sending messages.
+- `foreign-trade-customer-operations` is the primary communication plugin for selected prospects and existing customers: first cold outreach, unanswered follow-up, replies, and customer-operation materials.
 
 The user remains the final reviewer for page strategy, claims, visual approval, business judgment, email wording, and sending.
 
@@ -35,6 +36,10 @@ plugins/foreign-trade-customer-development/skills/foreign-trade-customer-develop
 plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development/agents/openai.yaml
 plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development/references/
 plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development/assets/prospect-development-workbook.xlsx
+plugins/foreign-trade-customer-operations/.codex-plugin/plugin.json
+plugins/foreign-trade-customer-operations/skills/foreign-trade-customer-operations/SKILL.md
+plugins/foreign-trade-customer-operations/skills/foreign-trade-customer-operations/agents/openai.yaml
+plugins/foreign-trade-customer-operations/skills/foreign-trade-customer-operations/references/
 ```
 
 ## Install From This Repository
@@ -46,13 +51,19 @@ plugins/foreign-trade-customer-development/skills/foreign-trade-customer-develop
 codex plugin marketplace add /absolute/path/to/dreamersteve-1st-hub
 ```
 
-3. Install the plugins:
+3. Install the recommended foreign-trade pair and any Jiangyue plugins you use:
 
 ```bash
 codex plugin add jiangyue-website-planner@jiangyue-team
 codex plugin add jiangyue-website-imagegen@jiangyue-team
-codex plugin add foreign-trade-email-assistant@jiangyue-team
 codex plugin add foreign-trade-customer-development@jiangyue-team
+codex plugin add foreign-trade-customer-operations@jiangyue-team
+```
+
+If you need only the older standalone email workflow, install `foreign-trade-email-assistant` as an optional compatibility plugin instead of using it together with customer operations for the same task:
+
+```bash
+codex plugin add foreign-trade-email-assistant@jiangyue-team
 ```
 
 4. Start a new Codex thread and use:
@@ -60,8 +71,8 @@ codex plugin add foreign-trade-customer-development@jiangyue-team
 ```text
 Use $jiangyue-website-planner to plan a Jiangyue website page and image brief.
 Use $jiangyue-website-imagegen to help me create a Jiangyue website visual.
-Use $foreign-trade-email-assistant to analyze a complete customer email thread and prepare a bilingual reply draft.
-Use $foreign-trade-customer-development to run candidate_scan for this salesperson-confirmed market theme or named prospect, return a candidate pool or candidate-scan findings, and stop for salesperson selection. Prepare a final development recommendation only after salesperson_classification = 潜力客户 and the salesperson explicitly starts full_due_diligence.
+Use $foreign-trade-customer-development to create a product-led development direction, validate it, or scan a confirmed direction for qualified candidates.
+Use $foreign-trade-customer-operations to prepare the first outreach, a due follow-up, or a reply from a complete customer thread.
 ```
 
 ## Recommended Workflow
@@ -74,16 +85,16 @@ Use $foreign-trade-customer-development to run candidate_scan for this salespers
 
 ## Foreign Trade Customer Development Workflow
 
-1. For a confirmed market theme or named prospect, run `candidate_scan`, return a candidate pool or candidate-scan findings, and stop for salesperson selection. Run `full_due_diligence` and prepare a final development recommendation only after `salesperson_classification = 潜力客户` and the salesperson explicitly starts `full_due_diligence`.
-2. Keep salesperson selection separate from potential-customer classification and the explicit start of full due diligence.
-3. Run full due diligence only after both gates are recorded.
-4. Write prospect research and development records only to the local workbook.
-5. Hand any customer reply to `foreign-trade-email-assistant` for reply preparation.
+1. Run `direction_discovery` from approved local product facts; validate the rule and obtain the salesperson's `已确认可扫描` decision before scanning a direction.
+2. For a confirmed direction or named prospect, run `candidate_scan`, return all qualified candidates in the declared scope, and stop for salesperson selection.
+3. Run full due diligence only after potential-customer classification and explicit start are both recorded.
+4. When the salesperson asks to start communication, output an `outreach_handoff_packet`; do not draft or send a message in customer development.
+5. Use `foreign-trade-customer-operations` for first outreach, no-reply follow-up, replies, and customer-operation work. Write only to a user-designated local workbook.
 
-## Foreign Trade Email Workflow
+## Standalone Compatibility Email Workflow
 
 1. Supply the complete customer email thread, readable attachments, and any approved local facts needed for the reply.
-2. Use `foreign-trade-email-assistant` for a Chinese reply recommendation, one customer-language draft, and a meaning-aligned Chinese translation.
+2. Use `foreign-trade-email-assistant` only when you intentionally choose the standalone compatibility workflow; otherwise use `foreign-trade-customer-operations`.
 3. Give revision instructions in natural language when the first draft is not acceptable.
 4. Keep importance, business decisions, final wording, and sending authority with the salesperson.
 5. Keep company knowledge, customer records, mailbox data, test cases, and actual correspondence outside this public plugin repository.

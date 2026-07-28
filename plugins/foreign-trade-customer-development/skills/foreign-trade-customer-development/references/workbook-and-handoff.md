@@ -10,41 +10,47 @@
 
 可见工作表顺序必须为：
 
-1. 客户总览
-2. 公司研究
-3. 项目机会
-4. 联系人
-5. 证据来源
-6. 海关与贸易
-7. 风险核验
-8. 触达记录
-9. 移交记录
+1. 开发方向
+2. 方向证据
+3. 客户总览
+4. 公司研究
+5. 项目机会
+6. 联系人
+7. 证据来源
+8. 海关与贸易
+9. 风险核验
+10. 触达记录
+11. 移交记录
 
 第 1 行是机器字段名，必须精确为：
 
 ```text
-客户总览: customer_id, company_name, legal_name, website, country, business_model, screening_status, salesperson_classification, information_reliability, risk_gate, recommended_opportunity_id, primary_contact_id, last_research_date, last_touch_date, next_action, next_action_date, handoff_status, salesperson_notes
+开发方向: direction_id, approved_product_reference, product_boundary, observable_enterprise_rule, candidate_direct_evidence_rule, exclusion_boundary, external_validation_status, direction_status, declared_scope, unresolved_conditions, salesperson_decision, decision_date
+方向证据: direction_evidence_id, direction_id, source_type, source_title, source_url_or_local_reference, original_excerpt, zh_summary, published_at, observed_at, evidence_state, validation_effect, limitation_note
+客户总览: customer_id, company_name, legal_name, website, country, business_model, source_direction_id, screening_status, salesperson_classification, information_reliability, risk_gate, recommended_opportunity_id, primary_contact_id, last_research_date, last_touch_date, next_action, next_action_date, handoff_status, salesperson_notes
 公司研究: research_id, customer_id, research_level, section, finding_original, finding_zh_summary, evidence_id, evidence_state, source_published_at, observed_at, gap_or_conflict, salesperson_confirmed
 项目机会: opportunity_id, customer_id, customer_fact, application_or_purchase_scenario, approved_product_reference, fit_basis, validation_question, primary_contact_id, recommendation_state, salesperson_decision, decision_date
 联系人: contact_id, customer_id, name, title, possible_role, role_evidence_id, channel, contact_value, authenticity_state, source_reliability, usage_permission, contact_order, ordering_basis, observed_at, salesperson_approval, employer_or_entity, entity_match_basis, contact_source_reference, uncertainty_note
 证据来源: evidence_id, customer_id, source_type, source_title, source_url_or_local_reference, source_owner, source_language, original_excerpt, zh_summary, published_at, observed_at, evidence_state, access_scope, conflict_note, source_region_or_jurisdiction
 海关与贸易: trade_record_id, customer_id, data_source, access_scope, coverage_country, coverage_period, observed_entity_name, observed_entity_address, entity_match_basis, trade_direction, shipment_period, visible_frequency, product_description, hs_code, quantity, quantity_unit, weight, weight_unit, declared_value, declared_currency, partner_or_country, limitation_note, observed_at, evidence_id
 风险核验: risk_id, customer_id, risk_type, matched_entity, match_basis, allegation_or_record, evidence_id, jurisdiction, record_date, observed_at, evidence_state, false_match_risk, gate_status, reviewer_decision, decision_date
-触达记录: touch_id, customer_id, contact_id, channel, touch_stage, content_status, planned_date, actual_sent_at, actual_content_or_local_reference, response_state, response_at, next_action, next_action_date, salesperson_approved
+触达记录: touch_id, customer_id, contact_id, channel, touch_stage, content_status, planned_date, draft_content_or_local_reference, draft_generated_at, draft_for_touch_stage, automation_run_id, actual_sent_at, actual_content_or_local_reference, response_state, response_at, next_action, next_action_date, salesperson_approved
 移交记录: handoff_id, customer_id, trigger_channel, trigger_touch_id, response_reference, development_snapshot_reference, open_questions, risk_gate_status, target_skill, handoff_status, salesperson_decision, decision_date
 ```
 
 第 2 行是业务可读的中文字段说明，必须与第 1 行逐列对应并精确为：
 
 ```text
-客户总览: 客户编号, 公司常用名称, 法定注册名称, 公司网站, 国家或地区, 商业模式, 筛选状态, 业务员客户分类, 信息可靠性, 风险门状态, 推荐机会编号, 主要联系人编号, 最近研究日期, 最近触达日期, 下一步行动, 下一步行动日期, 移交状态, 业务员备注
+开发方向: 开发方向编号, 已批准产品引用, 产品边界, 可观察目标企业规则, 候选公司直接证据规则, 排除边界, 外部核实状态, 方向状态, 本次声明范围, 待核实条件, 业务员方向决定, 决定日期
+方向证据: 方向证据编号, 开发方向编号, 来源类型, 来源标题, 来源网址或本地引用, 原文摘录, 中文摘要, 来源发布日期, 观察记录时间, 证据状态, 对方向的验证作用, 局限说明
+客户总览: 客户编号, 公司常用名称, 法定注册名称, 公司网站, 国家或地区, 商业模式, 来源开发方向编号, 筛选状态, 业务员客户分类, 信息可靠性, 风险门状态, 推荐机会编号, 主要联系人编号, 最近研究日期, 最近触达日期, 下一步行动, 下一步行动日期, 移交状态, 业务员备注
 公司研究: 研究记录编号, 客户编号, 研究层级, 研究章节, 原文研究发现, 研究发现中文摘要, 证据编号, 证据状态, 来源发布日期, 观察记录时间, 信息缺口或冲突, 业务员确认状态
 项目机会: 机会编号, 客户编号, 已确认客户事实, 应用或采购场景, 已批准产品引用, 匹配依据, 待验证问题, 主要联系人编号, 推荐状态, 业务员决定, 决定日期
 联系人: 联系人编号, 客户编号, 联系人姓名, 职务名称, 可能承担的角色, 角色证据编号, 联系渠道, 联系方式内容, 真实性状态, 来源可靠性, 使用许可, 联系顺序, 排序依据, 观察记录时间, 业务员批准状态, 所属公司或主体, 主体匹配依据, 联系信息来源或职业页面, 身份职位或联系方式不确定项
 证据来源: 证据编号, 客户编号, 来源类型, 来源标题, 来源网址或本地引用, 来源主体, 来源语言, 原文摘录, 中文摘要, 来源发布日期, 观察记录时间, 证据状态, 访问范围, 冲突说明, 来源适用地区或管辖范围
 海关与贸易: 贸易记录编号, 客户编号, 数据来源, 访问范围, 覆盖国家或地区, 覆盖期间, 观察到的企业名称, 观察到的企业地址, 主体匹配依据, 贸易方向, 货运期间, 可见交易频次, 产品描述, 海关编码, 数量, 数量单位, 重量, 重量单位, 申报价值, 申报币种, 贸易伙伴或国家, 数据局限说明, 观察记录时间, 证据编号
 风险核验: 风险记录编号, 客户编号, 风险类型, 匹配到的主体, 主体匹配依据, 指控或记录内容, 证据编号, 管辖地区, 记录日期, 观察记录时间, 证据状态, 误匹配风险, 风险门状态, 审核人决定, 决定日期
-触达记录: 触达记录编号, 客户编号, 联系人编号, 触达渠道, 触达阶段, 内容状态, 计划日期, 实际发送时间, 实发内容或本地引用, 回复状态, 回复时间, 下一步行动, 下一步行动日期, 业务员批准状态
+触达记录: 触达记录编号, 客户编号, 联系人编号, 触达渠道, 触达阶段, 内容状态, 计划日期, 草稿内容或本地引用, 草稿生成时间, 草稿对应触达阶段, 自动化运行编号, 实际发送时间, 实发内容或本地引用, 回复状态, 回复时间, 下一步行动, 下一步行动日期, 业务员批准状态
 移交记录: 移交记录编号, 客户编号, 触发渠道, 触发触达记录编号, 回复内容引用, 客户开发快照引用, 未解决问题, 风险门状态, 目标技能, 移交状态, 业务员决定, 决定日期
 ```
 
@@ -54,16 +60,18 @@
 
 ```text
 screening_status: 待业务员筛选, 已确认, 已暂停, 已关闭
+direction_status: 草案, 待外部核实, 待业务员确认, 已确认可扫描, 暂缓, 淘汰
+external_validation_status: 支持, 存在反证, 证据有限, 尚未核实, 来源不可访问
 salesperson_classification: 不继续, 普通候选, 潜力客户
 information_reliability: 资料充分且一致, 整体可信但存在缺口, 存在重大冲突需要核验, 证据不足无法判断
 evidence_state: 官方直接证据, 多来源相互印证, 单一来源待验证, 合理推断, 来源相互冲突, 信息已经过期, 来源不明隔离待核实
 usage_permission: 正常使用, 限制使用, 隔离待核实
 risk_gate: 未触发, 待核验, 暂停待业务员审核, 业务员批准继续, 已关闭
 content_status: 草稿, 业务员批准, 计划触达, 实际发送, 实际回复
-handoff_status: 未触发, 待邮件助手, 已移交, 业务员已决定
+handoff_status: 未触发, 待客户经营与沟通, 已移交, 业务员已决定
 ```
 
-以上 13 个受控字段都必须启用停止式错误拦截并允许空白：信息未知时可以留空，空白不违反数据验证；只要填入非空值，就必须来自对应受控列表。业务员输入列表外的非空值时，工作簿显示错误提示并拒绝写入。不得仅提供下拉候选但继续接受无效值，也不得用自造状态代替未知值。
+以上受控字段都必须启用停止式错误拦截并允许空白：信息未知时可以留空，空白不违反数据验证；只要填入非空值，就必须来自对应受控列表。业务员输入列表外的非空值时，工作簿显示错误提示并拒绝写入。不得仅提供下拉候选但继续接受无效值，也不得用自造状态代替未知值。
 
 `客户总览.risk_gate`、`风险核验.gate_status` 和 `移交记录.risk_gate_status` 必须使用同一组 `risk_gate` 受控值。风险硬门命中时，在同一待写入包或获授权的写入中，将 `客户总览.risk_gate` 与对应 `风险核验.gate_status` 都设为 `暂停待业务员审核`；在业务员明确审核并将风险门批准为 `业务员批准继续` 前，不得恢复推荐、准备触达材料或继续触达。
 
@@ -74,6 +82,14 @@ handoff_status: 未触发, 待邮件助手, 已移交, 业务员已决定
 使用 customer_id、research_id、opportunity_id、contact_id、evidence_id、trade_record_id、risk_id、touch_id 和 handoff_id。公司名称不是唯一键。
 
 更新前先用稳定编号定位记录，再核对 `customer_id` 的引用关系。不得仅凭公司名、品牌名或联系人名称合并记录。
+
+## 方向推导与结果反馈如何落入现有表
+
+为保持一个共享工作簿且不增加重复工作表，`direction_derivation_chain` 按现有字段拆分保存：产品事实引用写入 `approved_product_reference`；效果、功能、适用和禁止边界写入 `product_boundary`；可观察产品信号与目标企业规则写入 `observable_enterprise_rule`；候选准入证据门写入 `candidate_direct_evidence_rule`；排除条件写入 `exclusion_boundary`；反证和未知写入 `unresolved_conditions`。不得把整条链压缩成无法追溯的一段结论。
+
+每次候选扫描的声明范围、查询语言、覆盖来源、访问限制和观察日期必须保留在交付的结构化候选表及对应 `证据来源` 记录中；合格候选逐行进入 `客户总览` 并保留同一 `source_direction_id`。未合格或待核实公司不伪装成客户记录，保留在本次结构化候选表和证据记录中，供业务员审阅。若业务员尚未授权写入，则只输出 `workbook_update_packet`。
+
+`direction_feedback_packet` 的支持结果、反证结果和未覆盖范围分别追加为 `方向证据` 行，使用 `validation_effect` 和 `limitation_note` 区分；只有业务员对 `direction_status`、`salesperson_decision` 或 `decision_date` 给出字段级新值授权后，才可更新 `开发方向`。扫描结果本身不得自动改写方向状态。
 
 ## 状态分离
 
@@ -88,15 +104,32 @@ handoff_status: 未触发, 待邮件助手, 已移交, 业务员已决定
 
 任一渠道收到回复或看似回复的入站内容即暂停原触达计划。已核验时保存实际回复；尚未核验时保存当前文本或本地引用并标明身份、邮件头和来源缺口。输出客户编号、已确认资料、实发记录、当前入站内容、未解决问题、风险和证据引用。
 
-收到任何看似回复的入站内容时，立即暂停原触达计划，取消未发送的后续计划，不再生成新开发触达内容，并立即准备有边界的 `email_assistant_handoff`。若发件人身份、邮件头、原始消息或对应实发历史未核验，交接包使用当前已保存文本或本地引用和现有上下文，逐项标明身份与历史缺口；不得把它记成已核验的“实际回复”或“官方直接证据”，也不得因等待核验或补齐记录而延迟移交。未获得工作簿写入授权时，只输出待写入包和交接包，不得声称已写入、已创建移交记录或已更新状态。
+收到任何看似回复的入站内容时，立即暂停原触达计划，取消未发送的后续计划，不再生成新开发触达内容，并立即准备有边界的 `customer_operations_handoff`。若发件人身份、邮件头、原始消息或对应实发历史未核验，交接包使用当前已保存文本或本地引用和现有上下文，逐项标明身份与历史缺口；不得把它记成已核验的“实际回复”或“官方直接证据”，也不得因等待核验或补齐记录而延迟移交。未获得工作簿写入授权时，只输出待写入包和交接包，不得声称已写入、已创建移交记录或已更新状态。
 
-开始准备上述受控交接后，输出与待写入包中的移交状态只使用 `handoff_status = 待邮件助手`。原触达计划“已暂停”是独立流程状态，不得与 `handoff_status` 用斜杠、并列值或自造值合并。未核验入站内容仍不得记为已核验的实际回复、官方直接证据、实际回复状态或触达成功。
+开始准备上述受控交接后，输出与待写入包中的移交状态只使用 `handoff_status = 待客户经营与沟通`。原触达计划“已暂停”是独立流程状态，不得与 `handoff_status` 用斜杠、并列值或自造值合并。未核验入站内容仍不得记为已核验的实际回复、官方直接证据、实际回复状态或触达成功。
 
-## 邮件助手移交
+## 客户经营与沟通移交
 
-target_skill 固定为 foreign-trade-email-assistant。邮件助手处理当前回复后，由业务员决定明确商机、暂时无项目返回长期触达、或关闭。
+target_skill 固定为 foreign-trade-customer-operations。客户经营与沟通技能处理首封、未回复跟进和收到回复后的沟通；业务员决定项目状态、长期经营或关闭。
 
-`email_assistant_handoff` 在实际写入时使用新 `handoff_id`；仅准备未写入的交接包时，将缺失编号标为待创建，不得伪造。交接包必须包含 `customer_id`、`trigger_channel`、`trigger_touch_id`、已确认资料、实发记录、当前保存的回复原文或本地引用、发件人／邮件头／主体关系的核验状态与缺口、未解决问题、风险门状态、证据引用、`target_skill` 和待业务员决定项。交接是对当前入站内容的回复处理入口，不授权邮件助手决定客户价值、优先级、发送、受限联系方式或最终状态。
+`customer_operations_handoff` 在实际写入时使用新 `handoff_id`；仅准备未写入的交接包时，将缺失编号标为待创建，不得伪造。发送给接收技能的字段名必须与下列合同一致，不得只给一段综合叙述：
+
+```text
+customer_operations_handoff:
+  customer_id: <稳定编号或待创建>
+  trigger_channel: <触发渠道>
+  trigger_touch_id: <对应实发触达编号或缺口>
+  response_reference: <当前保存的入站原文或本地引用>
+  sender_identity_status: <发件人、邮件头、主体关系的核验状态与缺口>
+  confirmed_context: <已确认客户、产品和项目事实及证据引用>
+  actual_send_history: <可追溯实发记录；没有则明示缺口>
+  open_questions: <未解决问题>
+  risk_gate_status: <当前风险状态与依据>
+  target_skill: foreign-trade-customer-operations
+  salesperson_request: <本次明确要求或待确认>
+```
+
+交接是对当前入站内容的回复处理入口，不授权客户经营与沟通技能决定客户价值、优先级、发送、受限联系方式或最终状态。
 
 ## 现有接口兼容
 

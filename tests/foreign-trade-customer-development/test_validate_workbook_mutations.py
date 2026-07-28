@@ -4,6 +4,7 @@ from shutil import copyfile
 import subprocess
 import sys
 from tempfile import TemporaryDirectory
+import unittest
 
 from openpyxl import load_workbook
 
@@ -20,11 +21,11 @@ WORKBOOK_PATH = (
 )
 VALIDATOR_PATH = Path(__file__).with_name("validate_workbook.py")
 HANDOFF_TARGETS = (
-    ("客户总览", "Q3:Q5000"),
+    ("客户总览", "R3:R5000"),
     ("移交记录", "J3:J5000"),
 )
-EXPECTED_HANDOFF_FORMULA = '"未触发,待邮件助手,已移交,业务员已决定"'
-OBSOLETE_HANDOFF_FORMULA = '"未触发,触达已暂停,待邮件助手,已移交,业务员已决定"'
+EXPECTED_HANDOFF_FORMULA = '"未触发,待客户经营与沟通,已移交,业务员已决定"'
+OBSOLETE_HANDOFF_FORMULA = '"未触发,触达已暂停,待客户经营与沟通,已移交,业务员已决定"'
 
 
 def file_sha256(path: Path) -> str:
@@ -85,9 +86,9 @@ def create_green_control(destination: Path) -> None:
         for sheet in workbook.worksheets
         for validation in sheet.data_validations.dataValidation
     ]
-    if len(validations) != 13:
+    if len(validations) != 16:
         raise AssertionError(
-            f"expected 13 controlled validations in source workbook, observed {len(validations)}"
+            f"expected 16 controlled validations in source workbook, observed {len(validations)}"
         )
     for validation in validations:
         validation.showErrorMessage = True
@@ -117,7 +118,7 @@ def main() -> int:
         )
         wrong_screening_path = temp_root / "wrong-screening-list.xlsx"
         workbook = load_workbook(screening_green_control_path, data_only=False)
-        validation = validation_by_range(workbook["客户总览"], "G3:G5000")
+        validation = validation_by_range(workbook["客户总览"], "H3:H5000")
         validation.formula1 = '"待业务员筛选,已确认,NOT_A_VALID_SCREENING_STATE,已关闭"'
         workbook.save(wrong_screening_path)
         assert_rejected(
@@ -133,7 +134,7 @@ def main() -> int:
         )
         disabled_risk_alert_path = temp_root / "disabled-risk-alert.xlsx"
         workbook = load_workbook(risk_green_control_path, data_only=False)
-        validation = validation_by_range(workbook["客户总览"], "J3:J5000")
+        validation = validation_by_range(workbook["客户总览"], "K3:K5000")
         validation.showErrorMessage = False
         workbook.save(disabled_risk_alert_path)
         assert_rejected(
@@ -149,7 +150,7 @@ def main() -> int:
         )
         disabled_blank_allowance_path = temp_root / "disabled-blank-allowance.xlsx"
         workbook = load_workbook(blank_green_control_path, data_only=False)
-        validation = validation_by_range(workbook["客户总览"], "G3:G5000")
+        validation = validation_by_range(workbook["客户总览"], "H3:H5000")
         validation.allowBlank = False
         workbook.save(disabled_blank_allowance_path)
         assert_rejected(
@@ -179,6 +180,11 @@ def main() -> int:
 
     print("PASS: GREEN control validates and all five isolated mutations are rejected")
     return 0
+
+
+class WorkbookMutationTests(unittest.TestCase):
+    def test_validator_rejects_isolated_workbook_contract_mutations(self) -> None:
+        self.assertEqual(main(), 0)
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 {
   "name": "foreign-trade-customer-development",
-  "version": "0.1.0",
-  "description": "Codex skill plugin for salesperson-controlled prospect discovery, evidence-bound company due diligence, product-fit development recommendations, and local workbook handoff.",
+  "version": "0.1.0+codex.20260728074635",
+  "description": "Codex skill plugin for product-led direction discovery, evidence-bound candidate-company research, due diligence, and customer-development handoff before external communication.",
   "author": {
     "name": "steveshenbm-git"
   },
@@ -16,8 +16,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Foreign Trade Customer Development",
-    "shortDescription": "Research prospects and prepare controlled development plans.",
-    "longDescription": "A salesperson-controlled assistant for candidate scans, stage-gated due diligence, evidence-bound outreach preparation, and local prospect workbook maintenance without making final business or sending decisions.",
+    "shortDescription": "Discover product-led directions and prepare controlled development handoffs.",
+    "longDescription": "A salesperson-controlled assistant for product-led direction discovery, candidate scans, stage-gated due diligence, and evidence-bound outreach handoffs without drafting, sending, or making final business decisions.",
     "developerName": "steveshenbm-git",
     "category": "Productivity",
     "capabilities": [
@@ -26,9 +26,9 @@
     ],
     "brandColor": "#147DFF",
     "defaultPrompt": [
-      "Run a candidate scan for this named prospect, return evidence-bound initial findings, and stop for salesperson screening. Prepare a final development recommendation only after salesperson_classification = 潜力客户 and the salesperson explicitly starts full_due_diligence.",
-      "Build a candidate company list for this salesperson-confirmed market theme.",
-      "Perform full due diligence on this salesperson-confirmed potential customer and update the local workbook."
+      "Use approved local product facts to create a development-direction candidate and stop for salesperson decision.",
+      "Build a candidate company list for this salesperson-confirmed scannable development direction.",
+      "Perform full due diligence on this salesperson-confirmed potential customer and prepare an outreach handoff package without drafting or sending a message."
     ]
   }
 }

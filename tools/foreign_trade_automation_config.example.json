@@ -1,0 +1,28 @@
+{
+  "timezone": "Asia/Shanghai",
+  "workday_check_time": "10:00",
+  "activation_state": "disabled_until_named_workbook_and_standing_authorization",
+  "review_task_mode": "one_task_per_workday",
+  "open_review_task": true,
+  "include_overdue_from_missed_runs": true,
+  "workbook_path": "REPLACE_WITH_A_LOCAL_SHARED_WORKBOOK_PATH",
+  "holiday_calendar_path": null,
+  "standing_draft_write_authorized": false,
+  "allowed_write_fields": [
+    "content_status",
+    "draft_content_or_local_reference",
+    "draft_generated_at",
+    "draft_for_touch_stage",
+    "automation_run_id"
+  ],
+  "forbidden_write_fields": [
+    "actual_sent_at",
+    "actual_content_or_local_reference",
+    "response_at",
+    "salesperson_classification",
+    "risk_gate",
+    "salesperson_notes",
+    "salesperson_decision",
+    "decision_date"
+  ]
+}

@@ -1,9 +1,11 @@
 ---
 name: foreign-trade-email-assistant
-description: Use when a foreign-trade salesperson needs to analyze a complete customer email thread, prepare a reply recommendation and bilingual draft, revise a draft from natural-language feedback, or handle clear quality, contract, or payment issues.
+description: Use when the user explicitly requests the standalone compatibility email workflow for complete-thread replies or draft revision instead of the unified foreign-trade-customer-operations skill.
 ---
 
 # Foreign Trade Email Assistant
+
+This is a standalone compatibility email workflow. When `foreign-trade-customer-operations` is available and the task belongs to an ongoing prospect or customer record, prefer that unified skill; do not run both skills on the same reply task.
 
 ## Core role
 

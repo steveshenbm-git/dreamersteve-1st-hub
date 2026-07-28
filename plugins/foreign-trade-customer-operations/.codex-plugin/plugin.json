@@ -1,0 +1,35 @@
+{
+  "name": "foreign-trade-customer-operations",
+  "version": "0.1.0+codex.20260728074635",
+  "description": "Codex skill plugin for salesperson-controlled cold outreach, unanswered follow-up, customer reply communication, and local customer-operation records.",
+  "author": {
+    "name": "steveshenbm-git"
+  },
+  "repository": "https://github.com/steveshenbm-git/dreamersteve-1st-hub",
+  "keywords": [
+    "foreign-trade",
+    "customer-operations",
+    "cold-outreach",
+    "follow-up",
+    "bilingual",
+    "sales-workbook"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Foreign Trade Customer Operations",
+    "shortDescription": "Prepare controlled cold outreach, follow-up, replies, and customer-operation materials.",
+    "longDescription": "A salesperson-controlled assistant for first outreach, unanswered follow-up, complete-thread replies, and customer-operation preparation. It does not research prospects, choose customers, make commercial decisions, or send messages.",
+    "developerName": "steveshenbm-git",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "brandColor": "#147DFF",
+    "defaultPrompt": [
+      "Use the customer-development handoff package to prepare a first cold-outreach draft for salesperson review.",
+      "Review this due follow-up and prepare a draft without sending it.",
+      "Analyze this complete customer reply thread and prepare a bilingual reply draft."
+    ]
+  }
+}

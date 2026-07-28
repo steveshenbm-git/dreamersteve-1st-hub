@@ -1,7 +1,7 @@
 {
   "name": "foreign-trade-email-assistant",
   "version": "0.1.0",
-  "description": "Codex skill plugin for evidence-bound foreign-trade email analysis, bilingual reply drafting, natural-language revision, and controlled handling of serious communication issues.",
+  "description": "Optional compatibility plugin for standalone complete-thread foreign-trade email replies when the unified customer-operations skill is not used.",
   "author": {
     "name": "steveshenbm-git"
   },

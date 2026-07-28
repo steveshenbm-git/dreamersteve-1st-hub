@@ -1,4 +1,4 @@
 interface:
   display_name: "外贸客户开发"
-  short_description: "研究潜在客户、核验企业证据并准备业务员审核的开发建议"
-  default_prompt: "使用 $foreign-trade-customer-development 对这家指定客户执行 candidate_scan，整理带证据的候选初查结果，并停止等待业务员筛选。只有记录 salesperson_classification = 潜力客户 且业务员明确启动 full_due_diligence 后，才准备最终项目推荐。"
+  short_description: "从本地产品事实探索开发方向、筛选候选企业并准备开发交接包"
+  default_prompt: "使用 $foreign-trade-customer-development 根据本地已批准产品事实执行 direction_discovery，输出可核实的开发方向候选及其排除边界，停止等待业务员决定是否确认可扫描。"
