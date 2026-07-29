@@ -1,6 +1,6 @@
 # Jiangyue Team Codex Plugins
 
-This public repository shares reusable Codex plugins for Jiangyue website work and foreign-trade communication.
+This public repository shares reusable Codex plugins for Jiangyue website work and foreign-trade product knowledge, industry mapping, customer development, and communication.
 
 The package currently includes:
 
@@ -10,7 +10,9 @@ The package currently includes:
 - `jiangyue-knowledge-curator` maintains reusable Jiangyue website knowledge and approved-material references.
 - `jiangyue-skill-director` governs Jiangyue skill design, repair, and release checks.
 - `foreign-trade-email-assistant` remains an optional compatibility plugin for standalone complete-email-thread analysis. Do not run it alongside `foreign-trade-customer-operations` for the same reply.
-- `foreign-trade-customer-development` starts with product-led direction discovery, validates a direction before scanning, returns all qualified candidate companies in the declared scope, and prepares an evidence-bound communication handoff without drafting or sending messages.
+- `company-product-knowledge-builder` builds a company-isolated, source-traceable product-fact library and exports a controlled product-fact packet without inventing industry routes.
+- `industry-application-map-builder` maintains the shared industry/application framework, creates company-specific route candidates, audits coverage, and exports a controlled route-pool packet without searching companies.
+- `foreign-trade-customer-development` compiles a salesperson-selected, validated route into a development direction, validates it before scanning, returns all qualified candidate companies in the declared scope, and prepares an evidence-bound communication handoff without drafting or sending messages.
 - `foreign-trade-customer-operations` is the primary communication plugin for selected prospects and existing customers: first cold outreach, unanswered follow-up, replies, and customer-operation materials.
 
 The user remains the final reviewer for page strategy, claims, visual approval, business judgment, email wording, and sending.
@@ -31,6 +33,10 @@ plugins/foreign-trade-email-assistant/.codex-plugin/plugin.json
 plugins/foreign-trade-email-assistant/skills/foreign-trade-email-assistant/SKILL.md
 plugins/foreign-trade-email-assistant/skills/foreign-trade-email-assistant/agents/openai.yaml
 plugins/foreign-trade-email-assistant/skills/foreign-trade-email-assistant/references/
+plugins/company-product-knowledge-builder/.codex-plugin/plugin.json
+plugins/company-product-knowledge-builder/skills/company-product-knowledge-builder/
+plugins/industry-application-map-builder/.codex-plugin/plugin.json
+plugins/industry-application-map-builder/skills/industry-application-map-builder/
 plugins/foreign-trade-customer-development/.codex-plugin/plugin.json
 plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development/SKILL.md
 plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development/agents/openai.yaml
@@ -51,11 +57,13 @@ plugins/foreign-trade-customer-operations/skills/foreign-trade-customer-operatio
 codex plugin marketplace add /absolute/path/to/dreamersteve-1st-hub
 ```
 
-3. Install the recommended foreign-trade pair and any Jiangyue plugins you use:
+3. Install the recommended foreign-trade workflow and any Jiangyue plugins you use:
 
 ```bash
 codex plugin add jiangyue-website-planner@jiangyue-team
 codex plugin add jiangyue-website-imagegen@jiangyue-team
+codex plugin add company-product-knowledge-builder@jiangyue-team
+codex plugin add industry-application-map-builder@jiangyue-team
 codex plugin add foreign-trade-customer-development@jiangyue-team
 codex plugin add foreign-trade-customer-operations@jiangyue-team
 ```
@@ -71,7 +79,9 @@ codex plugin add foreign-trade-email-assistant@jiangyue-team
 ```text
 Use $jiangyue-website-planner to plan a Jiangyue website page and image brief.
 Use $jiangyue-website-imagegen to help me create a Jiangyue website visual.
-Use $foreign-trade-customer-development to create a product-led development direction, validate it, or scan a confirmed direction for qualified candidates.
+Use $company-product-knowledge-builder to create an approved product-fact packet for one company.
+Use $industry-application-map-builder to build that company's industry/application route pool from approved product facts and sourced application requirements.
+Use $foreign-trade-customer-development to compile a selected route, validate it, or scan a salesperson-confirmed direction for qualified candidates.
 Use $foreign-trade-customer-operations to prepare the first outreach, a due follow-up, or a reply from a complete customer thread.
 ```
 
@@ -85,11 +95,15 @@ Use $foreign-trade-customer-operations to prepare the first outreach, a due foll
 
 ## Foreign Trade Customer Development Workflow
 
-1. Run `direction_discovery` from approved local product facts; validate the rule and obtain the salesperson's `已确认可扫描` decision before scanning a direction.
-2. For a confirmed direction or named prospect, run `candidate_scan`, return all qualified candidates in the declared scope, and stop for salesperson selection.
-3. Run full due diligence only after potential-customer classification and explicit start are both recorded.
-4. When the salesperson asks to start communication, output an `outreach_handoff_packet`; do not draft or send a message in customer development.
-5. Use `foreign-trade-customer-operations` for first outreach, no-reply follow-up, replies, and customer-operation work. Write only to a user-designated local workbook.
+The primary chain is `company-product-knowledge-builder → industry-application-map-builder → foreign-trade-customer-development`.
+
+1. Build or update the selected company's product library and export a controlled `product_development_fact_packet`.
+2. Build the shared industry/application base, match the approved product facts for that company, review coverage, and export a validated `company_route_pool_packet`.
+3. Let the salesperson select one route candidate; compile it through `direction_discovery`, validate the rule, and obtain the salesperson's `已确认可扫描` decision before scanning that direction.
+4. For a confirmed direction or a separately supplied named prospect, run `candidate_scan`, return all qualified candidates in the declared scope, and stop for salesperson selection.
+5. Run full due diligence only after potential-customer classification and explicit start are both recorded.
+6. When the salesperson asks to start communication, output an `outreach_handoff_packet`; do not draft or send a message in customer development.
+7. Use `foreign-trade-customer-operations` for first outreach, no-reply follow-up, replies, and customer-operation work. Write only to a user-designated local workbook.
 
 ## Standalone Compatibility Email Workflow
 

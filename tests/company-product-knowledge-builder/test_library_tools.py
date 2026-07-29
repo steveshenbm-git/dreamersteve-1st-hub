@@ -19,6 +19,12 @@ SKILL_ROOT = (
 )
 INIT_SCRIPT = SKILL_ROOT / "scripts" / "init_company_library.py"
 VALIDATE_SCRIPT = SKILL_ROOT / "scripts" / "validate_company_library.py"
+EXPORT_FACT_PACKET_SCRIPT = (
+    SKILL_ROOT / "scripts" / "export_product_development_fact_packet.py"
+)
+EXPORT_READINESS_VIEW_SCRIPT = (
+    SKILL_ROOT / "scripts" / "export_development_readiness_view.py"
+)
 
 
 def run_script(script: Path, *args: str) -> subprocess.CompletedProcess[str]:
@@ -125,6 +131,57 @@ class CompanyLibraryToolTests(unittest.TestCase):
         payload = load_json(facts_path)
         payload["facts"] = list(facts)
         write_json(facts_path, payload)
+
+    def put_product_family(self, library: Path, *fact_ids: str) -> None:
+        product_path = library / "03-产品体系" / "product-system.json"
+        payload = load_json(product_path)
+        payload["product_families"] = [
+            {
+                "product_family_id": "ACME-001-PF-001",
+                "name": "Effect pigments",
+                "alias_terms": [],
+                "fact_ids": list(fact_ids),
+                "series": [],
+                "unresolved_structure": [],
+            }
+        ]
+        write_json(product_path, payload)
+
+    def commercial_fact(
+        self,
+        *,
+        fact_id: str,
+        evidence_level: str = "E3",
+        dimension: str = "minimum_order_quantity",
+        operator: str = "minimum",
+        value=25,
+        unit: str | None = "kg",
+        valid_until: str | None = "2026-12-31",
+    ) -> dict:
+        fact = self.valid_fact(fact_id=fact_id, evidence_level=evidence_level)
+        fact.update(
+            {
+                "fact_type": "commercial_condition",
+                "fact_value": {
+                    "dimension": dimension,
+                    "operator": operator,
+                    "value": value,
+                    "unit": unit,
+                },
+                "unit": unit,
+                "unit_status": "provided" if unit else "not_applicable",
+                "test_method": None,
+                "test_method_status": "not_applicable",
+                "observed_at": "2026-07-01",
+                "valid_until": valid_until,
+                "review_due": valid_until,
+                "sensitivity": "commercial_internal",
+                "geographic_scope": [],
+                "customer_type_scope": [],
+                "application_scope": [],
+            }
+        )
+        return fact
 
     def test_initializer_creates_an_empty_isolated_library(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -333,6 +390,19 @@ class CompanyLibraryToolTests(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("HANDOFF_CONFIRMED_FACT_NOT_E3", result.stdout)
 
+    def test_handoff_is_scoped_to_industry_application_mapping(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            library = self.initialize(Path(tmp))
+            packet_path = library / "04-开发交接" / "product-development-fact-packet.json"
+            packet = load_json(packet_path)["product_development_fact_packet"]
+
+            self.assertEqual(
+                packet["allowed_use"], ["internal_industry_application_mapping"]
+            )
+            self.assertTrue(
+                any("contains no industry routes" in item for item in packet["prohibited_inference"])
+            )
+
     def test_handoff_conditions_and_limits_also_require_e3(self):
         for field in ("required_conditions", "known_limits"):
             with self.subTest(field=field):
@@ -422,6 +492,284 @@ class CompanyLibraryToolTests(unittest.TestCase):
 
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("CROSS_COMPANY_FILE", result.stdout)
+
+    def test_fact_packet_exporter_selects_only_approved_e3_scope_facts(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            library = self.initialize(root)
+            self.add_source(library)
+            e3 = self.valid_fact(fact_id="ACME-001-K-0001")
+            e2 = self.valid_fact(
+                fact_id="ACME-001-K-0002",
+                evidence_level="E2",
+            )
+            e2["fact_type"] = "property"
+            self.put_facts(library, e3, e2)
+            self.put_product_family(
+                library,
+                "ACME-001-K-0001",
+                "ACME-001-K-0002",
+            )
+            output = root / "packet.json"
+
+            result = run_script(
+                EXPORT_FACT_PACKET_SCRIPT,
+                str(library),
+                "--product-family-id",
+                "ACME-001-PF-001",
+                "--output",
+                str(output),
+            )
+
+            self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
+            payload = load_json(output)
+            packet = payload["product_development_fact_packet"]
+            self.assertEqual(payload["schema_version"], "1.2")
+            self.assertEqual(packet["confirmed_parameters"], ["ACME-001-K-0001"])
+            self.assertEqual(packet["confirmed_properties"], [])
+            self.assertEqual(packet["approved_references"], ["ACME-001-S-0001"])
+            self.assertEqual(
+                set(packet["knowledge_snapshot"]),
+                {"facts_sha256", "product_system_sha256", "source_registry_sha256"},
+            )
+
+    def test_readiness_view_rejects_cross_company_request(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            library = self.initialize(root)
+            request_path = root / "request.json"
+            write_json(
+                request_path,
+                {
+                    "development_readiness_request": {
+                        "request_id": "READY-001",
+                        "company_id": "OTHER-CO",
+                        "product_scope": "Effect pigments",
+                        "route_candidate_id": "OTHER-CO-R-001",
+                        "requested_dimensions": ["minimum_order_quantity"],
+                        "declared_conditions": [],
+                        "requested_at": "2026-07-29",
+                    }
+                },
+            )
+
+            result = run_script(
+                EXPORT_READINESS_VIEW_SCRIPT,
+                str(library),
+                "--request",
+                str(request_path),
+            )
+
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("CROSS_COMPANY_READINESS_REQUEST", result.stderr + result.stdout)
+
+    def test_readiness_view_distinguishes_ready_conflict_unknown_and_stale(self):
+        cases = (
+            (50, "minimum_order_quantity", "2026-12-31", True, "可承接"),
+            (10, "minimum_order_quantity", "2026-12-31", True, "已确认冲突"),
+            (50, "minimum_order_quantity", "2026-12-31", False, "有条件"),
+            (50, "lead_time", "2026-12-31", True, "未知"),
+            (50, "minimum_order_quantity", "2026-01-01", True, "未知"),
+        )
+        for declared_value, dimension, valid_until, include_declared, expected in cases:
+            with self.subTest(expected=expected, dimension=dimension):
+                with tempfile.TemporaryDirectory() as tmp:
+                    root = Path(tmp)
+                    library = self.initialize(root)
+                    self.add_source(library)
+                    fact = self.commercial_fact(
+                        fact_id="ACME-001-K-0001",
+                        valid_until=valid_until,
+                    )
+                    self.put_facts(library, fact)
+                    request_path = root / "request.json"
+                    output = root / "view.json"
+                    write_json(
+                        request_path,
+                        {
+                            "development_readiness_request": {
+                                "request_id": "READY-001",
+                                "company_id": "ACME-001",
+                                "product_scope": "Effect pigments",
+                                "route_candidate_id": "ACME-001-R-001",
+                                "intended_use_scope": ["industrial coatings"],
+                                "geography_scope": ["DE"],
+                                "customer_type_scope": ["manufacturer"],
+                                "requested_dimensions": [dimension],
+                                "declared_conditions": (
+                                    [
+                                        {
+                                            "dimension": dimension,
+                                            "value": declared_value,
+                                            "unit": "kg",
+                                        }
+                                    ]
+                                    if include_declared
+                                    else []
+                                ),
+                                "requested_at": "2026-07-29",
+                                "return_to": {
+                                    "skill": "foreign-trade-customer-development",
+                                    "task_route": "route_portfolio_review",
+                                },
+                            }
+                        },
+                    )
+
+                    result = run_script(
+                        EXPORT_READINESS_VIEW_SCRIPT,
+                        str(library),
+                        "--request",
+                        str(request_path),
+                        "--output",
+                        str(output),
+                    )
+
+                    self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
+                    view = load_json(output)["development_readiness_view"]
+                    self.assertEqual(view["readiness_state"], expected)
+                    self.assertEqual(view["company_id"], "ACME-001")
+                    self.assertEqual(view["request_id"], "READY-001")
+
+    def test_e2_readiness_items_are_annex_only_and_never_change_state(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            library = self.initialize(root)
+            self.add_source(library)
+            fact = self.commercial_fact(
+                fact_id="ACME-001-K-0001",
+                evidence_level="E2",
+            )
+            self.put_facts(library, fact)
+            request_path = root / "request.json"
+            output = root / "view.json"
+            write_json(
+                request_path,
+                {
+                    "development_readiness_request": {
+                        "request_id": "READY-001",
+                        "company_id": "ACME-001",
+                        "product_scope": "Effect pigments",
+                        "route_candidate_id": "ACME-001-R-001",
+                        "requested_dimensions": ["minimum_order_quantity"],
+                        "declared_conditions": [
+                            {
+                                "dimension": "minimum_order_quantity",
+                                "value": 50,
+                                "unit": "kg",
+                            }
+                        ],
+                        "requested_at": "2026-07-29",
+                    }
+                },
+            )
+
+            result = run_script(
+                EXPORT_READINESS_VIEW_SCRIPT,
+                str(library),
+                "--request",
+                str(request_path),
+                "--output",
+                str(output),
+                "--include-e2-annex",
+            )
+
+            self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
+            view = load_json(output)["development_readiness_view"]
+            self.assertEqual(view["readiness_state"], "未知")
+            self.assertEqual(view["confirmed_items"], [])
+            self.assertEqual(
+                [item["fact_id"] for item in view["internal_reference_annex"]],
+                ["ACME-001-K-0001"],
+            )
+
+    def test_commercial_condition_requires_structured_dimension_and_review_dates(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            library = self.initialize(Path(tmp))
+            self.add_source(library)
+            fact = self.commercial_fact(fact_id="ACME-001-K-0001")
+            fact["fact_value"] = {"value": 25}
+            fact["review_due"] = "not-a-date"
+            self.put_facts(library, fact)
+
+            result = self.validate(library)
+
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("COMMERCIAL_CONDITION_INVALID", result.stdout)
+            self.assertIn("COMMERCIAL_REVIEW_DATE_INVALID", result.stdout)
+
+    def test_commercial_numeric_operator_rejects_non_numeric_fact_value(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            library = self.initialize(Path(tmp))
+            self.add_source(library)
+            fact = self.commercial_fact(fact_id="ACME-001-K-0001")
+            fact["fact_value"]["value"] = "twenty-five"
+            self.put_facts(library, fact)
+
+            result = self.validate(library)
+
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("COMMERCIAL_CONDITION_INVALID", result.stdout)
+
+    def test_incomparable_declared_condition_becomes_conditional_instead_of_crashing(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            library = self.initialize(root)
+            self.add_source(library)
+            fact = self.commercial_fact(fact_id="ACME-001-K-0001")
+            self.put_facts(library, fact)
+            request_path = root / "request.json"
+            write_json(
+                request_path,
+                {
+                    "development_readiness_request": {
+                        "request_id": "READY-001",
+                        "company_id": "ACME-001",
+                        "product_scope": "Effect pigments",
+                        "route_candidate_id": "ACME-001-R-001",
+                        "requested_dimensions": ["minimum_order_quantity"],
+                        "declared_conditions": [
+                            {
+                                "dimension": "minimum_order_quantity",
+                                "value": "not-a-number",
+                                "unit": "kg",
+                            }
+                        ],
+                        "requested_at": "2026-07-29",
+                    }
+                },
+            )
+
+            result = run_script(
+                EXPORT_READINESS_VIEW_SCRIPT,
+                str(library),
+                "--request",
+                str(request_path),
+            )
+
+            self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
+            view = json.loads(result.stdout)["development_readiness_view"]
+            self.assertEqual(view["readiness_state"], "有条件")
+
+    def test_generated_handoff_requires_valid_knowledge_snapshot_hashes(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            library = self.initialize(Path(tmp))
+            packet_path = library / "04-开发交接" / "product-development-fact-packet.json"
+            payload = load_json(packet_path)
+            packet = payload["product_development_fact_packet"]
+            packet["generated_at"] = "2026-07-29"
+            packet["product_family_id"] = "ACME-001-PF-001"
+            packet["knowledge_snapshot"] = {
+                "facts_sha256": "bad",
+                "product_system_sha256": "bad",
+                "source_registry_sha256": "bad",
+            }
+            write_json(packet_path, payload)
+
+            result = self.validate(library)
+
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("HANDOFF_SNAPSHOT_HASH_INVALID", result.stdout)
 
 
 if __name__ == "__main__":

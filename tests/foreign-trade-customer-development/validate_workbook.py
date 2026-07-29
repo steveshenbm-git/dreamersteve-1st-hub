@@ -4,7 +4,8 @@ from openpyxl import load_workbook
 from openpyxl.utils import get_column_letter, range_boundaries
 
 EXPECTED = {
-    "开发方向": ["direction_id", "approved_product_reference", "product_boundary", "observable_enterprise_rule", "candidate_direct_evidence_rule", "exclusion_boundary", "external_validation_status", "direction_status", "declared_scope", "unresolved_conditions", "salesperson_decision", "decision_date"],
+    "路线评审": ["route_review_id", "source_route_candidate_id", "company_id", "product_scope", "route_packet_reference", "route_packet_sha256", "producer_registry_reference", "map_route_status", "research_readiness", "readiness_snapshot_reference", "knowledge_snapshot_hash", "readiness_fact_ids", "commercial_readiness_status", "readiness_reviewed_at", "stale_status", "unresolved_business_conditions", "salesperson_route_decision", "decision_basis", "decision_date"],
+    "开发方向": ["direction_id", "source_route_review_id", "source_route_candidate_id", "approved_product_reference", "product_boundary", "observable_enterprise_rule", "candidate_direct_evidence_rule", "exclusion_boundary", "external_validation_status", "direction_status", "declared_scope", "unresolved_conditions", "salesperson_decision", "decision_date"],
     "方向证据": ["direction_evidence_id", "direction_id", "source_type", "source_title", "source_url_or_local_reference", "original_excerpt", "zh_summary", "published_at", "observed_at", "evidence_state", "validation_effect", "limitation_note"],
     "客户总览": ["customer_id", "company_name", "legal_name", "website", "country", "business_model", "source_direction_id", "screening_status", "salesperson_classification", "information_reliability", "risk_gate", "recommended_opportunity_id", "primary_contact_id", "last_research_date", "last_touch_date", "next_action", "next_action_date", "handoff_status", "salesperson_notes"],
     "公司研究": ["research_id", "customer_id", "research_level", "section", "finding_original", "finding_zh_summary", "evidence_id", "evidence_state", "source_published_at", "observed_at", "gap_or_conflict", "salesperson_confirmed"],
@@ -18,7 +19,8 @@ EXPECTED = {
 }
 
 EXPECTED_ZH = {
-    "开发方向": ["开发方向编号", "已批准产品引用", "产品边界", "可观察目标企业规则", "候选公司直接证据规则", "排除边界", "外部核实状态", "方向状态", "本次声明范围", "待核实条件", "业务员方向决定", "决定日期"],
+    "路线评审": ["路线评审编号", "来源路线候选编号", "公司编号", "产品范围", "路线包引用", "路线包哈希", "生产者登记引用", "地图路线状态", "研究就绪状态", "承接视图引用", "知识快照哈希", "承接事实编号", "商业承接状态", "承接复核日期", "时效状态", "未解决业务条件", "业务员路线决定", "决定依据", "决定日期"],
+    "开发方向": ["开发方向编号", "来源路线评审编号", "来源路线候选编号", "已批准产品引用", "产品边界", "可观察目标企业规则", "候选公司直接证据规则", "排除边界", "外部核实状态", "方向状态", "本次声明范围", "待核实条件", "业务员方向决定", "决定日期"],
     "方向证据": ["方向证据编号", "开发方向编号", "来源类型", "来源标题", "来源网址或本地引用", "原文摘录", "中文摘要", "来源发布日期", "观察记录时间", "证据状态", "对方向的验证作用", "局限说明"],
     "客户总览": ["客户编号", "公司常用名称", "法定注册名称", "公司网站", "国家或地区", "商业模式", "来源开发方向编号", "筛选状态", "业务员客户分类", "信息可靠性", "风险门状态", "推荐机会编号", "主要联系人编号", "最近研究日期", "最近触达日期", "下一步行动", "下一步行动日期", "移交状态", "业务员备注"],
     "公司研究": ["研究记录编号", "客户编号", "研究层级", "研究章节", "原文研究发现", "研究发现中文摘要", "证据编号", "证据状态", "来源发布日期", "观察记录时间", "信息缺口或冲突", "业务员确认状态"],
@@ -54,10 +56,20 @@ USAGE_PERMISSION_STATES = ["正常使用", "限制使用", "隔离待核实"]
 RISK_STATES = ["未触发", "待核验", "暂停待业务员审核", "业务员批准继续", "已关闭"]
 CONTENT_STATES = ["草稿", "业务员批准", "计划触达", "实际发送", "实际回复"]
 HANDOFF_STATES = ["未触发", "待客户经营与沟通", "已移交", "业务员已决定"]
+MAP_ROUTE_STATES = ["路线线索", "路线候选", "待外部核实", "暂缓", "排除"]
+RESEARCH_READINESS_STATES = ["可编译方向", "需补路线证据", "待外部核实", "不可进入"]
+COMMERCIAL_READINESS_STATES = ["可承接", "有条件", "未知", "已确认冲突"]
+STALE_STATES = ["当前", "临近复核", "已过期", "无法判断"]
+ROUTE_DECISION_STATES = ["选择编译", "继续核实", "暂缓", "淘汰"]
 
 CONTROLLED_VALIDATIONS = {
-    ("开发方向", "external_validation_status"): ("G3:G5000", EXTERNAL_VALIDATION_STATES),
-    ("开发方向", "direction_status"): ("H3:H5000", DIRECTION_STATES),
+    ("路线评审", "map_route_status"): ("H3:H5000", MAP_ROUTE_STATES),
+    ("路线评审", "research_readiness"): ("I3:I5000", RESEARCH_READINESS_STATES),
+    ("路线评审", "commercial_readiness_status"): ("M3:M5000", COMMERCIAL_READINESS_STATES),
+    ("路线评审", "stale_status"): ("O3:O5000", STALE_STATES),
+    ("路线评审", "salesperson_route_decision"): ("Q3:Q5000", ROUTE_DECISION_STATES),
+    ("开发方向", "external_validation_status"): ("I3:I5000", EXTERNAL_VALIDATION_STATES),
+    ("开发方向", "direction_status"): ("J3:J5000", DIRECTION_STATES),
     ("方向证据", "evidence_state"): ("J3:J5000", EVIDENCE_STATES),
     ("客户总览", "screening_status"): ("H3:H5000", SCREENING_STATES),
     ("客户总览", "salesperson_classification"): ("I3:I5000", CLASSIFICATION_STATES),

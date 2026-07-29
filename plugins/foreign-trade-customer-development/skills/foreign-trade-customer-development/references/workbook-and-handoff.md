@@ -10,22 +10,24 @@
 
 可见工作表顺序必须为：
 
-1. 开发方向
-2. 方向证据
-3. 客户总览
-4. 公司研究
-5. 项目机会
-6. 联系人
-7. 证据来源
-8. 海关与贸易
-9. 风险核验
-10. 触达记录
-11. 移交记录
+1. 路线评审
+2. 开发方向
+3. 方向证据
+4. 客户总览
+5. 公司研究
+6. 项目机会
+7. 联系人
+8. 证据来源
+9. 海关与贸易
+10. 风险核验
+11. 触达记录
+12. 移交记录
 
 第 1 行是机器字段名，必须精确为：
 
 ```text
-开发方向: direction_id, approved_product_reference, product_boundary, observable_enterprise_rule, candidate_direct_evidence_rule, exclusion_boundary, external_validation_status, direction_status, declared_scope, unresolved_conditions, salesperson_decision, decision_date
+路线评审: route_review_id, source_route_candidate_id, company_id, product_scope, route_packet_reference, route_packet_sha256, producer_registry_reference, map_route_status, research_readiness, readiness_snapshot_reference, knowledge_snapshot_hash, readiness_fact_ids, commercial_readiness_status, readiness_reviewed_at, stale_status, unresolved_business_conditions, salesperson_route_decision, decision_basis, decision_date
+开发方向: direction_id, source_route_review_id, source_route_candidate_id, approved_product_reference, product_boundary, observable_enterprise_rule, candidate_direct_evidence_rule, exclusion_boundary, external_validation_status, direction_status, declared_scope, unresolved_conditions, salesperson_decision, decision_date
 方向证据: direction_evidence_id, direction_id, source_type, source_title, source_url_or_local_reference, original_excerpt, zh_summary, published_at, observed_at, evidence_state, validation_effect, limitation_note
 客户总览: customer_id, company_name, legal_name, website, country, business_model, source_direction_id, screening_status, salesperson_classification, information_reliability, risk_gate, recommended_opportunity_id, primary_contact_id, last_research_date, last_touch_date, next_action, next_action_date, handoff_status, salesperson_notes
 公司研究: research_id, customer_id, research_level, section, finding_original, finding_zh_summary, evidence_id, evidence_state, source_published_at, observed_at, gap_or_conflict, salesperson_confirmed
@@ -41,7 +43,8 @@
 第 2 行是业务可读的中文字段说明，必须与第 1 行逐列对应并精确为：
 
 ```text
-开发方向: 开发方向编号, 已批准产品引用, 产品边界, 可观察目标企业规则, 候选公司直接证据规则, 排除边界, 外部核实状态, 方向状态, 本次声明范围, 待核实条件, 业务员方向决定, 决定日期
+路线评审: 路线评审编号, 来源路线候选编号, 公司编号, 产品范围, 路线包引用, 路线包哈希, 生产者登记引用, 地图路线状态, 研究就绪状态, 承接视图引用, 知识快照哈希, 承接事实编号, 商业承接状态, 承接复核日期, 时效状态, 未解决业务条件, 业务员路线决定, 决定依据, 决定日期
+开发方向: 开发方向编号, 来源路线评审编号, 来源路线候选编号, 已批准产品引用, 产品边界, 可观察目标企业规则, 候选公司直接证据规则, 排除边界, 外部核实状态, 方向状态, 本次声明范围, 待核实条件, 业务员方向决定, 决定日期
 方向证据: 方向证据编号, 开发方向编号, 来源类型, 来源标题, 来源网址或本地引用, 原文摘录, 中文摘要, 来源发布日期, 观察记录时间, 证据状态, 对方向的验证作用, 局限说明
 客户总览: 客户编号, 公司常用名称, 法定注册名称, 公司网站, 国家或地区, 商业模式, 来源开发方向编号, 筛选状态, 业务员客户分类, 信息可靠性, 风险门状态, 推荐机会编号, 主要联系人编号, 最近研究日期, 最近触达日期, 下一步行动, 下一步行动日期, 移交状态, 业务员备注
 公司研究: 研究记录编号, 客户编号, 研究层级, 研究章节, 原文研究发现, 研究发现中文摘要, 证据编号, 证据状态, 来源发布日期, 观察记录时间, 信息缺口或冲突, 业务员确认状态
@@ -69,6 +72,11 @@ usage_permission: 正常使用, 限制使用, 隔离待核实
 risk_gate: 未触发, 待核验, 暂停待业务员审核, 业务员批准继续, 已关闭
 content_status: 草稿, 业务员批准, 计划触达, 实际发送, 实际回复
 handoff_status: 未触发, 待客户经营与沟通, 已移交, 业务员已决定
+map_route_status: 路线线索, 路线候选, 待外部核实, 暂缓, 排除
+research_readiness: 可编译方向, 需补路线证据, 待外部核实, 不可进入
+commercial_readiness_status: 可承接, 有条件, 未知, 已确认冲突
+stale_status: 当前, 临近复核, 已过期, 无法判断
+salesperson_route_decision: 选择编译, 继续核实, 暂缓, 淘汰
 ```
 
 以上受控字段都必须启用停止式错误拦截并允许空白：信息未知时可以留空，空白不违反数据验证；只要填入非空值，就必须来自对应受控列表。业务员输入列表外的非空值时，工作簿显示错误提示并拒绝写入。不得仅提供下拉候选但继续接受无效值，也不得用自造状态代替未知值。
@@ -79,13 +87,17 @@ handoff_status: 未触发, 待客户经营与沟通, 已移交, 业务员已决�
 
 ## 稳定编号
 
-使用 customer_id、research_id、opportunity_id、contact_id、evidence_id、trade_record_id、risk_id、touch_id 和 handoff_id。公司名称不是唯一键。
+使用 route_review_id、direction_id、customer_id、research_id、opportunity_id、contact_id、evidence_id、trade_record_id、risk_id、touch_id 和 handoff_id。公司名称不是唯一键。
 
 更新前先用稳定编号定位记录，再核对 `customer_id` 的引用关系。不得仅凭公司名、品牌名或联系人名称合并记录。
 
-## 方向推导与结果反馈如何落入现有表
+## 路线评审、方向推导与结果反馈如何落表
 
-为保持一个共享工作簿且不增加重复工作表，`direction_derivation_chain` 按现有字段拆分保存：产品事实引用写入 `approved_product_reference`；效果、功能、适用和禁止边界写入 `product_boundary`；可观察产品信号与目标企业规则写入 `observable_enterprise_rule`；候选准入证据门写入 `candidate_direct_evidence_rule`；排除条件写入 `exclusion_boundary`；反证和未知写入 `unresolved_conditions`。不得把整条链压缩成无法追溯的一段结论。
+`路线评审` 是路线包、商业承接只读视图与业务员选择之间的唯一落表层。路线包引用、哈希、生产者登记、地图状态、承接快照、知识快照、事实编号、时效和未知必须分列保存；不得把 `development_readiness_view` 复制成第二事实库。`salesperson_route_decision`、`decision_basis` 和 `decision_date` 是业务员自有字段，AI 不得自动填写或覆盖。
+
+`direction_compilation` 只读取 `salesperson_route_decision = 选择编译` 的记录。新方向的 `source_route_review_id` 与 `source_route_candidate_id` 必须同时写入。`direction_derivation_chain` 按字段拆分保存：产品事实引用写入 `approved_product_reference`；效果、功能、适用和禁止边界写入 `product_boundary`；应用节点、产出产品、行业活动、可观察产品信号与目标企业规则写入 `observable_enterprise_rule`；候选准入证据门写入 `candidate_direct_evidence_rule`；排除条件写入 `exclusion_boundary`；承接条件、反证和未知写入 `unresolved_conditions`。不得丢失两级来源编号，也不得把整条链压缩成无法追溯的一段结论。
+
+如果指定工作簿仍是旧的 11 表结构，或缺少 `路线评审`、`source_route_review_id` 与当前验证规则，返回 `workbook_schema_migration_required`，先制作备份并获得迁移授权；不得静默移动旧列、覆盖业务员字段或把旧结构误报为已写入。
 
 每次候选扫描的声明范围、查询语言、覆盖来源、访问限制和观察日期必须保留在交付的结构化候选表及对应 `证据来源` 记录中；合格候选逐行进入 `客户总览` 并保留同一 `source_direction_id`。未合格或待核实公司不伪装成客户记录，保留在本次结构化候选表和证据记录中，供业务员审阅。若业务员尚未授权写入，则只输出 `workbook_update_packet`。
 

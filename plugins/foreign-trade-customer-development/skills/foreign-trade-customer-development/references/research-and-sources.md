@@ -4,7 +4,7 @@
 
 先确定任务入口：
 
-- 用户指定的客户可直接进入候选初查；已确认可扫描的开发方向可进入候选扫描；方向草案只能进入方向核实。
+- 命名公司可直接进入候选初查；已确认可扫描的开发方向可进入候选扫描；方向草案只能进入方向核实。
 - 候选名单未经业务员选择时，不得进入完整背调、深挖联系人或准备任何对外沟通内容。
 - 每个调查任务开始前，必须记录：国家、当地语言、英文名、法定名、品牌名、商业模式、研究层级、批准产品范围和授权来源范围。
 
@@ -19,18 +19,68 @@
 
 只有当 `salesperson_classification = 潜力客户` 与 业务员明确启动完整背调 两个条件同时满足时，才允许 `research_level = full_due_diligence`；普通候选不得启动完整背调。客户被业务员选中仅代表进入下一轮内部评审，不替代潜力客户分类，也不替代业务员对完整背调的启动指令。
 
-## 开发方向发现与核实
+## 路线包预检与路线组合评审
 
-### `direction_discovery`
+`route_portfolio_review` 开始前先执行确定性预检，不得仅凭文件名或 JSON 可读就信任路线包：
 
-输入只能是已批准的本地产品事实、明确的产品边界和业务员给出的探索范围。不得把外部行业页面、社媒热度、常见供应链说法或模型常识改写为内部产品事实。
+```bash
+python3 scripts/verify_route_pool_packet.py \
+  /absolute/path/to/company-route-pool-packet.json \
+  --map-root /absolute/path/to/industry-application-map-root \
+  --company-id ACME-001
+```
 
-先生成 `direction_derivation_chain`，再形成方向包。该链条是一套从产品出发的推断公式，不是行业清单：
+预检必须核对 `producer_registry_reference`、生产者登记状态、实际 `route_packet_sha256`、登记包路径、`export_id`、`company_id`、输入快照与当前输入文件哈希，以及 `producer_snapshot` 中的公司地图路径和哈希。缺失、复制改名、包被编辑、源公司地图已变化、跨公司、`stale`、`superseded` 或快照已变化时，停止并返回 `industry-application-map-builder` 复核与重新导出。
+
+预检通过后，为包内 `route_candidates`、`route_leads`、`deferred_routes` 和 `excluded_routes` 分别建立路线评审记录，但不得把它们混成一个综合分数。`research_readiness` 只按可观察上游状态确定：
+
+| 上游条件 | `research_readiness` | 本技能可做什么 |
+|---|---|---|
+| `map_route_status = 路线候选` 且路线字段与证据链完整 | `可编译方向` | 请求商业承接视图，等待业务员决定 |
+| `map_route_status = 待外部核实` | `待外部核实` | 仅列出待核问题，不编译方向 |
+| `map_route_status = 路线线索` | `需补路线证据` | 返回地图技能补证，不编译方向 |
+| `map_route_status = 暂缓` 或 `排除` | `不可进入` | 保留原因，不编译方向 |
+
+若当前路线决策涉及最小起订量、交期、样品、区域、客户类型、付款、合规文件或其他承接维度，输出下列显式交接并停止该路线；不得假装在后台调用另一个技能：
 
 ```text
-approved_product_fact
+development_readiness_request:
+  request_id
+  company_id
+  product_scope
+  route_candidate_id
+  intended_use_scope
+  geography_scope
+  customer_type_scope
+  requested_dimensions
+  declared_conditions
+  requested_at
+  next_owner: company-product-knowledge-builder
+  return_to:
+    skill: foreign-trade-customer-development
+    task_route: route_portfolio_review
+```
+
+收到 `development_readiness_view` 后，核对 request、company、product、route、`knowledge_snapshot`、事实编号、生成日期与 `next_owner`。`commercial_readiness_status` 只能取 `可承接`、`有条件`、`未知` 或 `已确认冲突`。`有条件` 与 `未知` 只能在业务员明确选择后进入有限方向核实，并把未解决业务条件带到下游；`已确认冲突` 不得进入广泛候选扫描。任何承接状态都不得反写 map_route_status，也不得被改写成行业、应用或市场需求事实。
+
+`route_portfolio_review_packet` 必须逐路线保留研究就绪、商业承接、时效、支持事实、冲突、未知、待办和来源引用。不得生成综合路线评分，不得按路线数量、候选数量或模型偏好自动排序。国家或地区假设不得直接变成最终市场优先级；市场范围、顺序、取舍以及 `salesperson_route_decision = 选择编译／继续核实／暂缓／淘汰` 均由业务员填写，并保留 `decision_basis` 与 `decision_date`。
+
+## 开发方向编译与核实
+
+### `direction_compilation`
+
+`direction_discovery` is a compatibility alias for `direction_compilation`，使用完全相同的输入门和停止点。
+
+输入必须是通过当前预检的 `company_route_pool_packet`、一条 `salesperson_route_decision = 选择编译` 的 `route_portfolio_review` 记录、相符且未过期的 `development_readiness_view`（若请求过），以及业务员给出的核实范围。选定路线必须保留 `source_route_review_id` 与 `source_route_candidate_id`，并回溯到同一 `company_id`、产品范围、产品事实、应用节点、需求原子、应用证据、行业节点和输入快照。缺少任一有效输入时停止方向工作并返回相应上游；不得仅凭产品事实、外部行业页面、社媒热度、常见供应链说法或模型常识在本技能内重建行业路线。
+
+先生成 `direction_derivation_chain`，再形成方向包。该链条用于审计并翻译上游路线，不是重新从产品推断行业：
+
+```text
+source_route_candidate_id
+→ approved_product_fact
 → effect_or_function_boundary
 → application_conditions
+→ application_node / output_product / industry_node
 → observable_product_signal
 → target_enterprise_rule
 → candidate_direct_evidence_rule
@@ -40,30 +90,36 @@ approved_product_fact
 
 逐项执行：
 
-1. `approved_product_fact`：逐条引用已批准的本地事实，不自行补全等级、用途、法规、工艺、兼容性或供货能力。
-2. `effect_or_function_boundary`：只提取该事实允许表达的效果、功能和禁止边界；这里仍是产品事实层。
-3. `application_conditions`：列出实现该效果或功能必须满足、可能满足和当前未知的条件。只有源资料明确支持的条件才能标为事实，其余必须标为推断或未知。
-4. `observable_product_signal`：把条件转换为未来可在企业的具体在售产品、目录、技术资料、已核验官方展示或可追溯零售页面中检查的信号；不能仅凭外观、行业惯例或“可能需要”认定材料已被使用。
-5. `target_enterprise_rule`：定义“什么企业公开呈现上述具体产品信号”，不默认企业是原料采购方、中游或终端，也不要求先推断不透明的生产环节或采购角色。
-6. `candidate_direct_evidence_rule`：定义企业实际进入候选池时必须取得的公司或品牌特定证据，以及材料身份或效果仍未知时要保留的限制。
-7. `exclusion_boundary`：明确禁止用途、与目标效果不符、只有泛行业说法、只有未归属图片或只有推断的企业如何排除。
-8. `counterevidence_or_unknown`：记录会推翻或限制该方向的反证，以及内部资料和公开资料都未解决的问题。
+1. `source_route_review_id / source_route_candidate_id`：锁定业务员选定的评审记录与上游路线；核对公司、产品范围、输入哈希、路线状态、承接视图和交接包限制。
+2. `approved_product_fact`：只读取该路线已引用的批准事实，不自行补全等级、用途、法规、工艺、兼容性或供货能力。
+3. `effect_or_function_boundary`：复核该路线引用事实允许表达的效果、功能和禁止边界；这里仍是产品事实层。
+4. `application_conditions`：复核上游逐项记录的需求匹配、条件兼容、工艺或接口兼容、限制冲突与未知；不得重新平均或补齐四类状态。
+5. `application_node / output_product / industry_node`：保留上游应用节点、产出产品和行业活动链，检查其应用证据与来源独立性；不得把行业分类本身当成应用证明。
+6. `observable_product_signal`：把上游目标企业活动转换为未来可在企业的具体在售产品、目录、技术资料、已核验官方展示或可追溯零售页面中检查的信号；不能仅凭外观、行业惯例或“可能需要”认定材料已被使用。
+7. `target_enterprise_rule`：定义“什么企业公开呈现上述具体产品与活动信号”，不默认企业是原料采购方、中游或终端，也不推断不透明的采购角色。
+8. `candidate_direct_evidence_rule`：定义企业实际进入候选池时必须取得的公司或品牌特定证据，以及材料身份或效果仍未知时要保留的限制。
+9. `exclusion_boundary`：继承路线排除与限制，明确只有泛行业说法、未归属图片、推断或落入禁止边界的企业如何排除。
+10. `counterevidence_or_unknown`：保留上游反证和未知，并记录方向核实新增的反证、访问限制或缺口。
 
-链条中的事实、推断和未知必须逐项标记并可回溯；不得因为链条逻辑顺畅就把推断升级为产品事实、行业事实或客户事实。若某一步无法从现有资料推出，停在该步输出缺口，不得借助常识跨越。
+链条中的事实、推断和未知必须逐项标记并回溯到 `source_route_candidate_id`；不得因为链条逻辑顺畅就把推断升级为产品事实、应用事实、行业事实或客户事实。若某一步在上游路线包中缺失或无法验证，停在该步输出缺口，不得借助常识跨越，也不得在本技能内另造替代路线。
 
 每个 `development_direction_packet` 必须按下列顺序输出：
 
-1. `approved_product_reference`：已批准本地产品或效果事实的引用。
-2. `product_boundary`：可说的效果、适用边界、明确禁止边界和未知项。
-3. `direction_derivation_chain`：完整保存从 `approved_product_fact` 到 `counterevidence_or_unknown` 的推导链、每一步证据状态和缺口。
-4. `observable_enterprise_rule`：目标企业公开产品、目录、展示或可追溯资料中必须出现的可观察特征；这是待检验规则，不是行业事实。
-5. `candidate_direct_evidence_rule`：以后纳入候选池时必须找到的公司或品牌特定直接产品证据。
-6. `exclusion_boundary`：不满足可观察规则、明确落在禁止边界内、或只有泛行业证据的企业不得进入候选池。
-7. `external_evidence_posture`：支持、反证、有限、不可访问或尚未检查；分别列出来源与日期。
-8. `unresolved_conditions`：尚需核实的效果、材料、法规、工艺、主体或市场条件。
-9. `salesperson_decision_required`：只能请求 `确认可扫描`、`继续核实`、`暂缓` 或 `淘汰` 中的一项。
+1. `source_route_review_id`：业务员已作路线决定的评审记录编号。
+2. `source_route_candidate_id`：被选定的上游路线编号。
+3. `approved_product_reference`：该路线引用的已批准本地产品或效果事实。
+4. `product_boundary`：可说的效果、适用边界、明确禁止边界和未知项。
+5. `application_industry_boundary`：上游应用节点、产出产品、行业活动、目标企业活动及其证据和限制。
+6. `commercial_readiness_boundary`：承接状态、当前事实、时效、冲突、未知和业务员接受的未解决条件；不得升级成产品事实。
+7. `direction_derivation_chain`：完整保存从路线评审到 `counterevidence_or_unknown` 的审计与翻译链、每一步证据状态和缺口。
+8. `observable_enterprise_rule`：目标企业公开产品、目录、展示或可追溯资料中必须出现的可观察特征；这是待检验规则，不是客户事实。
+9. `candidate_direct_evidence_rule`：以后纳入候选池时必须找到的公司或品牌特定直接产品证据。
+10. `exclusion_boundary`：不满足可观察规则、明确落在禁止边界内、或只有泛行业证据的企业不得进入候选池。
+11. `external_evidence_posture`：支持、反证、有限、不可访问或尚未检查；分别列出来源与日期。
+12. `unresolved_conditions`：尚需核实的效果、材料、法规、工艺、主体、承接或市场条件。
+13. `salesperson_decision_required`：只能请求 `确认可扫描`、`继续核实`、`暂缓` 或 `淘汰` 中的一项。
 
-方向发现只产出可复用的企业筛选规则，不列出“正式目标行业”，不搜索客户池，不给客户排序，不声称已覆盖市场。
+方向编译只把一条已选路线编译为可复用的企业筛选规则；不扩展新的行业或应用路线，不搜索客户池，不给客户排序，不声称已覆盖市场。
 
 ### `direction_validation`
 

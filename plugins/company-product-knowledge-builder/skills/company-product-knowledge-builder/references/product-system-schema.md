@@ -65,6 +65,35 @@ Do not invent a series or model to complete the tree. Store aliases as unresolve
 
 `conflict_status`: `none`, `open`, `resolved`, `superseded`.
 
+## Commercial condition facts
+
+`commercial_condition` is still an atomic company fact. Store the comparison rule inside `fact_value`:
+
+```json
+{
+  "fact_type": "commercial_condition",
+  "fact_value": {
+    "dimension": "minimum_order_quantity",
+    "operator": "minimum",
+    "value": 25,
+    "unit": "kg"
+  },
+  "observed_at": "2026-07-01",
+  "valid_until": "2026-12-31",
+  "review_due": "2026-12-31",
+  "sensitivity": "commercial_internal",
+  "geographic_scope": [],
+  "customer_type_scope": [],
+  "application_scope": []
+}
+```
+
+Allowed operators are `minimum`, `maximum`, `equals`, `one_of`, `not_one_of`, `required_boolean`, and `requires_confirmation`. Sensitivity is `commercial_internal`, `customer_safe`, or `restricted`.
+
+Operator and value types are a hard contract: `minimum` and `maximum` require a non-boolean number; `one_of` and `not_one_of` require a non-empty JSON list; `required_boolean` requires a JSON boolean; `equals` requires one non-null scalar; `requires_confirmation` deliberately produces no automatic comparison result. A declared value with a missing/different unit or incompatible type is `有条件`, not a confirmed conflict and never a runtime error.
+
+At least one of `valid_until` or `review_due` is required. The readiness exporter calculates freshness at request time; do not store a permanently current `stale_status` in the fact. Expired, missing, differently scoped, or incomparable facts cannot support `可承接` or `已确认冲突`.
+
 ## Parameter completeness
 
 A parameter is usable only inside its recorded scope. Preserve, when applicable:

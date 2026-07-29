@@ -1,6 +1,6 @@
 ---
 name: company-product-knowledge-builder
-description: Use when a company needs a new or updated local product-knowledge library, source intake, structured product hierarchy, evidence review, conflict handling, knowledge updates, or a controlled product-fact handoff before industry-route or customer-development work.
+description: Use when a company needs a new or updated local product-knowledge library, source intake, structured product hierarchy, evidence review, conflict handling, knowledge updates, a controlled product-fact handoff, or an evidence-bound development-readiness view.
 ---
 
 # 公司产品知识构建
@@ -31,7 +31,8 @@ Before reading or writing business material:
 | `product_system_build` | Organize families, series, models, parameters, effects, conditions, or gaps | [product-system-schema.md](references/product-system-schema.md) | Product structure cites fact IDs and leaves unknown levels empty |
 | `knowledge_review` | Review evidence, conflicts, customer usability, or missing facts | [evidence-and-review.md](references/evidence-and-review.md) | Review result records `PASS / FAIL / UNVERIFIED` and required action |
 | `knowledge_update` | Add newer material or revise an existing record | [company-library-contract.md](references/company-library-contract.md) and [evidence-and-review.md](references/evidence-and-review.md) | History is preserved and change record is written |
-| `development_handoff` | Prepare approved facts for downstream development | [handoff-contracts.md](references/handoff-contracts.md) | Controlled fact packet is written; no route or customer conclusion follows |
+| `development_handoff` | Prepare approved technical facts for industry-application mapping | [handoff-contracts.md](references/handoff-contracts.md) | Deterministic fact packet is written; no route or customer conclusion follows |
+| `development_readiness_handoff` | Answer a structured commercial-readiness request from customer development | [handoff-contracts.md](references/handoff-contracts.md) | On-demand read-only view is returned; no route status or salesperson decision changes |
 
 Do not combine routes merely for convenience. Complete the requested route and stop at its boundary unless the user authorized the next route.
 
@@ -53,6 +54,7 @@ Do not combine routes merely for convenience. Complete the requested route and s
 - Keep supplier, customer, general-industry, inferred, and unknown statements separate from own-company facts.
 - Preserve both sides of a conflict. A newer date alone does not authorize overwriting approved history.
 - Leave missing levels and fields unresolved; never fill gaps from plausibility.
+- For `commercial_condition`, record a structured dimension/operator/value, applicability scopes, observation date, review boundary, and sensitivity. Missing or expired commercial evidence remains unknown; it does not become a prohibition.
 
 Use the exact schema and controlled vocabulary in [product-system-schema.md](references/product-system-schema.md).
 
@@ -105,17 +107,39 @@ When updating, append the new source and fact records, link conflicts or superse
 
 ## Development handoff
 
-Populate `04-开发交接/product-development-fact-packet.json` according to [handoff-contracts.md](references/handoff-contracts.md).
+Generate `04-开发交接/product-development-fact-packet.json` according to [handoff-contracts.md](references/handoff-contracts.md):
+
+```bash
+python3 scripts/export_product_development_fact_packet.py \
+  /absolute/path/to/company-library \
+  --product-family-id ACME-001-PF-001
+```
 
 Confirmed fact fields accept only approved E3 own-company fact IDs. E2 may be supplied only in a separately labelled internal context and never inside `confirmed_*`. E1 and E0 never enter confirmed fields.
 
-Stop after producing the packet. Hand the packet to a customer-development capability only when the user separately requests downstream work. Do not infer:
+Stop after producing the packet. Hand the packet to `industry-application-map-builder` only when the user separately requests industry-application mapping. The packet itself contains no route hypothesis. Do not infer:
 
 - industry routes or application candidates;
 - country priorities;
 - candidate companies or customer selection;
 - commercial entry strategy;
 - outreach wording or sending actions.
+
+## Development readiness handoff
+
+Accept only a structured `development_readiness_request` carrying the same `company_id`, product scope, requested dimensions, declared context, and return target. Treat `route_candidate_id` as an opaque trace key; do not interpret or reconstruct its industry meaning.
+
+Generate the view on demand:
+
+```bash
+python3 scripts/export_development_readiness_view.py \
+  /absolute/path/to/company-library \
+  --request /absolute/path/to/development-readiness-request.json
+```
+
+The default output is the structured payload on stdout. Do not create a permanent second commercial database. Write a snapshot only when the user authorizes an explicit output path for a material decision record.
+
+Only current approved E3 own-company commercial facts may determine `readiness_state`: `可承接`, `有条件`, `未知`, or `已确认冲突`. E2 may appear only under `internal_reference_annex` with `--include-e2-annex`; it never changes the state. `未知` never means blocked. The view must not change a map route, choose a market, rank a route, authorize scanning, or replace salesperson judgment.
 
 ## Validation
 

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+from datetime import date
 import hashlib
 import json
 from pathlib import Path
@@ -48,6 +49,32 @@ CONFIRMED_HANDOFF_FIELDS = {
     "known_limits",
 }
 SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
+COMMERCIAL_OPERATORS = {
+    "minimum",
+    "maximum",
+    "equals",
+    "one_of",
+    "not_one_of",
+    "required_boolean",
+    "requires_confirmation",
+}
+COMMERCIAL_SENSITIVITY = {"commercial_internal", "customer_safe", "restricted"}
+
+
+def commercial_value_is_valid(value: Any) -> bool:
+    if not isinstance(value, dict):
+        return False
+    operator = value.get("operator")
+    expected = value.get("value")
+    if operator in {"minimum", "maximum"}:
+        return isinstance(expected, (int, float)) and not isinstance(expected, bool)
+    if operator in {"one_of", "not_one_of"}:
+        return isinstance(expected, list) and bool(expected)
+    if operator == "required_boolean":
+        return isinstance(expected, bool)
+    if operator == "equals":
+        return expected is not None and not isinstance(expected, (dict, list))
+    return operator == "requires_confirmation"
 
 
 def read_json(path: Path, issues: list[dict[str, str]]) -> Any:
@@ -245,6 +272,43 @@ def validate_facts(
             if not isinstance(fact.get("applicable_conditions"), list):
                 issues.append(issue("PARAMETER_CONDITIONS_INVALID", record_path, fact_id))
 
+        if fact.get("fact_type") == "commercial_condition":
+            value = fact.get("fact_value")
+            if not (
+                isinstance(value, dict)
+                and isinstance(value.get("dimension"), str)
+                and value.get("dimension", "").strip()
+                and value.get("operator") in COMMERCIAL_OPERATORS
+                and "value" in value
+                and commercial_value_is_valid(value)
+            ):
+                issues.append(issue("COMMERCIAL_CONDITION_INVALID", record_path, fact_id))
+            if fact.get("sensitivity") not in COMMERCIAL_SENSITIVITY:
+                issues.append(issue("COMMERCIAL_SENSITIVITY_INVALID", record_path, fact_id))
+            for scope_field in (
+                "geographic_scope",
+                "customer_type_scope",
+                "application_scope",
+            ):
+                if not isinstance(fact.get(scope_field), list):
+                    issues.append(issue("COMMERCIAL_SCOPE_INVALID", record_path, scope_field))
+            for date_field in ("observed_at", "valid_until", "review_due"):
+                value_date = fact.get(date_field)
+                if value_date is None and date_field in {"valid_until", "review_due"}:
+                    continue
+                try:
+                    date.fromisoformat(value_date)
+                except (TypeError, ValueError):
+                    issues.append(
+                        issue(
+                            "COMMERCIAL_REVIEW_DATE_INVALID",
+                            record_path,
+                            f"{fact_id}:{date_field}",
+                        )
+                    )
+            if not fact.get("valid_until") and not fact.get("review_due"):
+                issues.append(issue("COMMERCIAL_REVIEW_DATE_REQUIRED", record_path, fact_id))
+
         conflict_status = fact.get("conflict_status")
         conflicts_with = fact.get("conflicts_with")
         if conflict_status not in {"none", "open", "resolved", "superseded"}:
@@ -326,6 +390,7 @@ def validate_product_system(
 
 def validate_handoff(
     payload: Any,
+    root: Path,
     company_id: str,
     facts: dict[str, dict[str, Any]],
     sources: dict[str, dict[str, Any]],
@@ -360,6 +425,40 @@ def validate_handoff(
         for source_id in references:
             if source_id not in sources:
                 issues.append(issue("HANDOFF_UNKNOWN_SOURCE", "approved_references", str(source_id)))
+    if packet.get("generated_at"):
+        product_family_id = packet.get("product_family_id")
+        if not (
+            isinstance(product_family_id, str)
+            and product_family_id.startswith(f"{company_id}-")
+        ):
+            issues.append(
+                issue(
+                    "HANDOFF_PRODUCT_SCOPE_INVALID",
+                    "product_family_id",
+                    str(product_family_id),
+                )
+            )
+        snapshot = packet.get("knowledge_snapshot")
+        snapshot_paths = {
+            "facts_sha256": root / "02-事实库" / "facts.json",
+            "product_system_sha256": root / "03-产品体系" / "product-system.json",
+            "source_registry_sha256": root / "00-管理" / "源文件清单.json",
+        }
+        if not isinstance(snapshot, dict):
+            issues.append(
+                issue(
+                    "HANDOFF_SNAPSHOT_REQUIRED",
+                    "knowledge_snapshot",
+                    "Generated packet requires a knowledge snapshot.",
+                )
+            )
+        else:
+            for key, source_path in snapshot_paths.items():
+                value = snapshot.get(key)
+                if not isinstance(value, str) or not SHA256_PATTERN.fullmatch(value):
+                    issues.append(issue("HANDOFF_SNAPSHOT_HASH_INVALID", key, str(value)))
+                elif value != hashlib.sha256(source_path.read_bytes()).hexdigest():
+                    issues.append(issue("HANDOFF_SNAPSHOT_STALE", key, str(source_path)))
 
 
 def validate(root: Path) -> dict[str, Any]:
@@ -407,7 +506,7 @@ def validate(root: Path) -> dict[str, Any]:
         issues,
     )
     handoff_payload = read_json(root / "04-开发交接" / "product-development-fact-packet.json", issues)
-    validate_handoff(handoff_payload, company_id, facts, sources, issues)
+    validate_handoff(handoff_payload, root, company_id, facts, sources, issues)
 
     return {
         "status": "PASS" if not issues else "FAIL",

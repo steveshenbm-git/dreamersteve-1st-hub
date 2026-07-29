@@ -1,7 +1,7 @@
 {
   "name": "company-product-knowledge-builder",
   "version": "0.1.0",
-  "description": "将公司原始产品资料整理为按公司隔离、来源可追溯、证据分级的产品知识，并生成受控的客户开发事实交接包。",
+  "description": "将公司原始产品资料整理为按公司隔离、来源可追溯、证据分级的产品知识，并生成供行业应用地图使用的受控产品事实交接包。",
   "author": {
     "name": "steveshenbm-git"
   },
@@ -11,13 +11,13 @@
     "product-facts",
     "evidence-governance",
     "product-system",
-    "customer-development-handoff"
+      "industry-application-handoff"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "公司产品知识构建",
     "shortDescription": "构建可追溯、证据分级的公司产品知识库。",
-    "longDescription": "用于新建和维护按 company_id 隔离的公司产品知识库，登记原始来源，将资料拆分为原子产品事实，组织产品族、系列与型号结构，管理证据等级、冲突和缺口，并在不生成行业路线、客户名单或外联内容的前提下输出客户开发事实交接包。",
+    "longDescription": "用于新建和维护按 company_id 隔离的公司产品知识库，登记原始来源，将资料拆分为原子产品事实，组织产品族、系列与型号结构，管理证据等级、冲突和缺口，并在不生成行业路线、客户名单或外联内容的前提下输出行业应用地图所需的受控产品事实交接包。",
     "developerName": "steveshenbm-git",
     "category": "Productivity",
     "capabilities": [
@@ -27,7 +27,7 @@
     "defaultPrompt": [
       "为这家公司建立空白、隔离的产品知识库并完成结构校验。",
       "登记这些原始资料，拆分原子产品事实，但不要自动提升证据等级。",
-      "生成受控的客户开发事实交接包，并在行业或客户研究开始前停止。"
+      "生成供行业应用地图使用的受控产品事实交接包，并在路线推导开始前停止。"
     ]
   }
 }

@@ -1,4 +1,4 @@
 interface:
   display_name: "公司产品知识构建"
-  short_description: "构建按公司隔离、来源可追溯、证据分级的产品知识库"
-  default_prompt: "使用 $company-product-knowledge-builder 为指定 company_id 整理原始产品资料，建立证据分级的产品知识体系，并在受控事实边界内生成客户开发交接包。"
+  short_description: "构建隔离、可追溯的产品事实与开发承接视图"
+  default_prompt: "使用 $company-product-knowledge-builder 为指定 company_id 构建受控产品知识，生成行业地图所需技术事实包，或按请求返回开发承接条件只读视图。"

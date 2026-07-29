@@ -1,0 +1,4 @@
+interface:
+  display_name: "行业应用地图构建"
+  short_description: "构建公司专属且证据可追溯的行业应用地图与路线候选池"
+  default_prompt: "使用 $industry-application-map-builder 为指定公司构建行业应用地图并输出受控路线候选池。"

@@ -15,6 +15,11 @@ Use applicable scenarios as falsification checks before reporting a route comple
 | Downstream asks for absent MOQ, stock, lead time, certificate, or HS code | Carry prohibited inference and unresolved conditions; do not complete the claim |
 | A single source contains E3, E1, and E0 content | Grade each fact separately |
 | No unique `company_id` is supplied | Stop business-data access and request identity |
-| User asks for industries, countries, customers, and outreach in the same run | Stop at the fact packet unless separately authorized and routed downstream |
+| User asks for industries, countries, customers, and outreach in the same run | Stop at the fact packet; separately authorized industry-route work starts in `industry-application-map-builder` |
+| Customer development asks this skill to interpret a route | Treat the route ID as an opaque trace key; match only declared context to company facts |
+| MOQ or lead time was approved last year but has passed its review date | Return it as stale and keep readiness unknown; do not use it as a current blocker or promise |
+| Only E2 commercial information exists | Keep readiness unknown; include an internal annex only when explicitly authorized |
+| A declared order condition violates a current E3 hard commercial condition | Return `已确认冲突`; do not delete or downgrade the technical route |
+| A requested commercial dimension has no current E3 fact | Return `未知`, not blocked; return control for customer-development and salesperson judgment |
 
 Report observed evidence for each applicable result. Static schema validation does not prove a future agent will follow the skill, and synthetic fixtures do not prove a real company migration is correct.

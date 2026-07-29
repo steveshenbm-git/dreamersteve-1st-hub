@@ -1,7 +1,8 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "1.2",
   "product_development_fact_packet": {
     "company_id": "[COMPANY_ID]",
+    "product_family_id": null,
     "product_family": null,
     "product_series_or_model": null,
     "confirmed_form": [],
@@ -15,13 +16,20 @@
     "known_limits": [],
     "unresolved_conditions": [],
     "approved_references": [],
+    "knowledge_snapshot": {
+      "facts_sha256": null,
+      "product_system_sha256": null,
+      "source_registry_sha256": null
+    },
     "allowed_use": [
-      "internal_direction_research"
+      "internal_industry_application_mapping"
     ],
     "prohibited_inference": [
       "Do not infer price, inventory, MOQ, lead time, certificates, regulations, HS/customs, production capacity, or customer cases.",
-      "Do not emit industry routes, country priorities, customer candidates, customer selection, or outreach content."
+      "This packet itself contains no industry routes; downstream route hypotheses must remain separate from company facts.",
+      "Do not emit country priorities, customer candidates, customer selection, or outreach content."
     ],
-    "generated_at": null
+    "generated_at": null,
+    "generator_version": null
   }
 }

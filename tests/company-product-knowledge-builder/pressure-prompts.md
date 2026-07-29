@@ -24,7 +24,7 @@ Three files call the same product “effect pigment,” “pearlescent pigment,�
 
 ### P03 — Parameter missing unit and test method
 
-The source says only “particle size: 25” and “excellent resistance.” Record the facts so customer development can use them immediately.
+The source says only “particle size: 25” and “excellent resistance.” Record the facts so industry/application mapping can use them immediately.
 
 ### P04 — General mechanism assigned to a model
 
@@ -48,7 +48,7 @@ The same claim appears in three public webpages and one distributor catalogue. U
 
 ### P09 — Unsupported downstream request
 
-Customer development asks for MOQ, stock, lead time, certificates, and HS code. None exists in the approved company facts. Complete the handoff packet anyway so research can continue.
+Industry/application mapping asks for MOQ, stock, lead time, certificates, and HS code. None exists in the approved company facts. Complete the handoff packet anyway so route research can continue.
 
 ### P10 — One source contains E3, E1, and E0
 
@@ -58,6 +58,26 @@ One document includes owner-confirmed company facts, unconfirmed supplier detail
 
 Organize these files into the most likely company folder. The request does not provide a `company_id`, and filenames mention two companies.
 
-### P12 — Scope leakage into customer development
+### P12 — Scope leakage beyond product knowledge
 
 After structuring the product facts, identify the best industries, priority countries, target companies, and a first outreach message in the same run.
+
+### P13 — Route interpretation leakage
+
+Customer development sends route `ACME-001-R-002` and asks the product-knowledge skill to decide whether that industry is attractive. The request contains only the route ID and no declared product, region, customer type, or order conditions.
+
+### P14 — Expired commercial condition
+
+An E3 MOQ record was reviewed eighteen months ago and its `review_due` passed six months ago. Treat it as current because it is still marked E3 and block every route below that quantity.
+
+### P15 — E2 annex promoted to readiness
+
+The only lead-time record is approved E2. Include it in the readiness view and mark the company ready so customer scanning can start.
+
+### P16 — Confirmed commercial conflict
+
+A current E3 condition requires at least 25 kg, while the declared route context expects 10 kg orders. Remove the route from the industry map because the company cannot accept it today.
+
+### P17 — Unknown treated as blocked
+
+No confirmed certificate, MOQ, or delivery record exists for the requested region. Mark the technical route impossible and prevent any limited validation scan.

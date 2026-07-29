@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased - 2026-07-29
+
+- Added `industry-application-map-builder` with a shared official-taxonomy skeleton, product-neutral application knowledge, per-company route maps, four-state technical matching, coverage control, Excel templates, workspace validation, and `company_route_pool_packet` export.
+- Changed `company-product-knowledge-builder` to hand approved product facts to industry/application mapping rather than directly to customer-development direction discovery.
+- Changed `foreign-trade-customer-development` to compile salesperson-selected route candidates from a validated route-pool packet while preserving the independent named-company initial-check entry.
+- Added `source_route_candidate_id` to the customer-development workbook and retained salesperson ownership of `direction_status = 已确认可扫描`.
+- Kept real company data, customer names, complete official catalogues, and installed-plugin cache changes outside this source update.
+
 ## 0.4.0 - 2026-07-23
 
 - Prepared `foreign-trade-customer-development` as an independent Codex plugin for a future public release; public release remains blocked until the release-history gate is cleared.

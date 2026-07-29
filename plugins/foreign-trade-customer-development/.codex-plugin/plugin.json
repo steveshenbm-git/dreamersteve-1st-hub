@@ -1,7 +1,7 @@
 {
   "name": "foreign-trade-customer-development",
   "version": "0.1.0+codex.20260728074635",
-  "description": "Codex skill plugin for product-led direction discovery, evidence-bound candidate-company research, due diligence, and customer-development handoff before external communication.",
+  "description": "用于路线候选池评审、业务员选定路线的开发方向编译、证据约束的候选企业研究、尽职调查，以及外联前客户开发交接；不代替业务员做商业决策或发送沟通内容。",
   "author": {
     "name": "steveshenbm-git"
   },
@@ -15,9 +15,9 @@
   ],
   "skills": "./skills/",
   "interface": {
-    "displayName": "Foreign Trade Customer Development",
-    "shortDescription": "Discover product-led directions and prepare controlled development handoffs.",
-    "longDescription": "A salesperson-controlled assistant for product-led direction discovery, candidate scans, stage-gated due diligence, and evidence-bound outreach handoffs without drafting, sending, or making final business decisions.",
+    "displayName": "外贸客户开发",
+    "shortDescription": "评审已验证路线、编译开发方向并准备受控开发交接。",
+    "longDescription": "由业务员主导的客户开发助手：评审已登记的公司路线候选池，提出开发承接条件查阅请求，将业务员选定路线编译为开发方向，执行候选企业扫描与阶段受控尽调，并准备证据约束的外联交接包；不代写或发送邮件，不代替业务员做最终商业判断。",
     "developerName": "steveshenbm-git",
     "category": "Productivity",
     "capabilities": [
@@ -26,9 +26,10 @@
     ],
     "brandColor": "#147DFF",
     "defaultPrompt": [
-      "Use approved local product facts to create a development-direction candidate and stop for salesperson decision.",
-      "Build a candidate company list for this salesperson-confirmed scannable development direction.",
-      "Perform full due diligence on this salesperson-confirmed potential customer and prepare an outreach handoff package without drafting or sending a message."
+      "校验已登记的公司路线候选池交接包，输出无综合评分的路线评审与承接条件查阅请求，停止等待业务员选择。",
+      "将业务员选定的一条路线编译为开发方向，停止等待规则验证和业务员确认。",
+      "为业务员已确认可扫描的开发方向建立候选企业清单。",
+      "对业务员已确认的潜在客户执行完整尽调，并准备外联交接包；不代写或发送沟通内容。"
     ]
   }
 }

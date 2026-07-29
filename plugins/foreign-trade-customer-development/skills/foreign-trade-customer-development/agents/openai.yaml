@@ -1,4 +1,4 @@
 interface:
   display_name: "外贸客户开发"
-  short_description: "从本地产品事实探索开发方向、筛选候选企业并准备开发交接包"
-  default_prompt: "使用 $foreign-trade-customer-development 根据本地已批准产品事实执行 direction_discovery，输出可核实的开发方向候选及其排除边界，停止等待业务员决定是否确认可扫描。"
+  short_description: "评审已验证路线池、编译开发方向并筛选候选企业"
+  default_prompt: "使用 $foreign-trade-customer-development 校验 company_route_pool_packet，执行 route_portfolio_review，输出无综合评分的路线评审与承接条件请求，停止等待业务员选择。"

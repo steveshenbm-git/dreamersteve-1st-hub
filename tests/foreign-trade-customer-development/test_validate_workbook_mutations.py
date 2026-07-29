@@ -86,9 +86,9 @@ def create_green_control(destination: Path) -> None:
         for sheet in workbook.worksheets
         for validation in sheet.data_validations.dataValidation
     ]
-    if len(validations) != 16:
+    if len(validations) != 21:
         raise AssertionError(
-            f"expected 16 controlled validations in source workbook, observed {len(validations)}"
+            f"expected 21 controlled validations in source workbook, observed {len(validations)}"
         )
     for validation in validations:
         validation.showErrorMessage = True
@@ -108,7 +108,23 @@ def main() -> int:
 
         green_control_path = temp_root / "green-control.xlsx"
         create_green_control(green_control_path)
-        assert_accepted(run_validator(green_control_path), "all 13 enforced validations")
+        assert_accepted(run_validator(green_control_path), "all 21 enforced validations")
+
+        route_decision_green_path = temp_root / "route-decision-green-control.xlsx"
+        copyfile(green_control_path, route_decision_green_path)
+        assert_accepted(
+            run_validator(route_decision_green_path),
+            "route-decision mutation baseline",
+        )
+        wrong_route_decision_path = temp_root / "wrong-route-decision-list.xlsx"
+        workbook = load_workbook(route_decision_green_path, data_only=False)
+        validation = validation_by_range(workbook["路线评审"], "Q3:Q5000")
+        validation.formula1 = '"选择编译,AI自动选择,暂缓,淘汰"'
+        workbook.save(wrong_route_decision_path)
+        assert_rejected(
+            run_validator(wrong_route_decision_path),
+            "路线评审.salesperson_route_decision",
+        )
 
         screening_green_control_path = temp_root / "screening-green-control.xlsx"
         copyfile(green_control_path, screening_green_control_path)
@@ -178,7 +194,7 @@ def main() -> int:
     if file_sha256(WORKBOOK_PATH) != source_hash:
         raise AssertionError("source workbook changed during mutation tests")
 
-    print("PASS: GREEN control validates and all five isolated mutations are rejected")
+    print("PASS: GREEN control validates and all six isolated mutations are rejected")
     return 0
 
 

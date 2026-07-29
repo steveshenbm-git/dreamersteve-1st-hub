@@ -38,6 +38,8 @@ RULES: dict[str, tuple[str, tuple[str, ...]]] = {
     "skill.routes_and_stops": (
         "skill",
         (
+            "route_portfolio_review",
+            "direction_compilation",
             "direction_discovery",
             "direction_validation",
             "candidate_scan",
@@ -60,9 +62,11 @@ RULES: dict[str, tuple[str, tuple[str, ...]]] = {
             "every external message",
         ),
     ),
-    "research.product_led_formula": (
+    "research.route_led_formula": (
         "research",
         (
+            "company_route_pool_packet",
+            "source_route_candidate_id",
             "direction_derivation_chain",
             "approved_product_fact",
             "effect_or_function_boundary",
@@ -73,6 +77,21 @@ RULES: dict[str, tuple[str, tuple[str, ...]]] = {
             "counterevidence_or_unknown",
             "事实、推断和未知",
             "不得借助常识跨越",
+        ),
+    ),
+    "research.route_review_and_readiness": (
+        "research",
+        (
+            "route_portfolio_review_packet",
+            "producer_registry_reference",
+            "route_packet_sha256",
+            "development_readiness_request",
+            "development_readiness_view",
+            "next_owner: company-product-knowledge-builder",
+            "commercial_readiness_status",
+            "不得反写 map_route_status",
+            "不得生成综合路线评分",
+            "国家或地区假设不得直接变成最终市场优先级",
         ),
     ),
     "research.direction_lifecycle": (
@@ -157,6 +176,8 @@ RULES: dict[str, tuple[str, tuple[str, ...]]] = {
             "第 1 行是机器字段名",
             "第 2 行是业务可读的中文字段说明",
             "direction_derivation_chain",
+            "route_review_id",
+            "source_route_review_id",
             "direction_feedback_packet",
             "未合格或待核实公司不伪装成客户记录",
             "客户经营与沟通移交",
@@ -174,9 +195,9 @@ RULES: dict[str, tuple[str, tuple[str, ...]]] = {
     "interfaces.direction_first": (
         "manifest",
         (
-            "product-led direction discovery",
-            "without drafting, sending, or making final business decisions",
-            "Use approved local product facts",
+            "业务员选定路线的开发方向编译",
+            "不代写或发送邮件，不代替业务员做最终商业判断",
+            "校验已登记的公司路线候选池交接包",
         ),
     ),
     "readme.boundary": (

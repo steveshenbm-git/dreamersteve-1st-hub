@@ -13,7 +13,62 @@ SKILL_ROOT = (
 
 
 class DirectionDiscoveryContractTests(unittest.TestCase):
-    def test_product_led_direction_discovery_has_a_decision_gate(self):
+    def test_route_portfolio_review_precedes_direction_compilation(self):
+        skill_text = (SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        research_text = (
+            SKILL_ROOT / "references" / "research-and-sources.md"
+        ).read_text(encoding="utf-8")
+        combined = skill_text + research_text
+
+        for required in (
+            "route_portfolio_review",
+            "route_portfolio_review_packet",
+            "direction_compilation",
+            "direction_discovery",
+            "compatibility alias",
+            "salesperson_route_decision",
+        ):
+            self.assertIn(required, combined)
+
+    def test_route_preflight_and_readiness_are_explicit_handoffs(self):
+        skill_text = (SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        research_text = (
+            SKILL_ROOT / "references" / "research-and-sources.md"
+        ).read_text(encoding="utf-8")
+        combined = skill_text + research_text
+
+        for required in (
+            "producer_registry_reference",
+            "route_packet_sha256",
+            "development_readiness_request",
+            "development_readiness_view",
+            "next_owner: company-product-knowledge-builder",
+            "可承接",
+            "有条件",
+            "未知",
+            "已确认冲突",
+            "不得反写 map_route_status",
+        ):
+            self.assertIn(required, combined)
+
+    def test_businessperson_owns_route_selection_without_composite_score(self):
+        skill_text = (SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        research_text = (
+            SKILL_ROOT / "references" / "research-and-sources.md"
+        ).read_text(encoding="utf-8")
+        combined = skill_text + research_text
+
+        for required in (
+            "选择编译",
+            "继续核实",
+            "暂缓",
+            "淘汰",
+            "不得生成综合路线评分",
+            "国家或地区假设不得直接变成最终市场优先级",
+        ):
+            self.assertIn(required, combined)
+
+    def test_route_led_direction_discovery_has_a_decision_gate(self):
         skill_text = (SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
         research_text = (
             SKILL_ROOT / "references" / "research-and-sources.md"
@@ -48,6 +103,8 @@ class DirectionDiscoveryContractTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
 
         for required in (
+            "company_route_pool_packet",
+            "source_route_candidate_id",
             "direction_derivation_chain",
             "approved_product_fact",
             "effect_or_function_boundary",
@@ -59,6 +116,21 @@ class DirectionDiscoveryContractTests(unittest.TestCase):
             "不能仅凭外观、行业惯例或“可能需要”",
         ):
             self.assertIn(required, research_text)
+
+    def test_direction_discovery_consumes_map_route_instead_of_rebuilding_industries(self):
+        skill_text = (SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        research_text = (
+            SKILL_ROOT / "references" / "research-and-sources.md"
+        ).read_text(encoding="utf-8")
+        combined = skill_text + research_text
+
+        for required in (
+            "industry-application-map-builder",
+            "validated `company_route_pool_packet`",
+            "does not independently infer an industry from product facts",
+            "命名公司初查",
+        ):
+            self.assertIn(required, combined)
 
     def test_direction_lifecycle_includes_scan_feedback_without_ai_reclassification(self):
         research_text = (
