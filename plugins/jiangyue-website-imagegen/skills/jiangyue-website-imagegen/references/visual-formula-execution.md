@@ -15,14 +15,25 @@ Accept production only when planner supplies one current Formula Decision contai
 - authority and visual-unit intent;
 - an explicit `Planner Handoff Verdict: PROCEED` supported by semantic compatibility evidence;
 - judgments for `T/S/R/O/A/I/N`;
+- an inherited three-factor decision covering purpose fit, truthfulness/realism mode and evidence boundary, and visual-quality mechanism/quality bar;
 - one exact image, text, layout, or UI owner for each decision;
 - production direction, feasibility, protected content, risks, preconditions, and visible pass/fail checks.
 
 Do not fill missing strategic decisions inside imagegen. Return `RETURN`, ownerless, stale, contradictory, unsupported, or abstract decisions to Workflow Director.
 
+## Three-Factor Execution Mapping
+
+Purpose fit, truthfulness/realism fit, and visual-quality fit are cross-cutting execution checks, not new formula letters or local formula meanings. Map the inherited decision once inside the Production Success Strategy, then reuse existing evidence downstream:
+
+- use Formula/brief/intent evidence for purpose fit;
+- use fact/material, physical plausibility, claim-boundary, formula, and visual-self-check evidence for truthfulness/realism fit;
+- use visual value, composition, hierarchy, craft, brand/buyer fit, and small-size evidence for visual-quality fit.
+
+Imagegen may decide how to execute the accepted realism and quality requirements. It must not redefine the purpose, change the realism mode, add a product or semantic technology cue, or replace the planner's visual hypothesis.
+
 ## Observable Preflight
 
-Immediately before a semantic generation or meaning-changing edit tool call, emit `Imagegen Preflight` with Formula Decision source/identifier, `READY/BLOCKED`, production method, and primary veto. Use `READY` only after planner `PROCEED` and an executable inherited contract. `BLOCKED` makes no tool call; a backfilled/reconstructed preflight is invalid and its result is `analysis only`.
+Immediately before a semantic generation or meaning-changing edit tool call, emit `Imagegen Preflight` with Formula Decision source/identifier, `READY/BLOCKED`, production method, and primary veto. Use `READY` only after planner `PROCEED`, an executable inherited contract, and a method ceiling that can satisfy all three factors together. `BLOCKED` makes no tool call; a backfilled/reconstructed preflight is invalid and its result is `analysis only`.
 
 ## Production Trace
 
@@ -38,6 +49,7 @@ Formula Production Trace
 - A: planner decision / image evidence / external owner / prompt clause / result observation
 - I: planner decision / image evidence / external owner / prompt clause / result observation
 - N: negative constraint / result observation
+- Three-factor execution mapping: Production Success Strategy reference / joint result status
 - Post-processing responsibility:
 - Trace status: ready / return to planner / fail result check
 ```
@@ -77,7 +89,7 @@ Client review package = accepted Formula Decision before generation + visible ca
 
 ## Bounded Technical Operations
 
-Crop, resize, compress, format conversion, deterministic typesetting, and export may use a light trace that cites the accepted baseline and Formula Decision. Load only source, target, protected elements, technical parameters, and checks.
+Crop, resize, compress, format conversion, deterministic typesetting, and export may use a light trace that cites the accepted baseline, Formula Decision, and inherited three-factor status. Load only source, target, protected elements, technical parameters, and checks; verify no regression in purpose, truthfulness/realism, or visual quality.
 
 Return to planner if the operation can change attention ownership, subject credibility, relationship meaning, spatial order, atmosphere role, identification dominance, claim boundary, or forbidden interpretation.
 
@@ -90,6 +102,7 @@ After rendering, record observed evidence rather than prompt intent:
 - confirm `A` and `I` did not replace missing `S/R/O` mechanisms;
 - apply `N` as a misread and veto check;
 - classify any changed decision or owner as formula drift and return it to planner.
+- reuse the existing result checks to record purpose, truthfulness/realism, and visual-quality evidence; do not create three new peer gates.
 
 Keep visible-quality, Intent-Brief-Result, and candidate-delivery decisions distinct internally. Consolidate only the user-facing report:
 
@@ -97,6 +110,7 @@ Keep visible-quality, Intent-Brief-Result, and candidate-delivery decisions dist
 Imagegen Verdict
 - Review object: standalone asset / image base / desktop composite / mobile composite
 - Result vs intent: pass / fail
+- Three-factor joint verdict: purpose / truthfulness-realism / visual quality — pass only when all three pass without compensation
 - Blocking observation:
 - Delivery status:
 - Next route:

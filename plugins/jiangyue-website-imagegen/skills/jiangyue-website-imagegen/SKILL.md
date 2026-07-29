@@ -11,7 +11,7 @@ Own visual execution: production method, image editing, subject structure, physi
 
 Do not own page strategy, H1, CTA hierarchy, buyer-message fit, claim boundary, or final approval. If those are unclear, return to `$jiangyue-website-workflow-director` with the missing decision.
 
-Do not replace the planner's Formula Decision with imagegen's own visual strategy or formula interpretation. For semantic new images or meaning-changing edits, inherit the accepted `T → S → R → O → A → I → N` decision and its exact image/text/layout ownership; if it is missing, stale, ownerless, or too abstract to execute, return it before production.
+Do not replace the planner's Formula Decision with imagegen's own visual strategy or formula interpretation. For semantic new images or meaning-changing edits, inherit the accepted `T → S → R → O → A → I → N` decision, three-factor decision, and exact image/text/layout ownership; if any is missing, stale, ownerless, contradictory, or too abstract to execute, return it before production.
 
 Use professional industrial judgment for European B2B buyers. Avoid unsupported product, certification, customer, performance, export, compliance, patent, or specification claims.
 
@@ -20,6 +20,8 @@ Use professional industrial judgment for European B2B buyers. Avoid unsupported 
 Imagegen owns production/editing, P图, crop/export/package work, the execution brief and hard lists, visible QA at full/review size, candidate status, and reproduction notes.
 
 It does not own page objective, buyer intent, SEO/AEO, H1/CTA/section order, claim boundary, repeated-failure strategy attribution, formal knowledge entry, or final approval.
+
+Product, controller, hardware, UI, control signal, or application presence follows the inherited image role and evidence boundary. Do not add or remove one merely because Jiangyue sells motor drives or because the scene belongs to HVAC or another application category.
 
 ## Intake
 
@@ -41,6 +43,7 @@ Before a brief-based image, confirm:
 - real intent, page/use location, image role, and attention owner are clear
 - the brief cites the formal brand outline section 4 as formula authority
 - planner has issued an explicit `Planner Handoff Verdict: PROCEED`; `RETURN`, silence, or a reconstructed verdict blocks production
+- purpose fit, truthfulness/realism mode and evidence boundary, and visual-quality mechanism/quality bar each have an inherited `pass` decision
 - the current Formula Decision makes a judgment for `T/S/R/O/A/I/N` and names the exact image, text, layout, or UI owner for every field
 - image-owned decisions have prompt-ready visible carriers; non-image-owned decisions name the concrete external mechanism and the space/structure imagegen must preserve
 - production direction, feasibility, protected content, preconditions, major failure risks, and visible pass/fail criteria are clear
@@ -71,6 +74,7 @@ Hard rules:
 - A generated result may inform a future brief, but it cannot silently become the brief.
 - A brief may translate intent, but it cannot replace the original intent.
 - A visual self-check pass does not make a result deliverable; it only allows candidate delivery review.
+- Keep visual self-check, Intent-Brief-Result, and Candidate Delivery as distinct evidence owners. Reuse their evidence in one three-factor joint verdict; do not add a full duplicate three-factor review to every gate.
 - A rejected candidate is not the next baseline unless the user explicitly accepts that direction.
 - A candidate from a weak batch must pass the active brief and intent on an absolute basis; do not deliver the least-bad option.
 - User acceptance must be recorded by layer: intent, brief, direction, specific draft, final export, or approved archive.
@@ -113,7 +117,7 @@ For simple local edits, deterministic cards, format edits, crops, exports, and l
 For most Jiangyue website visuals:
 
 1. Read [references/visual-formula-execution.md](references/visual-formula-execution.md), verify planner `PROCEED`, and compile one production brief with four hard lists: must keep, must remove, must materially change, must avoid.
-2. Read [references/production-success-strategy-gate.md](references/production-success-strategy-gate.md) when the asset is brief-based, high-impact, cost-bearing, or repeated-failure; state how the method and visual model can succeed before production.
+2. Read [references/production-success-strategy-gate.md](references/production-success-strategy-gate.md) when the asset is brief-based, high-impact, cost-bearing, or repeated-failure; map purpose, truthfulness/realism, and visual quality to the selected method and block production when its ceiling cannot satisfy all three.
 3. Read [references/attempt-stop-and-method-escalation-gate.md](references/attempt-stop-and-method-escalation-gate.md) when multiple attempts, API calls, or repeated failures are possible; do not repeat the same failed hypothesis.
 4. Choose method based on visible result quality, not convenience.
 5. Compile the seven-stage decision into a coherent natural prompt, negative constraints, deterministic post-processing instructions, and result checks without copying labels mechanically or changing planner ownership.
@@ -134,7 +138,8 @@ For homepage heroes, product heroes, Contact heroes, brand-defining visuals, rec
    - [references/brief-review-rubric.md](references/brief-review-rubric.md) for production readiness.
    - [references/visual-structure-patterns.md](references/visual-structure-patterns.md) for abstract or multi-subject structure.
    - [references/design-upgrade.md](references/design-upgrade.md) when the design is generic or weak.
-   - [references/reference-research.md](references/reference-research.md) when category recognition or reference quality matters.
+   - [references/reference-research.md](references/reference-research.md) when the accepted subject needs physical/craft evidence or the quality ceiling needs references; use category research only when category recognition is image-owned.
+   - [references/balance-pressure-scenarios.md](references/balance-pressure-scenarios.md) when revising or validating three-factor, product-presence, method-ceiling, research, or delivery rules; do not load it as a normal production gate.
    - [references/failure-reset-hard-gates.md](references/failure-reset-hard-gates.md) when user-named defects or repeated failures appear.
    - [references/brief-anchor-and-rework-gate.md](references/brief-anchor-and-rework-gate.md) before rework after a rejected, disputed, or drifted candidate.
    - [references/rejected-result-analysis-gate.md](references/rejected-result-analysis-gate.md) when a candidate fails a hard gate or should only be used as analysis.
@@ -183,6 +188,7 @@ Reject or revise before delivery when any of these appear:
 - high-impact or brand-defining image lacks required Brand-System Visual Alignment, or visibly conflicts with formal brand-system visual planning
 - production brief invents a different visual strategy, image type, or composition relationship instead of executing the planner brief
 - polished output that no longer supports the approved brief or local edit intent
+- purpose fit, truthfulness/realism fit, or visual-quality fit fails, or one factor is being used to compensate for another
 
 ## Text Rules
 
@@ -206,6 +212,6 @@ Example: `outputs/jiangyue-website-images/home/首页英雄图API测试/01-方�
 
 ## Delivery Report
 
-For semantic work, report one `Imagegen Verdict`; keep the full Formula Production Trace and the three internal result checks internal unless the user requests them. Include verified file path, dimensions, method, and material limitations only when relevant. Correct dimensions, a saved path, or a successful script run are not visual verification.
+For semantic work, report one `Imagegen Verdict` with the three-factor joint status; keep the full Formula Production Trace and the three internal result checks internal unless the user requests them. Include verified file path, dimensions, method, and material limitations only when relevant. Correct dimensions, a saved path, or a successful script run are not visual verification.
 
 Classify the reviewed object precisely: `standalone asset`, `image base`, `desktop composite`, or `mobile composite`. When HTML/layout owns core category, differentiation, or interaction responsibility, a bitmap can be only an `image-base candidate`; it cannot pass as the complete Hero.

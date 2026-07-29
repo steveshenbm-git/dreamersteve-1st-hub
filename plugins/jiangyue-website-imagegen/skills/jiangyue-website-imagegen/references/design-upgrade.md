@@ -88,10 +88,10 @@ Creativity is allowed when it remains physically and commercially plausible for 
 
 Use creative freedom to change:
 
-- crop: close product fragments, edge tension, partial application-equipment or control-system context
-- spatial model: layered control field, feedback loop, product-to-application relationship, engineering workspace
+- crop: role-appropriate product or application detail when the accepted brief and evidence allow it, edge tension, partial equipment or engineering context
+- spatial model: the accepted system, feedback, product-to-application, or engineering relationship; do not add a control layer that the brief did not assign
 - material: cast or anodized metal, matte coating, controlled reflections, heat-sink rhythm
-- metaphor: adaptive control, service feedback, precision handoff, airflow-to-control relationship
+- metaphor: only the accepted relationship, such as adaptive control, service feedback, precision handoff, or airflow-to-control when the Formula Decision assigns it
 - palette: neutral industrial base with restrained technical or environmental accents
 
 Do not use creativity to add unsupported claims, fake interfaces, unrealistic sci-fi machinery, over-complex environments, or generic decorative tech patterns.
@@ -107,7 +107,7 @@ Do not use physical objects as arbitrary symbols. A transparent shell, base, PCB
 
 If the metaphor requires a half shell, floating frame, arbitrary metal platform, or unexplained energy loop, change the visual model before generating.
 
-For motor-control or application-specific visuals, the best creative solution usually combines one recognizable hardware/control cue with one clear control, application, or service relationship. It should not become either a plain product photo or an abstract AI poster.
+Product, hardware, controller, UI, control-signal, or application cues follow the inherited image role and evidence boundary; the company category or application category alone does not require or forbid them. When verified product/control recognition is image-owned, combine that credible cue with its assigned relationship. When it is not image-owned, do not add a cue merely to make the image feel relevant to motor control.
 
 If the previous draft failed for visual quality, the next draft must change at least one of:
 
@@ -123,17 +123,16 @@ For a user-requested rebuild, remake, or complete redesign, changing only elemen
 
 ## Brand-Safe Autonomous Additions
 
-These may be added without asking when they remain abstract and non-semantic:
+These may be added without asking only when they remain non-semantic and preserve the accepted attention hierarchy, image role, and three-factor decision:
 
-- one to three small AI energy nodes
-- a thin data path or control-layer axis
 - precise cut lines, registration marks, or material seams
 - a restrained crop that implies continuation beyond the frame
 - subtle depth, shadow, reflection, or material contrast
-- abstract waveform or diagnostic rhythm without values or status claims
 - one small warm accent used only for balance
 
 Keep additions subordinate to the chosen attention hierarchy. If the image supports the headline, CTA, or logo, additions must not steal first attention.
+
+AI nodes, data paths, control-layer axes, waveforms, diagnostic rhythms, signal lights, and similar technology cues are semantic even without labels or values. Add them only when the accepted Formula Decision already assigns that meaning and carrier; otherwise return the gap or ask the one necessary question through the workflow.
 
 ## Additions That Require One Question
 
@@ -142,6 +141,7 @@ Ask before adding:
 - a headline, subtitle, caption, slogan, or explanatory phrase
 - a motor controller or application object not requested, such as a fan, pump, machine, equipment scene, or human figure
 - a symbol that implies diagnostics, Bluetooth, AI monitoring, safety, certification, or performance
+- an AI node, data path, control axis, waveform, diagnostic rhythm, or signal light not already assigned by the Formula Decision
 - specific product architecture, interface behavior, data, values, or claims
 - a new brand metaphor that may affect positioning
 
@@ -160,7 +160,7 @@ When visual design alone cannot solve the brief, propose one relevant option:
 - promote one word as the main message and demote the others
 - replace a list with a relationship or sequence
 - add one verified product or application reference
-- use a close crop of a real or conceptual hardware detail
+- use a close crop of a verified product or role-appropriate application detail when the image role and evidence allow it
 - convert the image from a labeled graphic into a photographic or 3D visual
 
 Explain the trade-off in one sentence.

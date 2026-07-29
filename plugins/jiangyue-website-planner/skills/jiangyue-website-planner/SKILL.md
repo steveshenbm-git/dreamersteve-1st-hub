@@ -17,7 +17,7 @@ Planner is a **design-led planner**, not a separate designer skill. The designer
 
 ## Authority Boundary
 
-Planner owns page/buyer/message strategy, H1/CTA/section direction, claim and fact boundaries, first-screen hierarchy, image role, design judgment, brand alignment, executable composition, the complete `T -> S -> R -> O -> A -> I -> N` decision, image/text/layout ownership, feasibility, and strategy review after feedback.
+Planner owns page/buyer/message strategy, H1/CTA/section direction, claim and fact boundaries, first-screen hierarchy, image role, design judgment, brand alignment, controlled visual-hypothesis comparison, executable composition, the complete `T -> S -> R -> O -> A -> I -> N` decision, image/text/layout ownership, feasibility, and strategy review after feedback.
 
 It does not own image production or pixel execution, a standalone designer handoff, formal knowledge entry, or final approval.
 
@@ -33,10 +33,11 @@ Run these before a page plan, strategy review, or Planner Brief:
 6. **Brand-system visual alignment:** For macro visual planning, homepage/hero/background images, brand-defining visuals, B2-3 color use, New Eastern industrial style, life-sense metaphor, or repeated brand-direction feedback, align the brief with relevant files under `/Users/lirongjing/Documents/JY TECH WEB/brand-system/02-brand-visual/`. At minimum consider `brand-visual-standard.md`, `b2-3-color-scheme-reference.md`, `composition-rules.md`, `color-material-lighting.md`, and `negative-visual-directions.md`.
 7. **Design-led planning gate:** Every planner task must run at least a lightweight Jiangyue design judgment before making page, image-role, or handoff decisions. For homepage/hero/background, product/application page, brand-defining visual, imagegen handoff, "not premium enough" feedback, repeated failure, or layout/scene/content design work, read [references/design-led-planner.md](references/design-led-planner.md) and use the full design-led workflow.
 8. **Visual intention decomposition:** For brand visuals or repeated image feedback, translate abstract terms such as overall unity, connection, spatial depth, realism, calmness, control, warmth, premium feel, or high-end design into visible subject, environment, relationship, proportion, rhythm, density, material, light, and pass/fail criteria.
-9. **Formula decision:** Use [references/visual-formula-brief.md](references/visual-formula-brief.md). Complete the compact core in order; load only conditional modules whose observable trigger is present. Do not print empty or `not applicable` modules.
-10. **Composition readability:** Make `R` and `O` concrete enough that a person could roughly sketch the visible roles, relationship, reveal order, hierarchy, and useful copy space. Keep pixel-level method choices with imagegen.
-11. **Production handoff:** Compile the formula decision into prompt-ready direction, protected content, QA checks, and rejection triggers inside the same Planner Brief. Do not create a second peer script.
-12. **Semantic compatibility and route:** Reuse `Feasibility` to test `T-S` compatibility, the fact/material basis of image-owned `S/R`, the strongest plausible `N` misread, dependent formula fields, and whether named HTML/layout owners support rather than rescue the image. End with exactly `PROCEED` or `RETURN`. `PROCEED` requires the complete Formula Decision; `RETURN` forbids a production brief, prompt, or imagegen handoff.
+9. **Three-factor solution search:** For an unbounded, high-impact, meaning-changing, or repeatedly failed visual, use [references/design-led-planner.md](references/design-led-planner.md) to compare two or three materially different causal hypotheses internally. Decide purpose fit, truthfulness/realism mode and evidence boundary, and visual-quality mechanism; reject any hypothesis with one hard-factor failure. Do not expose a weak option menu or create multiple Planner Briefs.
+10. **Formula decision:** Use [references/visual-formula-brief.md](references/visual-formula-brief.md). Keep `T -> S -> R -> O -> A -> I -> N` as the complete semantic order; treat the three factors as cross-cutting checks, not new formula letters. Load only conditional modules whose observable trigger is present. Do not print empty or `not applicable` modules.
+11. **Composition readability:** Make `R` and `O` concrete enough that a person could roughly sketch the visible roles, relationship, reveal order, hierarchy, and useful copy space. Keep pixel-level method choices with imagegen.
+12. **Production handoff:** Compile the selected hypothesis into one prompt-ready Formula Decision with protected content, QA checks, and rejection triggers inside the same Planner Brief. State the required realism and quality ceiling, but leave the production model, renderer, compositing path, prompt technique, and other pixel methods to imagegen unless the user supplied a method constraint.
+13. **Semantic compatibility and route:** Reuse `Feasibility` to test `T-S` compatibility, the fact/material basis of image-owned `S/R`, the strongest plausible `N` misread, dependent formula fields, whether named HTML/layout owners support rather than rescue the image, and whether purpose fit, truthfulness/realism fit, and visual-quality fit each pass independently. End with exactly `PROCEED` or `RETURN`. `PROCEED` requires the complete Formula Decision and all three factor passes; `RETURN` forbids a production brief, prompt, or imagegen handoff.
 
 ## Initial Planning
 
@@ -48,7 +49,7 @@ Use when a page, section, hero, product visual, or image role is not strategical
 4. Define page job: SEO acquisition, AEO visibility, product understanding, trust building, inquiry conversion, or support navigation.
 5. Run Jiangyue design judgment: page-role intensity, trusted subject, brand temperament, design risk, and forbidden low-quality directions.
 6. Lock message, claim boundary, CTA path, and first-screen attention owner.
-7. Define image role: visual hammer, professional atmosphere, trust support, CTA support, product recognition, category recognition, or application context.
+7. Define image role: visual hammer, professional atmosphere, trust support, CTA support, product recognition, category recognition, or application context. Decide product presence from this role, purpose, and verified material state; never require or ban it from the application category alone.
 8. Output a concise page strategy. Issue a Planner Brief only after the Formula Decision ends in `PROCEED`; otherwise issue the compact return verdict from [references/visual-formula-brief.md](references/visual-formula-brief.md).
 
 Ask one necessary question only when the page goal, buyer, claim boundary, or image role cannot be safely inferred.

@@ -63,6 +63,29 @@ QA check:
 Reject if:
 ```
 
+## Three-Factor Solution Search
+
+Use this internal search for an unbounded, high-impact, meaning-changing, or repeatedly failed visual. It is not a second user-facing workflow and must end in one Planner Brief.
+
+### Lock The Three Factors
+
+- **Purpose fit:** state the page job, buyer interpretation, image role, first-attention responsibility, and what the bitmap must not own.
+- **Truthfulness/realism fit:** choose the level of factual and perceptual realism required by the image role; name verified evidence, allowed conceptualization, physical or commercial plausibility, and forbidden claims. A real product photo is required only when verified product recognition or detail is image-owned.
+- **Visual-quality fit:** name the visual mechanism that makes the result strong in this context, such as decisive hierarchy, crop, spatial relationship, material contrast, restrained depth, useful negative space, rhythm, or a memorable but credible silhouette.
+
+These are independent hard checks. Do not average them or use visual polish to rescue a purpose or truthfulness failure.
+
+### Compete Causal Hypotheses
+
+1. Freeze the accepted purpose, fact/claim boundary, exclusions, and image/text/layout responsibilities.
+2. Generate two or three materially different causal visual hypotheses when more than one solution is plausible. One bounded solution is enough for an accepted baseline revision or deterministic operation.
+3. For each hypothesis, state the decisive subject/relationship/order mechanism, why product presence or absence follows the image role, its truth basis, its visual-quality mechanism, and its strongest likely conflict.
+4. Start internal reasoning from the formula field that is most causally decisive for the task, but check the final decision in the full `T -> S -> R -> O -> A -> I -> N` order. Do not force every task to begin from `S` or force every relationship into the bitmap.
+5. Challenge each hypothesis separately for purpose failure, truthfulness/realism failure, and visual-quality failure. Eliminate a hypothesis when any factor fails.
+6. Compile only the strongest surviving hypothesis into the Formula Decision. If none survives, return the primary blocker instead of weakening a factor.
+
+Do not expose the raw hypothesis pool unless the user asks to compare materially different directions. Do not turn styling variations, color changes, or prompt wording changes into separate hypotheses.
+
 Examples:
 
 ```text
@@ -91,11 +114,11 @@ Use this internal order:
 
 1. Run the Jiangyue design judgment internally and keep only decisions that change visible execution or page ownership.
 2. Add the complete-page module only for complete-page work; do not output H1, CTA, SEO/AEO, or module-order placeholders for an image-only task.
-3. Compile trusted subject and fact basis into `S`; readable interaction into `R`; hierarchy, rhythm, reveal, and useful negative space into `O`; controlled amplification into `A`; recognition use into `I`; cheapness, claims, and misreads into `N`.
+3. Run the Three-Factor Solution Search when triggered, then compile trusted subject and fact basis into `S`; readable interaction into `R`; hierarchy, rhythm, reveal, and useful negative space into `O`; controlled amplification into `A`; recognition use into `I`; cheapness, claims, and misreads into `N`.
 4. Name the exact image, text, layout, or UI owner; do not add separate composition and asset-production contracts.
-5. Put prompt-ready direction, protected content, deterministic work, QA, rejection triggers, and feasibility in the compact Formula Decision.
+5. Put prompt-ready direction, protected content, deterministic work, three-factor evidence, QA, rejection triggers, and feasibility in the compact Formula Decision.
 
-Write production constraints, not final pixels. Imagegen owns prompt compilation, method, rendering, local retouching, and exact output files.
+Write production constraints and required realism/quality ceilings, not final pixels. Imagegen owns prompt compilation, method, rendering, local retouching, and exact output files.
 
 ## Failure Attribution
 

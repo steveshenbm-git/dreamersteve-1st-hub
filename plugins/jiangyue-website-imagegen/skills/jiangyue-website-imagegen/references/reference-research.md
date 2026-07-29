@@ -16,50 +16,32 @@ Do not research for simple icon cards, deterministic diagrams, text-only graphic
 
 ## Search Scope
 
-Use a three-layer funnel. Stop as soon as enough visual evidence exists.
+Use a three-layer funnel. Stop as soon as enough execution evidence exists. References support the accepted subject and method; they do not reopen Planner's image-role decision.
 
-### 1. Same Category First
+### 1. Brief-Assigned Subject And Execution Problem First
 
-Start with motor-control and the current target application category. This layer defines subject recognition and industrial credibility without locking Jiangyue into one downstream market. The Chinese category anchor is `电机驱动器`; use English queries first for Europe/US references.
+Start from the subject, image role, relationship, and realism/quality requirement in the accepted Formula Decision. Product presence follows that role and the evidence boundary, not the HVAC or motor-control category alone.
 
-Preferred query seeds:
+Use role-specific English seeds first for Europe/US references:
+
+- application/system role: the assigned equipment, operating relationship, service task, airflow/process state, physical environment, crop, or lighting problem
+- product-recognition role: the verified product/controller category, housing, mounting, terminal, material, crop, or product-to-copy problem
+- abstract/support role: the assigned spatial order, material/light behavior, depth, restraint, negative-space, or identification-cue problem
+
+Examples for an HVAC system role when the brief assigns it:
+
+- `industrial HVAC fan system`
+- `air handling unit fan inspection`
+- `ventilation fan service access`
+- `industrial airflow equipment close view`
+
+When verified motor-drive or controller recognition is image-owned, use category seeds such as:
 
 - `motor drive`
-- `motor controller`
 - `permanent magnet motor controller`
-- `PMSM motor controller`
-- `BLDC motor controller`
 - `industrial motor controller`
-- `industrial control electronics`
 - `power electronics controller`
-- `OEM motor controller`
 - `motor drive product page`
-- `motor drive contact hero`
-
-Add application-specific seeds only when the brief or page calls for them. Examples:
-
-- `motor drive HVAC fan controller`
-- `motor drive ventilation fan`
-- `HVAC motor drive`
-- `fan motor drive`
-- `fan motor controller`
-- `pump drive`
-- `pump motor controller`
-- `EC fan motor controller`
-- `EC motor controller ventilation`
-- `PMSM motor drive fan`
-- `BLDC motor controller HVAC`
-- `variable speed drive HVAC fan`
-- `inverter drive ventilation fan`
-- `air handling unit fan drive`
-- `HVAC fan drive product page`
-- `ventilation fan motor controller`
-
-Use Chinese only when the target asset is for Chinese-market content or when searching internal terminology:
-
-- `电机驱动器`
-- `永磁电机控制器`
-- add current application terms such as `风机`, `通风设备`, `泵`, `压缩机`, or other user-provided equipment keywords only when relevant
 
 Prefer official brand websites, product pages, application pages, and support/contact pages. Favor European and US industrial B2B sites when available.
 
@@ -67,16 +49,16 @@ Do not use Pinterest, Behance, Dribbble, stock image sites, AI image galleries, 
 
 Extract only:
 
-- what makes the object read as a motor drive, motor controller, or current target controller category
-- housing proportions, heat-sink rhythm, mounting geometry, terminal/connector hints
-- product-to-copy layout and hero crop behavior
-- how the current application context is suggested without becoming a busy factory scene
+- what makes the accepted subject and relationship credible at the required viewing distance
+- physical structure, scale, access, material, mounting, airflow/process, or environment cues relevant to that subject
+- role-appropriate subject-to-copy layout and crop behavior
+- how the assigned application context is suggested without becoming a busy factory scene
 - restrained material and lighting patterns
 - what looks outdated, consumer-like, or template-like
 
-### 2. Adjacent Industrial Control
+### 2. Adjacent Industrial Execution
 
-Use this layer only if same-category sites are too conservative or visually weak.
+Use this layer only when the assigned subject references are too conservative, visually weak, or insufficient for the required craft method.
 
 Query seeds:
 
@@ -87,7 +69,7 @@ Query seeds:
 - `building automation controller hero`
 - `industrial control electronics product page`
 
-Extract composition, visual hierarchy, material treatment, and credible technical abstraction. Do not import claims, application assumptions, product architecture, or brand metaphors.
+Extract composition, visual hierarchy, material treatment, physical plausibility, and credible technical abstraction. Do not import a new subject, product presence decision, claim, application assumption, product architecture, or brand metaphor.
 
 ### 3. High-End Industrial Technology Quality Bar
 
@@ -109,8 +91,8 @@ Return a short synthesis before the production brief:
 ```text
 参考研究结论
 
-- 同品类识别：
-- 当前应用类别启发（如有）：
+- 已确认画面角色与主体：
+- 物理/执行参考：
 - 可借鉴的构图原则：
 - 必须避免的套路：
 - 对本图的执行原则：
@@ -118,11 +100,12 @@ Return a short synthesis before the production brief:
 
 Keep it to 3-6 bullets. Mention only 3-5 useful references or reference patterns if needed. Do not provide a long competitor report unless the user asks.
 
-The synthesis must be actionable. Good output says "use a cropped aluminum enclosure with heat-sink rhythm and a restrained control-signal path"; weak output says "make it high-tech and premium."
+The synthesis must be actionable and role-specific. Good output says "use a close HVAC service-access crop with credible clearance and restrained directional airflow" for a system role, or "preserve the verified enclosure geometry and heat-sink rhythm" for a product role. Weak output says "make it high-tech and premium."
 
 ## Guardrails
 
 - References never override the intent lock.
+- References never decide whether a product, controller, application object, UI, signal path, or person belongs in the image; inherit that decision from the Formula Decision.
 - Do not copy one reference image.
 - Do not introduce a product, application, certification, performance claim, interface, or customer context from a reference unless the user confirms it.
 - If references push the image toward a standalone product hero while the original job is an advantage/relationship hero, stop and restate the trade-off before producing.

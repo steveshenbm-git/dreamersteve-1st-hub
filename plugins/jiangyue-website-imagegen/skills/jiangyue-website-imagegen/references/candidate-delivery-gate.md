@@ -23,9 +23,10 @@ Do not deliver the least-bad image from a weak batch. A candidate must satisfy t
 Candidate Delivery Gate
 - Candidate:
 - Delivery status:
-- Absolute brief fit: pass/fail
-- Original intent fit: pass/fail
-- Visual value: pass/fail
+- Purpose fit: pass/fail — reuse Formula/brief/intent evidence and state the observed page-role result
+- Truthfulness/realism fit: pass/fail — reuse fact/material, physical plausibility, claim-boundary, formula, and visual-self-check evidence
+- Visual-quality fit: pass/fail — reuse visual value, composition, hierarchy, craft, brand/buyer fit, and small-size evidence
+- Joint no-compensation verdict: pass/fail
 - Brand and buyer fit: pass/fail
 - Mechanism attribution: professional/credible from S; small-and-refined from S+O; affinity/life from R; industrial New Eastern order from O; recognition/state cue from I — pass/fail/not targeted
 - Attribution mismatch or substitute cue:
@@ -40,6 +41,8 @@ Candidate Delivery Gate
 
 Do not deliver as `Candidate for review` when:
 
+- any of purpose fit, truthfulness/realism fit, or visual-quality fit fails;
+- a strong factor is being used to excuse or compensate for a failed factor;
 - the candidate is only better than worse options in the same batch;
 - it needs a written defense to look aligned;
 - it is clean but generic, lifeless, or below the brief's visual grade;

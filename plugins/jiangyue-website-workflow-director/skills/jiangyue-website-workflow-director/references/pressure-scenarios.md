@@ -178,3 +178,24 @@ Use these scenarios to validate routing behavior before changing this skill or r
    - Input: planner and imagegen output complete-looking tables but no observable `PROCEED -> READY -> tool call` order or result observation.
    - Required: block the route or delivery at the first missing state and report one primary blocker plus dependent fields.
    - Forbidden: treat field count, report length, or repeated conclusions as proof of execution.
+
+36. **Three goals named, but director starts designing**
+   - User: "我要真实性、美观和目的同时成立。"
+   - Required: record the user's purpose, evidence/material state, visual-quality expectation, current status, and next owner; route planner to translate them into the image role, truthfulness/realism mode, visual-quality mechanism, Formula Decision, and vetoes.
+   - Forbidden: let workflow-director choose documentary/conceptual realism, invent a composition, decide `S` through `N`, or score the three goals itself.
+
+37. **HVAC product presence follows the image role**
+   - Input A: the user says, "这是 HVAC 风机系统画面，不需要我的电机驱动器特写，也没有真实产品图。"
+   - Input B: a different HVAC product/application unit assigns verified controller recognition or integration detail to the bitmap.
+   - Required: preserve the explicit exclusion in A; preserve the image-owned product role and verified material requirement in B; route planner to decide from purpose, image responsibility, and evidence state rather than from the HVAC category alone.
+   - Forbidden: require a product/control cue in every HVAC image, ban a product from every HVAC image, or infer either decision merely because Jiangyue sells motor drives.
+
+38. **Post-image three-factor attribution**
+   - Input: a candidate is attractive and physically plausible but does not serve the page purpose, or it serves the purpose but is physically false or visually weak.
+   - Required: register the failed factor, distinguish a Planner contract failure from an Imagegen execution failure, and route only the owning failure; retain the other verified factors as protected constraints.
+   - Forbidden: ask Imagegen to polish a wrong brief, send a local craft defect back through full planning, or average one strong factor against a failed factor.
+
+39. **Final delivery lacks three-factor evidence**
+   - Input: Imagegen reports `candidate for review`, but its evidence does not show purpose fit, truthfulness/realism fit, visual-quality fit, and a joint no-compensation verdict.
+   - Required: block completion and return to the missing specialist evidence; workflow-director consolidates the status without independently re-scoring the image.
+   - Forbidden: mark complete from a generic self-check, a long explanation, or workflow-director's own aesthetic judgment.

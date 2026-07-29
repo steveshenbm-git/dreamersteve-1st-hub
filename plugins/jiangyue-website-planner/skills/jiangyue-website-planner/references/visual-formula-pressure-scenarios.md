@@ -6,6 +6,8 @@ These scenarios define the later real-task forward tests. This source revision r
 
 Before this revision, formula semantics were absent from the skill chain, the planner skill embedded a 119-field brief, the page and image templates repeated overlapping decisions, and workflow ownership did not identify one formula decision owner.
 
+Before this balance revision, Planner had no explicit controlled competition between causal visual hypotheses, no cross-cutting three-factor veto record, and no rule preventing product presence or absence from being inferred from the application category alone. The current conversation supplied the failing baseline: an HVAC system task that excluded product close-ups was repeatedly pulled back toward Jiangyue hardware/product imagery.
+
 ## Scenarios
 
 ### Product Image
@@ -57,3 +59,34 @@ Before this revision, formula semantics were absent from the skill chain, the pl
 - Request: crop an accepted visual to a new aspect ratio.
 - Pass: inherit the accepted formula decision and add only crop/export constraints.
 - Fail: output empty H1, SEO, research, claim, and full-page modules, or silently change attention and meaning while calling the task technical-only.
+
+### HVAC Product Presence Follows Purpose And Evidence
+
+- Request A: create an HVAC fan-system visual whose job is to show a credible operating or engineering relationship; no real Jiangyue product material exists and the user excludes product close-ups.
+- Request B: create an HVAC product/application visual whose accepted purpose requires verified controller recognition or integration detail in the bitmap.
+- Pass: in A, test application-system hypotheses, keep the product exclusion, and assign any category message to a named text/layout owner; in B, require verified product material and design the product/application relationship without inventing detail.
+- Fail: insert a product/control cue in A merely to create category relevance, remove the required product from B merely because it is an HVAC scene, or use the application category itself as the decision rule.
+
+### Controlled Visual Hypothesis Competition
+
+- Request: find one image solution that simultaneously serves purpose, truthfulness/realism, and visual quality.
+- Pass: generate two or three materially different causal hypotheses when the solution is not already bounded; select the active formula core from the task rather than always starting from one fixed field; reject hypotheses with any hard-factor failure; output one coherent Planner Brief.
+- Fail: brainstorm styling variations of one structure, average the three factors, expose a menu of weak options, or create multiple production briefs.
+
+### Adaptive Formula Core
+
+- Request: plan three different units: a product detail, an HVAC operating scene, and a reusable abstract support background.
+- Pass: let the product detail begin from truthful `S`, the operating scene from the decisive subject/relationship mechanism, and the support background from its assigned spatial/atmospheric role while still checking the full `T -> S -> R -> O -> A -> I -> N` chain.
+- Fail: force every task to begin from `S`, force `R` into the bitmap, or treat `O/A/I` as sufficient when purpose or truthfulness fails.
+
+### Three Independent Vetoes
+
+- Request: approve a visually impressive concept that serves the page purpose but implies an unsupported Jiangyue installation; approve another that is true and purposeful but looks generic and weak.
+- Pass: return both; purpose fit, truthfulness/realism fit, and visual-quality fit are independent hard vetoes and no score is averaged.
+- Fail: accept the first because it converts well, accept the second because it is safe, or postpone one failed factor for Imagegen to solve without a revised Planner decision.
+
+### Planner Does Not Choose Production Method
+
+- Request: Planner knows the desired realism and quality ceiling and specifies that the result must preserve an HVAC operating relationship without product invention.
+- Pass: state the feasibility requirement, evidence boundary, protected content, major failure risks, and visible pass/fail criteria; leave the exact generation/editing method to Imagegen.
+- Fail: prescribe a specific model, renderer, compositing pipeline, or prompt technique as part of the Formula Decision unless the user supplied it as a method constraint.
