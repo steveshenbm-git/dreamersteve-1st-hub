@@ -1,0 +1,7 @@
+{
+  "schema_version": "1.0",
+  "company_id": "[COMPANY_ID]",
+  "company_name": "[COMPANY_NAME]",
+  "created_at": "[TODAY]",
+  "library_status": "initialized"
+}

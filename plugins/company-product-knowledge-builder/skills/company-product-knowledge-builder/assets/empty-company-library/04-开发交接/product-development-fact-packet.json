@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "product_development_fact_packet": {
+    "company_id": "[COMPANY_ID]",
+    "product_family": null,
+    "product_series_or_model": null,
+    "confirmed_form": [],
+    "confirmed_parameters": [],
+    "confirmed_properties": [],
+    "confirmed_mechanisms": [],
+    "confirmed_functions": [],
+    "confirmed_effects": [],
+    "confirmed_applications": [],
+    "required_conditions": [],
+    "known_limits": [],
+    "unresolved_conditions": [],
+    "approved_references": [],
+    "allowed_use": [
+      "internal_direction_research"
+    ],
+    "prohibited_inference": [
+      "Do not infer price, inventory, MOQ, lead time, certificates, regulations, HS/customs, production capacity, or customer cases.",
+      "Do not emit industry routes, country priorities, customer candidates, customer selection, or outreach content."
+    ],
+    "generated_at": null
+  }
+}
