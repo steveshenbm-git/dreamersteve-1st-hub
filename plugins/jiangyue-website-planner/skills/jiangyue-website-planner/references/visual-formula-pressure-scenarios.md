@@ -84,7 +84,7 @@ Before this scene-invariant revision, the formula could describe subject, relati
 
 ### Controlled Visual Hypothesis Competition
 
-- Request: find one image solution that simultaneously serves purpose, truthfulness/realism, and visual quality.
+- Request: find one purpose-directed image solution whose reality, visual quality, and page-use conditions can all survive.
 - Pass: generate two or three materially different causal hypotheses when the solution is not already bounded; select the active formula core from the task rather than always starting from one fixed field; reject hypotheses with any hard-factor failure; output one coherent Planner Brief.
 - Fail: brainstorm styling variations of one structure, average the three factors, expose a menu of weak options, or create multiple production briefs.
 
@@ -94,11 +94,35 @@ Before this scene-invariant revision, the formula could describe subject, relati
 - Pass: let the product detail begin from truthful `S`, the operating scene from the decisive subject/relationship mechanism, and the support background from its assigned spatial/atmospheric role while still checking the full `T -> S -> R -> O -> A -> I -> N` chain.
 - Fail: force every task to begin from `S`, force `R` into the bitmap, or treat `O/A/I` as sufficient when purpose or truthfulness fails.
 
-### Three Independent Vetoes
+### Ordered Factor Vetoes
 
-- Request: approve a visually impressive concept that serves the page purpose but implies an unsupported Jiangyue installation; approve another that is true and purposeful but looks generic and weak.
-- Pass: return both; purpose fit, truthfulness/realism fit, and visual-quality fit are independent hard vetoes and no score is averaged.
-- Fail: accept the first because it converts well, accept the second because it is safe, or postpone one failed factor for Imagegen to solve without a revised Planner decision.
+- Request: approve a visually impressive concept that follows the semantic purpose but implies an unsupported Jiangyue installation; approve another that is real but generic and weak; approve a third that is real and attractive but has no viable responsive copy/CTA composition.
+- Pass: return all three at their first failed dependency: reality, visual quality, then expected page use. Preserve the semantic purpose and any earlier verified constraints; do not average scores.
+- Fail: accept the first because it converts well, accept the second because it is safe, accept the third from raw-image whitespace, or postpone a known contract failure for Imagegen to explain away.
+
+### Co-Design Does Not Remove Ordered Acceptance
+
+- Request: design either an AHU inspection scene or a pump/hydronic plant scene that must be physically credible, visually strong, and usable with page title, copy, and CTA.
+- Pass: define semantic purpose and page responsibility in `T`; co-design `S/R/O` so scene truth, first-read hierarchy, and useful composition can coexist; allow `A/I` only to amplify an already credible reading; define the desktop and mobile review objects needed to prove page use. Record expected result acceptance as reality first, visual quality second, page use last.
+- Fail: design three disconnected solutions in sequence, postpone composition until after a realistic scene is fixed, let page purpose override physical truth, or treat early safe-area intent as final page-use evidence.
+
+### Reality Failure Stops Downstream Approval
+
+- Request: a concept has premium lighting and clean title space, but an access panel, operating state, flow path, or whole-unit/subsystem relationship is physically contradictory.
+- Pass: `RETURN` on truthfulness/realism and keep visual-quality and page-use result approval blocked; name the failed formula field, evidence, and dependent fields without averaging.
+- Fail: approve two of three factors, preserve the contradictory hypothesis because it is attractive, or expect copy to explain away false scene logic.
+
+### Raw Bitmap Cannot Prove Responsive Page Use
+
+- Request: a plausible and visually strong image has generous blank space, but the actual H1, supporting copy, CTA, and responsive layout have not been assembled.
+- Pass: define page-use conditions and owners in Planner, then mark the result expectation `awaiting composite`; require current desktop and mobile composites for page-use proof. If copy, layout responsibility, or breakpoint evidence is unavailable, keep page use `UNVERIFIED` and name the missing owner/input.
+- Fail: pass page use from blank space, prompt wording, a desktop-only crop, or invented copy/breakpoints.
+
+### All Three Factors Can Pass Without Compensation
+
+- Request: a physically credible scene survives normal-view inspection, the selected hierarchy/material/light mechanism meets the visual-quality bar, and current copy/CTA fit both named desktop and mobile composites.
+- Pass: preserve the evidence separately and issue one `PROCEED` contract whose production/result expectations retain the order reality, visual quality, then page use.
+- Fail: collapse the proof into one overall score or omit the raw/composite review-object distinction.
 
 ### Planner Does Not Choose Production Method
 

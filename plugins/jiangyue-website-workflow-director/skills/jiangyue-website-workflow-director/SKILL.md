@@ -106,7 +106,7 @@ Strategic Layer Lock
 - Macro planning control belongs to the director. If the strategic layer is not locked, do not route to production or curation skills.
 - Before handing any task to imagegen, run the **Imagegen Handoff Planner Gate** below. This is a hard rule.
 - The director may collect raw `T` inputs: visual unit, placement, task, first-attention candidate, and excluded information. It must not decide `S` through `N`, compile the production prompt, or assign image/text/layout responsibility; those decisions belong to planner.
-- When purpose fit, truthfulness/realism, and visual quality must be balanced, the director records their source, evidence state, current status, and owner. It must not choose the realism mode, visual hypothesis, composition mechanism, or three-factor verdict; planner and imagegen own those specialist decisions.
+- When truthfulness/realism, visual quality, and page purpose must be balanced, the director records their dependency state, evidence, current status, first blocker, and owner. It enforces ordered rejection without turning the design process into three isolated stages: reality is the acceptance floor, visual quality may pass only after that floor, and page-use proof may pass only on the required assembled review object. It must not choose the realism mode, visual hypothesis, composition mechanism, or specialist verdict.
 - Route planning/execution-logic challenges to Strategic Layer Lock or `$jiangyue-skill-director`; post-image changes require triage before imagegen.
 - After two failed local edits or repeated visible defects, register the defect and run root-cause failure reset before another draft. Missing visible change or challenged method also stops production and requires evidence/attribution.
 - Disputed or rejected drafts cannot become final/4K output or the next baseline without explicit acceptance.
@@ -241,19 +241,31 @@ Workflow State
 - User acceptance layer:
 - Open user-named defects:
 - Same-issue return count:
-- Three-factor balance state: purpose source/status; evidence/material state; visual-quality expectation/status; failed factor/current owner
+- Three-factor dependency state: semantic purpose; reality floor; visual-quality floor; page-use proof; first blocking factor; next gate
 - Next required gate:
 ```
 
-### Three-Factor Coordination State
+### Three-Factor Dependency State
 
-Use the single ledger line above when balancing purpose fit, truthfulness/realism, and visual quality is material to the task.
+Use this state when truthfulness/realism, visual quality, and page purpose are material to the task.
 
-- Record the user's original purpose requirement, available or missing evidence/material state, and stated visual-quality expectation without translating them into a design.
-- Let planner define the image role, truthfulness/realism mode, visual-quality mechanism, Formula Decision, and three independent vetoes.
+```text
+Three-Factor Dependency State
+- Semantic purpose: source / defined or missing / owner
+- Reality floor: waiting / pass / fail / unverified / evidence / owner
+- Visual-quality floor: waiting on reality / pass / fail / unverified / evidence / owner
+- Page-use proof: defined / awaiting composite / pass / fail / unverified / review object / owner
+- First blocking factor:
+- Next gate:
+```
+
+- Record the user's original semantic purpose, available or missing evidence/material state, visual-quality expectation, and actual page-use review requirement without translating them into a design.
+- Let planner define semantic purpose and page responsibility early, then co-design `S/R/O` so truthful scene logic, useful composition, and the intended visual-quality mechanism can coexist. This is not a rigid reality-then-beauty-then-layout design sequence.
 - Let imagegen choose the production method, execute the accepted decisions, and report observed evidence.
+- Apply result acceptance in the order `Reality -> Visual quality -> Page use`. A reality `fail` keeps downstream factors waiting; diagnostic observations may be recorded but cannot become downstream passes. A raw bitmap cannot pass page use when the page unit depends on HTML copy, CTA, or responsive composition.
+- Page use passes only on the review objects named by Planner. For image-plus-HTML page units, require both desktop and mobile composites. When current copy, layout responsibility, or breakpoint evidence is missing, record page use as `unverified` and name the missing input/owner rather than inventing it.
 - Route a failed contract or wrong visual solution to planner; route failed execution of a valid contract to imagegen.
-- Do not average factors, let one factor compensate for another, or create a second Planner Brief inside workflow state.
+- Verify that specialist state and evidence exist; do not independently re-score realism, aesthetics, or page composition. Do not average factors, let one factor compensate for another, or create a second Planner Brief inside workflow state.
 
 ## Handoff Quality
 
@@ -261,7 +273,7 @@ Every specialist handoff must include:
 
 - source request/paths, current stage, intent, active brief, and accepted baseline
 - formula authority, current decision, and image/text/layout owners for meaning-changing work
-- three-factor coordination state when purpose fit, truthfulness/realism, and visual quality are material; include source/status and current owner, not a director-authored design judgment
+- three-factor dependency state when reality, visual quality, and page purpose are material; include semantic-purpose source, ordered factor states, required review object, first blocker, and current owner, not a director-authored design judgment
 - keep/remove/change/avoid, defects, pass/fail criteria, and forbidden carry-over
 - production success/stop rules when needed, required output status, acceptance layer, and next output type
 
@@ -276,13 +288,13 @@ Before saying an image task is complete, verify that the specialist output inclu
 - visual self-check evidence when a candidate is shown
 - intent-brief-result status for brief-based, high-impact, or repeated-failure work
 - candidate delivery status when the output is shown to the user as a candidate
-- specialist evidence that purpose fit, truthfulness/realism fit, and visual-quality fit each pass without compensation when three-factor balance is material
+- specialist evidence that the reality floor passes first, visual quality then passes without weakening reality, and page use passes on the required review object without compensation when three-factor balance is material
 - user acceptance layer before final export, 4K export, archive, or approved-material handling
 - rejected-result analysis when the output failed but still provides learning value
 
 If any required item is missing, do not say complete. Return to imagegen, planner, or skill-director based on the missing layer. Verify that the specialist evidence and status exist; do not independently re-score realism or aesthetics inside workflow-director.
 
-When HTML/layout owns core category, differentiation, or interaction responsibility, a raw bitmap is only an `image-base candidate`; full Home Hero status requires reviewed desktop and mobile composites. Consolidate user-facing status instead of repeating specialist tables.
+When HTML/layout owns core category, differentiation, copy, CTA, or interaction responsibility, a raw bitmap is only an `image-base candidate`; page-use proof requires the Planner-named assembled review objects, including desktop and mobile composites for responsive page units. Consolidate user-facing status instead of repeating specialist tables.
 
 ## Specialist Boundaries
 

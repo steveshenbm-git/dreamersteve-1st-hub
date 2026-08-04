@@ -19,7 +19,7 @@ Visual Formula Decision / 视觉公式判断
 
 - Authority source: formal brand outline, section 4
 - Intent and fact boundary: original intent / accepted facts / assumptions / claims that must not be implied
-- Three-factor decision: purpose fit and required buyer/page outcome / truthfulness-realism mode and evidence boundary / visual-quality mechanism and quality bar / strongest conflict
+- Three-factor decision: semantic purpose and page-use contract / reality mode, evidence boundary and floor / visual-quality mechanism and floor / strongest conflict
 - T | Task and medium: visual unit, placement, job, first attention, information it does not own
 - S | Subject: attention owner, keep/weaken/omit, close-view real detail, fact or material basis
 - R | Relationship: visible carrier, what continues, how a person understands or participates, factual basis
@@ -29,26 +29,27 @@ Visual Formula Decision / 视觉公式判断
 - N | Misread and veto: likely misread, forbidden content, direct rejection trigger
 - Responsibility: image / HTML or text / layout; name the exact owner for every non-image field
 - Production direction: one prompt-ready visual statement, protected content, deterministic text/layout work
-- Feasibility and route: semantic compatibility evidence; main risk; imagegen freedom; pass/fail evidence; final decision `PROCEED` or `RETURN`
+- Feasibility and route: semantic compatibility evidence; main risk; imagegen freedom; ordered result evidence; required standalone/composite review objects; final decision `PROCEED` or `RETURN`
 ```
 
 Every field needs a decision. A field may be carried outside the asset, but `not applicable`, an empty value, or an unnamed "page will handle it" is not a decision. Name the actual text, layout position, UI element, or surrounding visual unit that owns it.
 
 The final model prompt may use natural language and combine sentences. The production record must still map its constraints back to all seven decisions without dropping, replacing, or reinterpreting them.
 
-## Three-Factor Cross-Check
+## Three-Factor Dependency Cross-Check
 
-Purpose fit, truthfulness/realism fit, and visual-quality fit are cross-cutting review dimensions, not new formula stages or replacement definitions:
+The three factors are cross-cutting review dimensions, not new formula stages or replacement definitions. Design them together but separate definition from proof:
 
-- Purpose begins with `T`, but the full decision must serve the page job, buyer interpretation, image role, and responsibility split.
-- Truthfulness/realism is anchored by `S`, fact/material evidence, physical and commercial plausibility, and `N`; also test whether the visible `R/O` mechanisms create a false installation, capability, product, or operating reading.
-- Visual quality is shaped by the selected visual hypothesis, `O/A/I`, composition, material, light, depth, rhythm, and craft; it cannot compensate for missing or false `S/R`, and safety alone does not excuse a generic result.
+- **Semantic purpose is defined first:** `T` names the page job, buyer interpretation, image role, responsibility split, and actual page-use review requirement. This directs the visual hypothesis; it is not permission to trade away physical truth.
+- **Reality is the result floor:** `S`, fact/material evidence, physical and commercial plausibility, and `N` establish the basis; `R/O` must not create a false installation, capability, product, operating state, access relationship, or system hierarchy.
+- **Visual quality follows a credible reading:** the selected hypothesis, `O/A/I`, composition, material, light, depth, rhythm, and craft must meet the stated bar without weakening reality. Safety alone does not excuse a generic result.
+- **Page use is proven last:** Planner defines copy, CTA, layout, safe-area, crop, and breakpoint responsibilities early. A rendered result passes page use only on the named assembled review objects; when HTML/layout owns material meaning, require current desktop and mobile composites rather than inferring success from a raw bitmap.
 
-Record `pass` or `fail` for each factor. Do not average scores. Product presence is a role-and-evidence decision: require it when verified product recognition or detail is image-owned, omit it when it conflicts with the accepted image role or lacks the required evidence.
+At Planner stage, record whether each factor has an executable contract and name its future evidence; do not claim that an unrendered result passes. Expected result acceptance is `Reality -> Visual quality -> Page use`: a reality failure blocks downstream passes, while missing current copy/layout/breakpoint inputs make page use `UNVERIFIED`. Do not average scores. Product presence is a role-and-evidence decision: require it when verified product recognition or detail is image-owned, omit it when it conflicts with the accepted image role or lacks the required evidence.
 
 ## Semantic Compatibility Preflight
 
-Before handoff, decide whether `T-S` serve the same page job, image-owned `S/R` have a public identifiable fact/material basis, the strongest plausible `N` misread remains likely, which fields depend on the primary conflict, named HTML/text/layout owners support rather than rescue a failed image-owned `S` or triggered `N`, any triggered Scene Invariant Trace is complete and non-contradictory, and all three factors pass independently.
+Before handoff, decide whether `T-S` serve the same page job, image-owned `S/R` have a public identifiable fact/material basis, the strongest plausible `N` misread remains likely, which fields depend on the primary conflict, named HTML/text/layout owners support rather than rescue a failed image-owned `S` or triggered `N`, any triggered Scene Invariant Trace is complete and non-contradictory, and all three factor contracts are executable without compensation.
 
 - `PROCEED`: keep the complete Formula Decision and compile the production handoff.
 - `RETURN`: issue no production brief, prompt, or imagegen instruction; record only the primary blocker, no more than two dependent fields, evidence, and next owner.
@@ -59,7 +60,8 @@ Planner Handoff Verdict
 - Primary blocker:
 - Dependent fields: maximum two
 - Evidence:
-- Three-factor status: purpose / truthfulness-realism / visual quality
+- Three-factor contract: semantic purpose and page-use conditions / reality floor and evidence / visual-quality floor and mechanism
+- Ordered result proof: reality observation / visual-quality observation after reality / page-use review object(s)
 - Next owner:
 ```
 

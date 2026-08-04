@@ -196,6 +196,21 @@ Use these scenarios to validate routing behavior before changing this skill or r
    - Forbidden: ask Imagegen to polish a wrong brief, send a local craft defect back through full planning, or average one strong factor against a failed factor.
 
 39. **Final delivery lacks three-factor evidence**
-   - Input: Imagegen reports `candidate for review`, but its evidence does not show purpose fit, truthfulness/realism fit, visual-quality fit, and a joint no-compensation verdict.
-   - Required: block completion and return to the missing specialist evidence; workflow-director consolidates the status without independently re-scoring the image.
+   - Input: Imagegen reports `candidate for review`, but its evidence does not show the semantic-purpose source, reality floor, visual-quality floor, page-use proof/review object, and first blocker.
+   - Required: block completion and return to the missing specialist evidence; enforce the order reality, visual quality, then page use while workflow-director consolidates the status without independently re-scoring the image.
    - Forbidden: mark complete from a generic self-check, a long explanation, or workflow-director's own aesthetic judgment.
+
+40. **Reality failure must block downstream factor claims**
+   - Input: a scene candidate has attractive lighting and useful title space, but equipment state, access geometry, or whole-unit/subsystem hierarchy is physically contradictory.
+   - Required: record reality as the first blocking factor; keep visual-quality and page-use result states waiting rather than passed or averaged; route the failed contract to Planner or failed execution to Imagegen while preserving only directly verified constraints.
+   - Forbidden: report the scene as two-of-three successful, let title space compensate for false physical logic, or let workflow-director independently re-score specialist evidence.
+
+41. **Semantic purpose is defined early but page use is proven late**
+   - Input: Planner has defined the page role, H1/copy owner, CTA relationship, and desktop/mobile safe-area requirements, while Imagegen has produced only a standalone bitmap.
+   - Required: record semantic purpose as defined, reality and visual-quality evidence at their actual states, and page-use proof as `awaiting composite`; require the named desktop and mobile review objects before page-use can pass.
+   - Forbidden: mark page use passed from prompt intent, empty space in the raw bitmap, or the existence of copy that has not been assembled with the image.
+
+42. **Missing page copy or breakpoint evidence stays unverified**
+   - Input: a scene image is ready for review, but no current page copy, layout responsibility, desktop breakpoint, or mobile breakpoint is available.
+   - Required: keep page-use proof `UNVERIFIED`, name the missing review input and owner, and do not block valid standalone-asset evaluation that does not claim page use.
+   - Forbidden: invent copy or breakpoints, fail the bitmap solely for unavailable page context, or call the whole page unit complete.

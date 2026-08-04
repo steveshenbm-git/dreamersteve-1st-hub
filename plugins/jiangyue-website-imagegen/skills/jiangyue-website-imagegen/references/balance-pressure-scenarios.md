@@ -1,6 +1,6 @@
 # Three-Factor Balance Pressure Scenarios
 
-Use these scenarios when revising or validating Imagegen rules that affect purpose fit, truthfulness/realism, visual quality, method choice, reference research, or candidate delivery. They are static contract tests until a fresh task runs the installed skill and actual rendered results are inspected.
+Use these scenarios when revising or validating Imagegen rules that affect semantic purpose preservation, the reality floor, visual quality, page-use proof, method choice, reference research, or candidate delivery. They are static contract tests until a fresh task runs the installed skill and actual rendered results are inspected.
 
 ## RED Baseline
 
@@ -38,8 +38,26 @@ Before this scene-invariant revision, Imagegen could compile `S/R/O/N` and inspe
 ### Method Ceiling Conflict
 
 - Input: one available method can produce clean geometry but cannot reach the required physical realism; another can create atmosphere but cannot preserve verified product detail.
-- Pass: mark `Imagegen Preflight: BLOCKED` or select a method that can meet purpose, truthfulness/realism, and visual-quality requirements together.
+- Pass: mark `Imagegen Preflight: BLOCKED` or select a method that first clears reality, then reaches visual quality without weakening it, and preserves the inherited page-use conditions.
 - Fail: choose the easiest method, generate first, or hope later review will repair a known ceiling mismatch.
+
+### Method Ceiling Is Checked In Dependency Order
+
+- Input: a method can create premium lighting and clean copy space but cannot reliably preserve the inherited equipment state or system hierarchy; another method preserves reality but needs bounded post-processing to reach the visual-quality and page-use requirements.
+- Pass: test method capability in the order reality, visual quality without weakening reality, then preservation of page-use constraints; select the second route when the bounded post-processing remains within the accepted Formula Decision, or block when no route clears the reality floor.
+- Fail: prefer the prettier first method, treat later compositing as a way to repair false scene logic, or check all three ceilings as compensating scores.
+
+### First Attempt Remains In The Evidence Record
+
+- Input: the first rendered attempt fails reality; a second corrective attempt passes reality and looks better.
+- Pass: preserve both attempt IDs, method/conditions, observations, and statuses; report first-attempt usable yield separately from later corrective success. The second result may replace the candidate, not the evaluation history.
+- Fail: delete, overwrite, or omit the first attempt; report only the best result; or claim first-attempt improvement from a corrected second run.
+
+### Diagnostic Generation Is Not A Candidate Attempt
+
+- Input: the team wants one image generation solely to distinguish a Planner scene-hypothesis defect from an Imagegen method/prompt defect.
+- Pass: require explicit current-task cost/production authorization, state the diagnostic hypothesis and controlled variable, preserve the output, and classify it `analysis only` even if it looks promising; a usable candidate requires a separate accepted route.
+- Fail: hide the diagnostic purpose, count the image as a normal candidate, or continue corrective generations under the diagnostic authorization.
 
 ### Beautiful But False
 
@@ -66,14 +84,26 @@ Before this scene-invariant revision, Imagegen could compile `S/R/O/N` and inspe
 - Pass: reject it as a user-facing candidate and revise the visual model, composition structure, crop/scale hierarchy, or method.
 - Fail: deliver it because it is safe, compliant, or the least-bad result in a batch.
 
+### Page Use Requires The Named Composite Objects
+
+- Input: the standalone image passes reality and visual-quality checks, and has apparent negative space, but the H1, supporting copy, CTA, desktop layout, and mobile layout have not all been assembled.
+- Pass: keep the bitmap at `image-base candidate`; build deterministic review composites only from Planner-supplied current copy/layout responsibility and named breakpoints; inspect both desktop and mobile before page use can pass. If any required input is missing, record page use `UNVERIFIED` and name it.
+- Fail: pass page use from blank space, a raw image, a desktop-only mockup, invented copy, or guessed breakpoints.
+
+### Ordered Result Evidence Does Not Duplicate Every Gate
+
+- Input: visual self-check, Intent-Brief-Result, and Candidate Delivery already contain specialist evidence.
+- Pass: reuse their observations in one ordered verdict: reality first, visual quality second, page use on the named review object last. Stop at the first blocker while preserving later observations only as diagnostics.
+- Fail: add three complete checklists to every gate, issue conflicting passes, or average a failed reality floor against visual or page strengths.
+
 ### Local Edit Preserves The Accepted Balance
 
 - Input: crop or retouch an accepted candidate without changing its meaning.
-- Pass: inherit the accepted Formula Decision and three-factor evidence, verify no regression in purpose, truthfulness/realism, or visual quality, and keep the operation lean.
+- Pass: inherit the accepted Formula Decision and dependency evidence, verify no regression in semantic purpose, reality, visual quality, or required page-use conditions, and keep the operation lean.
 - Fail: rerun full planning unnecessarily or satisfy the local edit while damaging the accepted composition, credibility, or page role.
 
 ### One Joint Verdict, Not Repeated Gates
 
 - Input: self-check, Intent-Brief-Result, and Candidate Delivery already produce their existing evidence.
-- Pass: reuse that evidence in one final purpose / truthfulness-realism / visual-quality joint verdict; every factor must pass independently.
+- Pass: reuse that evidence in one ordered reality / visual-quality / page-use verdict while citing the preserved semantic purpose; every required factor passes without compensation.
 - Fail: add separate full three-factor reviews to every gate, average scores, or issue conflicting factor verdicts from multiple artifacts.

@@ -15,26 +15,29 @@ Accept production only when planner supplies one current Formula Decision contai
 - authority and visual-unit intent;
 - an explicit `Planner Handoff Verdict: PROCEED` supported by semantic compatibility evidence;
 - judgments for `T/S/R/O/A/I/N`;
-- an inherited three-factor decision covering purpose fit, truthfulness/realism mode and evidence boundary, and visual-quality mechanism/quality bar;
+- an inherited three-factor dependency covering semantic purpose and page-use conditions, reality mode/evidence floor, visual-quality mechanism/floor, and ordered result proof;
 - one exact image, text, layout, or UI owner for each decision;
-- production direction, feasibility, protected content, risks, preconditions, and visible pass/fail checks.
+- production direction, feasibility, protected content, risks, preconditions, visible pass/fail checks, and required standalone/composite review objects.
 - the Planner's conditional Scene Invariant Trace when scene meaning depends on equipment/process state, access, human action, physical process, or whole-unit/subsystem hierarchy.
 
 Do not fill missing strategic decisions inside imagegen. Return `RETURN`, ownerless, stale, contradictory, unsupported, or abstract decisions to Workflow Director. If an observable scene trigger is present but the Planner trace is absent, do not invent it inside Imagegen; return the handoff.
 
-## Three-Factor Execution Mapping
+## Three-Factor Dependency Execution
 
-Purpose fit, truthfulness/realism fit, and visual-quality fit are cross-cutting execution checks, not new formula letters or local formula meanings. Map the inherited decision once inside the Production Success Strategy, then reuse existing evidence downstream:
+The three factors are cross-cutting execution checks, not new formula letters or local formula meanings. Map the inherited decision once inside the Production Success Strategy, then reuse existing evidence downstream:
 
-- use Formula/brief/intent evidence for purpose fit;
-- use fact/material, physical plausibility, claim-boundary, formula, and visual-self-check evidence for truthfulness/realism fit;
-- use visual value, composition, hierarchy, craft, brand/buyer fit, and small-size evidence for visual-quality fit.
+- preserve the Planner-defined semantic purpose, image-owned job, copy/layout/CTA owners, and named page-use review objects;
+- establish the reality floor from fact/material, physical plausibility, claim boundary, formula, scene-invariant, and full-size evidence;
+- assess the visual-quality floor only after reality passes, using composition, hierarchy, craft, brand/buyer fit, and review-size evidence;
+- prove page use last on the Planner-named assembled review objects. For image-plus-HTML responsive units, this means current desktop and mobile composites.
 
-Imagegen may decide how to execute the accepted realism and quality requirements. It must not redefine the purpose, change the realism mode, add a product or semantic technology cue, or replace the planner's visual hypothesis.
+Imagegen may decide how to execute the accepted realism and quality requirements. It must not redefine the purpose, change the realism mode, add a product or semantic technology cue, replace the planner's visual hypothesis, invent page copy, or guess layout/breakpoint responsibility.
 
 ## Observable Preflight
 
-Immediately before a semantic generation or meaning-changing edit tool call, emit `Imagegen Preflight` with Formula Decision source/identifier, `READY/BLOCKED`, production method, and primary veto. Use `READY` only after planner `PROCEED`, an executable inherited contract, a complete and non-contradictory Scene Invariant Trace when triggered, and a method ceiling that can satisfy all three factors together. A triggered invariant without an explicit prompt clause is `BLOCKED`. `BLOCKED` makes no tool call; a backfilled/reconstructed preflight is invalid and its result is `analysis only`.
+Immediately before a semantic generation or meaning-changing edit tool call, emit `Imagegen Preflight` with Formula Decision source/identifier, `READY/BLOCKED`, attempt class/identifier, production method, and primary veto. Use `READY` only after planner `PROCEED`, an executable inherited contract, a complete and non-contradictory Scene Invariant Trace when triggered, and a method ceiling that first clears reality, then can reach visual quality without weakening reality, then preserves the conditions needed for page-use review. A triggered invariant without an explicit prompt clause is `BLOCKED`. `BLOCKED` makes no tool call; a backfilled/reconstructed preflight is invalid and its result is `analysis only`.
+
+Record the first production attempt and raw observations permanently. Corrective attempts receive new identifiers and cannot erase first-attempt usable-yield evidence. A diagnostic attempt requires explicit current-task cost/production authorization, one stated hypothesis, and one controlled variable; its output remains `analysis only` even if visually promising.
 
 ## Production Trace
 
@@ -51,7 +54,8 @@ Formula Production Trace
 - I: planner decision / image evidence / external owner / prompt clause / result observation
 - N: negative constraint / result observation
 - Scene invariants (conditional): each invariant / formula source / explicit prompt clause / full-size observation / review-size observation / pass-fail
-- Three-factor execution mapping: Production Success Strategy reference / joint result status
+- Three-factor dependency: semantic purpose / reality floor / visual-quality floor / page-use proof and required review object / first blocker
+- Attempt record: first production, corrective, or diagnostic / identifier / controlled conditions / raw output and observation location
 - Post-processing responsibility:
 - Trace status: ready / return to planner / fail result check
 ```
@@ -93,21 +97,24 @@ Client review package = accepted Formula Decision before generation + visible ca
 
 ## Bounded Technical Operations
 
-Crop, resize, compress, format conversion, deterministic typesetting, and export may use a light trace that cites the accepted baseline, Formula Decision, and inherited three-factor status. Load only source, target, protected elements, technical parameters, and checks; verify no regression in purpose, truthfulness/realism, or visual quality.
+Crop, resize, compress, format conversion, deterministic typesetting, and export may use a light trace that cites the accepted baseline, Formula Decision, and inherited dependency status. Load only source, target, protected elements, technical parameters, and checks; verify no regression in semantic purpose, reality, visual quality, or required page-use conditions.
 
 Return to planner if the operation can change attention ownership, subject credibility, relationship meaning, spatial order, atmosphere role, identification dominance, claim boundary, or forbidden interpretation.
 
 ## Result Check
 
-After rendering, record observed evidence rather than prompt intent:
+After rendering, record observed evidence rather than prompt intent in dependency order:
 
-- inspect image-owned `S/R/O/A/I` mechanisms at full size and review size;
+- inspect the reality floor first: image-owned `S/R/O/N`, fact/material basis, physical state, hierarchy, and triggered invariants at full size and review size;
+- stop downstream approval when reality fails. Later-factor observations may remain diagnostic but cannot be recorded as passes;
+- after reality passes, inspect image-owned `O/A/I`, visual value, hierarchy, material/light craft, and small-size readability for the visual-quality floor;
 - confirm named text/layout/UI owners still have a usable carrier;
 - confirm `A` and `I` did not replace missing `S/R/O` mechanisms;
 - apply `N` as a misread and veto check;
 - for every triggered scene invariant, record separate full-size and review-size observations and fail the result when either view lacks the required proof or shows the incompatible reading;
 - classify any changed decision or owner as formula drift and return it to planner.
-- reuse the existing result checks to record purpose, truthfulness/realism, and visual-quality evidence; do not create three new peer gates.
+- when page use is in scope, create deterministic review composites from the current Planner-supplied copy, CTA, layout responsibility, crops, and named breakpoints; inspect every required desktop/mobile object. If an input is missing, record page use `UNVERIFIED` and name the missing input/owner;
+- reuse the existing result checks to record ordered evidence; do not create three new peer gates.
 
 Keep visible-quality, Intent-Brief-Result, and candidate-delivery decisions distinct internally. Consolidate only the user-facing report:
 
@@ -115,10 +122,13 @@ Keep visible-quality, Intent-Brief-Result, and candidate-delivery decisions dist
 Imagegen Verdict
 - Review object: standalone asset / image base / desktop composite / mobile composite
 - Result vs intent: pass / fail
-- Three-factor joint verdict: purpose / truthfulness-realism / visual quality — pass only when all three pass without compensation
-- Blocking observation:
+- Semantic purpose: source / defined or missing
+- Reality floor: pass / fail / unverified / evidence
+- Visual-quality floor: waiting on reality / pass / fail / unverified / evidence
+- Page-use proof: defined / awaiting composite / pass / fail / unverified / review object and evidence
+- First blocking factor:
 - Delivery status:
 - Next route:
 ```
 
-Use only: `rejected internally`, `analysis only`, `discovery candidate`, `image-base candidate`, `candidate for review`, `accepted draft`, or `final export`. If HTML/layout owns core category, differentiation, or interaction meaning, a bitmap is only an `image-base candidate`; full Hero acceptance requires assembled desktop and mobile review objects.
+Use only: `rejected internally`, `analysis only`, `discovery candidate`, `image-base candidate`, `candidate for review`, `accepted draft`, or `final export`. If HTML/layout owns core category, differentiation, copy, CTA, or interaction meaning, a bitmap is only an `image-base candidate`; page-use proof requires the Planner-named assembled desktop and mobile review objects. Workflow Director verifies that these states and evidence exist; it does not re-score them.
