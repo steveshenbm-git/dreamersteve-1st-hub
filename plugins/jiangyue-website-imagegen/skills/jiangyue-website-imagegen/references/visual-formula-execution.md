@@ -18,8 +18,9 @@ Accept production only when planner supplies one current Formula Decision contai
 - an inherited three-factor decision covering purpose fit, truthfulness/realism mode and evidence boundary, and visual-quality mechanism/quality bar;
 - one exact image, text, layout, or UI owner for each decision;
 - production direction, feasibility, protected content, risks, preconditions, and visible pass/fail checks.
+- the Planner's conditional Scene Invariant Trace when scene meaning depends on equipment/process state, access, human action, physical process, or whole-unit/subsystem hierarchy.
 
-Do not fill missing strategic decisions inside imagegen. Return `RETURN`, ownerless, stale, contradictory, unsupported, or abstract decisions to Workflow Director.
+Do not fill missing strategic decisions inside imagegen. Return `RETURN`, ownerless, stale, contradictory, unsupported, or abstract decisions to Workflow Director. If an observable scene trigger is present but the Planner trace is absent, do not invent it inside Imagegen; return the handoff.
 
 ## Three-Factor Execution Mapping
 
@@ -33,7 +34,7 @@ Imagegen may decide how to execute the accepted realism and quality requirements
 
 ## Observable Preflight
 
-Immediately before a semantic generation or meaning-changing edit tool call, emit `Imagegen Preflight` with Formula Decision source/identifier, `READY/BLOCKED`, production method, and primary veto. Use `READY` only after planner `PROCEED`, an executable inherited contract, and a method ceiling that can satisfy all three factors together. `BLOCKED` makes no tool call; a backfilled/reconstructed preflight is invalid and its result is `analysis only`.
+Immediately before a semantic generation or meaning-changing edit tool call, emit `Imagegen Preflight` with Formula Decision source/identifier, `READY/BLOCKED`, production method, and primary veto. Use `READY` only after planner `PROCEED`, an executable inherited contract, a complete and non-contradictory Scene Invariant Trace when triggered, and a method ceiling that can satisfy all three factors together. A triggered invariant without an explicit prompt clause is `BLOCKED`. `BLOCKED` makes no tool call; a backfilled/reconstructed preflight is invalid and its result is `analysis only`.
 
 ## Production Trace
 
@@ -49,6 +50,7 @@ Formula Production Trace
 - A: planner decision / image evidence / external owner / prompt clause / result observation
 - I: planner decision / image evidence / external owner / prompt clause / result observation
 - N: negative constraint / result observation
+- Scene invariants (conditional): each invariant / formula source / explicit prompt clause / full-size observation / review-size observation / pass-fail
 - Three-factor execution mapping: Production Success Strategy reference / joint result status
 - Post-processing responsibility:
 - Trace status: ready / return to planner / fail result check
@@ -69,6 +71,8 @@ Compile decisions in this order:
 7. `N`: forbidden readings, unsupported claims, failure patterns, and hard vetoes.
 
 The final model prompt should read as coherent natural instructions. Do not paste seven labels as slogans, repeat the same decision under multiple headings, or ask the model to render decisions owned by text/layout/UI. Convert `N` to explicit negative constraints and QA checks. Keep important copy and deterministic overlays outside the image model.
+
+When a Scene Invariant Trace is present, compile each invariant into its owning `S/R/O/N` clause before the final prompt is issued. Do not append the trace as a separate slogan or replace a visible condition with a lifecycle word such as "operating," "inspection," or "maintenance." The prompt must state the observable geometry, state, action, containment, motion, or absence that makes the invariant testable.
 
 ## Prompt And Client Review Boundary
 
@@ -101,6 +105,7 @@ After rendering, record observed evidence rather than prompt intent:
 - confirm named text/layout/UI owners still have a usable carrier;
 - confirm `A` and `I` did not replace missing `S/R/O` mechanisms;
 - apply `N` as a misread and veto check;
+- for every triggered scene invariant, record separate full-size and review-size observations and fail the result when either view lacks the required proof or shows the incompatible reading;
 - classify any changed decision or owner as formula drift and return it to planner.
 - reuse the existing result checks to record purpose, truthfulness/realism, and visual-quality evidence; do not create three new peer gates.
 

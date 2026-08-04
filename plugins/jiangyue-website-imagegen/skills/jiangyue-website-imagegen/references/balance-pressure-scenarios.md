@@ -6,6 +6,8 @@ Use these scenarios when revising or validating Imagegen rules that affect purpo
 
 The prior rules could treat motor-control identity as a reason to add a hardware/control cue to any motor-control or application visual, start reference research from motor-drive products even when the accepted image role was an application system, and classify AI nodes, data paths, control axes, or waveforms as non-semantic autonomous additions. Adding a full three-factor checklist to every existing gate would also duplicate decisions instead of coordinating them.
 
+Before this scene-invariant revision, Imagegen could compile `S/R/O/N` and inspect them after rendering without a required item-by-item trace for the decisive physical scene conditions. The air-handling baseline showed why that gap mattered: operating context, access state, and fan-system hierarchy could be described fluently yet still combine into a contradictory or generic image, while a powered-off complete-AHU hypothesis improved only after those conditions were made explicit.
+
 ## Scenarios
 
 ### HVAC Product Presence Follows The Inherited Role
@@ -44,6 +46,19 @@ The prior rules could treat motor-control identity as a reason to add a hardware
 - Input: a polished candidate implies an unsupported Jiangyue installation, impossible airflow/control behavior, fake interface, or invented product structure.
 - Pass: reject it on truthfulness/realism even when purpose and visual quality appear strong.
 - Fail: average the failure away or label it a discovery candidate merely because it looks premium.
+
+### Scene State Trace Blocks Contradictory Execution
+
+- Input A: Planner `PROCEED` assigns a complete AHU to powered-off final inspection, with one matching service door open, an internal fan array visible, and no operating-motion cue.
+- Input B: Planner asks for normal operation plus open access or exposed mechanisms without a verified controlled-test context.
+- Pass: map every triggered scene invariant from Planner decision to an explicit prompt clause and then to a full-size and review-size rendered observation; use `Imagegen Preflight: BLOCKED` when an invariant is missing, contradicted, or cannot be executed by the selected method. Return Input B rather than inventing safeguards or a test context.
+- Fail: infer state from general mood, accept a prompt that only says "inspection" or "operating," or mark the image truthful when door/access/mechanism evidence contradicts the inherited state.
+
+### Whole-Unit And Subsystem Hierarchy Is Rendered Evidence
+
+- Input: Planner assigns the complete AHU as the first-read subject and its internal fan array as contained supporting evidence.
+- Pass: compile containment, matching access geometry, and first-read hierarchy into the prompt; after rendering, verify each at full size and review size and reject a fan wall that reads as the whole external machine.
+- Fail: count all requested objects as prompt-complete, accept a mismatched door/opening, or rely on HTML copy to explain a hierarchy the bitmap reverses.
 
 ### True And Purposeful But Visually Weak
 

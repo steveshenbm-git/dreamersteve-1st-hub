@@ -8,6 +8,8 @@ Before this revision, formula semantics were absent from the skill chain, the pl
 
 Before this balance revision, Planner had no explicit controlled competition between causal visual hypotheses, no cross-cutting three-factor veto record, and no rule preventing product presence or absence from being inferred from the application category alone. The current conversation supplied the failing baseline: an HVAC system task that excluded product close-ups was repeatedly pulled back toward Jiangyue hardware/product imagery.
 
+Before this scene-invariant revision, the formula could describe subject, relationship, order, and misread risk without extracting the few physical scene conditions that had to survive prompt compilation and rendered review. The observed air-handling baseline mixed a frontal fan wall with an operating context; a later controlled trial improved purpose and basic realism only after changing the hypothesis to a complete AHU, powered-off final inspection, a matching open service door, and an internal fan array. This showed that fluent formula coverage and prompt intent alone did not preserve decisive scene state or whole-unit/subsystem hierarchy.
+
 ## Scenarios
 
 ### Product Image
@@ -66,6 +68,19 @@ Before this balance revision, Planner had no explicit controlled competition bet
 - Request B: create an HVAC product/application visual whose accepted purpose requires verified controller recognition or integration detail in the bitmap.
 - Pass: in A, test application-system hypotheses, keep the product exclusion, and assign any category message to a named text/layout owner; in B, require verified product material and design the product/application relationship without inventing detail.
 - Fail: insert a product/control cue in A merely to create category relevance, remove the required product from B merely because it is an HVAC scene, or use the application category itself as the decision rule.
+
+### Scene State Must Be Observable And Compatible
+
+- Request A: show a complete AHU during powered-off final inspection with one matching service door open, the internal fan array visible, and no operating-motion cue.
+- Request B: show a system in normal operation while also exposing an access state or internal mechanism that could contradict that state.
+- Pass: when scene meaning depends on operating, stopped, inspection, service, installation, commissioning, access, human-action, or physical-process state, derive one to three decisive invariants from `S/R/O/N`; name the dominant state, the visible proof, the incompatible or unsupported reading, and the evidence basis. Return Request B unless a credible controlled-test context and its visible safeguards resolve the conflict.
+- Fail: leave the state implicit, treat an activity verb as visible proof, prescribe a closed list of lifecycle labels, or approve normal operation plus open access/exposed mechanisms without evidence that makes the combination physically and commercially plausible.
+
+### Whole-Unit And Subsystem Hierarchy Must Survive
+
+- Request: show an air-handling application whose subject is the complete AHU and whose internal fan array is supporting evidence rather than a standalone machine.
+- Pass: record the intended whole-unit/subsystem hierarchy and one expected normal-view observation that would prove containment, access geometry, and first-read order; return when the available evidence cannot support that structure.
+- Fail: let the internal fan wall become the apparent whole product, place it outside a credible enclosure, mismatch the service door and opening, or rely on explanatory copy to repair the hierarchy.
 
 ### Controlled Visual Hypothesis Competition
 

@@ -48,7 +48,7 @@ Record `pass` or `fail` for each factor. Do not average scores. Product presence
 
 ## Semantic Compatibility Preflight
 
-Before handoff, decide whether `T-S` serve the same page job, image-owned `S/R` have a public identifiable fact/material basis, the strongest plausible `N` misread remains likely, which fields depend on the primary conflict, named HTML/text/layout owners support rather than rescue a failed image-owned `S` or triggered `N`, and all three factors pass independently.
+Before handoff, decide whether `T-S` serve the same page job, image-owned `S/R` have a public identifiable fact/material basis, the strongest plausible `N` misread remains likely, which fields depend on the primary conflict, named HTML/text/layout owners support rather than rescue a failed image-owned `S` or triggered `N`, any triggered Scene Invariant Trace is complete and non-contradictory, and all three factors pass independently.
 
 - `PROCEED`: keep the complete Formula Decision and compile the production handoff.
 - `RETURN`: issue no production brief, prompt, or imagegen instruction; record only the primary blocker, no more than two dependent fields, evidence, and next owner.
@@ -63,6 +63,30 @@ Planner Handoff Verdict
 - Next owner:
 ```
 
+## Conditional Scene Invariant Trace
+
+This trace is not an eighth formula stage or a parallel brief. Derive it only from the accepted `S/R/O/N` decisions when the image's meaning depends on one or more of these observable conditions:
+
+- operating, stopped, inspection, service, installation, commissioning, or other named equipment/process state;
+- door, guard, enclosure, service opening, or internal-access state;
+- a human action whose credibility depends on the equipment state;
+- motion, airflow, water flow, or another physical process;
+- whole-unit, enclosure, module, component, or other system hierarchy.
+
+Record one to three decisive invariants. Use a named state that fits the task; do not force a closed lifecycle vocabulary.
+
+```text
+Scene Invariant Trace
+- Trigger:
+- Invariant 1: formula source `S/R/O/N` / condition that must remain true / visible proof / incompatible or unsupported reading / evidence basis
+- Invariant 2: ... (only when independently decisive)
+- Invariant 3: ... (only when independently decisive)
+- Prompt-ready constraint(s):
+- Expected normal-view pass/fail observation(s):
+```
+
+Use `PROCEED` only when every recorded invariant has an evidence basis, a prompt-ready constraint, and an observable normal-view pass/fail condition. Use `RETURN` when an invariant is unsupported, internally contradictory, assigned to copy that cannot repair the bitmap, or cannot survive the proposed visual hypothesis. Omit the trace when none of the triggers is present.
+
 ## Conditional Modules
 
 Load and output a module only when its observable trigger is present. Omit the whole module otherwise; do not print empty fields.
@@ -72,6 +96,7 @@ Load and output a module only when its observable trigger is present. Omit the w
 | Complete page planning | H1, supporting copy, CTA, SEO/AEO, module order, trust path from [page-brief-template.md](page-brief-template.md) |
 | Brand-defining or homepage/hero visual | Relevant `brand-system/02-brand-visual/` alignment, approved-material protection, recognition and brand-drift checks |
 | Product or application subject | Product fact source, physical/integration logic, unsupported claim and fake-evidence checks |
+| Scene meaning depends on state, access, human action, physical process, or system hierarchy | Conditional Scene Invariant Trace derived from `S/R/O/N` |
 | Rework, rejection, or repeated failure | Accepted baseline, exact defect, keep/remove/materially-change/avoid, failed formula field, changed production hypothesis |
 | Reference research is materially needed | Source and attribution, learnable method, forbidden copying, facts or claims that cannot transfer |
 | Bounded technical operation | Source, crop/size/format/export, protected subject and copy space; inherit the accepted formula decision |

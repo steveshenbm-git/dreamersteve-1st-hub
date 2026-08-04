@@ -26,6 +26,7 @@ Visual Self-Check Evidence
 - Image-owned I evidence: use/carrier/position/range remain controlled, pass/fail
 - Named external owners preserved: text/layout/UI mechanism and pass/fail
 - N boundary and misread check: pass/fail
+- Scene invariant trace when triggered: each invariant / full-size observed proof / review-size observed proof / incompatible reading absent yes-no / pass-fail
 - Self-check status: pass/fail
 - If fail, delivery blocked because:
 ```
@@ -38,6 +39,7 @@ Visual Self-Check Evidence
 - Copy user-named defects verbatim. Do not soften "I cannot see the air layer" into "air layer can be stronger."
 - If the candidate passes this gate, it may enter the candidate delivery gate. It is not automatically deliverable.
 - Do not infer formula compliance from the presence of teal, glow, empty space, a person, or motion effects. Check the observable mechanism recorded in the Formula Decision.
+- A lifecycle or activity word in the brief or prompt is not evidence of scene state. When a Scene Invariant Trace is triggered, inspect the rendered geometry, access state, human action, physical process, and system hierarchy named by each invariant at both required sizes.
 
 ## Fail Conditions
 
@@ -50,3 +52,4 @@ Fail when:
 - the candidate no longer supports the active brief or local edit intent.
 - atmosphere or identification cues are compensating for a missing subject, relationship, or spatial-order mechanism;
 - a field assigned to text/layout/UI has no preserved usable carrier in the final visual unit.
+- a triggered scene invariant is absent from the evidence record, lacks visible proof at either required size, or shows its incompatible/unsupported reading.
