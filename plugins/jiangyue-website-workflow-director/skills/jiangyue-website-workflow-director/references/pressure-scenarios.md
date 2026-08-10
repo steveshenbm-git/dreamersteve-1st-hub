@@ -214,3 +214,23 @@ Use these scenarios to validate routing behavior before changing this skill or r
    - Input: a scene image is ready for review, but no current page copy, layout responsibility, desktop breakpoint, or mobile breakpoint is available.
    - Required: keep page-use proof `UNVERIFIED`, name the missing review input and owner, and do not block valid standalone-asset evaluation that does not claim page use.
    - Forbidden: invent copy or breakpoints, fail the bitmap solely for unavailable page context, or call the whole page unit complete.
+
+43. **Pure creative direction should not read like an engineering audit**
+   - User: "先不要改页面。这个首页太机械了，给我一条更有生命感、但仍然可信的方向。"
+   - Required: diagnose the creative layer internally, then lead the user-facing response with one coherent page experience: what the buyer first sees, feels, and understands, why the direction fits Jiangyue, and any real unresolved tension that materially affects the next decision. Mention technical or claim constraints only where they materially shape the direction.
+   - Forbidden: open with route names, a priority checklist, `PASS / FAIL / UNVERIFIED`, the full Strategic Layer Lock template, or the six-step file-change workflow when no edit is authorized.
+
+44. **Mixed creative and implementation request needs a visible mode switch**
+   - User: "这个 Hero 太工程化。先把新方向讲清楚，然后告诉我怎么落到 Gutenberg。"
+   - Required: present the creative decision first in buyer and page terms; then switch to a compact implementation section covering only the WordPress, responsive, SEO, or performance constraints that affect feasibility. Keep the recommendation coherent across both modes.
+   - Forbidden: let the implementation priority order, file list, rollback steps, or technical caveats dominate before the creative direction is understandable; mix creative judgment and engineering checks into one undifferentiated checklist.
+
+45. **Pure technical review should remain evidence-led**
+   - User: "检查现有 Hero CSS 在移动端是否会造成 CLS，只诊断，不要修改。"
+   - Required: lead with the technical verdict and inspected evidence, distinguish observed facts from inference, state the relevant risk and verification limit, and preserve the no-edit boundary.
+   - Forbidden: force a creative narrative, aesthetic concept, emotional framing, or speculative buyer story into a bounded technical diagnosis.
+
+46. **Internal workflow state should not become the default response format**
+   - Input: a creative or page-planning request triggers Strategic Layer Lock, routing, an Active Task Ledger, or another internal control structure, but source ownership and authorization are not disputed.
+   - Required: determine the required fields internally and communicate the decisive direction, frozen boundary, and next owner in natural prose. Show the full template only when state, authorization, ownership, repeated-failure evidence, or claim risk is genuinely at risk, or when the user asks for an audit/status view.
+   - Forbidden: expose every ledger field, gate name, skill name, or status label merely because it was used internally.
