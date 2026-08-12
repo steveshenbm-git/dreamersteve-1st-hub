@@ -24,6 +24,18 @@ If a judgment cannot be translated into a visible carrier or a page/content deci
 
 Do not use full-length output for every small task. Do not skip the design check when the task looks small but affects first-screen attention, buyer trust, SEO/AEO, or visual direction.
 
+## Design Continuity Intake
+
+For a substantive project conversation, Workflow Director or the primary agent owns the current conversation-memory file and supplies Planner only the state that changes design:
+
+- confirmed current goal and authorization boundary;
+- desired visitor experience or visual value and current acceptance conditions;
+- governing method and source roles;
+- accepted baseline only in its recorded role;
+- current anti-references, rejected directions, and material failure lessons.
+
+Treat this as upstream continuity input, not a third brief or a source of visual authority. Do not add a second Planner-owned memory read/write path or copy the memory file into the Planner Brief. When the active primary agent also performs Planner work, it first satisfies the global conversation-memory duty in its primary role, then uses only the reconciled design intake here. Never let stale state override the latest user instruction, current direct evidence, or formal authority. A latest or rejected generated image is not an accepted baseline unless the user accepted that exact role. When material state is missing or contradictory, return the gap to Workflow Director instead of inventing continuity.
+
 ## Jiangyue Context Packet
 
 Build this before making design decisions:
@@ -62,6 +74,30 @@ Production constraint:
 QA check:
 Reject if:
 ```
+
+## Whole-Image Synthesis Compiler
+
+For a semantic new image, meaning-changing edit, high-impact visual, or repeated-failure reset, compile the selected Formula Decision into one Whole-Image Synthesis Contract inside the Planner Brief:
+
+```text
+Whole-Image Synthesis Contract / 整体画面合成合同
+
+- Whole-image mother statement / 整体画面母句:
+- Scope frame / 画面范围框架:
+- Credibility anchors / 细节可信锚点: 3–6
+- Freedom budget / 自由度预算:
+  - Fixed:
+  - Adaptive:
+  - Forbidden:
+```
+
+The mother statement is a high-information-density description of one image, not the longest possible description. It should normally use three to four sentences or roughly 120–220 Chinese characters as a soft range. It must establish the visual genre and viewing distance, one core moment, the unified people/equipment/environment relationship, first and second attention, the global spatial/light/material/temperament boundary, and the strongest likely misread.
+
+Use one hard test: a reader should be able to sketch one scene, one core moment, and one attention order from the mother statement alone. Reject a statement that becomes an object inventory, repair checklist, multiple moments, or multiple independent stories even when it is detailed.
+
+The scope frame defines camera/view boundary, foreground/midground/background roles, subject scale, useful copy space, environmental extent, and explicit out-of-frame content. Each of the three to six credibility anchors must map to an existing formula decision and strengthen the same mother statement; an anchor must not create a second story. `Fixed` protects governing meaning and relationships, `Adaptive` preserves specialist execution freedom, and `Forbidden` carries hard misreads, unsupported claims, and anti-references.
+
+This contract is the synthesis output of `T -> S -> R -> O -> A -> I -> N`, not an eighth formula stage, a replacement definition, a parallel asset brief, or permission to repeat every field. A bounded local edit inherits the accepted contract and adds only the operation-specific constraints.
 
 ## Three-Factor Solution Search
 
@@ -110,15 +146,16 @@ Reject if: it reads as renewable energy, forest ecology, or neon technology.
 
 ## Planner Brief Relationship
 
-The Planner Brief is the single main handoff to imagegen. Design judgment is reasoning input to the Formula Decision, not a parallel contract.
+The Planner Brief is the single main handoff to imagegen. Design judgment is reasoning input to the Formula Decision, and the Whole-Image Synthesis Contract is its whole-picture compilation inside that same brief, not a parallel contract.
 
 Use this internal order:
 
 1. Run the Jiangyue design judgment internally and keep only decisions that change visible execution or page ownership.
 2. Add the complete-page module only for complete-page work; do not output H1, CTA, SEO/AEO, or module-order placeholders for an image-only task.
 3. Run the Three-Factor Solution Search when triggered, then compile trusted subject and fact basis into `S`; readable interaction into `R`; truthful hierarchy, rhythm, reveal, and useful negative space into `O`; controlled amplification of an established reading into `A`; recognition use into `I`; cheapness, claims, and misreads into `N`.
-4. Name the exact image, text, layout, or UI owner; do not add separate composition and asset-production contracts.
-5. Put prompt-ready direction, protected content, deterministic work, ordered result-evidence requirements, named standalone/composite review objects, QA, rejection triggers, and feasibility in the compact Formula Decision.
+4. For triggered semantic/high-impact work, compile those decisions into the Whole-Image Synthesis Contract and reject it when its mother statement, scope frame, anchors, or freedom budget point to different images.
+5. Name the exact image, text, layout, or UI owner; do not add separate composition and asset-production contracts.
+6. Put prompt-ready direction, protected content, deterministic work, ordered result-evidence requirements, named standalone/composite review objects, QA, rejection triggers, and feasibility in the compact Formula Decision.
 
 Write production constraints and required realism/quality ceilings, not final pixels. Imagegen owns prompt compilation, method, rendering, local retouching, and exact output files.
 
@@ -131,6 +168,7 @@ When feedback arrives, assign the failure to the lowest correct layer:
 | wrong business goal, buyer, CTA, claim boundary | page strategy | revise Planner Brief |
 | generic, cheap, not Jiangyue, wrong temperament | design judgment | revise Jiangyue Design Judgment |
 | right judgment but missing visible subject/carrier or owner | Formula Decision | revise the failed field and responsibility |
+| complete fields but fragmented scene, multiple moments, or conflicting attention | Whole-Image Synthesis Contract | revise the mother statement, scope, anchors, or freedom budget without redefining formula semantics |
 | right brief but poor realism, artifacts, crop, lighting, execution | imagegen execution | return to imagegen with hard defects |
 | macro relationship or brand worldview unclear | Workflow Director strategic layer | return to Workflow Director |
 
@@ -144,3 +182,5 @@ These scenarios should pass after the skill revision:
 2. **"Not premium enough" feedback:** planner diagnoses proportion, hierarchy, rhythm, restraint, density, material/space credibility, or buyer readability instead of only saying "more premium".
 3. **Imagegen failure:** planner decides whether failure belongs to design judgment, page module, Formula Decision, or imagegen execution before another production round.
 4. **Contract confusion:** planner does not hand imagegen separate reasoning, composition, asset-production, and feasibility contracts when one Formula Decision is sufficient.
+5. **Complete fields but no whole:** planner rejects a populated field set that cannot be compiled into one sketchable scene and one core moment.
+6. **Conversation continuity:** planner consumes the current reconciled design state without copying memory or allowing an old/rejected result to become the governing baseline.

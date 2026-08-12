@@ -15,12 +15,13 @@ Accept production only when planner supplies one current Formula Decision contai
 - authority and visual-unit intent;
 - an explicit `Planner Handoff Verdict: PROCEED` supported by semantic compatibility evidence;
 - judgments for `T/S/R/O/A/I/N`;
+- the triggered Whole-Image Synthesis Contract: one sketchable mother statement, scope frame, three to six credibility anchors mapped to formula decisions, and a `Fixed / Adaptive / Forbidden` freedom budget;
 - an inherited three-factor dependency covering semantic purpose and page-use conditions, reality mode/evidence floor, visual-quality mechanism/floor, and ordered result proof;
 - one exact image, text, layout, or UI owner for each decision;
 - production direction, feasibility, protected content, risks, preconditions, visible pass/fail checks, and required standalone/composite review objects.
 - the Planner's conditional Scene Invariant Trace when scene meaning depends on equipment/process state, access, human action, physical process, or whole-unit/subsystem hierarchy.
 
-Do not fill missing strategic decisions inside imagegen. Return `RETURN`, ownerless, stale, contradictory, unsupported, or abstract decisions to Workflow Director. If an observable scene trigger is present but the Planner trace is absent, do not invent it inside Imagegen; return the handoff.
+Do not fill missing strategic decisions inside imagegen or read conversation memory to reconstruct them. Return `RETURN`, ownerless, stale, contradictory, unsupported, or abstract decisions to Workflow Director. Return a triggered synthesis contract when its mother statement, scope, anchors, freedom budget, formula fields, or responsibility owners describe different images. If an observable scene trigger is present but the Planner trace is absent, do not invent it inside Imagegen; return the handoff.
 
 ## Three-Factor Dependency Execution
 
@@ -35,7 +36,7 @@ Imagegen may decide how to execute the accepted realism and quality requirements
 
 ## Observable Preflight
 
-Immediately before a semantic generation or meaning-changing edit tool call, emit `Imagegen Preflight` with Formula Decision source/identifier, `READY/BLOCKED`, attempt class/identifier, production method, and primary veto. Use `READY` only after planner `PROCEED`, an executable inherited contract, a complete and non-contradictory Scene Invariant Trace when triggered, and a method ceiling that first clears reality, then can reach visual quality without weakening reality, then preserves the conditions needed for page-use review. A triggered invariant without an explicit prompt clause is `BLOCKED`. `BLOCKED` makes no tool call; a backfilled/reconstructed preflight is invalid and its result is `analysis only`.
+Immediately before a semantic generation or meaning-changing edit tool call, emit `Imagegen Preflight` with Formula Decision source/identifier, `READY/BLOCKED`, attempt class/identifier, production method, and primary veto. Use `READY` only after planner `PROCEED`, an executable inherited Whole-Image Synthesis Contract when triggered, a complete and non-contradictory Scene Invariant Trace when triggered, and a method ceiling that first clears reality, then can reach visual quality without weakening reality, then preserves the conditions needed for page-use review. A missing or internally conflicting synthesis contract, or a triggered invariant without an explicit prompt clause, is `BLOCKED`. `BLOCKED` makes no tool call; a backfilled/reconstructed preflight is invalid and its result is `analysis only`.
 
 Record the first production attempt and raw observations permanently. Corrective attempts receive new identifiers and cannot erase first-attempt usable-yield evidence. A diagnostic attempt requires explicit current-task cost/production authorization, one stated hypothesis, and one controlled variable; its output remains `analysis only` even if visually promising.
 
@@ -46,6 +47,7 @@ Maintain one compact internal trace. Do not expose it as a second brief.
 ```text
 Formula Production Trace
 - Formula Decision source / identifier:
+- Whole-image synthesis: mother statement / scope frame / credibility anchors / Fixed-Adaptive-Forbidden / prompt governing clause / full-size and review-size result observation
 - T: accepted task and excluded information
 - S: planner decision / image evidence / external owner / prompt clause / result observation
 - R: planner decision / image evidence / external owner / prompt clause / result observation
@@ -62,9 +64,13 @@ Formula Production Trace
 
 Every field receives a judgment. A field need not become an object in the bitmap when its named text/layout/UI mechanism carries it, but imagegen must preserve the required area, hierarchy, contrast, or integration condition.
 
-## Prompt Compilation Order
+## Two-Pass Prompt Compilation
 
-Compile decisions in this order:
+The formula order is the semantic audit order, not the prose structure of the final model prompt.
+
+### Pass A — Formula And Ownership Audit
+
+Audit decisions in this order:
 
 1. `T`: output role, context, stage, aspect ratio, and exclusions.
 2. `S`: subject, truthful detail, material/physical constraints, and proximity standard.
@@ -74,7 +80,18 @@ Compile decisions in this order:
 6. `I`: exact identification use, carrier, position, range, and intensity.
 7. `N`: forbidden readings, unsupported claims, failure patterns, and hard vetoes.
 
-The final model prompt should read as coherent natural instructions. Do not paste seven labels as slogans, repeat the same decision under multiple headings, or ask the model to render decisions owned by text/layout/UI. Convert `N` to explicit negative constraints and QA checks. Keep important copy and deterministic overlays outside the image model.
+### Pass B — Whole-Image Prompt
+
+Start from the inherited mother statement and preserve its single scene, core moment, unified people/equipment/environment relationship, and attention order as the governing prompt clause. Then integrate, rather than append as separate lists:
+
+1. the scope frame and useful copy-space boundary;
+2. three to six credibility anchors that support the same scene;
+3. `Fixed` meaning, state, hierarchy, fact, and claim constraints;
+4. bounded `Adaptive` choices that let the model solve pose, minor layout, surface variation, and craft;
+5. `Forbidden` misreads and explicit negative constraints;
+6. deterministic text/layout or post-processing work kept outside the image model.
+
+The final model prompt should read as coherent natural instructions. Do not paste the mother statement as a slogan when natural phrasing needs adjustment, paste seven labels, concatenate field values in audit order, repeat the same decision under multiple headings, or ask the model to render decisions owned by text/layout/UI. The naturalized prompt must preserve the mother statement's governing relationship. Convert `N` to explicit negative constraints and QA checks. Keep important copy and deterministic overlays outside the image model.
 
 When a Scene Invariant Trace is present, compile each invariant into its owning `S/R/O/N` clause before the final prompt is issued. Do not append the trace as a separate slogan or replace a visible condition with a lifecycle word such as "operating," "inspection," or "maintenance." The prompt must state the observable geometry, state, action, containment, motion, or absence that makes the invariant testable.
 
@@ -105,6 +122,7 @@ Return to planner if the operation can change attention ownership, subject credi
 
 After rendering, record observed evidence rather than prompt intent in dependency order:
 
+- run the Whole-Image Synthesis Contract as an independent non-compensating veto at full size and review size: one scene, one core moment, inherited people/equipment/environment relationship, attention order, scope, and global spatial/light/material coherence must remain observable. Reject below candidate status when this whole fails; locally correct details cannot compensate;
 - inspect the reality floor first: image-owned `S/R/O/N`, fact/material basis, physical state, hierarchy, and triggered invariants at full size and review size;
 - stop downstream approval when reality fails. Later-factor observations may remain diagnostic but cannot be recorded as passes;
 - after reality passes, inspect image-owned `O/A/I`, visual value, hierarchy, material/light craft, and small-size readability for the visual-quality floor;

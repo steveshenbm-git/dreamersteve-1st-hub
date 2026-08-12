@@ -10,6 +10,8 @@ Before this balance revision, Planner had no explicit controlled competition bet
 
 Before this scene-invariant revision, the formula could describe subject, relationship, order, and misread risk without extracting the few physical scene conditions that had to survive prompt compilation and rendered review. The observed air-handling baseline mixed a frontal fan wall with an operating context; a later controlled trial improved purpose and basic realism only after changing the hypothesis to a complete AHU, powered-off final inspection, a matching open service door, and an internal fan array. This showed that fluent formula coverage and prompt intent alone did not preserve decisive scene state or whole-unit/subsystem hierarchy.
 
+Before this whole-image synthesis revision, a Planner Brief could populate every formula field, pass field-level review, and still hand Imagegen a collection of locally correct components rather than one drawable scene. The rejected Home Hero A2 evidence showed this false pass: a complete-looking brief became an empty-hall panorama with stock-like person/equipment adjacency and no strong conceal/reveal or world implication. Field completeness and fluent detail were therefore not evidence of one coherent image.
+
 ## Scenarios
 
 ### Product Image
@@ -47,6 +49,30 @@ Before this scene-invariant revision, the formula could describe subject, relati
 - Request: approve a long Formula Decision whose fields contain polished descriptions but no fact source, visible carrier, or misread evidence.
 - Pass: return the primary unsupported decision and dependent fields; populated labels are not semantic evidence.
 - Fail: treat length, completeness of headings, or fluent wording as production readiness.
+
+### Complete Fields But Fragmented Image
+
+- Request: approve a new semantic or high-impact visual whose `T/S/R/O/A/I/N` fields are individually populated, but whose subjects, environment, action, light, and copy space read as separate production notes.
+- Pass: compile the selected formula decision into one Whole-Image Synthesis Contract whose mother statement alone makes one scene, one core moment, and one attention order roughly sketchable; every scope boundary and credibility anchor supports that same scene.
+- Fail: pass because every field has text, hand Imagegen an object inventory, or expect prompt compilation to invent the missing whole-picture relationship.
+
+### Mother Statement Becomes A Detail Inventory
+
+- Request: strengthen the whole-image mother statement by making it as detailed as possible.
+- Pass: use a high-information-density statement, normally three to four sentences or roughly 120–220 Chinese characters as a soft range, covering viewing mode, core moment, unified subject/environment relationship, attention order, global spatial/light/material boundary, and strongest misread. Judge it by sketchability, not length.
+- Fail: enumerate equipment parts, clothing, materials, exclusions, repair instructions, and every formula field until the statement becomes a checklist or contains multiple moments.
+
+### Continuity Input Cannot Become A Third Brief
+
+- Request: use the current conversation `memory.md` to preserve design intent across turns.
+- Pass: Workflow or the primary agent supplies Planner only the current confirmed goal, authorization boundary, desired experience, acceptance conditions, source roles, accepted baseline in its recorded role, anti-references, and material lessons; the latest user instruction and direct evidence override stale memory.
+- Fail: copy the memory file into the Planner Brief, let Planner write it independently, let old memory override the current user correction, or promote the latest or rejected image to an accepted baseline.
+
+### Local Edit Inherits The Accepted Whole
+
+- Request: make a bounded crop, retouch, or export that cannot change meaning.
+- Pass: inherit the accepted Formula Decision and Whole-Image Synthesis Contract, add only local operation constraints, and verify that the accepted core moment and attention order do not regress.
+- Fail: rerun full whole-image planning, create a new mother statement, or silently change the accepted scene while calling the task technical-only.
 
 ### Adversarial Instructions
 

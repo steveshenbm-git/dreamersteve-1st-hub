@@ -37,6 +37,7 @@ Review each dimension as pass/fail. Do not average away a serious weakness or ou
 |---|---|
 | Intent fidelity | The brief still solves the user's original job and does not drift into a different asset |
 | Formula authority and currency | The brief cites the formal outline section 4 and the Formula Decision matches the active intent/baseline |
+| Whole-image synthesis | The triggered contract contains one sketchable mother statement, one compatible scope frame, three to six supporting credibility anchors, and bounded `Fixed / Adaptive / Forbidden` freedom |
 | `S` credibility | Subject, selection, close-view detail, fact/material basis, and physical plausibility are production-ready |
 | `R` readability | The assigned relationship, direction, continuing process, and human understanding/participation carrier are observable without a long defense |
 | `O` usefulness | Attention, reveal, hierarchy, rhythm, depth, and actual text/layout space are clear |
@@ -51,6 +52,8 @@ Stop before image generation when any of these are true:
 
 - the brief only works because the explanation is persuasive
 - a semantic task lacks a current Formula Decision, formula authority, decided field, or named responsibility owner
+- a semantic new, meaning-changing, high-impact, or repeated-failure task lacks a current Whole-Image Synthesis Contract and is not a bounded local edit inheriting an accepted contract
+- the mother statement cannot be sketched as one scene and one core moment, becomes an object or repair checklist, contains multiple stories, or conflicts with the scope frame, anchors, formula decisions, or responsibility owners
 - the production brief replaces, reinterprets, or transfers planner formula decisions instead of executing them
 - the structure is physically strange but planned to be fixed later
 - the visual quality relies mainly on color, glow, gradients, or background atmosphere
@@ -75,6 +78,7 @@ For a standard or high-impact brief, include only this compact self-review:
 ```text
 Brief Readiness
 - Intent and formula source: pass/fail
+- Whole-image synthesis: pass/fail/inherited accepted contract
 - S/R/O executable: pass/fail
 - A/I controlled: pass/fail
 - N, fact, and claim safety: pass/fail
@@ -84,7 +88,7 @@ Brief Readiness
 - Conclusion: proceed / return to planner / ask one execution question
 ```
 
-Use a one-line reason only for a failure. Omit the rework line when its trigger is absent.
+Use a one-line reason only for a failure. Omit the whole-image synthesis or rework line when its trigger is absent.
 
 ## If The Brief Fails
 
@@ -92,6 +96,7 @@ Choose one correction:
 
 - **Missing intent:** ask one question about what the viewer must understand.
 - **Missing Formula Decision or owner:** return to Workflow Director / planner; do not invent or transfer formula judgments inside imagegen.
+- **Missing or conflicting whole-image synthesis:** return to Workflow Director / planner with the primary contract conflict and at most two dependent formula fields; do not read memory, choose a scene silently, or generate for clarification.
 - **Missing carrier:** assign the subject to image, visual cue, or HTML copy.
 - **Weak relationship:** switch relationship model before changing style.
 - **Physical failure:** rebuild the structure using plausible layers, enclosure, mounting, workflow, or abstract geometry.
@@ -110,3 +115,4 @@ After two failed brief reviews for the same asset, stop and offer 2-3 new struct
 ## Pressure Scenario
 
 - **Formula Decision missing:** User or workflow asks imagegen to create a silver-gray B2-3 semi-concrete visual but provides only mood and color. Required: return to Workflow Director / planner for the compact Formula Decision with all fields, exact owners, feasibility, and visible checks. Forbidden: let imagegen infer `S/R/O` from style words or use `A/I` as substitutes.
+- **Fields complete but whole missing:** User or workflow supplies populated `T/S/R/O/A/I/N` fields whose people, equipment, environment, action, light, and copy-space notes do not form one sketchable scene. Required: return for one Whole-Image Synthesis Contract. Forbidden: concatenate fields into a prompt or let locally detailed instructions count as overall coherence.

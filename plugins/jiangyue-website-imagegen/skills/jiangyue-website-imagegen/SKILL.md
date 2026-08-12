@@ -11,7 +11,7 @@ Own visual execution: production method, image editing, subject structure, physi
 
 Do not own page strategy, H1, CTA hierarchy, buyer-message fit, claim boundary, or final approval. If those are unclear, return to `$jiangyue-website-workflow-director` with the missing decision.
 
-Do not replace the planner's Formula Decision with imagegen's own visual strategy or formula interpretation. For semantic new images or meaning-changing edits, inherit the accepted `T → S → R → O → A → I → N` decision, three-factor decision, and exact image/text/layout ownership; if any is missing, stale, ownerless, contradictory, or too abstract to execute, return it before production.
+Do not replace the planner's Formula Decision with imagegen's own visual strategy or formula interpretation. For semantic new images or meaning-changing edits, inherit the accepted `T → S → R → O → A → I → N` decision, triggered Whole-Image Synthesis Contract, three-factor decision, and exact image/text/layout ownership; if any is missing, stale, ownerless, contradictory, or too abstract to execute, return it before production. Imagegen does not read conversation memory to reconstruct missing visual strategy.
 
 Use professional industrial judgment for European B2B buyers. Avoid unsupported product, certification, customer, performance, export, compliance, patent, or specification claims.
 
@@ -45,6 +45,7 @@ Before a brief-based image, confirm:
 - planner has issued an explicit `Planner Handoff Verdict: PROCEED`; `RETURN`, silence, or a reconstructed verdict blocks production
 - purpose fit, truthfulness/realism mode and evidence boundary, and visual-quality mechanism/quality bar each have an inherited `pass` decision
 - the current Formula Decision makes a judgment for `T/S/R/O/A/I/N` and names the exact image, text, layout, or UI owner for every field
+- semantic new, meaning-changing, high-impact, or repeated-failure work includes one current Whole-Image Synthesis Contract whose mother statement, scope frame, three to six credibility anchors, and `Fixed / Adaptive / Forbidden` freedom budget describe the same sketchable scene; a bounded local edit may inherit an accepted contract
 - image-owned decisions have prompt-ready visible carriers; non-image-owned decisions name the concrete external mechanism and the space/structure imagegen must preserve
 - production direction, feasibility, protected content, preconditions, major failure risks, and visible pass/fail criteria are clear
 - forbidden claims and product-fact risks are explicit
@@ -65,7 +66,7 @@ Return to Workflow Director / 简报退回
 
 Use this state chain for brief-based, high-impact, cost-bearing, or repeated-failure image work:
 
-`Intent Lock -> Planner Brief -> Formula Decision -> Production Success Strategy -> Attempt Stop Rule -> Imagegen Preflight -> Generate Candidate -> Visual Self-Check -> Intent-Brief-Result Check -> Outcome Classification -> Candidate Delivery Gate -> User Acceptance Layer -> Final Export / Archive`
+`Intent Lock -> Planner Brief (Formula Decision + triggered Whole-Image Synthesis Contract) -> Production Success Strategy -> Attempt Stop Rule -> Imagegen Preflight -> Generate Candidate -> Visual Self-Check -> Intent-Brief-Result Check -> Outcome Classification -> Candidate Delivery Gate -> User Acceptance Layer -> Final Export / Archive`
 
 Hard rules:
 
@@ -120,7 +121,7 @@ For most Jiangyue website visuals:
 2. Read [references/production-success-strategy-gate.md](references/production-success-strategy-gate.md) when the asset is brief-based, high-impact, cost-bearing, or repeated-failure; map purpose, truthfulness/realism, and visual quality to the selected method and block production when its ceiling cannot satisfy all three.
 3. Read [references/attempt-stop-and-method-escalation-gate.md](references/attempt-stop-and-method-escalation-gate.md) when multiple attempts, API calls, or repeated failures are possible; do not repeat the same failed hypothesis.
 4. Choose method based on visible result quality, not convenience.
-5. Compile the seven-stage decision into a coherent natural prompt, negative constraints, deterministic post-processing instructions, and result checks without copying labels mechanically or changing planner ownership.
+5. Use the two-pass compiler in [references/visual-formula-execution.md](references/visual-formula-execution.md): audit the seven-stage decision and ownership first, then organize the natural model prompt around the Whole-Image Synthesis Contract, negative constraints, deterministic post-processing instructions, and result checks without copying labels mechanically or changing planner ownership.
 6. Emit `Imagegen Preflight: READY` with the selected method immediately before the tool call, then produce one strong draft. Stop without a tool call on `BLOCKED`; create variants only for materially different hypotheses, models, structures, sources, or methods.
 7. Inspect full size, thumbnail/review size, prior draft, and references when available.
 8. Run [references/visual-self-check-gate.md](references/visual-self-check-gate.md), [references/intent-brief-result-coordination-gate.md](references/intent-brief-result-coordination-gate.md), and [references/candidate-delivery-gate.md](references/candidate-delivery-gate.md) as distinct internal decisions before presenting a candidate.
@@ -184,6 +185,8 @@ Reject or revise before delivery when any of these appear:
 - product/application cues that imply unverified customer installation, final product architecture, or confirmed performance
 - brief-based new image or meaning-changing edit lacks a current planner Formula Decision and is not a bounded local edit or deterministic export
 - any `T/S/R/O/A/I/N` field is undecided, assigned only as "outside the image", or has no named observable owner
+- triggered Whole-Image Synthesis Contract is missing, not sketchable as one scene, conflicts with the Formula Decision or ownership, or has no bounded `Fixed / Adaptive / Forbidden` freedom
+- the rendered result has locally plausible details but fails the inherited single scene, core moment, unified people/equipment/environment relationship, or attention order
 - atmosphere or identification cues substitute for an unresolved subject, relationship, or spatial-order decision
 - high-impact or brand-defining image lacks required Brand-System Visual Alignment, or visibly conflicts with formal brand-system visual planning
 - production brief invents a different visual strategy, image type, or composition relationship instead of executing the planner brief

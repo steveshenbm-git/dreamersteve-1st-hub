@@ -36,6 +36,28 @@ Every field needs a decision. A field may be carried outside the asset, but `not
 
 The final model prompt may use natural language and combine sentences. The production record must still map its constraints back to all seven decisions without dropping, replacing, or reinterpreting them.
 
+## Whole-Image Synthesis Contract
+
+Require this inside the same Formula Decision for semantic new images, meaning-changing edits, high-impact visuals, and repeated-failure resets. A bounded local edit inherits the accepted contract unless it changes meaning.
+
+```text
+Whole-Image Synthesis Contract / 整体画面合成合同
+
+- Whole-image mother statement / 整体画面母句: normally 3–4 sentences or roughly 120–220 Chinese characters as a soft range; one visual genre/viewing distance, one core moment, unified people/equipment/environment relationship, first and second attention, global spatial/light/material/temperament boundary, strongest misread
+- Scope frame / 画面范围框架: camera/view boundary / foreground-midground-background roles / subject scale / useful copy space / environmental extent / explicit out-of-frame content
+- Credibility anchors / 细节可信锚点: 3–6 details, each mapped to an existing formula decision and supporting the same mother statement
+- Freedom budget / 自由度预算:
+  - Fixed: governing subject, relationship, moment, hierarchy, fact and claim boundary
+  - Adaptive: bounded pose, minor layout, surface variation, and execution choices Imagegen may solve
+  - Forbidden: conflicting story, unsupported object or claim, anti-reference, and direct whole-image veto
+```
+
+The hard acceptance test is sketchability, not length: the mother statement alone must let a reader roughly sketch one scene, one core moment, and one attention order. Reject an object inventory, repair checklist, multiple moments, or multiple independent stories. The mother statement, scope frame, anchors, Formula Decision, and ownership must describe the same image.
+
+This contract is the synthesis compilation of the existing formula, not an eighth formula stage, new semantic authority, separate Planner Brief, or license to duplicate all formula wording.
+
+When this contract is not triggered, omit the whole section rather than printing an empty or `not applicable` field.
+
 ## Three-Factor Dependency Cross-Check
 
 The three factors are cross-cutting review dimensions, not new formula stages or replacement definitions. Design them together but separate definition from proof:
@@ -49,7 +71,7 @@ At Planner stage, record whether each factor has an executable contract and name
 
 ## Semantic Compatibility Preflight
 
-Before handoff, decide whether `T-S` serve the same page job, image-owned `S/R` have a public identifiable fact/material basis, the strongest plausible `N` misread remains likely, which fields depend on the primary conflict, named HTML/text/layout owners support rather than rescue a failed image-owned `S` or triggered `N`, any triggered Scene Invariant Trace is complete and non-contradictory, and all three factor contracts are executable without compensation.
+Before handoff, decide whether `T-S` serve the same page job, image-owned `S/R` have a public identifiable fact/material basis, the strongest plausible `N` misread remains likely, which fields depend on the primary conflict, named HTML/text/layout owners support rather than rescue a failed image-owned `S` or triggered `N`, the triggered Whole-Image Synthesis Contract is sketchable and internally consistent, any triggered Scene Invariant Trace is complete and non-contradictory, and all three factor contracts are executable without compensation.
 
 - `PROCEED`: keep the complete Formula Decision and compile the production handoff.
 - `RETURN`: issue no production brief, prompt, or imagegen instruction; record only the primary blocker, no more than two dependent fields, evidence, and next owner.
@@ -61,6 +83,7 @@ Planner Handoff Verdict
 - Dependent fields: maximum two
 - Evidence:
 - Three-factor contract: semantic purpose and page-use conditions / reality floor and evidence / visual-quality floor and mechanism
+- Whole-image synthesis when triggered: inherited accepted contract / complete and consistent / missing or conflicting
 - Ordered result proof: reality observation / visual-quality observation after reality / page-use review object(s)
 - Next owner:
 ```
@@ -107,4 +130,4 @@ If a bounded operation changes attention, subject meaning, relationship, reveal 
 
 ## Handoff Failure
 
-Return to Workflow Director when intent or task ownership is unresolved. Imagegen returns a handoff that lacks `PROCEED`, is contradictory, unsupported, too abstract to sketch, or assigns a field to text/layout without naming the carrier.
+Return to Workflow Director when intent or task ownership is unresolved. Imagegen returns a handoff that lacks `PROCEED`, lacks a triggered Whole-Image Synthesis Contract, contains a contract that is contradictory or not sketchable as one scene, is unsupported, is too abstract to execute, or assigns a field to text/layout without naming the carrier.

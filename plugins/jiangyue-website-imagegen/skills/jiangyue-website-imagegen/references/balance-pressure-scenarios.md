@@ -8,6 +8,8 @@ The prior rules could treat motor-control identity as a reason to add a hardware
 
 Before this scene-invariant revision, Imagegen could compile `S/R/O/N` and inspect them after rendering without a required item-by-item trace for the decisive physical scene conditions. The air-handling baseline showed why that gap mattered: operating context, access state, and fan-system hierarchy could be described fluently yet still combine into a contradictory or generic image, while a powered-off complete-AHU hypothesis improved only after those conditions were made explicit.
 
+Before this whole-image synthesis revision, Imagegen could audit all formula fields and then compile the prompt in field order, yet still preserve the brief as a sequence of component instructions rather than one governing image. Locally correct people, equipment, atmosphere, and detail could therefore coexist with a failed overall scene, while existing result checks had no explicit rule that whole-image failure vetoed those local passes.
+
 ## Scenarios
 
 ### HVAC Product Presence Follows The Inherited Role
@@ -34,6 +36,30 @@ Before this scene-invariant revision, Imagegen could compile `S/R/O/N` and inspe
 - Input: the accepted Formula Decision does not assign AI nodes, control signals, diagnostics, waveforms, or data paths to the bitmap.
 - Pass: keep them absent; only non-semantic craft adjustments that preserve attention and meaning may be autonomous.
 - Fail: add any of them as a supposedly neutral technology accent.
+
+### Formula Audit Does Not Become Mechanical Prompt Assembly
+
+- Input: Planner supplies a complete Formula Decision and a Whole-Image Synthesis Contract for a new semantic visual.
+- Pass: first audit meaning and ownership through `T -> S -> R -> O -> A -> I -> N`; then write the model prompt around the coherent mother statement, integrating the scope frame, three to six credibility anchors, fixed/adaptive/forbidden freedom, and negative constraints as natural instructions.
+- Fail: begin the model prompt with seven field labels, concatenate field values in audit order, repeat the same constraint under multiple headings, or let local prompt detail replace the governing image.
+
+### Local Detail Cannot Rescue Whole-Image Failure
+
+- Input: the rendered people, equipment parts, material texture, and status accents are locally plausible, but the result no longer shows the inherited single scene, core moment, attention order, or unified people/equipment/environment relationship.
+- Pass: reject the result at the whole-image check and keep it below candidate status; record later local observations only as diagnostics.
+- Fail: average the whole-image failure against local detail passes, deliver the least-bad result, or ask HTML copy to explain the missing image relationship.
+
+### Contradictory Synthesis Contract Blocks Production
+
+- Input: the mother statement, scope frame, credibility anchors, freedom budget, and Formula Decision point to different scenes or attention owners.
+- Pass: emit `Imagegen Preflight: BLOCKED` and return one primary conflict plus at most two dependent formula fields to Workflow Director or Planner.
+- Fail: choose one version silently, read conversation memory to reconstruct visual strategy, or generate first and treat the output as clarification.
+
+### Bounded Edit Reuses The Accepted Synthesis
+
+- Input: crop, retouch, or export an accepted candidate without changing meaning.
+- Pass: inherit the accepted Whole-Image Synthesis Contract, keep the operation lean, and verify that the core moment, attention order, global coherence, and relevant page-use conditions do not regress.
+- Fail: require a new synthesis contract, reinterpret it, or satisfy the local defect while weakening the accepted whole image.
 
 ### Method Ceiling Conflict
 
