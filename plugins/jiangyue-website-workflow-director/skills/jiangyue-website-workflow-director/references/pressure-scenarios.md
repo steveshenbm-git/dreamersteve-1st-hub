@@ -175,7 +175,7 @@ Use these scenarios to validate routing behavior before changing this skill or r
    - Forbidden: infer page-level success from the raw image or from a passing imagegen self-check.
 
 35. **Long report without execution evidence**
-   - Input: planner and imagegen output complete-looking tables but no observable `PROCEED -> READY -> tool call` order or result observation.
+   - Input: planner and imagegen output complete-looking tables but no observable `PROCEED -> current user production authorization -> READY -> tool call` order or result observation.
    - Required: block the route or delivery at the first missing state and report one primary blocker plus dependent fields.
    - Forbidden: treat field count, report length, or repeated conclusions as proof of execution.
 
@@ -234,3 +234,18 @@ Use these scenarios to validate routing behavior before changing this skill or r
    - Input: a creative or page-planning request triggers Strategic Layer Lock, routing, an Active Task Ledger, or another internal control structure, but source ownership and authorization are not disputed.
    - Required: determine the required fields internally and communicate the decisive direction, frozen boundary, and next owner in natural prose. Show the full template only when state, authorization, ownership, repeated-failure evidence, or claim risk is genuinely at risk, or when the user asks for an audit/status view.
    - Forbidden: expose every ledger field, gate name, skill name, or status label merely because it was used internally.
+
+47. **Planner handoff omits the governing whole**
+   - Input: Planner supplies populated `T/S/R/O/A/I/N` fields and `PROCEED`, but the triggered Whole-Image Synthesis Contract or Scene Invariant Trace is absent.
+   - Required: block the Imagegen handoff and return to Planner for the missing item inside the same Planner Brief.
+   - Forbidden: let Workflow invent the missing scene, ask Imagegen to reconstruct it from memory, or pass the field list as if it described one image.
+
+48. **Discussion authorization cannot become production authorization**
+   - Input: the user approved the direction or asked to prepare a brief, while Planner is `PROCEED` and Imagegen is `READY`.
+   - Required: keep Current user production authorization missing and stop before the image tool call; obtain authorization for the exact generation/edit action.
+   - Forbidden: treat direction acceptance, `PROCEED`, `READY`, memory, or an earlier task's approval as current production permission.
+
+49. **Final delivery omits whole-image evidence**
+   - Input: Imagegen reports factor statuses and candidate delivery but no full-size/review-size whole-image synthesis observation.
+   - Required: block completion and return to Imagegen's existing Visual Self-Check evidence owner; Workflow verifies presence and status without re-scoring the picture.
+   - Forbidden: infer the whole from local detail passes, repeat the assessment inside Workflow, or deliver because the image is the best in a batch.

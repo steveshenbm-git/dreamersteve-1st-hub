@@ -7,8 +7,8 @@ Do not create this full archive for every exploratory trial image. For trial-onl
 Create this as `REPRODUCTION.md` in each version folder, for example:
 
 ```text
-outputs/jiangyue-website-images/home/2026-06-18-pmsm-drive-hero-draft-01/REPRODUCTION.md
-outputs/jiangyue-website-images/home/2026-06-18-pmsm-drive-hero-final/REPRODUCTION.md
+/Users/lirongjing/Documents/JY TECH WEB/outputs/jiangyue-website-images/home/home-hero-a1-draft-1/REPRODUCTION.md
+/Users/lirongjing/Documents/JY TECH WEB/outputs/jiangyue-website-images/home/home-hero-a1-draft-2/REPRODUCTION.md
 ```
 
 ```text

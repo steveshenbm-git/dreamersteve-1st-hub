@@ -68,7 +68,7 @@ Entries under `brand-system/` may operationalize, reference, test, or limit that
 collect evidence -> classify -> curation card -> user confirmation -> formal entry -> verify
 ```
 
-1. **Intent Lock:** Identify the curation type: daily curation, single-task recap, failure-case capture, approved-material indexing, competitor-reference capture, product-fact boundary update, or inbox cleanup.
+1. **Intent Lock:** Identify the curation type: daily curation, single-task recap, failure-case capture, approved-material indexing, competitor-reference capture, product-fact boundary update, or inbox cleanup. For daily curation, read [references/daily-curation-rules.md](references/daily-curation-rules.md).
 2. **Evidence Capture:** Read relevant README, REPRODUCTION, review images, source paths, user feedback, and competitor notes. Inspect visuals when visual quality is being judged.
 3. **Classification:** Use [references/material-classification.md](references/material-classification.md). Default ordinary intermediate drafts to `process-only`.
 4. **Curation Card:** Produce a short confirmation card using [references/curation-card-template.md](references/curation-card-template.md).

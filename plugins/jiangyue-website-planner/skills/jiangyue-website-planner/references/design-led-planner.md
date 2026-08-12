@@ -103,7 +103,9 @@ This contract is the synthesis output of `T -> S -> R -> O -> A -> I -> N`, not 
 
 Use this internal search for an unbounded, high-impact, meaning-changing, or repeatedly failed visual. It is not a second user-facing workflow and must end in one Planner Brief.
 
-Treat design as one nested search, not three disconnected passes. Define semantic purpose and page responsibility first; co-design truthful scene logic and useful composition through `S/R/O`; allow `A/I` to amplify only a reading already established by the earlier fields. Result acceptance is ordered even though design is co-developed: reality first, visual quality second, page use last.
+Treat design as one nested search, not three disconnected passes. Define semantic purpose and page responsibility first; co-design truthful scene logic and useful composition through `S/R/O`; allow `A/I` to amplify only a reading already established by the earlier fields. Result acceptance is ordered even though design is co-developed: whole-image synthesis first as an independent coherence veto, then reality, visual quality, and page use.
+
+For each serious contender, write one internal **Provisional Whole-Image Hypothesis** before the full formula audit: one or two sentences naming the scene, core moment, unified subject/environment relationship, and attention order. Use it to test whether the direction is a coherent image rather than a component list. It is disposable reasoning, not an output contract, model prompt, Planner Brief, or new semantic authority.
 
 ### Lock The Three Factors
 
@@ -117,10 +119,10 @@ These remain separate vetoes, but their result evidence has dependencies. Do not
 
 1. Freeze the accepted purpose, fact/claim boundary, exclusions, and image/text/layout responsibilities.
 2. Generate two or three materially different causal visual hypotheses when more than one solution is plausible. One bounded solution is enough for an accepted baseline revision or deterministic operation.
-3. For each hypothesis, state the decisive subject/relationship/order mechanism, why product presence or absence follows the image role, its truth basis, its visual-quality mechanism, page-use conditions, and its strongest likely conflict.
-4. Start internal reasoning from the formula field that is most causally decisive for the task, but check the final decision in the full `T -> S -> R -> O -> A -> I -> N` order. Do not force every task to begin from `S` or force every relationship into the bitmap.
-5. Challenge each hypothesis for reality first, then visual quality without weakening reality, then expected page use. A reality failure stops downstream approval; a diagnostic note about later factors is not a pass. Eliminate a hypothesis when any required factor fails.
-6. Compile only the strongest surviving hypothesis into the Formula Decision. If none survives, return the primary blocker instead of weakening a factor.
+3. For each hypothesis, state the decisive subject/relationship/order mechanism, why product presence or absence follows the image role, its truth basis, its visual-quality mechanism, page-use conditions, strongest likely conflict, and one Provisional Whole-Image Hypothesis.
+4. Start internal reasoning from the formula field that is most causally decisive for the task, but audit the selected hypothesis in the full `T -> S -> R -> O -> A -> I -> N` order. Use the audit to correct the provisional whole; do not force every task to begin from `S` or force every relationship into the bitmap.
+5. Challenge each hypothesis for reality first, then visual quality without weakening reality, then expected page use. A reality failure stops downstream approval; a diagnostic note about later factors is not a pass. Eliminate a hypothesis when any required contract has a known conflict.
+6. Compile only the strongest surviving, formula-audited hypothesis into the formal Whole-Image Synthesis Contract. Reverse-check the formal contract against every formula field, owner, factor contract, likely misread, and triggered invariant. If none survives, return the primary blocker instead of weakening a factor.
 
 Do not expose the raw hypothesis pool unless the user asks to compare materially different directions. Do not turn styling variations, color changes, or prompt wording changes into separate hypotheses.
 
@@ -152,10 +154,11 @@ Use this internal order:
 
 1. Run the Jiangyue design judgment internally and keep only decisions that change visible execution or page ownership.
 2. Add the complete-page module only for complete-page work; do not output H1, CTA, SEO/AEO, or module-order placeholders for an image-only task.
-3. Run the Three-Factor Solution Search when triggered, then compile trusted subject and fact basis into `S`; readable interaction into `R`; truthful hierarchy, rhythm, reveal, and useful negative space into `O`; controlled amplification of an established reading into `A`; recognition use into `I`; cheapness, claims, and misreads into `N`.
-4. For triggered semantic/high-impact work, compile those decisions into the Whole-Image Synthesis Contract and reject it when its mother statement, scope frame, anchors, or freedom budget point to different images.
-5. Name the exact image, text, layout, or UI owner; do not add separate composition and asset-production contracts.
-6. Put prompt-ready direction, protected content, deterministic work, ordered result-evidence requirements, named standalone/composite review objects, QA, rejection triggers, and feasibility in the compact Formula Decision.
+3. Run the Three-Factor Solution Search when triggered and use the selected Provisional Whole-Image Hypothesis only as an internal coherence scaffold.
+4. Audit that scaffold through the formula: compile trusted subject and fact basis into `S`; readable interaction into `R`; truthful hierarchy, rhythm, reveal, and useful negative space into `O`; controlled amplification of an established reading into `A`; recognition use into `I`; cheapness, claims, and misreads into `N`.
+5. For triggered semantic/high-impact work, replace the provisional scaffold with the formal Whole-Image Synthesis Contract. Reject it when its mother statement, scope frame, anchors, or freedom budget point to different images.
+6. Reverse-check the formal contract against `T/S/R/O/A/I/N`, exact image/text/layout/UI owners, the three factor contracts, strongest misread, and any Scene Invariant Trace. Return on dropped, added, conflicting, or rescue-dependent meaning.
+7. Put prompt-ready direction, protected content, deterministic work, ordered result-evidence requirements, named standalone/composite review objects, QA, rejection triggers, and feasibility in the compact Formula Decision. Do not output the provisional scaffold or add separate composition and asset-production contracts.
 
 Write production constraints and required realism/quality ceilings, not final pixels. Imagegen owns prompt compilation, method, rendering, local retouching, and exact output files.
 

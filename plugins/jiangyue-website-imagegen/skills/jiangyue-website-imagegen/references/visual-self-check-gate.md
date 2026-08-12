@@ -15,6 +15,7 @@ Visual Self-Check Evidence
 - User-named defect register:
 - Full-size image checked: yes/no
 - Review-size or thumbnail checked: yes/no
+- Whole-image synthesis: pass/fail — full-size observation / review-size observation / one scene / core moment / inherited relationship / attention order / scope and global coherence
 - Side-by-side comparison: path / not applicable
 - Normal-view visible change: pass/fail/not applicable
 - Forbidden object check: pass/fail
@@ -40,12 +41,14 @@ Visual Self-Check Evidence
 - If the candidate passes this gate, it may enter the candidate delivery gate. It is not automatically deliverable.
 - Do not infer formula compliance from the presence of teal, glow, empty space, a person, or motion effects. Check the observable mechanism recorded in the Formula Decision.
 - A lifecycle or activity word in the brief or prompt is not evidence of scene state. When a Scene Invariant Trace is triggered, inspect the rendered geometry, access state, human action, physical process, and system hierarchy named by each invariant at both required sizes.
+- Judge the inherited Whole-Image Synthesis Contract before local detail checks. If the result fragments into separate subjects, moments, stories, or attention systems at either required size, fail it even when individual details are plausible.
 
 ## Fail Conditions
 
 Fail when:
 
 - any blocking user-named defect remains visible;
+- the inherited single scene, core moment, people/equipment/environment relationship, attention order, scope, or global spatial/light/material coherence fails at full size or review size;
 - the requested visible change is not clear in normal review size;
 - the candidate relies on labels or explanation to show the improvement;
 - forbidden objects, fake claims, fake UI, readable generated text, or unsupported product details appear;

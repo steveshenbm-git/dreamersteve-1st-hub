@@ -40,6 +40,8 @@ The final model prompt may use natural language and combine sentences. The produ
 
 Require this inside the same Formula Decision for semantic new images, meaning-changing edits, high-impact visuals, and repeated-failure resets. A bounded local edit inherits the accepted contract unless it changes meaning.
 
+Before filling the formula, the design-led search may use a short Provisional Whole-Image Hypothesis to test whether a candidate direction forms one scene. Do not include that scaffold in this brief. Audit it through `T -> S -> R -> O -> A -> I -> N`, replace it with the formal contract below, then run the reverse consistency check before `PROCEED`.
+
 ```text
 Whole-Image Synthesis Contract / 整体画面合成合同
 
@@ -67,13 +69,13 @@ The three factors are cross-cutting review dimensions, not new formula stages or
 - **Visual quality follows a credible reading:** the selected hypothesis, `O/A/I`, composition, material, light, depth, rhythm, and craft must meet the stated bar without weakening reality. Safety alone does not excuse a generic result.
 - **Page use is proven last:** Planner defines copy, CTA, layout, safe-area, crop, and breakpoint responsibilities early. A rendered result passes page use only on the named assembled review objects; when HTML/layout owns material meaning, require current desktop and mobile composites rather than inferring success from a raw bitmap.
 
-At Planner stage, record whether each factor has an executable contract and name its future evidence; do not claim that an unrendered result passes. Expected result acceptance is `Reality -> Visual quality -> Page use`: a reality failure blocks downstream passes, while missing current copy/layout/breakpoint inputs make page use `UNVERIFIED`. Do not average scores. Product presence is a role-and-evidence decision: require it when verified product recognition or detail is image-owned, omit it when it conflicts with the accepted image role or lacks the required evidence.
+At Planner stage, record each factor contract as `defined / executable / no known conflict` and name its future evidence; do not claim that an unrendered result passes. Expected result acceptance is `Whole-image synthesis -> Reality -> Visual quality -> Page use`: whole-image synthesis and reality are independent non-compensating vetoes, while missing current copy/layout/breakpoint inputs make page use `UNVERIFIED`. Do not average scores. Product presence is a role-and-evidence decision: require it when verified product recognition or detail is image-owned, omit it when it conflicts with the accepted image role or lacks the required evidence.
 
 ## Semantic Compatibility Preflight
 
-Before handoff, decide whether `T-S` serve the same page job, image-owned `S/R` have a public identifiable fact/material basis, the strongest plausible `N` misread remains likely, which fields depend on the primary conflict, named HTML/text/layout owners support rather than rescue a failed image-owned `S` or triggered `N`, the triggered Whole-Image Synthesis Contract is sketchable and internally consistent, any triggered Scene Invariant Trace is complete and non-contradictory, and all three factor contracts are executable without compensation.
+Before handoff, decide whether `T-S` serve the same page job, image-owned `S/R` have a public identifiable fact/material basis, the strongest plausible `N` misread remains likely, which fields depend on the primary conflict, named HTML/text/layout owners support rather than rescue a failed image-owned `S` or triggered `N`, the triggered Whole-Image Synthesis Contract is sketchable and internally consistent, any triggered Scene Invariant Trace is complete and non-contradictory, and all three factor contracts are executable without compensation. Then reverse-check the formal mother statement, scope, anchors, and freedom budget against every formula field and owner; any dropped required decision, unsupported addition, or different implied scene requires `RETURN`.
 
-- `PROCEED`: keep the complete Formula Decision and compile the production handoff.
+- `PROCEED`: keep the complete Formula Decision and compile the production handoff. This certifies an executable unrendered contract, not result success, user acceptance, or production authorization.
 - `RETURN`: issue no production brief, prompt, or imagegen instruction; record only the primary blocker, no more than two dependent fields, evidence, and next owner.
 
 ```text
@@ -82,8 +84,9 @@ Planner Handoff Verdict
 - Primary blocker:
 - Dependent fields: maximum two
 - Evidence:
-- Three-factor contract: semantic purpose and page-use conditions / reality floor and evidence / visual-quality floor and mechanism
+- Three-factor contract: semantic purpose and page-use conditions / reality floor and evidence / visual-quality floor and mechanism / each defined-executable-no known conflict
 - Whole-image synthesis when triggered: inherited accepted contract / complete and consistent / missing or conflicting
+- Reverse consistency: formula and owners fully preserved / dropped or unsupported meaning / same or different implied image
 - Ordered result proof: reality observation / visual-quality observation after reality / page-use review object(s)
 - Next owner:
 ```

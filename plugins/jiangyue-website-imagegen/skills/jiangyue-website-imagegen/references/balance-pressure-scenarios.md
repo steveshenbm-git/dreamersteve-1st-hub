@@ -10,6 +10,8 @@ Before this scene-invariant revision, Imagegen could compile `S/R/O/N` and inspe
 
 Before this whole-image synthesis revision, Imagegen could audit all formula fields and then compile the prompt in field order, yet still preserve the brief as a sequence of component instructions rather than one governing image. Locally correct people, equipment, atmosphere, and detail could therefore coexist with a failed overall scene, while existing result checks had no explicit rule that whole-image failure vetoed those local passes.
 
+Before this authorization-state revision, `Imagegen Preflight: READY` could be read as permission to generate even though readiness, user authorization, and result acceptance are different states. A field-complete unrendered brief could also arrive with inherited factor `pass` labels, blurring executable contracts with observed evidence.
+
 ## Scenarios
 
 ### HVAC Product Presence Follows The Inherited Role
@@ -54,6 +56,24 @@ Before this whole-image synthesis revision, Imagegen could audit all formula fie
 - Input: the mother statement, scope frame, credibility anchors, freedom budget, and Formula Decision point to different scenes or attention owners.
 - Pass: emit `Imagegen Preflight: BLOCKED` and return one primary conflict plus at most two dependent formula fields to Workflow Director or Planner.
 - Fail: choose one version silently, read conversation memory to reconstruct visual strategy, or generate first and treat the output as clarification.
+
+### READY Is Not Production Authorization
+
+- Input: Planner has issued `PROCEED` and Imagegen's method is `READY`, but the user authorized only discussion, planning, or file review.
+- Pass: record strategy readiness separately, mark current user production authorization missing, set tool call allowed to no, and stop before any image tool call.
+- Fail: treat `PROCEED`, `READY`, an old approval, conversation memory, or the existence of a prompt as authorization to generate or edit pixels.
+
+### Pre-Render Contract Cannot Claim Result Pass
+
+- Input: Planner's purpose, reality, visual-quality, and page-use contracts are executable, but no current image or composite has been rendered and inspected.
+- Pass: inherit the contracts without a result pass; after rendering, create evidence in order at whole-image synthesis, reality, visual quality, and page use.
+- Fail: copy an inherited `pass`, skip full/review-size observation, or present a readiness verdict as image qualification.
+
+### Whole-Image Evidence Must Reach The Verdict
+
+- Input: local objects and realism checks pass, but the compact Imagegen Verdict contains no full-size/review-size observation of the inherited whole.
+- Pass: keep delivery blocked or unverified until Visual Self-Check supplies whole-image evidence and the Verdict reuses it before the three-factor statuses.
+- Fail: infer whole-image success from detail checks, prompt compliance, or Candidate Delivery alone.
 
 ### Bounded Edit Reuses The Accepted Synthesis
 

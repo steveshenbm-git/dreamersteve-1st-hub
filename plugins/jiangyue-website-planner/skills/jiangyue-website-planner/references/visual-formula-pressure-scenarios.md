@@ -62,6 +62,24 @@ Before this whole-image synthesis revision, a Planner Brief could populate every
 - Pass: use a high-information-density statement, normally three to four sentences or roughly 120–220 Chinese characters as a soft range, covering viewing mode, core moment, unified subject/environment relationship, attention order, global spatial/light/material boundary, and strongest misread. Judge it by sketchability, not length.
 - Fail: enumerate equipment parts, clothing, materials, exclusions, repair instructions, and every formula field until the statement becomes a checklist or contains multiple moments.
 
+### Provisional Whole Must Be Audited, Not Promoted
+
+- Request: a strong early scene idea already sounds coherent, so the team wants to copy it directly into the production prompt.
+- Pass: treat it as a Provisional Whole-Image Hypothesis, audit it through `T -> S -> R -> O -> A -> I -> N`, replace it with the formal Whole-Image Synthesis Contract, and reverse-check the contract before `PROCEED`.
+- Fail: promote the provisional hypothesis into a second brief, bypass formula evidence, output both provisional and formal descriptions, or treat fluency as feasibility.
+
+### Pre-Render Contracts Are Not Result Passes
+
+- Request: Planner has no rendered image but all formula fields and factor contracts look complete.
+- Pass: record purpose, reality, visual-quality, and page-use contracts as defined, executable, and without known conflict; state future result evidence and issue `PROCEED` only as an execution-contract verdict.
+- Fail: mark any visual factor `pass`, call the picture qualified, infer page-use success, or treat `PROCEED` as user production authorization.
+
+### Beauty And Page Use Cannot Disappear Behind Realism
+
+- Request: a physically safe scene is ready for handoff, but its distinctive visual mechanism or desktop/mobile composition contract is absent.
+- Pass: `RETURN` because the visual-quality or page-use contract is missing even though the reality floor is defined.
+- Fail: hand off a merely safe/generic direction, postpone beauty to Imagegen invention, or infer responsive suitability from empty space.
+
 ### Continuity Input Cannot Become A Third Brief
 
 - Request: use the current conversation `memory.md` to preserve design intent across turns.

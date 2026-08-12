@@ -43,7 +43,7 @@ Before a brief-based image, confirm:
 - real intent, page/use location, image role, and attention owner are clear
 - the brief cites the formal brand outline section 4 as formula authority
 - planner has issued an explicit `Planner Handoff Verdict: PROCEED`; `RETURN`, silence, or a reconstructed verdict blocks production
-- purpose fit, truthfulness/realism mode and evidence boundary, and visual-quality mechanism/quality bar each have an inherited `pass` decision
+- purpose/page-use, truthfulness/realism, and visual-quality contracts are each defined, executable, and free of known conflict; these pre-render states are not result passes
 - the current Formula Decision makes a judgment for `T/S/R/O/A/I/N` and names the exact image, text, layout, or UI owner for every field
 - semantic new, meaning-changing, high-impact, or repeated-failure work includes one current Whole-Image Synthesis Contract whose mother statement, scope frame, three to six credibility anchors, and `Fixed / Adaptive / Forbidden` freedom budget describe the same sketchable scene; a bounded local edit may inherit an accepted contract
 - image-owned decisions have prompt-ready visible carriers; non-image-owned decisions name the concrete external mechanism and the space/structure imagegen must preserve
@@ -66,11 +66,12 @@ Return to Workflow Director / 简报退回
 
 Use this state chain for brief-based, high-impact, cost-bearing, or repeated-failure image work:
 
-`Intent Lock -> Planner Brief (Formula Decision + triggered Whole-Image Synthesis Contract) -> Production Success Strategy -> Attempt Stop Rule -> Imagegen Preflight -> Generate Candidate -> Visual Self-Check -> Intent-Brief-Result Check -> Outcome Classification -> Candidate Delivery Gate -> User Acceptance Layer -> Final Export / Archive`
+`Intent Lock -> Planner Brief (Formula Decision + triggered Whole-Image Synthesis Contract) -> Production Success Strategy -> Attempt Stop Rule -> Current user production authorization -> Imagegen Preflight -> Generate Candidate -> Visual Self-Check -> Intent-Brief-Result Check -> Outcome Classification -> Candidate Delivery Gate -> User Acceptance Layer -> Final Export / Archive`
 
 Hard rules:
 
-- For semantic new images and meaning-changing edits, emit the observable `Imagegen Preflight` from [references/visual-formula-execution.md](references/visual-formula-execution.md) before any image generation or edit tool call. `READY` is authorization to execute; `BLOCKED` returns without a tool call.
+- For semantic new images and meaning-changing edits, emit the observable `Imagegen Preflight` from [references/visual-formula-execution.md](references/visual-formula-execution.md) before any image generation or edit tool call. `READY` records strategy and method readiness only. A tool call requires separate, current, action-specific user production authorization. `BLOCKED` or missing authorization returns without a tool call.
+- The preflight must expose `Strategy readiness: READY / BLOCKED`, `Current user production authorization: confirmed / missing`, authorization evidence and exact allowed action, method, primary veto, and `Tool call allowed: yes / no`. Only `READY + confirmed` permits the scoped tool call.
 - A preflight written or reconstructed after the tool call is invalid. Treat its result as `analysis only`; do not deliver it as a candidate.
 - A generated result may inform a future brief, but it cannot silently become the brief.
 - A brief may translate intent, but it cannot replace the original intent.
@@ -122,7 +123,7 @@ For most Jiangyue website visuals:
 3. Read [references/attempt-stop-and-method-escalation-gate.md](references/attempt-stop-and-method-escalation-gate.md) when multiple attempts, API calls, or repeated failures are possible; do not repeat the same failed hypothesis.
 4. Choose method based on visible result quality, not convenience.
 5. Use the two-pass compiler in [references/visual-formula-execution.md](references/visual-formula-execution.md): audit the seven-stage decision and ownership first, then organize the natural model prompt around the Whole-Image Synthesis Contract, negative constraints, deterministic post-processing instructions, and result checks without copying labels mechanically or changing planner ownership.
-6. Emit `Imagegen Preflight: READY` with the selected method immediately before the tool call, then produce one strong draft. Stop without a tool call on `BLOCKED`; create variants only for materially different hypotheses, models, structures, sources, or methods.
+6. Confirm current user production authorization, then emit `Imagegen Preflight: READY` with the selected method immediately before the tool call and produce one strong draft. Stop without a tool call on `BLOCKED` or missing authorization; create variants only for materially different hypotheses, models, structures, sources, or methods.
 7. Inspect full size, thumbnail/review size, prior draft, and references when available.
 8. Run [references/visual-self-check-gate.md](references/visual-self-check-gate.md), [references/intent-brief-result-coordination-gate.md](references/intent-brief-result-coordination-gate.md), and [references/candidate-delivery-gate.md](references/candidate-delivery-gate.md) as distinct internal decisions before presenting a candidate.
 9. Emit the single compact `Imagegen Verdict` from [references/visual-formula-execution.md](references/visual-formula-execution.md); revise, reject, archive, analyze, or return based on observed evidence.
@@ -203,18 +204,18 @@ Use exact user-provided wording. Typeset important text with real fonts. Do not 
 
 Read [references/output-and-archive.md](references/output-and-archive.md) when creating reusable drafts or finals. For full reproduction notes, use [references/reproduction-archive-template.md](references/reproduction-archive-template.md).
 
-Default output root:
+Fixed project output root:
 
 ```text
-outputs/jiangyue-website-images/{content-type}/{conversation-root-cn}/{task-folder}/
+/Users/lirongjing/Documents/JY TECH WEB/outputs/jiangyue-website-images/{content-type}/{page-or-type}-{image-role}-{option-code}-draft-{number}/
 ```
 
-Keep all files created in one Codex conversation under one Chinese conversation root folder named from the conversation title or a concise Chinese summary of the user's task. Create subfolders inside that root for each task, draft, or final export.
+Use short lowercase kebab-case task folders. Keep the folder focused on page/type, image role, short option code, and draft number; do not use conversation titles, long descriptions, or date-first names.
 
-Example: `outputs/jiangyue-website-images/home/首页英雄图API测试/01-方向草稿/`
+Example: `/Users/lirongjing/Documents/JY TECH WEB/outputs/jiangyue-website-images/home/home-hero-a1-draft-1/`
 
 ## Delivery Report
 
-For semantic work, report one `Imagegen Verdict` with the three-factor joint status; keep the full Formula Production Trace and the three internal result checks internal unless the user requests them. Include verified file path, dimensions, method, and material limitations only when relevant. Correct dimensions, a saved path, or a successful script run are not visual verification.
+For semantic work, report one `Imagegen Verdict` with `Whole-image synthesis: pass / fail / unverified` before the ordered three-factor status; include concise full-size and review-size evidence for the inherited scene, core moment, relationship, attention order, scope, and global coherence. Keep the full Formula Production Trace and the three internal result checks internal unless the user requests them. Include verified file path, dimensions, method, and material limitations only when relevant. Correct dimensions, a saved path, or a successful script run are not visual verification.
 
 Classify the reviewed object precisely: `standalone asset`, `image base`, `desktop composite`, or `mobile composite`. When HTML/layout owns core category, differentiation, or interaction responsibility, a bitmap can be only an `image-base candidate`; it cannot pass as the complete Hero.

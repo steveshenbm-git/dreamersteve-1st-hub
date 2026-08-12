@@ -36,7 +36,21 @@ Imagegen may decide how to execute the accepted realism and quality requirements
 
 ## Observable Preflight
 
-Immediately before a semantic generation or meaning-changing edit tool call, emit `Imagegen Preflight` with Formula Decision source/identifier, `READY/BLOCKED`, attempt class/identifier, production method, and primary veto. Use `READY` only after planner `PROCEED`, an executable inherited Whole-Image Synthesis Contract when triggered, a complete and non-contradictory Scene Invariant Trace when triggered, and a method ceiling that first clears reality, then can reach visual quality without weakening reality, then preserves the conditions needed for page-use review. A missing or internally conflicting synthesis contract, or a triggered invariant without an explicit prompt clause, is `BLOCKED`. `BLOCKED` makes no tool call; a backfilled/reconstructed preflight is invalid and its result is `analysis only`.
+Immediately before a semantic generation or meaning-changing edit tool call, emit this preflight:
+
+```text
+Imagegen Preflight
+- Formula Decision source / identifier:
+- Strategy readiness: READY / BLOCKED
+- Current user production authorization: confirmed / missing
+- Authorization evidence and exact allowed action:
+- Attempt class / identifier:
+- Production method:
+- Primary veto:
+- Tool call allowed: yes / no
+```
+
+Use strategy `READY` only after planner `PROCEED`, an executable inherited Whole-Image Synthesis Contract when triggered, a complete and non-contradictory Scene Invariant Trace when triggered, and a method ceiling that first clears reality, then can reach visual quality without weakening reality, then preserves the conditions needed for page-use review. `READY` is internal readiness, not permission. Set `Tool call allowed: yes` only when strategy is `READY` and separate current user production authorization is confirmed for that exact action. A missing or conflicting synthesis contract, a triggered invariant without an explicit prompt clause, or a known method-ceiling conflict is `BLOCKED`. `BLOCKED` or missing authorization makes no tool call; a backfilled/reconstructed preflight is invalid and its result is `analysis only`.
 
 Record the first production attempt and raw observations permanently. Corrective attempts receive new identifiers and cannot erase first-attempt usable-yield evidence. A diagnostic attempt requires explicit current-task cost/production authorization, one stated hypothesis, and one controlled variable; its output remains `analysis only` even if visually promising.
 
@@ -140,6 +154,7 @@ Keep visible-quality, Intent-Brief-Result, and candidate-delivery decisions dist
 Imagegen Verdict
 - Review object: standalone asset / image base / desktop composite / mobile composite
 - Result vs intent: pass / fail
+- Whole-image synthesis: pass / fail / unverified — full-size evidence / review-size evidence
 - Semantic purpose: source / defined or missing
 - Reality floor: pass / fail / unverified / evidence
 - Visual-quality floor: waiting on reality / pass / fail / unverified / evidence

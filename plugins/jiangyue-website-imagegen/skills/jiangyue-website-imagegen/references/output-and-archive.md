@@ -4,12 +4,10 @@ Use this reference when saving Jiangyue website image outputs.
 
 ## Folder Structure
 
-Every Codex conversation uses one conversation root folder under the project output area. All drafts, sources, reviews, and finals created in that conversation must stay under that root so the user can find the whole work session in one place.
-
-Use a Chinese root folder name based on the Codex conversation title. If the exact title is unavailable, create a concise Chinese name from the user's task. Avoid vague roots such as `新建文件夹`, `图片`, `测试`, or long prompt fragments.
+Use the fixed Jiangyue project output root. Each meaningful option/draft gets one short task folder so later conversations and tools can locate it without depending on a conversation title.
 
 ```text
-outputs/jiangyue-website-images/{content-type}/{conversation-root-cn}/
+/Users/lirongjing/Documents/JY TECH WEB/outputs/jiangyue-website-images/{content-type}/{page-or-type}-{image-role}-{option-code}-draft-{number}/
 ```
 
 Recommended content folders:
@@ -23,12 +21,11 @@ Recommended content folders:
 - `brand/`
 - `shared/`
 
-Create a subfolder inside the conversation root for each task, draft set, revision round, or final export:
+Use short lowercase kebab-case names. Keep the task folder limited to page/type, image role, a short option code such as `a1`, `a2`, or `b1`, and the draft number:
 
 ```text
-outputs/jiangyue-website-images/{content-type}/{conversation-root-cn}/01-方向草稿/
-outputs/jiangyue-website-images/{content-type}/{conversation-root-cn}/02-局部修改/
-outputs/jiangyue-website-images/{content-type}/{conversation-root-cn}/03-final/
+/Users/lirongjing/Documents/JY TECH WEB/outputs/jiangyue-website-images/home/home-hero-a1-draft-1/
+/Users/lirongjing/Documents/JY TECH WEB/outputs/jiangyue-website-images/product/product-controller-a1-draft-1/
 ```
 
 Use clear short filenames inside each task folder:
@@ -43,7 +40,7 @@ Examples:
 - `product-hero-final-01.png`
 - `contact-hero-draft-02.png`
 
-Avoid scattering files directly under `{content-type}`. Avoid creating a new top-level folder for every draft. Avoid long prompt fragments, repeated company names, repeated category words, and dates inside filenames when the conversation root already contains that context.
+Avoid scattering files directly under `{content-type}`. Avoid conversation-title folders, Chinese numbered process folders, long prompt fragments, repeated company names, repeated category words, and date-first task folders. Keep revisions and source/review/output subfolders inside the matching short task folder when they belong to the same accepted direction.
 
 ## Archive Levels
 

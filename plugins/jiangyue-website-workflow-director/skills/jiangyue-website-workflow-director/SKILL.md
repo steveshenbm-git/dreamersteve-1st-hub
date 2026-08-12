@@ -172,12 +172,12 @@ Direct imagegen handoff is allowed only when at least one condition is true:
 
 - **Explicit bounded execution:** the user has specified an exact crop, compression, format conversion, export, or deterministic local edit that inherits an accepted visual baseline and cannot alter image meaning, role, claim boundary, buyer interpretation, formula decision, or composition concept.
 - **Accepted baseline revision:** the user has accepted the current direction and asks for a bounded change with clear must keep / must change / must avoid / pass-fail criteria; the accepted Formula Decision remains valid.
-- **Planner brief exists:** `$jiangyue-website-planner` has produced a current compact Formula Decision with authority source, `T/S/R/O/A/I/N` judgments, exact image/text/layout ownership, production direction, feasibility, pass/fail criteria, and an explicit `Planner Handoff Verdict: PROCEED`.
+- **Planner brief exists:** `$jiangyue-website-planner` has produced one current compact Planner Brief with authority source, `T/S/R/O/A/I/N` judgments, exact image/text/layout ownership, a triggered Whole-Image Synthesis Contract, a Scene Invariant Trace when its observable trigger is present, production direction, feasibility, visible result checks, and an explicit `Planner Handoff Verdict: PROCEED`.
 
 Route to `$jiangyue-website-planner` before imagegen when the next output depends on any of these:
 
 - 画面怎么设计, composition strategy, subject/form choice, semi-concrete vs abstract expression, visual metaphor, or "what shape/form should it use"
-- a `RETURN`, missing or stale Formula Decision, missing formula authority, undecided `T/S/R/O/A/I/N` field, or responsibility assigned only as "outside the image" without naming the exact text/layout/UI owner
+- a `RETURN`, missing or stale Formula Decision, missing formula authority, undecided `T/S/R/O/A/I/N` field, a triggered but missing Whole-Image Synthesis Contract or Scene Invariant Trace, or responsibility assigned only as "outside the image" without naming the exact text/layout/UI owner
 - an unresolved production direction, feasibility result, protected content, failure risk, precondition, or visible pass/fail criterion
 - industrial / AI / life sense relationship, B2-3 color role, buyer readability, trust fit, page role, first-screen attention, CTA/text support, or claim boundary
 - a new image direction, brand-defining visual, homepage/hero/background concept, or any production brief that is more than a local edit
@@ -197,7 +197,7 @@ Do not bypass this gate because the visual direction "feels clear." If the task 
 
 ### Execution Order Evidence
 
-For semantic new images and meaning-changing edits, enforce `Planner PROCEED -> Imagegen READY -> tool call -> internal result checks -> Imagegen Verdict`. A tool call before `READY` or a backfilled preflight makes the process `FAIL` and result `analysis only`. Workflow verifies order/status; it does not repeat specialist judgments.
+For semantic new images and meaning-changing edits, enforce `Planner PROCEED -> current user production authorization -> Imagegen READY -> tool call -> internal result checks -> Imagegen Verdict`. `Planner PROCEED` means the visual contract is executable. `Imagegen READY` means the selected execution strategy is ready. Neither is current-task permission to create or edit pixels. A missing **Current user production authorization**, a tool call before `READY`, or a backfilled preflight makes the process `FAIL` and result `analysis only`. Workflow verifies order, authorization evidence, and specialist status; it does not repeat specialist judgments.
 
 ## Local OpenAI API Image Requests
 
@@ -254,6 +254,7 @@ Workflow State
 - Current stage:
 - Current route:
 - Original intent:
+- Current user production authorization: confirmed / missing / evidence / exact allowed action
 - Active brief:
 - Accepted baseline:
 - Rejected candidates / anti-references:
@@ -272,6 +273,7 @@ Use this state when truthfulness/realism, visual quality, and page purpose are m
 ```text
 Three-Factor Dependency State
 - Semantic purpose: source / defined or missing / owner
+- Whole-image synthesis: waiting / pass / fail / unverified / full-size and review-size evidence owner
 - Reality floor: waiting / pass / fail / unverified / evidence / owner
 - Visual-quality floor: waiting on reality / pass / fail / unverified / evidence / owner
 - Page-use proof: defined / awaiting composite / pass / fail / unverified / review object / owner
@@ -282,9 +284,9 @@ Three-Factor Dependency State
 - Record the user's original semantic purpose, available or missing evidence/material state, visual-quality expectation, and actual page-use review requirement without translating them into a design.
 - Let planner define semantic purpose and page responsibility early, then co-design `S/R/O` so truthful scene logic, useful composition, and the intended visual-quality mechanism can coexist. This is not a rigid reality-then-beauty-then-layout design sequence.
 - Let imagegen choose the production method, execute the accepted decisions, and report observed evidence.
-- Apply result acceptance in the order `Reality -> Visual quality -> Page use`. A reality `fail` keeps downstream factors waiting; diagnostic observations may be recorded but cannot become downstream passes. A raw bitmap cannot pass page use when the page unit depends on HTML copy, CTA, or responsive composition.
+- Apply result acceptance in the order `Whole-image synthesis -> Reality -> Visual quality -> Page use`. Whole-image synthesis is an independent non-compensating veto: locally plausible details cannot rescue a fragmented scene. A whole-image or reality `fail` keeps downstream factors waiting; diagnostic observations may be recorded but cannot become downstream passes. A raw bitmap cannot pass page use when the page unit depends on HTML copy, CTA, or responsive composition.
 - Page use passes only on the review objects named by Planner. For image-plus-HTML page units, require both desktop and mobile composites. When current copy, layout responsibility, or breakpoint evidence is missing, record page use as `unverified` and name the missing input/owner rather than inventing it.
-- Route a failed contract or wrong visual solution to planner; route failed execution of a valid contract to imagegen.
+- Route a failed contract or wrong visual solution to planner; route failed execution of a valid contract to imagegen. Whole-image observations originate in Imagegen Visual Self-Check and are reused by Candidate Delivery and the compact Verdict; Workflow must not create a parallel review.
 - Verify that specialist state and evidence exist; do not independently re-score realism, aesthetics, or page composition. Do not average factors, let one factor compensate for another, or create a second Planner Brief inside workflow state.
 
 ## Handoff Quality
@@ -293,9 +295,10 @@ Every specialist handoff must include:
 
 - source request/paths, current stage, intent, active brief, and accepted baseline
 - formula authority, current decision, and image/text/layout owners for meaning-changing work
+- the triggered Whole-Image Synthesis Contract and, when applicable, the triggered Scene Invariant Trace inside that same Planner Brief; never ask Imagegen to reconstruct either from conversation memory
 - three-factor dependency state when reality, visual quality, and page purpose are material; include semantic-purpose source, ordered factor states, required review object, first blocker, and current owner, not a director-authored design judgment
 - keep/remove/change/avoid, defects, pass/fail criteria, and forbidden carry-over
-- production success/stop rules when needed, required output status, acceptance layer, and next output type
+- production success/stop rules when needed, required output status, acceptance layer, next output type, and Current user production authorization status/evidence without promoting memory, `PROCEED`, or `READY` into permission
 
 Do not hand off vague instructions such as "make it better", "continue", or "optimize" without visible criteria.
 
@@ -305,10 +308,11 @@ Before saying an image task is complete, verify that the specialist output inclu
 
 - review object: `standalone asset`, `image base`, `desktop composite`, or `mobile composite`
 - output status: rejected internally, analysis only, discovery candidate, candidate for review, accepted draft, or final export
+- whole-image synthesis status with full-size and review-size observed evidence for the inherited scene, core moment, relationship, attention order, scope, and global coherence
 - visual self-check evidence when a candidate is shown
 - intent-brief-result status for brief-based, high-impact, or repeated-failure work
 - candidate delivery status when the output is shown to the user as a candidate
-- specialist evidence that the reality floor passes first, visual quality then passes without weakening reality, and page use passes on the required review object without compensation when three-factor balance is material
+- specialist evidence that whole-image synthesis passes as an independent veto, the reality floor then passes, visual quality passes without weakening reality, and page use passes on the required review object without compensation when three-factor balance is material
 - user acceptance layer before final export, 4K export, archive, or approved-material handling
 - rejected-result analysis when the output failed but still provides learning value
 

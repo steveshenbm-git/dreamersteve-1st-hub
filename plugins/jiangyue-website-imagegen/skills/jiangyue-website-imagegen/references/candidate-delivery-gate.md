@@ -27,6 +27,7 @@ Candidate Delivery Gate
 - Candidate:
 - Review object: standalone asset / image base / desktop composite / mobile composite
 - Delivery status:
+- Whole-image synthesis: pass/fail/unverified — reuse full-size and review-size Visual Self-Check evidence; no compensation by local detail
 - Semantic purpose: source / defined or missing / observed image-role result
 - Reality floor: pass/fail/unverified — reuse fact/material, physical plausibility, claim-boundary, formula, scene-invariant, and visual-self-check evidence
 - Visual-quality floor: waiting on reality/pass/fail/unverified — reuse visual value, composition, hierarchy, craft, brand/buyer fit, and small-size evidence only after reality passes
@@ -48,6 +49,7 @@ Candidate Delivery Gate
 Do not deliver as `Candidate for review` when:
 
 - the reality floor fails or remains unverified;
+- whole-image synthesis fails or remains unverified at full size or review size;
 - visual quality is being passed before reality, or page use is being passed before the named assembled review objects are inspected;
 - current copy, layout responsibility, CTA, or breakpoint evidence is missing but page use is reported as passed;
 - a strong factor is being used to excuse or compensate for a failed factor;
