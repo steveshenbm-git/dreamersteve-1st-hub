@@ -1,6 +1,6 @@
 {
   "name": "industry-application-map-builder",
-  "version": "0.1.0",
+  "version": "0.2.0-beta.1",
   "description": "基于公司受控产品事实、官方行业骨架与公开应用证据，构建公司专属行业应用地图和路线候选池。",
   "author": {
     "name": "steveshenbm-git"
@@ -17,7 +17,7 @@
   "interface": {
     "displayName": "行业应用地图构建",
     "shortDescription": "构建公司专属、证据可追溯的行业应用地图与路线候选池。",
-    "longDescription": "用于维护带版本的共享行业骨架和产品中性应用知识，将单一公司的已批准产品事实逐项匹配到应用需求，构建公司专属路线候选、排除与暂缓记录、覆盖台账及客户开发交接包；不搜索客户，不做综合评分，不决定开发优先级。",
+    "longDescription": "用于维护带版本的共享行业骨架和产品中性应用知识，将单一公司的已批准产品事实逐项匹配到应用需求，构建公司专属路线候选、排除与暂缓记录、覆盖台账及客户开发交接包；这些工作簿属于机器证据后台，可向外贸客户工作流返回业务摘要，但不搜索客户、不做综合评分、不决定开发优先级。",
     "developerName": "steveshenbm-git",
     "category": "Productivity",
     "capabilities": [

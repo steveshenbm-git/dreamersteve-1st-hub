@@ -1,5 +1,11 @@
 # 工作簿与自动化
 
+## 后台记录与业务前台
+
+客户开发工作簿中的触达、移交和风险记录是机器事实后台；`foreign-trade-workflow-director` 的六页 `salesperson_workbench` 只显示业务摘要和决策。业务前台中的草稿审核或下一步决定由协调器在字段级授权后记录，本技能通过稳定 `customer_id`、`touch_id`、草稿编号、`source_packet_reference` 和 `evidence_reference` 接收该决定。
+
+本技能不得直接覆盖业务前台，也不得把业务前台的批准状态写成实际发送或回复。准备草稿时可向协调器返回 `workbench_update_packet` 建议；只有实际发送/收件证据进入后台后，才可返回新的真实状态投影。
+
 ## 草稿记录
 
 自动或人工生成的沟通候选写入时使用：

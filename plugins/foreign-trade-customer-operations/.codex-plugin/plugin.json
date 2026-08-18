@@ -1,6 +1,6 @@
 {
   "name": "foreign-trade-customer-operations",
-  "version": "0.1.0+codex.20260728074635",
+  "version": "0.2.0-beta.1",
   "description": "Codex skill plugin for salesperson-controlled cold outreach, unanswered follow-up, customer reply communication, and local customer-operation records.",
   "author": {
     "name": "steveshenbm-git"
@@ -18,7 +18,7 @@
   "interface": {
     "displayName": "Foreign Trade Customer Operations",
     "shortDescription": "Prepare controlled cold outreach, follow-up, replies, and customer-operation materials.",
-    "longDescription": "A salesperson-controlled assistant for first outreach, unanswered follow-up, complete-thread replies, and customer-operation preparation. It does not research prospects, choose customers, make commercial decisions, or send messages.",
+    "longDescription": "A salesperson-controlled assistant for first outreach, unanswered follow-up, complete-thread replies, and customer-operation preparation. It can return traceable draft, follow-up, and risk projections to the salesperson workbench; it does not research prospects, choose customers, make commercial decisions, write actual-send facts without evidence, or send messages.",
     "developerName": "steveshenbm-git",
     "category": "Productivity",
     "capabilities": [

@@ -9,7 +9,9 @@ description: Use when a company needs a shared industry/application framework, p
 
 Build the missing evidence layer between approved company product facts and customer-development direction validation. Use official industry classification as an activity skeleton, public product-neutral application evidence as the application layer, and one company's approved facts as the matching input.
 
-This skill owns shared industry/application knowledge, company-specific matching, route candidates, and coverage. 本技能不得搜索具体客户，不得用综合评分给路线或国家排序，不得选择客户、起草外联内容或修改公司产品知识库。本技能不得写入 `direction_status = 已确认可扫描`；该决定仍由业务员在 `foreign-trade-customer-development` 中记录。
+This skill owns shared industry/application knowledge, company-specific matching, route candidates, and coverage. Its workbooks are a machine evidence backend, not the salesperson's daily interface. When work starts from `foreign-trade-workflow-director`, return a traceable business projection for its `salesperson_workbench`; do not make the coordinator or salesperson maintain machine sheets.
+
+本技能不得搜索具体客户，不得用综合评分给路线或国家排序，不得选择客户、起草外联内容或修改公司产品知识库。本技能不得写入 `direction_status = 已确认可扫描`；该决定仍由业务员在 `foreign-trade-customer-development` 中记录。
 
 ## Start contract
 
@@ -118,6 +120,10 @@ python3 scripts/export_company_route_pool.py \
 The exporter refuses overwrite and any destination outside that company's map directory. It writes the packet hash, input snapshot, and source company-map path/hash to `route-pool-export-registry.json`; downstream work must verify that producer record rather than trusting a copied packet by filename. If the packet or source map is changed, missing, cross-company, stale, superseded, or no longer matches the recorded snapshot, invalidate the handoff and re-export after review.
 
 The packet targets `foreign-trade-customer-development`. It does not authorize customer scanning, full due diligence, country priority, customer selection, or `已确认可扫描`.
+
+If the request arrived through `foreign-trade-workflow-director`, also return a `specialist_return_packet` that preserves the route IDs, packet and registry references, `PASS / FAIL / UNVERIFIED`, staleness state, business summary, blockers, and the salesperson decision required. The return is a projection only: `salesperson_workbench` may show route choices and exceptions, but it must not copy or replace taxonomy, application, relationship, evidence, coverage, or change-log sheets.
+
+When taxonomy, application-base, product-fact, company-map, route-packet, or producer-registry hashes become stale or mismatched, return `shared_input_stale_event` to the coordinator. The event must identify the affected route IDs and exact validation status, and must block downstream direction compilation or candidate collection until this skill revalidates and re-exports a current packet.
 
 ## Completion report
 

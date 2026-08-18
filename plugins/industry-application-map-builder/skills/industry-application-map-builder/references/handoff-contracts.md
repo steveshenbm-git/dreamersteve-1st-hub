@@ -42,3 +42,29 @@ company_route_pool_packet:
 `foreign-trade-customer-development` 先校验路线包及其生产者登记，再向业务员呈现路线组合评审。业务员选定路线后，下游才能将其编译为 `development_direction_packet` 并执行 `direction_validation`。只有业务员记录 `direction_status = 已确认可扫描` 并声明国家、语言、应用细分、产品范围和来源范围后，才可启动按方向的 `candidate_scan`。
 
 命名公司初查仍是独立入口；它不需要预建完整路线池，但不能据此把产品适配、行业路线或采购角色升级为事实。
+
+## 业务前台投影
+
+当任务由 `foreign-trade-workflow-director` 发起时，机器交接包仍直接交给 `foreign-trade-customer-development` 校验；另向协调器返回只读 `route_workbench_projection`：
+
+```text
+route_workbench_projection:
+  handoff_id
+  company_id
+  source_record_id: <route_candidate_id>
+  source_packet_reference
+  evidence_reference
+  result_state: PASS | FAIL | UNVERIFIED
+  product_scope
+  application_industry_route_summary
+  why_review_now
+  material_evidence_summary
+  unknowns_and_limits
+  geography_hypothesis
+  current_status
+  salesperson_decision_required
+```
+
+该投影只供 `salesperson_workbench` 的 `01-路线选择` 和 `05-异常与风险` 使用。它不得复制共享行业骨架、产出产品、应用节点、需求原子、关系边、完整证据来源、覆盖台账或变更记录，也不得成为新的事实来源。
+
+若出现 `COMPANY_TAXONOMY_SNAPSHOT_STALE`、`COMPANY_APPLICATION_SNAPSHOT_STALE`、`ROUTE_EXPORT_NOT_CURRENT`、`INPUT_SNAPSHOT_HASH_MISMATCH` 或 `ROUTE_EXPORT_SOURCE_MAP_STALE`，返回 `shared_input_stale_event`，明确受影响路线、当前哈希/登记状态和所需复核动作。协调器必须把它投影到异常页并阻断受影响的方向编译与候选采集；业务员手工改状态不能解除该阻断。

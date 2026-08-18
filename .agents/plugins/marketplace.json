@@ -123,6 +123,18 @@
         "authentication": "ON_INSTALL"
       },
       "category": "Productivity"
+    },
+    {
+      "name": "foreign-trade-workflow-director",
+      "source": {
+        "source": "local",
+        "path": "./plugins/foreign-trade-workflow-director"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
     }
   ]
 }

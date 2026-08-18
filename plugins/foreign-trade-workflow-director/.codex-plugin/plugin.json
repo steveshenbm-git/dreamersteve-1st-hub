@@ -1,0 +1,34 @@
+{
+  "name": "foreign-trade-workflow-director",
+  "version": "0.1.0-beta.1",
+  "description": "为单一业务员提供外贸客户开发与经营的六页业务前台，并在行业地图、客户开发、客户运营及可替换采集执行器之间进行受控交接。",
+  "author": {
+    "name": "steveshenbm-git"
+  },
+  "repository": "https://github.com/steveshenbm-git/dreamersteve-1st-hub",
+  "keywords": [
+    "foreign-trade",
+    "sales-workbench",
+    "workflow",
+    "customer-development",
+    "customer-operations"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "外贸客户工作流",
+    "shortDescription": "用六页业务工作台衔接路线、候选、跟进、草稿与风险。",
+    "longDescription": "面向单一业务员的外贸工作流入口：只展示业务动作和人工决策，通过可追溯交接调用行业应用地图、客户开发和客户运营技能，并隔离机器证据工作簿与可替换采集执行器；不代替业务员决定或发送。",
+    "developerName": "steveshenbm-git",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "brandColor": "#147DFF",
+    "defaultPrompt": [
+      "打开或初始化单人编辑的外贸业务工作台，告诉我当前最需要处理的业务动作。",
+      "把我对路线、候选客户、跟进、草稿或风险的决定记录到业务工作台，并保留后台来源引用。",
+      "按受控交接调用合适的专业技能；不要让我直接操作机器证据页，也不要发送任何消息。"
+    ]
+  }
+}

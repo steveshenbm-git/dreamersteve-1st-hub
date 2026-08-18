@@ -1,5 +1,11 @@
 # 工作簿与技能交接
 
+## 后台工作簿与业务前台
+
+本文件定义的 12 页工作簿是客户开发机器证据后台，不是业务员的日常操作界面。`foreign-trade-workflow-director` 拥有独立六页 `salesperson_workbench`；本技能只通过 `source_record_id`、`source_packet_reference`、`evidence_reference` 和 `specialist_return_packet` 提供业务投影，不直接写该业务工作簿。
+
+后台中的路线评审、方向、证据、研究、贸易、风险、触达和移交字段必须保留，不能为“看起来简单”而删页、改名或压平。业务前台的路线决定、客户分类、下一步、草稿审核和风险处置只有在业务员给出字段级授权后，才由协调器写入并重开验证；本技能接收返回的稳定编号和决定引用，不覆盖业务员字段。
+
 ## 写入前提
 
 只写业务员指定的本地 `.xlsx`。写入后必须重新打开验证；失败时输出结构化待写入包，不得声称成功。
@@ -100,6 +106,8 @@ salesperson_route_decision: 选择编译, 继续核实, 暂缓, 淘汰
 如果指定工作簿仍是旧的 11 表结构，或缺少 `路线评审`、`source_route_review_id` 与当前验证规则，返回 `workbook_schema_migration_required`，先制作备份并获得迁移授权；不得静默移动旧列、覆盖业务员字段或把旧结构误报为已写入。
 
 每次候选扫描的声明范围、查询语言、覆盖来源、访问限制和观察日期必须保留在交付的结构化候选表及对应 `证据来源` 记录中；合格候选逐行进入 `客户总览` 并保留同一 `source_direction_id`。未合格或待核实公司不伪装成客户记录，保留在本次结构化候选表和证据记录中，供业务员审阅。若业务员尚未授权写入，则只输出 `workbook_update_packet`。
+
+三段式候选采集还必须保留 `candidate_collection_task.task_id`、`raw_candidate_batch.batch_id`、执行器与运行编号、方向包哈希、追加关系和本次 `candidate_review` 结果。`candidate_batch_intake` 只登记原始批次，不将观察项写成合格客户；只有独立 `candidate_review = PASS` 的企业才可形成待业务员筛选的候选投影。`FAIL` 和 `UNVERIFIED` 留在批次/复核记录及证据引用中，不伪装为客户总览中的合格客户。
 
 `direction_feedback_packet` 的支持结果、反证结果和未覆盖范围分别追加为 `方向证据` 行，使用 `validation_effect` 和 `limitation_note` 区分；只有业务员对 `direction_status`、`salesperson_decision` 或 `decision_date` 给出字段级新值授权后，才可更新 `开发方向`。扫描结果本身不得自动改写方向状态。
 

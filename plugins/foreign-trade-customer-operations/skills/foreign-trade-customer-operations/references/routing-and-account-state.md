@@ -1,5 +1,11 @@
 # 路由、交接与客户状态
 
+## 协调器入口与返回
+
+`foreign-trade-workflow-director` 可提交 `specialist_handoff_packet`，但它不能代替本技能需要的 `outreach_handoff_packet`、完整线程、实际发送历史或风险事实。协调器包必须带 `handoff_id`、`company_id`、业务问题、`source_record_id`、`source_packet_reference`、`evidence_reference`、允许写入范围和禁止动作；缺少专业输入时仍返回原所有者补齐，不得由协调器叙述替代证据。
+
+返回协调器的 `specialist_return_packet` 只允许投影到 `salesperson_workbench` 的客户跟进、沟通草稿或异常风险页。结果必须分开保存草稿状态、业务员审核、实际发送、实际回复和风险门。不得把 `业务员批准` 解释为实际发送，也不得因下一步日期到期自动写成触达事实。
+
 ## `outreach_handoff_packet` 接受条件
 
 `cold_outreach` 只接受业务员已选定客户并明确要求准备触达的交接包。包中必须可读到客户身份、至少一条直接适配证据、已批准产品引用、允许和禁止表述、联系人权限、`outreach_scope`、风险状态和本次业务员请求。

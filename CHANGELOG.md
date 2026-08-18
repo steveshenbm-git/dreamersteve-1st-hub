@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased - 2026-08-18
+
+- Added the Beta `foreign-trade-workflow-director` plugin and a six-sheet, single-salesperson business workbench for tasks, route decisions, candidate screening, follow-up, communication drafts, and exceptions/risks.
+- Kept the existing industry/application and customer-development workbooks as machine evidence backends rather than renaming their technical sheets into a salesperson interface.
+- Split direction-led candidate collection into a bounded task export, append-only raw batch intake, and independent evidence review while retaining `candidate_scan` as a compatibility entry.
+- Added controlled coordinator projections to industry mapping, customer development, and customer operations without transferring their evidence ownership or the salesperson's decision and sending authority.
+- Kept this Beta as source-only until a separately authorized commit, push, installation, and real-business test.
+
 ## Unreleased - 2026-07-29
 
 - Added `industry-application-map-builder` with a shared official-taxonomy skeleton, product-neutral application knowledge, per-company route maps, four-state technical matching, coverage control, Excel templates, workspace validation, and `company_route_pool_packet` export.

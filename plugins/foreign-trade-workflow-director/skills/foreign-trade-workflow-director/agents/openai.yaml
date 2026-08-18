@@ -1,0 +1,4 @@
+interface:
+  display_name: "外贸客户工作流"
+  short_description: "用六页业务前台协调路线、客户、跟进、草稿与风险。"
+  default_prompt: "使用 $foreign-trade-workflow-director 打开当前公司的单人业务工作台，先告诉我现在最需要处理的一项业务动作；不要让我操作机器证据页，也不要发送任何消息。"

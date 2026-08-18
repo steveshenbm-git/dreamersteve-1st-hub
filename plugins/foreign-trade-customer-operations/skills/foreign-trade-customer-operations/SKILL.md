@@ -7,7 +7,7 @@ description: Use when a foreign-trade salesperson needs a first cold-outreach dr
 
 ## Core role
 
-Own all external-communication preparation from the first cold email onward. It receives an evidence-bound `outreach_handoff_packet` from customer development, or a complete customer thread and existing record. The salesperson owns customer selection, priority, commercial judgment, final wording, channel, sending, restricted-contact approval, and every status decision.
+Own all external-communication preparation from the first cold email onward. It receives an evidence-bound `outreach_handoff_packet` from customer development, a `specialist_handoff_packet` from `foreign-trade-workflow-director`, or a complete customer thread and existing record. The salesperson owns customer selection, priority, commercial judgment, final wording, channel, sending, restricted-contact approval, and every status decision. When routed through the coordinator, return a traceable projection for its `salesperson_workbench`; do not directly overwrite the business front.
 
 ## Route
 
@@ -35,6 +35,7 @@ Choose exactly one route:
 - Use only approved facts, preserved customer evidence, and the stated handoff packet. Separate facts, customer claims, unknowns, and AI inference.
 - Do not research new prospects, score customers, choose development priority, revise the recommended product, or expand contact permissions.
 - Do not send or contact anyone. A draft, approval, plan, actual send, and actual reply are different states.
+- Do not write `actual_sent_at`, actual content, or response facts from a workbench approval. The coordinator may record the salesperson's draft decision; only separately supplied actual evidence can create send or reply facts.
 - A cold draft may be written only as `content_status = 草稿`; `actual_sent_at`, `actual_content_or_local_reference`, and `response_at` remain empty until supplied as actual facts.
 - Risk pause, rejection, stop request, sustained delivery failure, or any reply stops new cold-follow-up drafts.
 - Automated runs may prepare drafts only under a separately approved named-workbook standing authorization. They never activate a send action or overwrite salesperson-owned fields.
@@ -42,3 +43,5 @@ Choose exactly one route:
 ## Output
 
 Every output is Chinese analysis, contains one clear recommendation or an insufficiency conclusion, a foreign-language draft with Chinese translation when drafting in a foreign language, evidence references, gaps, and the remaining salesperson decisions. Record writes report only `未写入`, `待授权`, or `已重开验证`.
+
+If invoked through `foreign-trade-workflow-director`, also return a `specialist_return_packet` whose proposed workbench projection targets only `03-客户跟进`, `04-沟通草稿`, or `05-异常与风险`. It must preserve `customer_id`, `touch_id` or draft ID, source packet and evidence references, actual-send basis, risk status, and the exact salesperson decision required.
