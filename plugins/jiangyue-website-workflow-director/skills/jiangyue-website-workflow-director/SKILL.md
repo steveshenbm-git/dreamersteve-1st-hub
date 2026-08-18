@@ -199,6 +199,32 @@ Do not bypass this gate because the visual direction "feels clear." If the task 
 
 For semantic new images and meaning-changing edits, enforce `Planner PROCEED -> current user production authorization -> Imagegen READY -> tool call -> internal result checks -> Imagegen Verdict`. `Planner PROCEED` means the visual contract is executable. `Imagegen READY` means the selected execution strategy is ready. Neither is current-task permission to create or edit pixels. A missing **Current user production authorization**, a tool call before `READY`, or a backfilled preflight makes the process `FAIL` and result `analysis only`. Workflow verifies order, authorization evidence, and specialist status; it does not repeat specialist judgments.
 
+## Production Lane Routing
+
+For semantic generation, meaning-changing edits, formal retouching, or final image finishing, maintain one `Production Lane State`:
+
+```text
+Production Lane State
+- Lane: test / formal / deterministic
+- Purpose and one controlled hypothesis:
+- Provider or method constraint:
+- Current user authorization: confirmed / missing / exact allowed action
+- Allowed result identity:
+- Next handoff:
+```
+
+- **Test lane:** Use the current chat's native image capability only to test a declared composition, relationship, prompt, or model-behavior hypothesis. The output is always `analysis only`; it cannot become a formal candidate, accepted draft, page asset, or final export. Its pixels may enter formal production as a reference only after explicit user authorization and with rejected defects listed as forbidden carry-over.
+- **Formal lane:** Use Magnific formal production by default for new assets, meaning-changing edits, and professional retouching under the current workflow; use another formal provider only when the user explicitly supplies or authorizes that method constraint. Imagegen chooses the current verified Magnific model/action unless the user supplied a model constraint. A formal call needs its own current authorization; test authorization never transfers. Magnific provider completion returns raw output and provenance to Imagegen, not directly to user delivery or Workflow visual scoring.
+- **Deterministic lane:** Use crop, measured color correction, resize, compression, comparison files, and desktop/mobile composites only when the operation preserves the accepted meaning and visual contract. Return semantic changes to Planner or formal Imagegen production.
+
+Do not silently promote outputs or switch lanes. If Magnific entitlement, credits, connection, action support, result access, or download fails, record `external execution blocked`; preserve the active Planner Brief and Imagegen execution package unless independent image evidence establishes a design or execution failure.
+
+Execution order remains observable per lane:
+
+- test: `Planner PROCEED or explicitly authorized diagnostic hypothesis derived from a current Planner contract -> current test authorization -> Imagegen READY -> native tool call -> analysis-only checks -> Imagegen Verdict -> Workflow route`
+- formal: `Planner PROCEED -> current formal authorization -> Imagegen READY -> Magnific call -> provider return -> Imagegen result checks -> Imagegen Verdict -> Workflow route`
+- deterministic: `accepted baseline -> current scoped authorization -> deterministic operation -> visual regression check -> Workflow delivery gate`
+
 ## Local OpenAI API Image Requests
 
 Use this gate when the user wants Jiangyue image work through their own OpenAI API key rather than the chat's native image tool.
@@ -234,6 +260,9 @@ Before sending another image round, classify the latest feedback:
 | Imagegen says self-check passed but output still looks weak, generic, off-intent, or only least-bad in batch | Treat as false-pass risk; require candidate delivery gate or return to planner |
 | A rejected candidate is being used as the next baseline | Stop and require Brief Anchor Lock before another production attempt |
 | Multiple attempts repeat the same hypothesis | Stop and require attempt-stop analysis before more generation |
+| A native test output looks promising | Keep it `analysis only`; route its findings, and require separate authorization before using its pixels as a Magnific reference or starting formal production |
+| Magnific reports provider completion | Return raw output and provenance to Imagegen for specialist result checks; provider success is not candidate approval |
+| Magnific access, credits, action, result, or download fails | Record external execution blockage; do not attribute a Planner or Imagegen quality failure without image evidence |
 | User asks to optimize a skill, plugin, workflow, routing rule, source boundary, install/reinstall flow, or self-check | Route to `$jiangyue-skill-director`; production skills must not repair themselves or edit plugin files directly |
 
 ## Intent Check
@@ -299,6 +328,7 @@ Every specialist handoff must include:
 - three-factor dependency state when reality, visual quality, and page purpose are material; include semantic-purpose source, ordered factor states, required review object, first blocker, and current owner, not a director-authored design judgment
 - keep/remove/change/avoid, defects, pass/fail criteria, and forbidden carry-over
 - production success/stop rules when needed, required output status, acceptance layer, next output type, and Current user production authorization status/evidence without promoting memory, `PROCEED`, or `READY` into permission
+- production lane, allowed result identity, provider/method constraint, and whether the handoff is a raw provider return or an Imagegen-reviewed verdict
 
 Do not hand off vague instructions such as "make it better", "continue", or "optimize" without visible criteria.
 
@@ -315,6 +345,7 @@ Before saying an image task is complete, verify that the specialist output inclu
 - specialist evidence that whole-image synthesis passes as an independent veto, the reality floor then passes, visual quality passes without weakening reality, and page use passes on the required review object without compensation when three-factor balance is material
 - user acceptance layer before final export, 4K export, archive, or approved-material handling
 - rejected-result analysis when the output failed but still provides learning value
+- for formal external production: provider/model/action provenance, local raw-output path, provider return status, and an Imagegen Verdict produced after the return
 
 If any required item is missing, do not say complete. Return to imagegen, planner, or skill-director based on the missing layer. Verify that the specialist evidence and status exist; do not independently re-score realism or aesthetics inside workflow-director.
 

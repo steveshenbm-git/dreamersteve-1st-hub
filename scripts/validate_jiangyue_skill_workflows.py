@@ -11,6 +11,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 SKILLS = {
+    "skill_director": ROOT
+    / "plugins/jiangyue-skill-director/skills/jiangyue-skill-director",
     "workflow": ROOT
     / "plugins/jiangyue-website-workflow-director/skills/jiangyue-website-workflow-director",
     "planner": ROOT
@@ -22,11 +24,18 @@ SKILLS = {
 }
 
 REQUIRED_FRAGMENTS = {
+    "skill_director": [
+        "Worktree Identity Gate",
+        "rev-parse --show-toplevel",
+        "branch --show-current",
+    ],
     "workflow": [
         "Current user production authorization",
         "Whole-Image Synthesis Contract",
         "Scene Invariant Trace",
         "Planner PROCEED -> current user production authorization -> Imagegen READY",
+        "Production Lane State",
+        "Magnific formal production",
     ],
     "planner": [
         "Provisional Whole-Image Hypothesis",
@@ -40,6 +49,9 @@ REQUIRED_FRAGMENTS = {
         "Whole-image synthesis: pass / fail / unverified",
         "/Users/lirongjing/Documents/JY TECH WEB/outputs/jiangyue-website-images",
         "{page-or-type}-{image-role}-{option-code}-draft-{number}",
+        "Production lane: test / formal / deterministic",
+        "Magnific Formal Execution Package",
+        "Provider return status",
     ],
 }
 

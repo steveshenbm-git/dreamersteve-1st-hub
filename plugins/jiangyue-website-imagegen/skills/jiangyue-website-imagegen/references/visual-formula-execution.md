@@ -42,15 +42,22 @@ Immediately before a semantic generation or meaning-changing edit tool call, emi
 Imagegen Preflight
 - Formula Decision source / identifier:
 - Strategy readiness: READY / BLOCKED
+- Production lane: test / formal / deterministic
+- Provider / access method:
+- Model / action:
+- Provider capability: verified / blocked / not applicable
+- Allowed result identity:
 - Current user production authorization: confirmed / missing
 - Authorization evidence and exact allowed action:
 - Attempt class / identifier:
 - Production method:
+- Magnific Formal Execution Package: identifier / not applicable
+- Expected raw return owner: Imagegen / not applicable
 - Primary veto:
 - Tool call allowed: yes / no
 ```
 
-Use strategy `READY` only after planner `PROCEED`, an executable inherited Whole-Image Synthesis Contract when triggered, a complete and non-contradictory Scene Invariant Trace when triggered, and a method ceiling that first clears reality, then can reach visual quality without weakening reality, then preserves the conditions needed for page-use review. `READY` is internal readiness, not permission. Set `Tool call allowed: yes` only when strategy is `READY` and separate current user production authorization is confirmed for that exact action. A missing or conflicting synthesis contract, a triggered invariant without an explicit prompt clause, or a known method-ceiling conflict is `BLOCKED`. `BLOCKED` or missing authorization makes no tool call; a backfilled/reconstructed preflight is invalid and its result is `analysis only`.
+Use strategy `READY` only after planner `PROCEED`, an executable inherited Whole-Image Synthesis Contract when triggered, a complete and non-contradictory Scene Invariant Trace when triggered, a declared production lane and allowed result identity, and a method ceiling that first clears reality, then can reach visual quality without weakening reality, then preserves the conditions needed for page-use review. Formal Magnific work also requires currently verified provider/model/action capability and one compiled Magnific Formal Execution Package; an explicitly authorized alternate formal provider requires an equivalent package. `READY` is internal readiness, not permission. Set `Tool call allowed: yes` only when strategy is `READY` and separate current user production authorization is confirmed for that exact lane and action. A missing or conflicting synthesis contract, a triggered invariant without an explicit prompt clause, provider blockage, or a known method-ceiling conflict is `BLOCKED`. `BLOCKED` or missing authorization makes no tool call; a backfilled/reconstructed preflight is invalid and its result is `analysis only`.
 
 Record the first production attempt and raw observations permanently. Corrective attempts receive new identifiers and cannot erase first-attempt usable-yield evidence. A diagnostic attempt requires explicit current-task cost/production authorization, one stated hypothesis, and one controlled variable; its output remains `analysis only` even if visually promising.
 
@@ -61,6 +68,10 @@ Maintain one compact internal trace. Do not expose it as a second brief.
 ```text
 Formula Production Trace
 - Formula Decision source / identifier:
+- Production lane / allowed result identity:
+- Provider / access method / model / action:
+- Magnific Formal Execution Package identifier, if used:
+- Provider return: status / task or generation ID / available cost evidence / raw local path / provenance completeness
 - Whole-image synthesis: mother statement / scope frame / credibility anchors / Fixed-Adaptive-Forbidden / prompt governing clause / full-size and review-size result observation
 - T: accepted task and excluded information
 - S: planner decision / image evidence / external owner / prompt clause / result observation
@@ -153,6 +164,8 @@ Keep visible-quality, Intent-Brief-Result, and candidate-delivery decisions dist
 ```text
 Imagegen Verdict
 - Review object: standalone asset / image base / desktop composite / mobile composite
+- Production lane: test / formal / deterministic
+- Provider return status: returned / blocked / not applicable
 - Result vs intent: pass / fail
 - Whole-image synthesis: pass / fail / unverified — full-size evidence / review-size evidence
 - Semantic purpose: source / defined or missing

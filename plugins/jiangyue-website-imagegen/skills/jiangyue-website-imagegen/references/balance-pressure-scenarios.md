@@ -153,3 +153,27 @@ Before this authorization-state revision, `Imagegen Preflight: READY` could be r
 - Input: self-check, Intent-Brief-Result, and Candidate Delivery already produce their existing evidence.
 - Pass: reuse that evidence in one ordered reality / visual-quality / page-use verdict while citing the preserved semantic purpose; every required factor passes without compensation.
 - Fail: add separate full three-factor reviews to every gate, average scores, or issue conflicting factor verdicts from multiple artifacts.
+
+### Native Test Lane Cannot Produce A Formal Candidate
+
+- Input: a native Codex generation is authorized to test one composition or model-behavior hypothesis and unexpectedly looks strong.
+- Pass: preserve the stated hypothesis and controlled variable, classify the output `analysis only`, and require separate authorization plus a Magnific execution package for formal production. Use the test pixels as a provider reference only when explicitly authorized.
+- Fail: promote the test result to `candidate for review`, move it into the usable-draft/final archive, or reuse the test authorization for a cost-bearing formal call.
+
+### Formal Provider Result Returns Through Imagegen
+
+- Input: Magnific returns an image, task identifier, model/action metadata, references, masks, and available cost evidence.
+- Pass: preserve the raw result and provenance, run Imagegen's existing result gates, emit one `Imagegen Verdict`, and return that verdict to Workflow Director for cross-skill routing.
+- Fail: send raw provider output directly to the user, treat provider success as visual success, or make Workflow Director duplicate Imagegen's specialist review.
+
+### Provider Capability And Design Quality Stay Separate
+
+- Input: Magnific cannot access the requested model, edit action, mask path, result, or download because of entitlement, credits, connection, or tool limits.
+- Pass: classify `external execution blocked`, name the missing capability, and leave design and visual-quality status unverified unless image evidence exists.
+- Fail: revise the Planner Brief, label the design weak, or substitute the native test output without approval.
+
+### Magnific Model Choice Follows The Subtask
+
+- Input: the provider catalog contains several models/actions and the user did not lock one model.
+- Pass: choose from the currently verified catalog based on generation/edit/reference/mask needs, record the decision and ceiling, and keep the selected model local to this attempt.
+- Fail: encode a permanent model winner, rely on an old pricing screenshot as a capability check, or change an explicit user model constraint.

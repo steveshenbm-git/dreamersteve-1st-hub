@@ -66,6 +66,8 @@ For each important reference:
 
 ## Production Method
 
+- Production lane: test / formal / deterministic
+- Allowed result identity:
 - Method: deterministic / AI-generated / image-edit / hybrid
 - Tooling:
 - Runtime:
@@ -84,10 +86,19 @@ For each important reference:
 
 Use this section only when an AI model generated or edited pixels.
 
-- Tool / model:
+- Provider / access method:
+- Tool / model / action:
+- Provider capability verified at:
+- Magnific task / generation ID, if available:
+- Credits estimated / actual, if available:
 - Prompt:
 - Negative constraints:
 - Reference inputs:
+- Reference roles and explicit reuse authorization:
+- Mask inputs / protected regions / edit scope:
+- Raw provider output:
+- Local downloaded source:
+- Provider return status: returned / blocked / unavailable
 - Seed / generation ID, if available:
 - Non-reproducible limitations:
 
@@ -149,6 +160,8 @@ When the output is deterministic or hybrid, also create a compact `recipe.json` 
   "previous_version_folder": "",
   "next_version_folder": "",
   "method": "deterministic|ai-generated|image-edit|hybrid",
+  "production_lane": "test|formal|deterministic",
+  "allowed_result_identity": "analysis-only|formal-candidate|formal-revision|final-export",
   "final_outputs": [],
   "source_inputs": [],
   "reference_attribution": {
@@ -166,9 +179,22 @@ When the output is deterministic or hybrid, also create a compact `recipe.json` 
   "layout": {},
   "export": {},
   "ai_generation": {
+    "provider": "",
+    "access_method": "",
     "tool": "",
     "model": "",
+    "action": "",
+    "provider_capability_verified_at": "",
+    "provider_task_or_generation_id": "",
+    "credits_estimated": null,
+    "credits_actual": null,
     "prompt_ref": "",
+    "reference_inputs": [],
+    "reference_reuse_authorization": "",
+    "mask_inputs": [],
+    "raw_provider_output": "",
+    "local_downloaded_source": "",
+    "provider_return_status": "returned|blocked|unavailable|not-applicable",
     "seed_or_generation_id": "",
     "exact_regeneration_verified": false
   },

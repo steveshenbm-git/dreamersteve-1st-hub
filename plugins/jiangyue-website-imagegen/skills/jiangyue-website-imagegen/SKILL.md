@@ -66,7 +66,7 @@ Return to Workflow Director / 简报退回
 
 Use this state chain for brief-based, high-impact, cost-bearing, or repeated-failure image work:
 
-`Intent Lock -> Planner Brief (Formula Decision + triggered Whole-Image Synthesis Contract) -> Production Success Strategy -> Attempt Stop Rule -> Current user production authorization -> Imagegen Preflight -> Generate Candidate -> Visual Self-Check -> Intent-Brief-Result Check -> Outcome Classification -> Candidate Delivery Gate -> User Acceptance Layer -> Final Export / Archive`
+`Intent Lock -> Planner Brief (Formula Decision + triggered Whole-Image Synthesis Contract) -> Production Lane -> Production Success Strategy -> Attempt Stop Rule -> Current user production authorization -> Imagegen Preflight -> Tool Call -> Provider Return -> Visual Self-Check -> Intent-Brief-Result Check -> Outcome Classification -> Candidate Delivery Gate -> User Acceptance Layer -> Final Export / Archive`
 
 Hard rules:
 
@@ -80,6 +80,18 @@ Hard rules:
 - A rejected candidate is not the next baseline unless the user explicitly accepts that direction.
 - A candidate from a weak batch must pass the active brief and intent on an absolute basis; do not deliver the least-bad option.
 - User acceptance must be recorded by layer: intent, brief, direction, specific draft, final export, or approved archive.
+
+## Production Lanes And Provider Contract
+
+For any generated pixels, meaning-changing edit, formal retouch, or deterministic finish, read [references/production-lane-and-provider-contract.md](references/production-lane-and-provider-contract.md) and record:
+
+`Production lane: test / formal / deterministic`
+
+- **Test:** Use native Codex image generation only for one declared design or execution hypothesis. The result remains `analysis only`, even when visually strong. It cannot become a formal candidate, accepted draft, page asset, or final export. Use its pixels as a Magnific reference only after explicit authorization.
+- **Formal:** Use Magnific by default for formal new-image production, meaning-changing edits, and professional retouching. Use another formal provider only when the user explicitly supplies or authorizes that method constraint. Do not hard-code one Magnific model. Inspect the current provider catalog and verified action capabilities, preserve an explicit user model constraint, and choose the model/action that fits the current subtask.
+- **Deterministic:** Use exact crop, measured color correction, resize, compression, comparison files, and desktop/mobile composites only when meaning and the accepted contract remain unchanged.
+
+Test authorization does not authorize formal production. Provider completion does not make a candidate. Preserve the provider return, run Imagegen's existing result checks, and send one `Imagegen Verdict` to Workflow Director for the cross-skill route. Provider entitlement, credits, connection, action support, result access, or download failure is `external execution blocked`, not a Planner or visual-quality failure.
 
 ## Production Paths
 
@@ -118,13 +130,13 @@ For simple local edits, deterministic cards, format edits, crops, exports, and l
 
 For most Jiangyue website visuals:
 
-1. Read [references/visual-formula-execution.md](references/visual-formula-execution.md), verify planner `PROCEED`, and compile one production brief with four hard lists: must keep, must remove, must materially change, must avoid.
+1. Read [references/visual-formula-execution.md](references/visual-formula-execution.md) and [references/production-lane-and-provider-contract.md](references/production-lane-and-provider-contract.md), verify planner `PROCEED`, select one production lane, and compile one production brief with four hard lists: must keep, must remove, must materially change, must avoid.
 2. Read [references/production-success-strategy-gate.md](references/production-success-strategy-gate.md) when the asset is brief-based, high-impact, cost-bearing, or repeated-failure; map purpose, truthfulness/realism, and visual quality to the selected method and block production when its ceiling cannot satisfy all three.
 3. Read [references/attempt-stop-and-method-escalation-gate.md](references/attempt-stop-and-method-escalation-gate.md) when multiple attempts, API calls, or repeated failures are possible; do not repeat the same failed hypothesis.
 4. Choose method based on visible result quality, not convenience.
 5. Use the two-pass compiler in [references/visual-formula-execution.md](references/visual-formula-execution.md): audit the seven-stage decision and ownership first, then organize the natural model prompt around the Whole-Image Synthesis Contract, negative constraints, deterministic post-processing instructions, and result checks without copying labels mechanically or changing planner ownership.
-6. Confirm current user production authorization, then emit `Imagegen Preflight: READY` with the selected method immediately before the tool call and produce one strong draft. Stop without a tool call on `BLOCKED` or missing authorization; create variants only for materially different hypotheses, models, structures, sources, or methods.
-7. Inspect full size, thumbnail/review size, prior draft, and references when available.
+6. Confirm current user production authorization for the exact lane and action, then emit `Imagegen Preflight: READY` with the selected method immediately before the tool call. For Magnific formal work, compile the Magnific Formal Execution Package before the call; for an explicitly authorized alternate formal provider, compile an equivalent package with the same provenance, authorization, stop, and return fields. Stop without a tool call on `BLOCKED` or missing authorization; create variants only for materially different hypotheses, models, structures, sources, or methods.
+7. Preserve the raw tool/provider return and provenance. Inspect full size, thumbnail/review size, prior draft, and references when available. A provider return that cannot be retrieved or verified is blocked, not a candidate.
 8. Run [references/visual-self-check-gate.md](references/visual-self-check-gate.md), [references/intent-brief-result-coordination-gate.md](references/intent-brief-result-coordination-gate.md), and [references/candidate-delivery-gate.md](references/candidate-delivery-gate.md) as distinct internal decisions before presenting a candidate.
 9. Emit the single compact `Imagegen Verdict` from [references/visual-formula-execution.md](references/visual-formula-execution.md); revise, reject, archive, analyze, or return based on observed evidence.
 
@@ -217,5 +229,7 @@ Example: `/Users/lirongjing/Documents/JY TECH WEB/outputs/jiangyue-website-image
 ## Delivery Report
 
 For semantic work, report one `Imagegen Verdict` with `Whole-image synthesis: pass / fail / unverified` before the ordered three-factor status; include concise full-size and review-size evidence for the inherited scene, core moment, relationship, attention order, scope, and global coherence. Keep the full Formula Production Trace and the three internal result checks internal unless the user requests them. Include verified file path, dimensions, method, and material limitations only when relevant. Correct dimensions, a saved path, or a successful script run are not visual verification.
+
+For native tests and formal external production, include the production lane, allowed result identity, and `Provider return status`. A Magnific raw return is never the user-facing verdict; Imagegen must review it before Workflow Director routes or presents it.
 
 Classify the reviewed object precisely: `standalone asset`, `image base`, `desktop composite`, or `mobile composite`. When HTML/layout owns core category, differentiation, or interaction responsibility, a bitmap can be only an `image-base candidate`; it cannot pass as the complete Hero.

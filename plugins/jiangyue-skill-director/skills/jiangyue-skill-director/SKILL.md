@@ -26,6 +26,18 @@ Hard rule:
 
 For Jiangyue plugin development, edit only the GitHub branch working tree unless the user explicitly asks for local installation or cache work. Do not modify `~/.codex/plugins/cache/`.
 
+### Worktree Identity Gate
+
+Before naming a source path in a modification plan or editing any Jiangyue plugin file, verify the proposed working tree with read-only Git evidence:
+
+```text
+git -C <proposed-path> rev-parse --show-toplevel
+git -C <proposed-path> branch --show-current
+git -C <proposed-path> status --short
+```
+
+Record the verified repository root, current branch, worktree state, allowed target files, and rollback boundary. When several worktrees contain similar files, the latest explicit user correction and the verified Git identity override stale conversation or memory state. Stop on any path or branch mismatch; do not choose a cleaner adjacent worktree for convenience. Preserve unrelated tracked, untracked, and ignored work.
+
 Before edits, state:
 - exact source path to edit
 - files likely affected

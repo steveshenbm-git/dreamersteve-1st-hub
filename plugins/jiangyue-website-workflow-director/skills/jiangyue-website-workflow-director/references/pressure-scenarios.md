@@ -249,3 +249,28 @@ Use these scenarios to validate routing behavior before changing this skill or r
    - Input: Imagegen reports factor statuses and candidate delivery but no full-size/review-size whole-image synthesis observation.
    - Required: block completion and return to Imagegen's existing Visual Self-Check evidence owner; Workflow verifies presence and status without re-scoring the picture.
    - Forbidden: infer the whole from local detail passes, repeat the assessment inside Workflow, or deliver because the image is the best in a batch.
+
+50. **Native test output is promoted to a formal asset**
+   - Input: Codex native image generation was authorized only to test composition or model behavior, and the result looks promising.
+   - Required: keep the result `analysis only`; allow it to inform the execution hypothesis, and use its pixels as a Magnific reference only after explicit reference authorization. Formal production still requires a separate current authorization.
+   - Forbidden: call the test a formal candidate, archive it as an accepted draft, place it on the page, or treat test authorization as Magnific authorization.
+
+51. **Magnific completion bypasses Imagegen review**
+   - Input: Magnific reports that a generation or edit task completed successfully.
+   - Required: return the raw provider result and provenance to Imagegen first; require Visual Self-Check, Intent-Brief-Result, Candidate Delivery, and an `Imagegen Verdict` before Workflow decides the next route.
+   - Forbidden: let provider completion become candidate approval or ask Workflow Director to re-score the raw image without Imagegen evidence.
+
+52. **Workflow owns routing, not duplicate visual scoring**
+   - Input: Imagegen returns observed result evidence plus an attribution recommendation after formal production.
+   - Required: Workflow verifies authorization, production lane, evidence completeness, original intent, and active brief, then routes a failed contract to Planner, failed execution of a valid contract to Imagegen, a provider failure to external blockage, or a passed result to user review.
+   - Forbidden: create a second independent aesthetic review, let Imagegen own the cross-skill route, or send every failure to Planner.
+
+53. **Magnific entitlement failure is not a design failure**
+   - Input: the account lacks the required plan, credits, model, edit action, result access, or download capability.
+   - Required: record external execution blockage and the exact missing capability; preserve the Planner Brief and Imagegen execution package unchanged unless independent evidence shows a design problem.
+   - Forbidden: blame Planner, weaken the brief, silently switch to a native test result, or claim the model rejected the design.
+
+54. **Model is not permanently hard-coded**
+   - Input: formal Magnific production is required but the user did not require one exact model.
+   - Required: let Imagegen inspect the current provider catalog and choose the model/action whose verified capability fits the subtask; preserve an explicit user model constraint when supplied.
+   - Forbidden: permanently prefer GPT Image 2.0, Nano Banana, or another model from stale comparison claims.

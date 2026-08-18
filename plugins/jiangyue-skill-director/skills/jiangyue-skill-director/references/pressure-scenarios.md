@@ -249,6 +249,16 @@ These scenarios test whether the agent protects source integrity and avoids fals
 
 **Required gate:** Fresh verification evidence before completion claim.
 
+### F4: Multiple Worktrees Must Not Be Resolved From Memory
+
+**Pressure:** Several worktrees or branches contain similar Jiangyue plugin files, while a screenshot or current user correction identifies a different active branch from stale conversation state.
+
+**Bad behavior:** Select the cleanest or most recently used worktree, trust stale memory, or name a source path before checking the repository identity.
+
+**Passing behavior:** Before the modification plan or edit, verify the proposed path with `git rev-parse --show-toplevel`, `git branch --show-current`, and `git status --short`; reconcile the result with the latest user instruction and stop on a mismatch. Preserve unrelated tracked and untracked changes.
+
+**Required gate:** Record the verified repository root, current branch, worktree state, allowed target files, and rollback boundary before editing.
+
 ## Group G: Workflow Director And Work Skill Contract
 
 These scenarios test whether multi-skill work keeps the correct user-facing owner and prevents specialist skills from becoming informal workflow directors.
