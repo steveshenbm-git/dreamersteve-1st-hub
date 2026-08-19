@@ -28,7 +28,7 @@ description: Use when a company needs to audit, build, resume, or reproduce the 
 
 前七段属于公司级 `company_foundation`；`direction_decision` 按 `route_instance`、`candidate_development` 按 `direction_instance`、`customer_operations` 按 `customer_thread` 循环记录。一条路线或一个客户完成，不能把整个公司的后续阶段永久标为完成。
 
-当行业分类骨架已经存在，但声明范围仍为 `not_expanded` 或没有完整的产品中立行业语义时，`industry_semantic_expansion` 就是最早未完成阶段。此时必须阻断旧公司地图、旧路线包和客户搜索，不能因目录里已有后期文件而越级。
+当行业分类骨架已经存在，但RC2研究合同、方法校准、全量浅筛、触发节点证据处置或反向审计任一未通过时，`industry_semantic_expansion` 就是最早未完成阶段。此时必须阻断旧公司地图、旧路线包和客户搜索，不能因目录里已有后期文件而越级。
 
 ## 路由
 
@@ -56,12 +56,40 @@ description: Use when a company needs to audit, build, resume, or reproduce the 
 7. 专业返回必须核对公司、工作单元、来源、版本/哈希、声明范围、结果状态和禁止动作。仅凭文件名、存在一个工作簿或已有候选公司，不得判定阶段完成。
 8. 当前阶段通过后更新对应公司基础或业务实例，再重新从第一阶段计算；不依赖聊天记忆直接跳到后期。
 
-用于全行业筛查时，`industry_semantic_expansion` 必须覆盖登记的全部末端行业节点。小范围 pilot 可以验证方法，但不能把全量阶段记为 PASS。
+用于全行业筛查时，全部登记末端节点必须具有同一冻结合同下的可审计浅筛记录；所有触发节点完成证据处置，反向审计通过且无安全失败后，才可把阶段记为PASS。小范围pilot或40例只能验证方法，不能代替全量门。
+
+## 阶段5内部续作
+
+当 `first_incomplete_stage = industry_semantic_expansion` 时，读取：
+
+- `semantic_method_validation_state`；
+- `active_research_contract_id` 和版本；
+- `active_semantic_work_unit`；
+- `full_screening_authorization`；
+- `application_base_write_authorization`；
+- 最新 `semantic_specialist_return_packet` 及其哈希。
+
+固定路由顺序为：
+
+```text
+合同未冻结 → semantic_contract_prepare
+40例未准备 → semantic_calibration_case_prepare
+方法未EFFECTIVE → semantic_method_calibration
+未获全量授权 → 等待用户决定
+全量未筛完 → semantic_full_screening
+触发节点未处置 → semantic_evidence_expansion
+反向审计未通过 → semantic_reverse_audit
+阶段尚未验收 → semantic_stage_review
+```
+
+每次只生成一个 `specialist_handoff_packet` 和一项下一动作。步骤返回 `FAIL` 或 `UNVERIFIED` 时只路由该步的修复，不越过它。40例结果即使 `EFFECTIVE`，也不能把 `industry_semantic_expansion` 记为 PASS。
+
+外部模型当前使用 `manual_external_handoff`：控制器生成 `semantic_model_handoff_packet`，用户只传递完整任务包和原始返回，后台字段由专业技能处理。没有另行授权和验证的连接器时不自动调用Claude、Grok或其他外部模型，也不要求用户填写机器证据附页。
 
 ## 专业所有权
 
 - `company-product-knowledge-builder`：公司身份边界、来源接收、产品事实库和受控产品事实包；不得自行推断行业路线。
-- `industry-application-map-builder`：官方行业骨架、产品中立的行业/应用语义、公司能力匹配、覆盖复核和路线池交接；它不搜索具体客户。
+- `industry-application-map-builder`：官方行业骨架、RC2方法合同与校准、产品中立浅筛/证据/反向审计、公司能力匹配、覆盖复核和路线池交接；它不搜索具体客户。
 - `foreign-trade-customer-development`：路线编译与验证、候选采集任务、原始批次接收、独立候选复核、完整背调和沟通前交接。
 - `foreign-trade-customer-operations`：首封、未回复跟进、完整线程回复、严重问题和既有客户经营材料；不得发送。
 - 获批准的采集执行器：只执行 `candidate_collection_task` 并追加 `raw_candidate_batch`；不判断客户合格，不写业务工作簿。
@@ -94,6 +122,7 @@ description: Use when a company needs to audit, build, resume, or reproduce the 
 - 路线决定、客户分类、跟进决定、风险处置、最终文案、渠道和发送始终属于业务员。
 - 回复或疑似回复 → 风险暂停 → 停止/拒绝/持续退信 → 输入过期 → 到期跟进 → 普通待办。
 - 共享输入、公司地图或路线包版本/哈希过期时，返回对应所有者重新验证；不得手工改成通过。
+- 源编辑、40例、全量筛查、正式底座写入、公司匹配、Git提交和插件安装均为独立授权；一个批准不得扩张到另一个阶段。
 - 不搜索具体客户，不补造事实，不改专业技能结论，不覆盖业务员字段，不发送，不创建自动发送配置。
 
 ## 写入合同

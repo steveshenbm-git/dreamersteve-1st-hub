@@ -17,6 +17,25 @@
 
 AI常识和理论推导只能形成 `hypothesis`，不能因表述顺畅、来源数量多或模型置信度高而升级。
 
+行业语义初筛状态不是证据状态。`hypothesis_formed` 只触发证据展开；`ambiguous` 保留未知并强制处置；`no_hypothesis_formed` 只进入反向审计总体。三者都不能单独产生 `supported`。
+
+## 正式支持门
+
+```text
+direct_source_support == true
+AND source_location_present == true
+AND snapshot_or_live_source_verified == true
+AND model_b_review == PASS
+AND claim_scope_within_source == true
+AND circular_source == false
+AND unresolved_counterevidence == false
+AND automated_contract_validation == PASS
+```
+
+模型A不得审查自己的证据。模型B必须重新读取原始来源或校验后的快照；不可访问且重试失败时返回 `UNVERIFIED`，不能用自身知识补齐。模型C只处理争议、反证和反向审计；多数模型同意不构成证据。
+
+命题必须先于搜索并保持最小范围。来源只支持某个材料、过程、作用点、条件或应用时，不得扩大到整个行业或相邻技术。`conditions` 和 `limitations` 必须包含可观察边界；空洞套话不算完成。
+
 ## 四值技术匹配
 
 每个硬性 `requirement_atom` 分别匹配：

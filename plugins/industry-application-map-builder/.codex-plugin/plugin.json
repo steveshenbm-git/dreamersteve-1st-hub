@@ -1,7 +1,7 @@
 {
   "name": "industry-application-map-builder",
-  "version": "0.2.0-beta.1",
-  "description": "基于公司受控产品事实、官方行业骨架与公开应用证据，构建公司专属行业应用地图和路线候选池。",
+  "version": "0.3.0-beta.1",
+  "description": "维护官方行业骨架，执行产品中性的行业语义浅筛、证据展开、方法校准与反向审计，并在方法和证据门通过后构建公司专属行业应用地图和路线候选池。",
   "author": {
     "name": "steveshenbm-git"
   },
@@ -9,6 +9,9 @@
   "keywords": [
     "industry-map",
     "application-knowledge",
+    "semantic-screening",
+    "method-calibration",
+    "reverse-audit",
     "route-pool",
     "product-fit",
     "foreign-trade"
@@ -16,8 +19,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "行业应用地图构建",
-    "shortDescription": "构建公司专属、证据可追溯的行业应用地图与路线候选池。",
-    "longDescription": "用于维护带版本的共享行业骨架和产品中性应用知识，将单一公司的已批准产品事实逐项匹配到应用需求，构建公司专属路线候选、排除与暂缓记录、覆盖台账及客户开发交接包；这些工作簿属于机器证据后台，可向外贸客户工作流返回业务摘要，但不搜索客户、不做综合评分、不决定开发优先级。",
+    "shortDescription": "校准并执行行业语义筛查、证据审查与公司路线构建。",
+    "longDescription": "用于维护带版本的官方行业骨架，冻结产品中性的研究合同，通过全量浅筛、选择性证据展开、模型盲审、争议处理和分层有限总体反向审计验证行业语义方法；只有校准、安全和写入授权门均通过后，才可更新正式共享应用底座，再将单一公司的已批准产品事实逐项匹配到受控应用需求并构建路线候选与客户开发交接包。不搜索具体客户、不做综合评分、不决定开发优先级。",
     "developerName": "steveshenbm-git",
     "category": "Productivity",
     "capabilities": [
@@ -25,6 +28,9 @@
       "Write"
     ],
     "defaultPrompt": [
+      "为行业语义研究冻结产品中性的研究合同、末端节点快照和模型任务协议；不要写入正式共享应用底座。",
+      "按冻结合同执行40例同级基线与RC2候选校准，分离筛查、进度和证据状态，并输出PASS、FAIL或INCONCLUSIVE。",
+      "对全量行业浅筛结果执行选择性证据展开和分层有限总体反向审计；未获得单独写入授权时只生成研究记录。",
       "为指定公司初始化独立的行业应用地图，并校验产品事实输入。",
       "基于共享应用证据和受控产品事实，生成可追溯的路线候选池。",
       "复核公司路线覆盖并导出客户开发交接包，不搜索具体客户。"

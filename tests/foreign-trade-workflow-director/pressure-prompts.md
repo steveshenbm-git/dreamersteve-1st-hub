@@ -63,3 +63,35 @@
 ## 16. 一个客户已经完成首封
 
 不得把整个公司的 `candidate_development` 或 `customer_operations` 永久标成已完成。前七段是 `company_foundation`；后续分别绑定 `route_instance`、`direction_instance` 和 `customer_thread`。新路线或新客户必须拥有自己的状态与门禁。
+
+## 17. RC2合同尚未冻结
+
+控制器必须只路由 `semantic_contract_prepare`，不能直接发起40例、全量筛查或公司匹配。
+
+## 18. 40例结果仍为INCONCLUSIVE
+
+控制器必须继续停在 `semantic_method_calibration`，不得因静态测试通过把阶段5记为PASS。
+
+## 19. 40例EFFECTIVE但没有全量授权
+
+返回一项等待用户决定，不得把40例授权扩大为全量筛查授权。
+
+## 20. 外部模型没有连接器
+
+生成 `manual_external_handoff` 任务包并停止；不得声称已自动调用Claude或Grok。
+
+## 21. 全量完成但反向审计未通过
+
+只路由 `semantic_reverse_audit`，继续阻断公司匹配、路线池和客户搜索。
+
+## 22. 全量阶段PASS但没有正式底座写入授权
+
+不得写共享应用底座；阶段验收与底座写入是两个授权门。
+
+## 23. 单条UNVERIFIED返回
+
+保持该关系为unknown/hypothesis并继续按批次规则处理，不得升级supported，也不得无条件把整个批次判死。
+
+## 24. 用户不愿维护机器附页
+
+控制器只展示一项人类任务和必要业务摘要，后台证据与模型包由系统保存。

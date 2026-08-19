@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "semantic_model_task": {
+    "task_id": null,
+    "research_contract_id": null,
+    "contract_version": null,
+    "input_sha256": null,
+    "role": null,
+    "mode": null,
+    "trigger_reason": null,
+    "declared_model_name": null,
+    "actual_model_id_required": true,
+    "visible_inputs": [],
+    "source_references": [],
+    "output_contract": "semantic_model_return",
+    "transport": "manual_external_handoff",
+    "prohibited_inputs": [],
+    "prohibited_actions": [],
+    "issued_at": null
+  }
+}

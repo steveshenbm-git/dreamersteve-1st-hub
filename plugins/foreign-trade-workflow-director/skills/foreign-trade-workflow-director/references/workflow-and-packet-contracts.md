@@ -177,6 +177,66 @@ specialist_return_packet:
 
 协调器只保留 `PASS / FAIL / UNVERIFIED` 三态及逐项理由，不得把 `result_state` 换算成综合分，也不得在缺少返回包时自行补齐专业结论。
 
+## 阶段5行业语义交接
+
+阶段5仍使用 `specialist_handoff_packet`，但 `target_route` 只按以下顺序取一个：
+
+```text
+semantic_contract_prepare
+semantic_calibration_case_prepare
+semantic_method_calibration
+semantic_full_screening
+semantic_evidence_expansion
+semantic_reverse_audit
+semantic_stage_review
+```
+
+需要外部模型时，附加只读运输包：
+
+```text
+semantic_model_handoff_packet:
+  handoff_id
+  research_contract_id
+  contract_version
+  semantic_work_unit_id
+  target_role: A | B | C
+  declared_model_name
+  actual_model_id_required: true
+  transport: manual_external_handoff
+  input_reference
+  input_sha256
+  visible_fields
+  prohibited_fields
+  source_permissions
+  expected_return_contract
+  stop_condition
+```
+
+控制器只生成和校验包，不自动调用当前未接入的外部模型。用户只传递完整任务包和原始返回，不填写查询、证据、哈希或机器附页。
+
+阶段5专业返回使用：
+
+```text
+semantic_specialist_return_packet:
+  handoff_id
+  research_contract_id
+  contract_version
+  source_route
+  result_state: PASS | FAIL | UNVERIFIED
+  semantic_method_validation_state: INCONCLUSIVE | EFFECTIVE | NOT_EFFECTIVE
+  active_semantic_work_unit
+  artifact_references_and_hashes
+  coverage_summary
+  evidence_gate_summary
+  reverse_audit_summary
+  blockers
+  one_next_action
+  next_authorization_required
+  prohibited_downstream_actions
+```
+
+返回包必须与当前合同、输入哈希和工作单元一致。40例 `EFFECTIVE` 只允许请求独立的 `full_screening_authorization`；不改变阶段5为PASS。全量筛查、`application_base_write_authorization`、公司匹配、客户搜索、Git提交和插件安装都是分开的用户授权。
+
 ## 业务工作簿更新包
 
 ```text

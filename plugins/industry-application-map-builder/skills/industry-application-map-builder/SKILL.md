@@ -1,6 +1,6 @@
 ---
 name: industry-application-map-builder
-description: Use when a company needs a shared industry/application framework, product-neutral application evidence, a company-specific industry application map, route candidates, route coverage review, or a controlled route-pool handoff before customer-development direction validation.
+description: Use when work involves an official industry taxonomy, product-neutral industry semantic screening, method calibration, evidence expansion, reverse-audit coverage, a company-specific industry application map, route candidates, or a controlled route-pool handoff before customer-development validation.
 ---
 
 # 行业应用地图构建
@@ -9,7 +9,7 @@ description: Use when a company needs a shared industry/application framework, p
 
 Build the missing evidence layer between approved company product facts and customer-development direction validation. Use official industry classification as an activity skeleton, public product-neutral application evidence as the application layer, and one company's approved facts as the matching input.
 
-This skill owns shared industry/application knowledge, company-specific matching, route candidates, and coverage. Its workbooks are a machine evidence backend, not the salesperson's daily interface. When work starts from `foreign-trade-workflow-director`, return a traceable business projection for its `salesperson_workbench`; do not make the coordinator or salesperson maintain machine sheets.
+This skill owns shared industry/application knowledge, RC2 semantic-method research, company-specific matching, route candidates, and coverage. Its workbooks and semantic research records are a machine evidence backend, not the salesperson's daily interface. When work starts from `foreign-trade-workflow-director`, return a traceable business projection for its `salesperson_workbench`; do not make the coordinator or salesperson maintain machine sheets.
 
 本技能不得搜索具体客户，不得用综合评分给路线或国家排序，不得选择客户、起草外联内容或修改公司产品知识库。本技能不得写入 `direction_status = 已确认可扫描`；该决定仍由业务员在 `foreign-trade-customer-development` 中记录。
 
@@ -17,9 +17,9 @@ This skill owns shared industry/application knowledge, company-specific matching
 
 1. Select exactly one route from the table below.
 2. Determine whether the request authorizes writes. Review, audit, explain, and diagnose requests remain read-only.
-3. For every company route, require one explicit `company_id`, company product-library root, product fact packet, product scope, map root, and declared research scope.
-4. Resolve every product fact ID to the same company's `facts.json`, run the product-library validator, and freeze the packet, facts, taxonomy, and application-base SHA-256 values before matching.
-5. Stop if an input is missing, another company appears, a hash changed, a confirmed ID does not resolve, or the shared taxonomy version is not frozen.
+3. For semantic-method routes, require one map root, frozen taxonomy snapshot, product-neutral research theme, contract version, model profile, allowed source scope, budget, and explicit authorization for the requested phase. Do not require or load company facts.
+4. For company routes, require one explicit `company_id`, company product-library root, product fact packet, product scope, map root, and declared research scope. Resolve every fact ID to the same company's `facts.json` and freeze all input hashes before matching.
+5. Stop if an input is missing, another company appears, a hash or contract changed, a confirmed ID does not resolve, the taxonomy version is unfrozen, or the requested semantic phase lacks its own authorization.
 
 ## Route selection
 
@@ -30,8 +30,47 @@ This skill owns shared industry/application knowledge, company-specific matching
 | `company_map_build` | Match one approved product fact packet to the shared application base | [evidence-and-derivation.md](references/evidence-and-derivation.md) and [coverage-and-lifecycle.md](references/coverage-and-lifecycle.md) | Company routes and coverage dispositions are recorded; no customer search starts |
 | `company_map_review` | Review coverage, conflicts, stale inputs, exclusions, or route lifecycle | [coverage-and-lifecycle.md](references/coverage-and-lifecycle.md) and [pressure-scenarios.md](references/pressure-scenarios.md) | `PASS / FAIL / UNVERIFIED` review and required action are recorded |
 | `route_pool_handoff` | Export validated route candidates for customer-development direction work | [handoff-contracts.md](references/handoff-contracts.md) | A registered `company_route_pool_packet` is written inside the company map; stop before direction or company research |
+| `semantic_contract_prepare` | Freeze the product-neutral theme, taxonomy snapshot, model profile, prompts, budget, sampling and write boundary | [industry-semantic-research-contract.md](references/industry-semantic-research-contract.md) | Frozen `semantic_research_contract`; stop before case preparation |
+| `semantic_calibration_case_prepare` | Build the frozen 40-case truth package | [industry-semantic-calibration-and-audit.md](references/industry-semantic-calibration-and-audit.md) | Versioned case set and hashes; incomplete truth returns `INCONCLUSIVE` |
+| `semantic_method_calibration` | Run paired baseline and candidate arms under identical controls | [industry-semantic-calibration-and-audit.md](references/industry-semantic-calibration-and-audit.md) and [industry-semantic-model-protocol.md](references/industry-semantic-model-protocol.md) | `EFFECTIVE / NOT_EFFECTIVE / INCONCLUSIVE`; stop before full screening |
+| `semantic_full_screening` | Shallow-screen every frozen terminal node in controlled batches | [industry-semantic-research-contract.md](references/industry-semantic-research-contract.md) | Append-only screening batch; stop after each batch and check drift/budget |
+| `semantic_evidence_expansion` | Expand triggered nodes into minimal claims and source packets | [industry-semantic-model-protocol.md](references/industry-semantic-model-protocol.md) | Evidence packets and B-review tasks; no `supported` before B PASS |
+| `semantic_reverse_audit` | Sample the rejected population by risk and calculate the finite-population bound | [industry-semantic-calibration-and-audit.md](references/industry-semantic-calibration-and-audit.md) | Audit plan/report; any confirmed miss fails the contract |
+| `semantic_stage_review` | Validate full coverage, one contract version, evidence gates, audit and safety | [coverage-and-lifecycle.md](references/coverage-and-lifecycle.md) | Stage `PASS / FAIL / UNVERIFIED`; stop before company matching |
 
 Do not combine routes merely because the next step is convenient. Complete the requested route, validate it, and stop unless the user separately authorized the next route.
+
+## RC2 semantic-method gate
+
+Keep method status `INCONCLUSIVE` until the frozen 40-case paired run passes. Writing clearer rules, passing static tests, or producing a pilot does not prove method effectiveness.
+
+Preserve three independent semantic axes:
+
+```text
+screening_result: hypothesis_formed | ambiguous | no_hypothesis_formed
+semantic_work_state: not_screened | screened | evidence_expansion_required | evidence_expanded | audit_reopened
+evidence_state: supported | hypothesis | unknown | conflicted
+```
+
+Never convert absence of a hypothesis, low keyword similarity, sparse public information, or an unprocessed node into an industry exclusion. Read all three semantic references before any semantic-method route:
+
+1. [industry-semantic-research-contract.md](references/industry-semantic-research-contract.md)
+2. [industry-semantic-model-protocol.md](references/industry-semantic-model-protocol.md)
+3. [industry-semantic-calibration-and-audit.md](references/industry-semantic-calibration-and-audit.md)
+
+Use the templates under `assets/semantic-method/`. Current external-model transport is `manual_external_handoff`: Codex prepares and validates packages; the user only transfers the complete package and raw return, never fills machine evidence fields. Do not claim automatic Claude or Grok invocation without a separately authorized connector.
+
+Use deterministic scripts for repeatable operations:
+
+```bash
+python3 scripts/init_semantic_research_workspace.py --map-root /absolute/map-root --contract /absolute/semantic-research-contract.json
+python3 scripts/freeze_semantic_taxonomy_snapshot.py --taxonomy-workbook /absolute/industry-taxonomy.xlsx --output /absolute/taxonomy-snapshot.json
+python3 scripts/validate_semantic_research_workspace.py /absolute/semantic-research-workspace --format json
+python3 scripts/sample_semantic_reverse_audit.py --screening-records /absolute/screening-records.jsonl --seed frozen-seed --output /absolute/audit-plan.json
+python3 scripts/evaluate_semantic_calibration.py --baseline /absolute/baseline.json --candidate /absolute/candidate.json --output /absolute/calibration-report.json
+```
+
+These scripts refuse overwrites where results are append-only. Do not add force flags or delete prior runs to reuse an ID.
 
 ## Ownership and isolation
 
@@ -77,6 +116,8 @@ The initializer refuses to overwrite an existing root or company map. Never add 
 Use official classification sources for taxonomy nodes. Use traceable public sources for output products, use points, processes, application nodes, and requirements. Record publisher, title, URL or local archive reference, publication date or `unknown`, observation date, source subject, original location, Chinese summary, evidence state, access scope, dependency group, conflict, and limitation.
 
 AI world knowledge, mechanism reasoning, semantic similarity, and common practice may create a `hypothesis` and search vocabulary only. They cannot create `supported` evidence. A classification node proves an economic activity category, not a terminal application, technical requirement, market size, or customer need.
+
+Calibration writes only inside `05-工作区/行业语义研究/<research_contract_id>/`. `application_knowledge_update` may write a reviewed relationship into the shared base only after method `EFFECTIVE`, full-stage authorization, `application_base_write_authorization = true`, direct evidence, B PASS, and automated validation. Screening records and model consensus are never shared-base facts.
 
 After changing a shared workbook, update its registry hash, append the change log, and mark dependent company routes for review. Never silently replace an old taxonomy version; add a new version and an explicit correspondence or unresolved migration record.
 

@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "model_profile": {
+    "model_profile_id": "rc2-pilot-v1",
+    "contract_state": "draft",
+    "roles": {
+      "A": {
+        "provider": "OpenAI",
+        "declared_model_name": "GPT-5.6 Terra",
+        "actual_model_id_or_unknown": "unknown",
+        "access_mode": "codex_or_authorized_api",
+        "search_tool": null,
+        "source_permissions": [],
+        "availability": "UNVERIFIED"
+      },
+      "B": {
+        "provider": "Anthropic",
+        "declared_model_name": "Claude Sonnet 5",
+        "actual_model_id_or_unknown": "unknown",
+        "access_mode": "manual_external_handoff",
+        "search_tool": null,
+        "source_permissions": [],
+        "availability": "UNVERIFIED"
+      },
+      "C": {
+        "provider": "xAI",
+        "declared_model_name": "Grok 4.5",
+        "actual_model_id_or_unknown": "unknown",
+        "access_mode": "manual_external_handoff",
+        "search_tool": null,
+        "source_permissions": [],
+        "availability": "UNVERIFIED"
+      }
+    },
+    "silent_substitution_allowed": false
+  }
+}

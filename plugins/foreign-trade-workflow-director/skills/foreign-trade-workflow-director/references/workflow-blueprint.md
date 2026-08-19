@@ -2,7 +2,7 @@
 
 `blueprint_id: foreign-trade-complete-workflow`
 
-`blueprint_version: 0.1.0-beta.1`
+`blueprint_version: 0.2.0-beta.1`
 
 ## 判定原则
 
@@ -19,7 +19,7 @@
 | 2 | `company_identity` | `company_foundation` | company product knowledge builder | 用户明确的公司边界与来源范围 | 唯一 `company_id`、隔离根目录、批准的来源范围 | 公司不明、与现有公司冲突或来源范围未确认 |
 | 3 | `product_knowledge` | `company_foundation` | company product knowledge builder | 批准来源 | 当前产品事实库与 `product_development_fact_packet`，证据和限制可追溯 | 缺包、来源失效、哈希过期或事实冲突未处置 |
 | 4 | `industry_taxonomy` | `company_foundation` | industry application map builder | 官方分类来源与版本 | 版本化行业分类骨架、稳定编号和覆盖登记 | 分类来源/版本未核实或结构不完整 |
-| 5 | `industry_semantic_expansion` | `company_foundation` | industry application map builder | 当前分类骨架、明确覆盖范围 | 全量筛查时，全部登记末端节点具备产品中立的产出、过程/使用点、应用、需求、证据、限制和覆盖处置 | 任一应覆盖节点仍为 `not_expanded` 或只有行业名称推测 |
+| 5 | `industry_semantic_expansion` | `company_foundation` | industry application map builder | 当前分类骨架、冻结RC2合同、方法状态和独立授权 | 全部末端节点具备同一合同的可审计浅筛，触发节点已完成证据处置，分层反向审计上界通过且无安全失败 | 合同/校准/全量/证据/审计任一未通过，或仍有 `not_screened` |
 | 6 | `company_industry_match` | `company_foundation` | industry application map builder | 当前产品事实包与当前行业语义层 | 公司能力原子与应用需求的逐项匹配、反证和未知；不得直接按行业名称匹配 | 语义层过期、直接名称推断或未知被自动提升 |
 | 7 | `route_pool_handoff` | `company_foundation` | industry application map builder | 当前公司地图与覆盖复核 | 已登记为 current 的 `company_route_pool_packet`，输入和生产者哈希一致 | 路线包或源图过期、范围未覆盖 |
 | 8 | `direction_decision` | `route_instance` | customer development + salesperson | 当前路线池与业务员选路 | 方向已编译和验证，业务员明确记录是否 `已确认可扫描` | 没有人工选路/确认或方向规则未验证 |
@@ -35,9 +35,28 @@
 - 基础通过后，控制器必须读取用户明确指定或业务前台当前选中的 `active_work_unit`；没有明确工作单元时，先让业务员选择，不擅自挑选。
 - `framework_review` 按一次 `review_cycle` 保存，只在重大失败、依赖变化或已授权里程碑触发；没有新复盘任务本身不阻断下一条业务实例。
 
-完整行业骨架不等于行业语义层完成。用于“从行业骨架中筛选潜在行业”的正式流程，覆盖范围必须是 `full registered terminal-node scope`；只要其中仍有 `not_expanded`，流程必须停在 `industry_semantic_expansion`，旧公司地图、路线池和客户数据均不能越过这个门。
+完整行业骨架不等于行业语义层完成。骨架中的 `not_expanded` 只是旧式覆盖登记，不能代替 RC2 的可审计筛查记录。正式流程覆盖范围必须是 `full registered terminal-node scope`；每个节点需要可审计浅筛，但并非每个节点都强制深度展开。只要还有 `not_screened`、未处置触发节点或未通过反向审计，流程必须停在 `industry_semantic_expansion`，旧公司地图、路线池和客户数据均不能越过这个门。
 
 用户可以明确授权一个 `pilot` 范围来验证字段和方法，但 pilot 只能标记为局部验证，不能把 `industry_semantic_expansion` 的全量门记为 PASS，也不能据此声称已经完成全行业筛查。
+
+## 阶段5内部状态机
+
+控制器按以下顺序选择一个且仅一个专业路由：
+
+```text
+semantic_contract_prepare
+→ semantic_calibration_case_prepare
+→ semantic_method_calibration
+→ full_screening_authorization
+→ semantic_full_screening
+→ semantic_evidence_expansion
+→ semantic_reverse_audit
+→ semantic_stage_review
+```
+
+`semantic_method_validation_state` 只允许 `INCONCLUSIVE / EFFECTIVE / NOT_EFFECTIVE`。结构测试、文档完整、单模型自评或外部模型多数意见都不能把它改为 `EFFECTIVE`。40例通过也不能把 `industry_semantic_expansion` 记为 PASS，更不能自动获得全量筛查或 `application_base_write_authorization`。
+
+当前外部模型运输方式是 `manual_external_handoff`。没有经过另行授权和验证的API/MCP连接器时，控制器不自动调用外部模型；它只生成带合同和输入哈希的任务包，等待原始返回。
 
 ## 必需能力依赖
 
@@ -95,6 +114,14 @@ company_workflow_state:
       blockers
   pending_handoff
   pending_human_decision
+  semantic_method:
+    semantic_method_validation_state
+    active_research_contract_id
+    active_research_contract_version
+    active_semantic_work_unit
+    full_screening_authorization
+    application_base_write_authorization
+    latest_semantic_return_reference
   active_work_unit
   work_units:
     - work_unit_type: route_instance | direction_instance | customer_thread | review_cycle

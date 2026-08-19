@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "semantic_screening_record": {
+    "research_contract_id": null,
+    "contract_version": null,
+    "skill_git_commit": null,
+    "research_theme_id": null,
+    "taxonomy_snapshot_sha256": null,
+    "industry_node_id": null,
+    "official_name": null,
+    "official_description_reference": null,
+    "parent_path": [],
+    "model_a_run_id": null,
+    "retrieval_status": "partial",
+    "search_queries": [],
+    "inspected_result_references": [],
+    "hypothesis_origin": [],
+    "screening_result": "ambiguous",
+    "semantic_work_state": "not_screened",
+    "evidence_state": "unknown",
+    "screening_triggered": false,
+    "is_nec_or_miscellaneous_node": false,
+    "risk_layer_inputs": {},
+    "proposed_minimal_claims": [],
+    "unknowns": [],
+    "stop_reason": null,
+    "record_sha256": null
+  }
+}

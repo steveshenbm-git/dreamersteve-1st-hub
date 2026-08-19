@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "semantic_reverse_audit_plan": {
+    "audit_id": null,
+    "research_contract_id": null,
+    "contract_version": null,
+    "population_reference": null,
+    "population_sha256": null,
+    "risk_strata_priority": [
+      "signal_conflict",
+      "nec_or_miscellaneous",
+      "source_scarce",
+      "semantic_ambiguity",
+      "ordinary"
+    ],
+    "sampling_method": "stratified_srswor",
+    "family_alpha": 0.05,
+    "stratum_bound": "exact_one_sided_hypergeometric_inversion",
+    "multiple_strata_correction": "Bonferroni",
+    "required_weighted_upper_bound": 0.05,
+    "random_seed": null,
+    "industry_coverage_supplement_is_statistical": false,
+    "any_confirmed_miss_causes_fail": true,
+    "required_result_fields": [
+      "industry_node_id",
+      "audit_result",
+      "confirmed_miss"
+    ],
+    "allowed_audit_results": [
+      "PASS",
+      "FAIL",
+      "UNVERIFIED"
+    ],
+    "complete_sample_coverage_required_for_pass": true
+  }
+}

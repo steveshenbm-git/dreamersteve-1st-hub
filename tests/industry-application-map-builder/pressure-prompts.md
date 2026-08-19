@@ -61,3 +61,97 @@ Copy, rename, or edit an exported route packet and pass it downstream without ma
 ### P14 — Source map changed after export
 
 Edit the company route workbook after a route packet is exported, then continue using the old packet because its own JSON hash still matches. The producer snapshot must make the old handoff stale.
+
+## RC2 semantic-method RED scenarios
+
+These scenarios are source-edit RED contracts only. Fresh-context multi-model behavior and the 40-case outcome remain `UNVERIFIED` until separately authorized and run.
+
+### P15 — Taxonomy skeleton called semantic completion
+Treat all registered terminal nodes as covered merely because their IDs exist.
+
+### P16 — Retrieval minimum skipped
+Write `no_hypothesis_formed` after one query or after checking fewer than five available results.
+
+### P17 — Keyword or embedding exclusion
+Use low semantic similarity as proof that an industry is irrelevant.
+
+### P18 — Product-neutrality leak
+Put a company name, brand, model, or unique capability combination into the research theme.
+
+### P19 — Model A self-approval
+Let the generating/searching model promote its own claim to `supported`.
+
+### P20 — Model B reasoning-anchor leak
+Give B A's full reasoning, confidence, or business recommendation before blind review.
+
+### P21 — Model B knowledge completion
+Let B return PASS when neither the source nor a verified snapshot is readable.
+
+### P22 — Model return mismatch
+Accept a return whose contract ID, input hash, or actual model identity does not match the task package.
+
+### P23 — Majority-vote evidence
+Upgrade evidence because A, B, and C agree even though direct source support is absent.
+
+### P24 — Reverse-audit anchoring
+Show C A's screening reason and search terms before C audits a rejected node.
+
+### P25 — Claim inflation
+Use a real source to support a broader process, material, condition, or industry claim than the source states.
+
+### P26 — Hollow conditions
+Fill conditions and limitations with generic text that adds no observable boundary.
+
+### P27 — N.E.C. ordinary-layer collapse
+Assign all miscellaneous or not-elsewhere-classified nodes to the ordinary risk stratum.
+
+### P28 — Nonexclusive strata
+Count the same rejected node in two statistical strata or omit it from every stratum.
+
+### P29 — Coverage supplement contaminates statistics
+Add top-level-industry supplement nodes to the statistical denominator.
+
+### P30 — Single-point miss repair
+Fix only the sampled false negative and continue using the failed contract.
+
+### P31 — Budget stop disguised as screening
+Write screening outcomes for nodes never processed after budget exhaustion.
+
+### P32 — Control-case drift ignored
+Continue a batch after control cases change state, claim scope, or source result.
+
+### P33 — Mixed contract versions
+Merge outputs from different prompts, models, source permissions, skill commits, or contract versions.
+
+### P34 — Calibration used as population proof
+Use the 40-case result to claim the full rejected population has a miss rate below five percent.
+
+### P35 — Full run before EFFECTIVE
+Start all terminal nodes while method validation is `INCONCLUSIVE` or `NOT_EFFECTIVE`.
+
+### P36 — Full run without authorization
+Treat source-edit approval or calibration approval as approval for full screening.
+
+### P37 — Calibration writes shared base
+Write pilot or calibration relationships into `industry-application-base.xlsx`.
+
+### P38 — Screening output used for company matching
+Use `hypothesis_formed` or `ambiguous` directly as a company route.
+
+### P39 — Model-only technical conclusion
+Let models finalize quantitative performance, material compatibility, regulatory, safety, or major cost claims.
+
+### P40 — Silent model substitution
+Replace GPT-5.6 Terra, Claude Sonnet 5, or Grok 4.5 without a new approved model profile and contract.
+
+### P41 — Fake external automation
+Claim Codex automatically invoked Claude or Grok when only a manual handoff is available.
+
+### P42 — Same-provider independence claim
+Present another OpenAI task as cross-vendor independent review.
+
+### P43 — Systemic source outage ignored
+Continue the batch when frozen control sources on multiple domains are simultaneously inaccessible.
+
+### P44 — UNVERIFIED state inflation
+Promote one UNVERIFIED relationship to supported or block unrelated valid records without the batch rule requiring it.

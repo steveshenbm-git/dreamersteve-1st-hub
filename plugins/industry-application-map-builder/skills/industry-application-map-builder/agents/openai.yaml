@@ -1,4 +1,4 @@
 interface:
   display_name: "行业应用地图构建"
-  short_description: "构建公司专属且证据可追溯的行业应用地图与路线候选池"
-  default_prompt: "使用 $industry-application-map-builder 为指定公司构建行业应用地图并输出受控路线候选池。"
+  short_description: "校准行业语义方法并构建可追溯的公司路线候选池"
+  default_prompt: "使用 $industry-application-map-builder 先识别当前是研究合同、40例校准、全量浅筛、证据展开、反向审计、共享底座写入还是公司路线阶段；严格分离筛查、进度和证据状态。未通过方法门、证据门和单独写入授权时，不要更新正式共享应用底座或进入公司匹配。"

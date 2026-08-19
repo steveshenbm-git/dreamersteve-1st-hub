@@ -35,6 +35,7 @@ class IndustryApplicationMapContractTests(unittest.TestCase):
         )
 
         self.assertEqual(manifest["name"], "industry-application-map-builder")
+        self.assertEqual(manifest["version"], "0.3.0-beta.1")
         self.assertEqual(manifest["interface"]["displayName"], "行业应用地图构建")
         self.assertTrue(
             any(
@@ -117,6 +118,99 @@ class IndustryApplicationMapContractTests(unittest.TestCase):
             "company-product-knowledge-builder → industry-application-map-builder → foreign-trade-customer-development",
             readme,
         )
+
+    def test_rc2_semantic_routes_and_resources_are_owned_by_map_builder(self):
+        skill_text = (SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        for route in (
+            "semantic_contract_prepare",
+            "semantic_calibration_case_prepare",
+            "semantic_method_calibration",
+            "semantic_full_screening",
+            "semantic_evidence_expansion",
+            "semantic_reverse_audit",
+            "semantic_stage_review",
+        ):
+            self.assertIn(route, skill_text)
+
+        for reference in (
+            "industry-semantic-research-contract.md",
+            "industry-semantic-model-protocol.md",
+            "industry-semantic-calibration-and-audit.md",
+        ):
+            self.assertTrue((SKILL_ROOT / "references" / reference).is_file(), reference)
+            self.assertIn(reference, skill_text)
+
+        for script in (
+            "init_semantic_research_workspace.py",
+            "freeze_semantic_taxonomy_snapshot.py",
+            "validate_semantic_research_workspace.py",
+            "sample_semantic_reverse_audit.py",
+            "evaluate_semantic_calibration.py",
+        ):
+            self.assertTrue((SKILL_ROOT / "scripts" / script).is_file(), script)
+
+    def test_rc2_contract_separates_status_axes_models_and_authorizations(self):
+        for name in (
+            "industry-semantic-research-contract.md",
+            "industry-semantic-model-protocol.md",
+            "industry-semantic-calibration-and-audit.md",
+        ):
+            self.assertTrue((SKILL_ROOT / "references" / name).is_file(), name)
+        references = "\n".join(
+            (SKILL_ROOT / "references" / name).read_text(encoding="utf-8")
+            for name in (
+                "industry-semantic-research-contract.md",
+                "industry-semantic-model-protocol.md",
+                "industry-semantic-calibration-and-audit.md",
+            )
+        )
+        for required in (
+            "screening_result",
+            "semantic_work_state",
+            "evidence_state",
+            "no_hypothesis_formed",
+            "GPT-5.6 Terra",
+            "Claude Sonnet 5",
+            "Grok 4.5",
+            "manual_external_handoff",
+            "application_base_write_authorization",
+            "INCONCLUSIVE",
+            "baseline_full_depth",
+            "candidate_screen_then_expand",
+            "Bonferroni",
+            "超几何",
+        ):
+            self.assertIn(required, references)
+        for forbidden in (
+            "logically_unrelated",
+            "confirmed_irrelevant",
+            "excluded_by_screening",
+        ):
+            self.assertNotIn(forbidden, references)
+
+    def test_rc2_assets_are_machine_readable_and_do_not_contain_credentials(self):
+        asset_root = SKILL_ROOT / "assets" / "semantic-method"
+        json_assets = (
+            "research-contract.template.json",
+            "model-profile.rc2-pilot.template.json",
+            "model-task.template.json",
+            "model-return.template.json",
+            "screening-record.template.json",
+            "audit-plan.template.json",
+        )
+        combined = ""
+        for name in json_assets:
+            path = asset_root / name
+            self.assertTrue(path.is_file(), name)
+            json.loads(path.read_text(encoding="utf-8"))
+            combined += path.read_text(encoding="utf-8")
+        case_path = asset_root / "calibration-case-set.template.jsonl"
+        self.assertTrue(case_path.is_file())
+        for line in case_path.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                json.loads(line)
+        for secret_name in ("api_key", "access_token", "password", "private_key"):
+            self.assertNotIn(secret_name, combined.lower())
 
 
 if __name__ == "__main__":

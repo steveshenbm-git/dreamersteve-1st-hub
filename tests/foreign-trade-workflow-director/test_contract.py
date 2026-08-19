@@ -34,10 +34,10 @@ class WorkflowDirectorContractTests(unittest.TestCase):
         marketplace = json.loads(read(ROOT / ".agents" / "plugins" / "marketplace.json"))
 
         self.assertEqual(manifest["name"], "foreign-trade-workflow-director")
-        self.assertEqual(manifest["version"].split("+", 1)[0], "0.1.0-beta.2")
+        self.assertEqual(manifest["version"], "0.2.0-beta.1")
         self.assertRegex(
             manifest["version"],
-            r"^0\.1\.0-beta\.2(?:\+codex\.[A-Za-z0-9._-]+)?$",
+            r"^0\.2\.0-beta\.1$",
         )
         self.assertTrue(
             any(
@@ -215,6 +215,35 @@ class WorkflowDirectorContractTests(unittest.TestCase):
             "追加",
         ):
             self.assertIn(required, texts["development"])
+
+    def test_stage_five_routes_rc2_without_crossing_human_authorization_gates(self):
+        skill = read(SKILL_ROOT / "SKILL.md")
+        blueprint = read(SKILL_ROOT / "references" / "workflow-blueprint.md")
+        contract = read(SKILL_ROOT / "references" / "workflow-and-packet-contracts.md")
+        state = read(SKILL_ROOT / "assets" / "company-workflow-state.template.yaml")
+        combined = "\n".join((skill, blueprint, contract, state))
+
+        for required in (
+            "semantic_contract_prepare",
+            "semantic_calibration_case_prepare",
+            "semantic_method_calibration",
+            "semantic_full_screening",
+            "semantic_evidence_expansion",
+            "semantic_reverse_audit",
+            "semantic_stage_review",
+            "semantic_method_validation_state",
+            "active_research_contract_id",
+            "active_semantic_work_unit",
+            "full_screening_authorization",
+            "application_base_write_authorization",
+            "semantic_model_handoff_packet",
+            "manual_external_handoff",
+        ):
+            self.assertIn(required, combined)
+
+        self.assertIn("40例", combined)
+        self.assertIn("不能把 `industry_semantic_expansion` 记为 PASS", combined)
+        self.assertIn("不自动调用", combined)
 
 
 if __name__ == "__main__":

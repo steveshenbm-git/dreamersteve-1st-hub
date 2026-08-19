@@ -68,3 +68,28 @@ route_workbench_projection:
 该投影只供 `salesperson_workbench` 的 `01-路线选择` 和 `05-异常与风险` 使用。它不得复制共享行业骨架、产出产品、应用节点、需求原子、关系边、完整证据来源、覆盖台账或变更记录，也不得成为新的事实来源。
 
 若出现 `COMPANY_TAXONOMY_SNAPSHOT_STALE`、`COMPANY_APPLICATION_SNAPSHOT_STALE`、`ROUTE_EXPORT_NOT_CURRENT`、`INPUT_SNAPSHOT_HASH_MISMATCH` 或 `ROUTE_EXPORT_SOURCE_MAP_STALE`，返回 `shared_input_stale_event`，明确受影响路线、当前哈希/登记状态和所需复核动作。协调器必须把它投影到异常页并阻断受影响的方向编译与候选采集；业务员手工改状态不能解除该阻断。
+
+## 行业语义专业返回
+
+阶段5每个路由返回同一合同版本的 `semantic_specialist_return_packet`：
+
+```text
+semantic_specialist_return_packet:
+  handoff_id
+  research_contract_id
+  contract_version
+  source_route
+  result_state: PASS | FAIL | UNVERIFIED
+  method_validation_state: INCONCLUSIVE | EFFECTIVE | NOT_EFFECTIVE
+  active_semantic_work_unit
+  artifact_references_and_hashes
+  coverage_summary
+  evidence_gate_summary
+  reverse_audit_summary
+  blockers
+  one_next_action
+  next_authorization_required
+  prohibited_downstream_actions
+```
+
+40例返回只更新方法状态，不把阶段5记为PASS。全量筛查、正式底座写入、公司匹配和客户搜索分别需要自己的门。协调器只投影当前为什么停、唯一下一动作和需要用户批准什么，不把模型包、查询记录或机器证据附页交给业务员维护。

@@ -16,6 +16,7 @@ industry-application-map-root/
 │   ├── route-pool-export-registry.json
 │   └── review-log.json
 ├── 05-工作区/
+│   └── 行业语义研究/<research_contract_id>/
 └── 06-风险隔离/
 ```
 
@@ -33,6 +34,12 @@ industry-application-map-root/
 根索引只保存版本、哈希、公司编号和路径。共享底座不得成为跨公司产品事实通道。跨公司比较只能写入单独获授权的工作区。
 
 本技能的 4/8/8 页工作簿是机器证据后台。不得通过改名、删页或把业务员决定直接塞入共享底座来制造“业务前台”。协调器的业务工作簿位于公司工作区，由稳定编号和包引用回溯本技能记录，不属于本地图根的事实所有权。
+
+## 行业语义研究工作区
+
+每个冻结合同使用独立的 `05-工作区/行业语义研究/<research_contract_id>/`，包含合同、节点快照、校准案例、baseline/candidate原始运行、模型交接、证据包、反向审计、报告和隔离失败返回。
+
+初始化器拒绝覆盖。原始运行、模型返回和审计记录追加保存；合同版本变化创建新运行，不原地改历史。校准阶段 `allowed_writes` 只能指向本研究工作区，禁止写 `02-共享应用知识/industry-application-base.xlsx`。正式底座写入必须另有显式 `application_base_write_authorization = true`。
 
 ## 初始化与回滚
 

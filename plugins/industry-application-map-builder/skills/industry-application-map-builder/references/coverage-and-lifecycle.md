@@ -28,3 +28,22 @@
 产品事实包、事实库、行业骨架或应用底座哈希变化时，标记所有依赖路线待复核。分类版本变化时保留旧节点、添加新节点和对应关系；未能确定对应关系时记录迁移未知。不得静默改写路线ID、业务员决定或下游扫描历史。
 
 候选扫描结果可以通过 `direction_feedback_packet` 反向形成应用知识修订候选，但不能自动改变共享事实、公司路线状态或覆盖处置。
+
+## 行业语义阶段生命周期
+
+分类骨架覆盖与语义研究覆盖分别登记。`not_expanded` 只表示尚无独立应用语义，不能因节点已经登记而自动改为完成。
+
+```text
+semantic_contract_prepare
+→ semantic_calibration_case_prepare
+→ semantic_method_calibration
+→ separate full-screening authorization
+→ semantic_full_screening
+→ semantic_evidence_expansion
+→ semantic_reverse_audit
+→ semantic_stage_review
+```
+
+节点进度使用 `not_screened / screened / evidence_expansion_required / evidence_expanded / audit_reopened`。预算耗尽时未处理节点继续 `not_screened`。任何漏判都使受影响范围进入 `audit_reopened`，创建新合同版本并独立重审。
+
+全量阶段只能在当前末端节点全部有可审计筛查记录、同一合同版本的触发节点全部处置、反向审计通过且无安全失败时PASS。40例校准、静态合同或局部pilot都不能代替全量门。
