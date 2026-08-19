@@ -23,6 +23,7 @@ ASSET_ROOT = SKILL_ROOT / "assets" / "semantic-method"
 INIT_SCRIPT = SKILL_ROOT / "scripts" / "init_semantic_research_workspace.py"
 FREEZE_SCRIPT = SKILL_ROOT / "scripts" / "freeze_semantic_taxonomy_snapshot.py"
 VALIDATE_SCRIPT = SKILL_ROOT / "scripts" / "validate_semantic_research_workspace.py"
+BUILD_HANDOFF_SCRIPT = SKILL_ROOT / "scripts" / "build_semantic_model_handoff.py"
 SAMPLE_SCRIPT = SKILL_ROOT / "scripts" / "sample_semantic_reverse_audit.py"
 EVALUATE_SCRIPT = SKILL_ROOT / "scripts" / "evaluate_semantic_calibration.py"
 TAXONOMY_SNAPSHOT_BYTES = b'{"schema_version":"1.0","terminal_node_count":2}\n'
@@ -49,6 +50,16 @@ def write_jsonl(path: Path, values: list[dict]) -> None:
         "".join(json.dumps(value, ensure_ascii=False, sort_keys=True) + "\n" for value in values),
         encoding="utf-8",
     )
+
+
+def canonical_json_sha256(value: object) -> str:
+    encoded = json.dumps(
+        value,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
 
 
 class SemanticMethodToolTests(unittest.TestCase):
@@ -424,6 +435,411 @@ class SemanticMethodToolTests(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("MODEL_RETURN_MISMATCH", result.stdout)
 
+    def test_handoff_builder_embeds_visible_input_return_schema_and_field_ownership(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            parent = Path(tmp)
+            task = json.loads(
+                (ASSET_ROOT / "model-task.template.json").read_text(encoding="utf-8")
+            )
+            task_body = task["semantic_model_task"]
+            task_body.update(
+                {
+                    "task_id": "TASK-B-BUNDLE",
+                    "research_contract_id": "SEM-RC2-001",
+                    "contract_version": "1.0.0",
+                    "role": "B",
+                    "mode": "blind_source_review",
+                    "declared_model_name": "Claude Sonnet 5",
+                    "source_references": ["SOURCE-001"],
+                    "issued_at": "2026-08-19T00:00:00Z",
+                }
+            )
+            visible_input = {
+                "minimal_claim": "A bounded claim",
+                "source_records": [{"source_id": "SOURCE-001"}],
+            }
+            task_path = parent / "task.json"
+            input_path = parent / "input.json"
+            output_path = parent / "handoff.json"
+            write_json(task_path, task)
+            write_json(input_path, visible_input)
+
+            result = run_script(
+                BUILD_HANDOFF_SCRIPT,
+                "--task",
+                str(task_path),
+                "--input",
+                str(input_path),
+                "--output",
+                str(output_path),
+            )
+            self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
+            packet = json.loads(output_path.read_text(encoding="utf-8"))[
+                "semantic_model_task"
+            ]
+            self.assertEqual(packet["visible_input"], visible_input)
+            self.assertEqual(
+                packet["input_sha256"], canonical_json_sha256(visible_input)
+            )
+            self.assertEqual(
+                packet["input_hash_algorithm"], "sha256_canonical_json_v1"
+            )
+            self.assertIn("semantic_model_return", packet["expected_return_schema"])
+            self.assertIn("model_required_fields", packet["field_ownership"])
+            self.assertIn("receiver_owned_fields", packet["field_ownership"])
+            self.assertTrue(
+                packet["manual_transport_rules"][
+                    "unknown_runtime_metadata_must_be_null"
+                ]
+            )
+            second = run_script(
+                BUILD_HANDOFF_SCRIPT,
+                "--task",
+                str(task_path),
+                "--input",
+                str(input_path),
+                "--output",
+                str(output_path),
+            )
+            self.assertNotEqual(second.returncode, 0)
+            self.assertIn("DESTINATION_EXISTS", second.stderr)
+
+    def test_handoff_builder_rejects_unfilled_task_fields(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            parent = Path(tmp)
+            task_path = parent / "task.json"
+            input_path = parent / "input.json"
+            output_path = parent / "handoff.json"
+            task_path.write_bytes((ASSET_ROOT / "model-task.template.json").read_bytes())
+            write_json(input_path, {"minimal_claim": "A bounded claim"})
+            result = run_script(
+                BUILD_HANDOFF_SCRIPT,
+                "--task",
+                str(task_path),
+                "--input",
+                str(input_path),
+                "--output",
+                str(output_path),
+            )
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("MODEL_TASK_INCOMPLETE", result.stderr)
+            self.assertFalse(output_path.exists())
+
+    def test_validator_accepts_manual_return_without_model_runtime_metadata_when_receipt_matches(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            workspace = self.initialize_workspace(Path(tmp))
+            task_template = json.loads(
+                (ASSET_ROOT / "model-task.template.json").read_text(encoding="utf-8")
+            )["semantic_model_task"]
+            visible_input = {
+                "minimal_claim": "A bounded claim",
+                "source_records": [{"source_id": "SOURCE-001"}],
+            }
+            task_body = {
+                "task_id": "TASK-B-MANUAL",
+                "research_contract_id": "SEM-RC2-001",
+                "contract_version": "1.0.0",
+                "input_sha256": canonical_json_sha256(visible_input),
+                "input_hash_algorithm": "sha256_canonical_json_v1",
+                "role": "B",
+                "mode": "blind_source_review",
+                "trigger_reason": None,
+                "declared_model_name": "Claude Sonnet 5",
+                "identity_evidence_policy": {
+                    "minimum_level": "operator_attested",
+                    "accepted_types": [
+                        "connector_verified",
+                        "platform_export",
+                        "ui_observed",
+                        "user_attested",
+                    ],
+                },
+                "visible_input": visible_input,
+                "source_references": ["SOURCE-001"],
+                "expected_return_schema": task_template["expected_return_schema"],
+                "field_ownership": task_template["field_ownership"],
+                "manual_transport_rules": task_template["manual_transport_rules"],
+                "output_contract": "semantic_model_return",
+                "transport": "manual_external_handoff",
+                "source_permissions": ["public_web"],
+                "prohibited_inputs": ["company_name", "full_reasoning"],
+                "prohibited_actions": [
+                    "use_model_knowledge_to_fill_source_gap"
+                ],
+                "stop_condition": "return one raw semantic_model_return JSON object and stop",
+                "issued_at": "2026-08-19T00:00:00Z",
+            }
+            return_body = {
+                "task_id": "TASK-B-MANUAL",
+                "research_contract_id": "SEM-RC2-001",
+                "contract_version": "1.0.0",
+                "input_sha256": canonical_json_sha256(visible_input),
+                "declared_model_name": "Claude Sonnet 5",
+                "actual_model_id_or_unknown": "unknown",
+                "provider_or_unknown": "Anthropic",
+                "model_reported_run_id": None,
+                "model_reported_started_at": None,
+                "result_state": "PASS",
+                "reason_codes": ["SOURCE_READ_AND_SCOPE_MATCHED"],
+                "source_access_results": [
+                    {"source_id": "SOURCE-001", "state": "read"}
+                ],
+                "structured_findings": [
+                    {"claim_id": "CLAIM-001", "review": "PASS"}
+                ],
+                "unknowns": [],
+                "model_reported_returned_at": None,
+            }
+            task_path = workspace / "04-模型交接" / "B" / "task.json"
+            return_path = (
+                workspace
+                / "03-运行原始记录"
+                / "candidate"
+                / "B-return.json"
+            )
+            write_json(
+                task_path,
+                {"schema_version": "1.1", "semantic_model_task": task_body},
+            )
+            write_json(
+                return_path,
+                {"schema_version": "1.1", "semantic_model_return": return_body},
+            )
+            receipt = {
+                "schema_version": "1.1",
+                "semantic_model_receipt": {
+                    "receipt_id": "RECEIPT-B-MANUAL",
+                    "task_id": "TASK-B-MANUAL",
+                    "research_contract_id": "SEM-RC2-001",
+                    "contract_version": "1.0.0",
+                    "transport": "manual_external_handoff",
+                    "raw_return_reference": str(return_path.relative_to(workspace)),
+                    "raw_return_sha256": hashlib.sha256(return_path.read_bytes()).hexdigest(),
+                    "received_at": "2026-08-19T00:03:00Z",
+                    "identity_evidence": {
+                        "observed_model_label_or_unknown": "Claude Sonnet 5",
+                        "evidence_type": "user_attested",
+                        "evidence_reference_or_null": "USER-HANDOFF-001",
+                        "verification_level": "operator_attested",
+                    },
+                    "executor_metadata": {
+                        "executor_run_id_or_null": None,
+                        "executor_started_at_or_null": None,
+                        "executor_returned_at_or_null": None,
+                        "provenance": "none",
+                    },
+                    "acceptance_state": "PASS",
+                    "reason_codes": ["RAW_RETURN_HASH_MATCHED", "IDENTITY_ATTESTED"],
+                }
+            }
+            write_json(
+                workspace / "04-模型交接" / "B" / "receipt.json", receipt
+            )
+            result = run_script(VALIDATE_SCRIPT, str(workspace), "--format", "json")
+            self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
+            self.assertEqual(json.loads(result.stdout)["status"], "PASS")
+
+    def test_validator_rejects_manual_return_without_a_receiver_receipt(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            workspace = self.initialize_workspace(Path(tmp))
+            task_template = json.loads(
+                (ASSET_ROOT / "model-task.template.json").read_text(encoding="utf-8")
+            )["semantic_model_task"]
+            visible_input = {"minimal_claim": "A bounded claim"}
+            task_body = {
+                "task_id": "TASK-B-NO-RECEIPT",
+                "research_contract_id": "SEM-RC2-001",
+                "contract_version": "1.0.0",
+                "input_sha256": canonical_json_sha256(visible_input),
+                "input_hash_algorithm": "sha256_canonical_json_v1",
+                "role": "B",
+                "mode": "blind_source_review",
+                "declared_model_name": "Claude Sonnet 5",
+                "identity_evidence_policy": {
+                    "minimum_level": "operator_attested",
+                    "accepted_types": [
+                        "connector_verified",
+                        "platform_export",
+                        "ui_observed",
+                        "user_attested",
+                    ],
+                },
+                "visible_input": visible_input,
+                "source_references": ["SOURCE-001"],
+                "source_permissions": ["public_web"],
+                "expected_return_schema": task_template["expected_return_schema"],
+                "field_ownership": task_template["field_ownership"],
+                "manual_transport_rules": task_template["manual_transport_rules"],
+                "output_contract": "semantic_model_return",
+                "transport": "manual_external_handoff",
+                "prohibited_inputs": ["company_name", "full_reasoning"],
+                "prohibited_actions": [
+                    "use_model_knowledge_to_fill_source_gap"
+                ],
+                "stop_condition": "return raw JSON and stop",
+                "issued_at": "2026-08-19T00:00:00Z",
+            }
+            return_body = {
+                "task_id": "TASK-B-NO-RECEIPT",
+                "research_contract_id": "SEM-RC2-001",
+                "contract_version": "1.0.0",
+                "input_sha256": canonical_json_sha256(visible_input),
+                "declared_model_name": "Claude Sonnet 5",
+                "actual_model_id_or_unknown": "unknown",
+                "provider_or_unknown": "Anthropic",
+                "model_reported_run_id": None,
+                "model_reported_started_at": None,
+                "result_state": "PASS",
+                "reason_codes": ["SOURCE_READ_AND_SCOPE_MATCHED"],
+                "source_access_results": [],
+                "structured_findings": [],
+                "unknowns": [],
+                "model_reported_returned_at": None,
+            }
+            write_json(
+                workspace / "04-模型交接" / "B" / "task.json",
+                {"schema_version": "1.1", "semantic_model_task": task_body},
+            )
+            write_json(
+                workspace
+                / "03-运行原始记录"
+                / "candidate"
+                / "B-return.json",
+                {"schema_version": "1.1", "semantic_model_return": return_body},
+            )
+            result = run_script(VALIDATE_SCRIPT, str(workspace), "--format", "json")
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("MODEL_RECEIPT_MISSING", result.stdout)
+
+    def test_validator_rejects_receiver_receipt_with_wrong_raw_return_hash(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            workspace = self.initialize_workspace(Path(tmp))
+            task_template = json.loads(
+                (ASSET_ROOT / "model-task.template.json").read_text(encoding="utf-8")
+            )["semantic_model_task"]
+            visible_input = {"minimal_claim": "A bounded claim"}
+            task_body = {
+                "task_id": "TASK-B-BAD-RECEIPT",
+                "research_contract_id": "SEM-RC2-001",
+                "contract_version": "1.0.0",
+                "input_sha256": canonical_json_sha256(visible_input),
+                "input_hash_algorithm": "sha256_canonical_json_v1",
+                "role": "B",
+                "mode": "blind_source_review",
+                "declared_model_name": "Claude Sonnet 5",
+                "identity_evidence_policy": {
+                    "minimum_level": "operator_attested",
+                    "accepted_types": [
+                        "connector_verified",
+                        "platform_export",
+                        "ui_observed",
+                        "user_attested",
+                    ],
+                },
+                "visible_input": visible_input,
+                "source_references": ["SOURCE-001"],
+                "expected_return_schema": task_template["expected_return_schema"],
+                "field_ownership": task_template["field_ownership"],
+                "manual_transport_rules": task_template["manual_transport_rules"],
+                "output_contract": "semantic_model_return",
+                "transport": "manual_external_handoff",
+                "source_permissions": ["public_web"],
+                "prohibited_inputs": ["company_name"],
+                "prohibited_actions": ["fill_source_gap"],
+                "stop_condition": "return raw JSON and stop",
+                "issued_at": "2026-08-19T00:00:00Z",
+            }
+            return_body = {
+                "task_id": "TASK-B-BAD-RECEIPT",
+                "research_contract_id": "SEM-RC2-001",
+                "contract_version": "1.0.0",
+                "input_sha256": canonical_json_sha256(visible_input),
+                "declared_model_name": "Claude Sonnet 5",
+                "actual_model_id_or_unknown": "unknown",
+                "provider_or_unknown": "Anthropic",
+                "model_reported_run_id": None,
+                "model_reported_started_at": None,
+                "result_state": "PASS",
+                "reason_codes": ["SOURCE_READ_AND_SCOPE_MATCHED"],
+                "source_access_results": [],
+                "structured_findings": [],
+                "unknowns": [],
+                "model_reported_returned_at": None,
+            }
+            task_path = workspace / "04-模型交接" / "B" / "task.json"
+            return_path = workspace / "03-运行原始记录" / "candidate" / "return.json"
+            write_json(
+                task_path,
+                {"schema_version": "1.1", "semantic_model_task": task_body},
+            )
+            write_json(
+                return_path,
+                {"schema_version": "1.1", "semantic_model_return": return_body},
+            )
+            receipt = {
+                "schema_version": "1.1",
+                "semantic_model_receipt": {
+                    "receipt_id": "RECEIPT-B-BAD-HASH",
+                    "task_id": "TASK-B-BAD-RECEIPT",
+                    "research_contract_id": "SEM-RC2-001",
+                    "contract_version": "1.0.0",
+                    "transport": "manual_external_handoff",
+                    "raw_return_reference": str(return_path.relative_to(workspace)),
+                    "raw_return_sha256": "f" * 64,
+                    "received_at": "2026-08-19T00:03:00Z",
+                    "identity_evidence": {
+                        "observed_model_label_or_unknown": "Claude Sonnet 5",
+                        "evidence_type": "user_attested",
+                        "evidence_reference_or_null": "USER-HANDOFF-001",
+                        "verification_level": "operator_attested",
+                    },
+                    "executor_metadata": {
+                        "executor_run_id_or_null": None,
+                        "executor_started_at_or_null": None,
+                        "executor_returned_at_or_null": None,
+                        "provenance": "none",
+                    },
+                    "acceptance_state": "PASS",
+                    "reason_codes": ["RAW_RETURN_RECEIVED"],
+                }
+            }
+            receipt_path = workspace / "04-模型交接" / "B" / "receipt.json"
+            write_json(receipt_path, receipt)
+            result = run_script(VALIDATE_SCRIPT, str(workspace), "--format", "json")
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("MODEL_RECEIPT_RETURN_HASH_MISMATCH", result.stdout)
+
+            receipt_body = receipt["semantic_model_receipt"]
+            receipt_body["raw_return_sha256"] = hashlib.sha256(
+                return_path.read_bytes()
+            ).hexdigest()
+            receipt_body["executor_metadata"] = {
+                "executor_run_id_or_null": "fabricated-run-id",
+                "executor_started_at_or_null": "2026-08-19T00:01:00Z",
+                "executor_returned_at_or_null": "2026-08-19T00:02:00Z",
+                "provenance": "manual_external_handoff",
+            }
+            write_json(receipt_path, receipt)
+            result = run_script(VALIDATE_SCRIPT, str(workspace), "--format", "json")
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn(
+                "MODEL_RECEIPT_MANUAL_EXECUTOR_METADATA_INVALID", result.stdout
+            )
+
+            receipt_body["executor_metadata"] = {
+                "executor_run_id_or_null": None,
+                "executor_started_at_or_null": None,
+                "executor_returned_at_or_null": None,
+                "provenance": "none",
+            }
+            receipt_body["identity_evidence"][
+                "observed_model_label_or_unknown"
+            ] = "Grok 4.5"
+            write_json(receipt_path, receipt)
+            result = run_script(VALIDATE_SCRIPT, str(workspace), "--format", "json")
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("MODEL_RECEIPT_IDENTITY_UNVERIFIED", result.stdout)
+
     def test_validator_rejects_model_c_without_an_allowed_trigger(self):
         with tempfile.TemporaryDirectory() as tmp:
             workspace = self.initialize_workspace(Path(tmp))
@@ -455,49 +871,194 @@ class SemanticMethodToolTests(unittest.TestCase):
     def test_validator_accepts_a_matching_blind_review_task_and_return(self):
         with tempfile.TemporaryDirectory() as tmp:
             workspace = self.initialize_workspace(Path(tmp))
+            task_template = json.loads(
+                (ASSET_ROOT / "model-task.template.json").read_text(encoding="utf-8")
+            )["semantic_model_task"]
+            visible_input = {
+                "minimal_claim": "A bounded claim",
+                "source_records": [{"source_id": "SOURCE-001"}],
+            }
             task_body = {
                 "task_id": "TASK-B-VALID",
                 "research_contract_id": "SEM-RC2-001",
                 "contract_version": "1.0.0",
-                "input_sha256": "d" * 64,
+                "input_sha256": canonical_json_sha256(visible_input),
+                "input_hash_algorithm": "sha256_canonical_json_v1",
                 "role": "B",
                 "mode": "blind_source_review",
                 "trigger_reason": None,
                 "declared_model_name": "Claude Sonnet 5",
-                "actual_model_id_required": True,
-                "visible_inputs": ["minimal_claim", "source_reference"],
+                "identity_evidence_policy": {
+                    "minimum_level": "operator_attested",
+                    "accepted_types": [
+                        "connector_verified",
+                        "platform_export",
+                        "ui_observed",
+                        "user_attested",
+                    ],
+                },
+                "visible_input": visible_input,
                 "source_references": ["SOURCE-001"],
+                "expected_return_schema": task_template["expected_return_schema"],
+                "field_ownership": task_template["field_ownership"],
+                "manual_transport_rules": task_template["manual_transport_rules"],
                 "output_contract": "semantic_model_return",
                 "transport": "manual_external_handoff",
+                "source_permissions": ["public_web"],
                 "prohibited_inputs": ["company_name", "full_reasoning"],
                 "prohibited_actions": ["use_model_knowledge_to_fill_source_gap"],
+                "stop_condition": "return raw JSON and stop",
                 "issued_at": "2026-08-19T00:00:00Z",
             }
             return_body = {
                 "task_id": "TASK-B-VALID",
                 "research_contract_id": "SEM-RC2-001",
                 "contract_version": "1.0.0",
-                "input_sha256": "d" * 64,
+                "input_sha256": canonical_json_sha256(visible_input),
                 "declared_model_name": "Claude Sonnet 5",
                 "actual_model_id_or_unknown": "claude-sonnet-5-build-x",
-                "provider": "Anthropic",
-                "run_id": "RUN-B-VALID",
-                "run_started_at": "2026-08-19T00:01:00Z",
+                "provider_or_unknown": "Anthropic",
+                "model_reported_run_id": "RUN-B-VALID",
+                "model_reported_started_at": "2026-08-19T00:01:00Z",
                 "result_state": "PASS",
                 "reason_codes": ["SOURCE_READ_AND_SCOPE_MATCHED"],
                 "source_access_results": [{"source_id": "SOURCE-001", "state": "read"}],
                 "structured_findings": [{"claim_id": "CLAIM-001", "review": "PASS"}],
                 "unknowns": [],
-                "returned_at": "2026-08-19T00:02:00Z",
+                "model_reported_returned_at": "2026-08-19T00:02:00Z",
             }
+            return_path = (
+                workspace / "03-运行原始记录" / "candidate" / "B-return.json"
+            )
             write_json(
                 workspace / "04-模型交接" / "B" / "task.json",
-                {"semantic_model_task": task_body},
+                {"schema_version": "1.1", "semantic_model_task": task_body},
             )
             write_json(
-                workspace / "03-运行原始记录" / "candidate" / "B-return.json",
-                {"semantic_model_return": return_body},
+                return_path,
+                {"schema_version": "1.1", "semantic_model_return": return_body},
             )
+            receipt = {
+                "schema_version": "1.1",
+                "semantic_model_receipt": {
+                    "receipt_id": "RECEIPT-B-VALID",
+                    "task_id": "TASK-B-VALID",
+                    "research_contract_id": "SEM-RC2-001",
+                    "contract_version": "1.0.0",
+                    "transport": "manual_external_handoff",
+                    "raw_return_reference": str(return_path.relative_to(workspace)),
+                    "raw_return_sha256": hashlib.sha256(return_path.read_bytes()).hexdigest(),
+                    "received_at": "2026-08-19T00:03:00Z",
+                    "identity_evidence": {
+                        "observed_model_label_or_unknown": "Claude Sonnet 5",
+                        "evidence_type": "user_attested",
+                        "evidence_reference_or_null": "USER-HANDOFF-001",
+                        "verification_level": "operator_attested",
+                    },
+                    "executor_metadata": {
+                        "executor_run_id_or_null": None,
+                        "executor_started_at_or_null": None,
+                        "executor_returned_at_or_null": None,
+                        "provenance": "none",
+                    },
+                    "acceptance_state": "PASS",
+                    "reason_codes": ["RAW_RETURN_HASH_MATCHED", "IDENTITY_ATTESTED"],
+                }
+            }
+            write_json(workspace / "04-模型交接" / "B" / "receipt.json", receipt)
+            result = run_script(VALIDATE_SCRIPT, str(workspace), "--format", "json")
+            self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
+            self.assertEqual(json.loads(result.stdout)["status"], "PASS")
+
+    def test_validator_accepts_connected_model_a_with_receiver_executor_metadata(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            workspace = self.initialize_workspace(Path(tmp))
+            task_template = json.loads(
+                (ASSET_ROOT / "model-task.template.json").read_text(encoding="utf-8")
+            )["semantic_model_task"]
+            visible_input = {"industry_node_id": "T-01"}
+            task_body = {
+                "task_id": "TASK-A-CONNECTED",
+                "research_contract_id": "SEM-RC2-001",
+                "contract_version": "1.0.0",
+                "input_sha256": canonical_json_sha256(visible_input),
+                "input_hash_algorithm": "sha256_canonical_json_v1",
+                "role": "A",
+                "mode": "screening",
+                "trigger_reason": None,
+                "declared_model_name": "GPT-5.6 Terra",
+                "identity_evidence_policy": {
+                    "minimum_level": "platform_verified",
+                    "accepted_types": ["connector_verified", "platform_export"],
+                },
+                "visible_input": visible_input,
+                "source_references": ["SOURCE-001"],
+                "source_permissions": ["public_web"],
+                "expected_return_schema": task_template["expected_return_schema"],
+                "field_ownership": task_template["field_ownership"],
+                "manual_transport_rules": task_template["manual_transport_rules"],
+                "output_contract": "semantic_model_return",
+                "transport": "codex_task",
+                "prohibited_inputs": ["company_name"],
+                "prohibited_actions": ["upgrade_own_evidence"],
+                "stop_condition": "return raw JSON and stop",
+                "issued_at": "2026-08-19T00:00:00Z",
+            }
+            return_body = {
+                "task_id": "TASK-A-CONNECTED",
+                "research_contract_id": "SEM-RC2-001",
+                "contract_version": "1.0.0",
+                "input_sha256": canonical_json_sha256(visible_input),
+                "declared_model_name": "GPT-5.6 Terra",
+                "actual_model_id_or_unknown": "gpt-5.6-terra",
+                "provider_or_unknown": "OpenAI",
+                "model_reported_run_id": None,
+                "model_reported_started_at": None,
+                "result_state": "PASS",
+                "reason_codes": ["SCREENING_COMPLETE"],
+                "source_access_results": [],
+                "structured_findings": [],
+                "unknowns": [],
+                "model_reported_returned_at": None,
+            }
+            task_path = workspace / "04-模型交接" / "A" / "task.json"
+            return_path = workspace / "03-运行原始记录" / "candidate" / "A-return.json"
+            write_json(
+                task_path,
+                {"schema_version": "1.1", "semantic_model_task": task_body},
+            )
+            write_json(
+                return_path,
+                {"schema_version": "1.1", "semantic_model_return": return_body},
+            )
+            receipt = {
+                "schema_version": "1.1",
+                "semantic_model_receipt": {
+                    "receipt_id": "RECEIPT-A-CONNECTED",
+                    "task_id": "TASK-A-CONNECTED",
+                    "research_contract_id": "SEM-RC2-001",
+                    "contract_version": "1.0.0",
+                    "transport": "codex_task",
+                    "raw_return_reference": str(return_path.relative_to(workspace)),
+                    "raw_return_sha256": hashlib.sha256(return_path.read_bytes()).hexdigest(),
+                    "received_at": "2026-08-19T00:03:00Z",
+                    "identity_evidence": {
+                        "observed_model_label_or_unknown": "GPT-5.6 Terra",
+                        "evidence_type": "platform_export",
+                        "evidence_reference_or_null": "CODEX-TASK-TRACE-001",
+                        "verification_level": "platform_verified",
+                    },
+                    "executor_metadata": {
+                        "executor_run_id_or_null": "CODEX-RUN-001",
+                        "executor_started_at_or_null": "2026-08-19T00:01:00Z",
+                        "executor_returned_at_or_null": "2026-08-19T00:02:00Z",
+                        "provenance": "codex_task",
+                    },
+                    "acceptance_state": "PASS",
+                    "reason_codes": ["RAW_RETURN_HASH_MATCHED", "PLATFORM_IDENTITY_VERIFIED"],
+                }
+            }
+            write_json(workspace / "04-模型交接" / "A" / "receipt.json", receipt)
             result = run_script(VALIDATE_SCRIPT, str(workspace), "--format", "json")
             self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
             self.assertEqual(json.loads(result.stdout)["status"], "PASS")

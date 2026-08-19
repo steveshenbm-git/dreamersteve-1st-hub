@@ -84,7 +84,9 @@ description: Use when a company needs to audit, build, resume, or reproduce the 
 
 每次只生成一个 `specialist_handoff_packet` 和一项下一动作。步骤返回 `FAIL` 或 `UNVERIFIED` 时只路由该步的修复，不越过它。40例结果即使 `EFFECTIVE`，也不能把 `industry_semantic_expansion` 记为 PASS。
 
-外部模型当前使用 `manual_external_handoff`：控制器生成 `semantic_model_handoff_packet`，用户只传递完整任务包和原始返回，后台字段由专业技能处理。没有另行授权和验证的连接器时不自动调用Claude、Grok或其他外部模型，也不要求用户填写机器证据附页。
+外部模型当前使用 `manual_external_handoff`：控制器只接收专业技能生成的一份自包含 `semantic_model_handoff_packet`，其中必须已有可见输入、规范化输入哈希、精确返回Schema、字段责任、允许空值和停止点。用户只传递完整任务包和原始返回，不寻找额外模板、不填写机器证据附页。原始返回由专业技能原样保存；收件时间、原件哈希、身份依据和真实运输元数据写入独立receiver-owned `semantic_model_receipt`。不得把Codex收件时间或自造编号回填成外部模型运行事实。
+
+控制器必须分别读取 `review_result` 与 `admissibility_state`。即使内容审查为 `PASS`，只要身份、运输、输入或原件哈希仍为 `UNVERIFIED`，就停在当前模型交接，不得升级证据、计入40例或进入下一阶段。
 
 ## 专业所有权
 

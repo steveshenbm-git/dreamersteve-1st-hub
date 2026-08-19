@@ -201,18 +201,67 @@ semantic_model_handoff_packet:
   semantic_work_unit_id
   target_role: A | B | C
   declared_model_name
-  actual_model_id_required: true
+  identity_evidence_policy
   transport: manual_external_handoff
-  input_reference
+  visible_input
   input_sha256
-  visible_fields
-  prohibited_fields
+  input_hash_algorithm: sha256_canonical_json_v1
+  expected_return_schema
+  field_ownership
+  manual_transport_rules
+  prohibited_inputs
+  prohibited_actions
   source_permissions
-  expected_return_contract
   stop_condition
 ```
 
-控制器只生成和校验包，不自动调用当前未接入的外部模型。用户只传递完整任务包和原始返回，不填写查询、证据、哈希或机器附页。
+运输包必须自包含，不能只写 `expected_return_contract` 名称再让用户寻找另一个模板。控制器只生成和校验包，不自动调用当前未接入的外部模型。用户只传递完整任务包和原始返回，不填写查询、证据、哈希或机器附页。
+
+外部模型原始返回与Codex接收记录分层保存：
+
+```text
+semantic_model_return:
+  task_id
+  research_contract_id
+  contract_version
+  input_sha256
+  declared_model_name
+  actual_model_id_or_unknown
+  provider_or_unknown
+  model_reported_run_id: null | model-reported value
+  model_reported_started_at: null | model-reported value
+  result_state: PASS | FAIL | UNVERIFIED
+  reason_codes
+  source_access_results
+  structured_findings
+  unknowns
+  model_reported_returned_at: null | model-reported value
+
+semantic_model_receipt:
+  receipt_id
+  task_id
+  research_contract_id
+  contract_version
+  transport
+  raw_return_reference
+  raw_return_sha256
+  received_at
+  identity_evidence
+  executor_metadata
+  acceptance_state: PASS | FAIL | UNVERIFIED
+  reason_codes
+```
+
+`semantic_model_return`属于外部模型，`semantic_model_receipt`属于接收方。手工交接时，receiver-owned `executor_metadata` 的运行ID和起止时间必须为空；`codex_task` 或 `authorized_api` 必须从真实平台记录填写并注明provenance。任何一层都不得把Codex收件时间冒充模型运行时间。
+
+控制器以两轴验收：
+
+```text
+review_result: PASS | FAIL | UNVERIFIED
+admissibility_state: PASS | FAIL | UNVERIFIED
+```
+
+`review_result`来自模型内容结论；`admissibility_state`来自任务、输入哈希、返回结构、原件哈希、身份依据与运输检查。只有两者均为PASS，才能将该返回计入正式校准或用于证据升级。
 
 阶段5专业返回使用：
 

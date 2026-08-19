@@ -58,12 +58,15 @@ Never convert absence of a hypothesis, low keyword similarity, sparse public inf
 2. [industry-semantic-model-protocol.md](references/industry-semantic-model-protocol.md)
 3. [industry-semantic-calibration-and-audit.md](references/industry-semantic-calibration-and-audit.md)
 
-Use the templates under `assets/semantic-method/`. Current external-model transport is `manual_external_handoff`: Codex prepares and validates packages; the user only transfers the complete package and raw return, never fills machine evidence fields. Do not claim automatic Claude or Grok invocation without a separately authorized connector.
+Use the templates under `assets/semantic-method/`. Current external-model transport is `manual_external_handoff`: Codex must build one self-contained package containing the visible input, canonical input hash, exact return schema, field ownership, null rules and stop condition. The user only transfers that package and the raw return; never ask the user to fill machine evidence fields. After receipt, keep the untouched external return separate from the receiver-owned `semantic_model_receipt`; never backfill model-reported run IDs or timestamps with Codex receipt data. Do not claim automatic Claude or Grok invocation without a separately authorized connector.
+
+Keep `review_result` separate from `admissibility_state`. An external reviewer may return `PASS` on source content while the transport or identity evidence remains `UNVERIFIED`; in that case do not upgrade evidence or count the run in the 40-case calibration.
 
 Use deterministic scripts for repeatable operations:
 
 ```bash
 python3 scripts/init_semantic_research_workspace.py --map-root /absolute/map-root --contract /absolute/semantic-research-contract.json
+python3 scripts/build_semantic_model_handoff.py --task /absolute/filled-model-task.json --input /absolute/visible-input.json --output /absolute/self-contained-handoff.json
 python3 scripts/freeze_semantic_taxonomy_snapshot.py --taxonomy-workbook /absolute/industry-taxonomy.xlsx --output /absolute/taxonomy-snapshot.json
 python3 scripts/validate_semantic_research_workspace.py /absolute/semantic-research-workspace --format json
 python3 scripts/sample_semantic_reverse_audit.py --screening-records /absolute/screening-records.jsonl --seed frozen-seed --output /absolute/audit-plan.json

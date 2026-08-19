@@ -25,6 +25,7 @@ CONTRACT_REQUIRED = {
     "research_theme",
     "model_profile_id",
     "model_roles",
+    "model_identity_evidence_policy",
     "prompt_template_references_and_hashes",
     "source_scope",
     "search_tool_and_locale",
@@ -91,6 +92,65 @@ MODEL_C_TRIGGERS = {
     "independent_counterevidence",
     "reverse_audit_sample",
 }
+MODEL_TRANSPORTS = {"manual_external_handoff", "codex_task", "authorized_api"}
+IDENTITY_LEVEL_RANK = {
+    "unverified": 0,
+    "operator_attested": 1,
+    "ui_observed": 2,
+    "platform_verified": 3,
+    "connector_verified": 4,
+}
+IDENTITY_TYPE_LEVEL = {
+    "unknown": "unverified",
+    "self_reported": "unverified",
+    "user_attested": "operator_attested",
+    "ui_observed": "ui_observed",
+    "platform_export": "platform_verified",
+    "connector_verified": "connector_verified",
+}
+MODEL_REQUIRED_FIELDS = {
+    "task_id",
+    "research_contract_id",
+    "contract_version",
+    "input_sha256",
+    "declared_model_name",
+    "result_state",
+    "reason_codes",
+    "source_access_results",
+    "structured_findings",
+    "unknowns",
+}
+MODEL_OPTIONAL_OR_UNKNOWN_FIELDS = {
+    "actual_model_id_or_unknown",
+    "provider_or_unknown",
+    "model_reported_run_id",
+    "model_reported_started_at",
+    "model_reported_returned_at",
+}
+RECEIVER_OWNED_FIELDS = {
+    "receipt_id",
+    "received_at",
+    "raw_return_reference",
+    "raw_return_sha256",
+    "identity_evidence",
+    "executor_metadata",
+    "acceptance_state",
+}
+MODEL_RETURN_FIELDS = MODEL_REQUIRED_FIELDS | MODEL_OPTIONAL_OR_UNKNOWN_FIELDS
+MODEL_RECEIPT_FIELDS = {
+    "receipt_id",
+    "task_id",
+    "research_contract_id",
+    "contract_version",
+    "transport",
+    "raw_return_reference",
+    "raw_return_sha256",
+    "received_at",
+    "identity_evidence",
+    "executor_metadata",
+    "acceptance_state",
+    "reason_codes",
+}
 
 
 def load_json(path: Path) -> object:
@@ -135,6 +195,16 @@ def sha256_text(value: object) -> bool:
     return isinstance(value, str) and re.fullmatch(r"[0-9a-fA-F]{64}", value) is not None
 
 
+def canonical_json_sha256(value: object) -> str:
+    encoded = json.dumps(
+        value,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
+
+
 def positive_number(value: object) -> bool:
     return isinstance(value, (int, float)) and not isinstance(value, bool) and value > 0
 
@@ -167,6 +237,20 @@ def frozen_contract_completeness_errors(contract: object) -> list[str]:
         problems.append("taxonomy_snapshot_sha256:invalid")
     if not isinstance(contract.get("terminal_node_count"), int) or contract.get("terminal_node_count", 0) <= 0:
         problems.append("terminal_node_count:invalid")
+
+    identity_policy = contract.get("model_identity_evidence_policy")
+    if not isinstance(identity_policy, dict) or set(identity_policy) != {"A", "B", "C"}:
+        problems.append("model_identity_evidence_policy:invalid")
+    else:
+        for role, policy in identity_policy.items():
+            if (
+                not isinstance(policy, dict)
+                or policy.get("minimum_level") not in IDENTITY_LEVEL_RANK
+                or not isinstance(policy.get("accepted_types"), list)
+                or not policy.get("accepted_types")
+                or not all(item in IDENTITY_TYPE_LEVEL for item in policy.get("accepted_types", []))
+            ):
+                problems.append(f"model_identity_evidence_policy.{role}:invalid")
 
     theme = contract.get("research_theme")
     if not isinstance(theme, dict):
@@ -506,20 +590,70 @@ def main() -> int:
                 "B": {"blind_source_review"},
                 "C": {"dispute", "reverse_audit"},
             }
+            identity_policy = task.get("identity_evidence_policy")
+            expected_return_schema = task.get("expected_return_schema")
+            field_ownership = task.get("field_ownership")
+            manual_rules = task.get("manual_transport_rules")
+            visible_input = task.get("visible_input")
+            input_hash_ok = (
+                task.get("input_hash_algorithm") == "sha256_canonical_json_v1"
+                and visible_input is not None
+                and task.get("input_sha256") == canonical_json_sha256(visible_input)
+            )
+            if not input_hash_ok:
+                add(
+                    errors,
+                    "MODEL_TASK_INPUT_HASH_MISMATCH",
+                    f"{path.relative_to(handoff_root)}: {task_id}",
+                )
             task_ok = (
+                payload.get("schema_version") == "1.1"
+                and
                 task.get("research_contract_id") == contract_id
                 and task.get("contract_version") == contract_version
                 and sha256_text(task.get("input_sha256"))
+                and input_hash_ok
                 and role in allowed_modes
                 and task.get("mode") in allowed_modes.get(role, set())
                 and nonempty_text(task.get("declared_model_name"))
-                and task.get("actual_model_id_required") is True
                 and task.get("output_contract") == "semantic_model_return"
-                and nonempty_text(task.get("transport"))
+                and task.get("transport") in MODEL_TRANSPORTS
                 and nonempty_text(task.get("issued_at"))
-                and isinstance(task.get("visible_inputs"), list)
+                and isinstance(identity_policy, dict)
+                and identity_policy
+                == contract.get("model_identity_evidence_policy", {}).get(role)
+                and identity_policy.get("minimum_level") in IDENTITY_LEVEL_RANK
+                and isinstance(identity_policy.get("accepted_types"), list)
+                and bool(identity_policy.get("accepted_types"))
+                and all(
+                    item in IDENTITY_TYPE_LEVEL
+                    for item in identity_policy.get("accepted_types", [])
+                )
+                and isinstance(expected_return_schema, dict)
+                and expected_return_schema.get("schema_version") == "1.1"
+                and isinstance(expected_return_schema.get("semantic_model_return"), dict)
+                and set(expected_return_schema.get("semantic_model_return", {}))
+                == MODEL_RETURN_FIELDS
+                and isinstance(field_ownership, dict)
+                and set(field_ownership) == {
+                    "model_required_fields",
+                    "model_optional_or_unknown_fields",
+                    "receiver_owned_fields",
+                }
+                and set(field_ownership.get("model_required_fields", []))
+                == MODEL_REQUIRED_FIELDS
+                and set(field_ownership.get("model_optional_or_unknown_fields", []))
+                == MODEL_OPTIONAL_OR_UNKNOWN_FIELDS
+                and set(field_ownership.get("receiver_owned_fields", []))
+                == RECEIVER_OWNED_FIELDS
+                and isinstance(manual_rules, dict)
+                and manual_rules.get("return_raw_json_only") is True
+                and manual_rules.get("unknown_runtime_metadata_must_be_null") is True
+                and manual_rules.get("receiver_must_not_backfill_model_reported_fields") is True
                 and isinstance(task.get("prohibited_inputs"), list)
                 and isinstance(task.get("prohibited_actions"), list)
+                and isinstance(task.get("source_permissions"), list)
+                and nonempty_text(task.get("stop_condition"))
             )
             if not task_ok:
                 add(errors, "MODEL_TASK_INVALID", f"{path.relative_to(handoff_root)}: {task_id}")
@@ -536,11 +670,137 @@ def main() -> int:
                 if leaked:
                     add(errors, "MODEL_B_BLINDING_VIOLATION", f"{path.relative_to(handoff_root)}: {','.join(leaked)}")
 
+    receipts: dict[str, dict] = {}
+    receipt_return_paths: dict[str, Path] = {}
+    receipt_validity: dict[str, bool] = {}
+    if handoff_root.is_dir():
+        for path in sorted(handoff_root.rglob("*.json")):
+            try:
+                payload = load_json(path)
+            except json.JSONDecodeError:
+                continue
+            receipt = payload.get("semantic_model_receipt", {}) if isinstance(payload, dict) else {}
+            if not receipt:
+                continue
+            task_id = receipt.get("task_id")
+            if not nonempty_text(task_id):
+                add(errors, "MODEL_RECEIPT_INVALID", f"{path.relative_to(handoff_root)}: missing task_id")
+                continue
+            if task_id in receipts:
+                add(errors, "MODEL_RECEIPT_DUPLICATE", str(task_id))
+                continue
+            receipts[task_id] = receipt
+            task = model_tasks.get(task_id)
+            valid = True
+            if payload.get("schema_version") != "1.1" or set(receipt) != MODEL_RECEIPT_FIELDS:
+                add(errors, "MODEL_RECEIPT_INVALID", f"{path.name}: schema or fields")
+                valid = False
+            if task is None:
+                add(errors, "MODEL_RECEIPT_TASK_MISSING", f"{path.name}: {task_id}")
+                receipt_validity[task_id] = False
+                continue
+            for field in ("research_contract_id", "contract_version", "transport"):
+                if receipt.get(field) != task.get(field):
+                    add(errors, "MODEL_RECEIPT_MISMATCH", f"{task_id}: {field}")
+                    valid = False
+            if not nonempty_text(receipt.get("receipt_id")) or not nonempty_text(receipt.get("received_at")):
+                add(errors, "MODEL_RECEIPT_INVALID", f"{path.name}: {task_id}")
+                valid = False
+
+            raw_reference = receipt.get("raw_return_reference")
+            raw_path: Path | None = None
+            if nonempty_text(raw_reference):
+                raw_path = Path(raw_reference)
+                if not raw_path.is_absolute():
+                    raw_path = workspace / raw_path
+                raw_path = raw_path.resolve()
+                try:
+                    raw_path.relative_to(workspace)
+                except ValueError:
+                    add(errors, "MODEL_RECEIPT_RETURN_REFERENCE_OUTSIDE_WORKSPACE", str(raw_path))
+                    raw_path = None
+                    valid = False
+            else:
+                add(errors, "MODEL_RECEIPT_INVALID", f"{path.name}: missing raw_return_reference")
+                valid = False
+            if raw_path is None or not raw_path.is_file():
+                add(errors, "MODEL_RECEIPT_RETURN_MISSING", str(raw_path))
+                valid = False
+            else:
+                receipt_return_paths[task_id] = raw_path
+                actual_return_hash = hashlib.sha256(raw_path.read_bytes()).hexdigest()
+                if receipt.get("raw_return_sha256") != actual_return_hash:
+                    add(errors, "MODEL_RECEIPT_RETURN_HASH_MISMATCH", f"{task_id}: {raw_path}")
+                    valid = False
+
+            identity = receipt.get("identity_evidence")
+            policy = task.get("identity_evidence_policy", {})
+            if not isinstance(identity, dict):
+                add(errors, "MODEL_RECEIPT_IDENTITY_INVALID", str(task_id))
+                valid = False
+            else:
+                evidence_type = identity.get("evidence_type")
+                verification_level = identity.get("verification_level")
+                expected_level = IDENTITY_TYPE_LEVEL.get(evidence_type)
+                minimum_level = policy.get("minimum_level")
+                identity_ok = (
+                    evidence_type in policy.get("accepted_types", [])
+                    and expected_level == verification_level
+                    and verification_level in IDENTITY_LEVEL_RANK
+                    and minimum_level in IDENTITY_LEVEL_RANK
+                    and IDENTITY_LEVEL_RANK.get(verification_level, 0)
+                    >= IDENTITY_LEVEL_RANK.get(minimum_level, 99)
+                    and nonempty_text(identity.get("observed_model_label_or_unknown"))
+                    and identity.get("observed_model_label_or_unknown") != "unknown"
+                    and identity.get("observed_model_label_or_unknown")
+                    == task.get("declared_model_name")
+                    and nonempty_text(identity.get("evidence_reference_or_null"))
+                )
+                if not identity_ok:
+                    add(errors, "MODEL_RECEIPT_IDENTITY_UNVERIFIED", str(task_id))
+                    valid = False
+
+            executor = receipt.get("executor_metadata")
+            if not isinstance(executor, dict):
+                add(errors, "MODEL_RECEIPT_EXECUTOR_METADATA_INVALID", str(task_id))
+                valid = False
+            elif task.get("transport") == "manual_external_handoff":
+                manual_executor_ok = (
+                    executor.get("executor_run_id_or_null") is None
+                    and executor.get("executor_started_at_or_null") is None
+                    and executor.get("executor_returned_at_or_null") is None
+                    and executor.get("provenance") == "none"
+                )
+                if not manual_executor_ok:
+                    add(errors, "MODEL_RECEIPT_MANUAL_EXECUTOR_METADATA_INVALID", str(task_id))
+                    valid = False
+            else:
+                connected_executor_ok = (
+                    nonempty_text(executor.get("executor_run_id_or_null"))
+                    and nonempty_text(executor.get("executor_started_at_or_null"))
+                    and nonempty_text(executor.get("executor_returned_at_or_null"))
+                    and executor.get("provenance") == task.get("transport")
+                )
+                if not connected_executor_ok:
+                    add(errors, "MODEL_RECEIPT_CONNECTED_EXECUTOR_METADATA_INVALID", str(task_id))
+                    valid = False
+            if (
+                receipt.get("acceptance_state") not in {"PASS", "FAIL", "UNVERIFIED"}
+                or not isinstance(receipt.get("reason_codes"), list)
+                or not receipt.get("reason_codes")
+            ):
+                add(errors, "MODEL_RECEIPT_INVALID", f"{path.name}: {task_id}")
+                valid = False
+            if receipt.get("acceptance_state") != "PASS":
+                add(errors, "MODEL_RETURN_NOT_ADMISSIBLE", str(task_id))
+                valid = False
+            receipt_validity[task_id] = valid
+
     return_paths: list[Path] = []
     for root in (workspace / "03-运行原始记录", handoff_root):
         if root.is_dir():
             return_paths.extend(sorted(root.rglob("*.json")))
-    seen_return_ids: set[tuple[str, str]] = set()
+    seen_return_task_ids: set[str] = set()
     for path in return_paths:
         try:
             payload = load_json(path)
@@ -550,11 +810,10 @@ def main() -> int:
         if not returned:
             continue
         task_id = returned.get("task_id")
-        run_id = returned.get("run_id")
-        return_key = (str(task_id), str(run_id))
-        if return_key in seen_return_ids:
-            add(errors, "MODEL_RETURN_DUPLICATE", f"{task_id}:{run_id}")
-        seen_return_ids.add(return_key)
+        return_key = str(task_id)
+        if return_key in seen_return_task_ids:
+            add(errors, "MODEL_RETURN_DUPLICATE", return_key)
+        seen_return_task_ids.add(return_key)
         task = model_tasks.get(task_id)
         if task is None:
             add(errors, "MODEL_RETURN_TASK_MISSING", f"{path.name}: {task_id}")
@@ -566,22 +825,43 @@ def main() -> int:
         if mismatch_fields:
             add(errors, "MODEL_RETURN_MISMATCH", f"{task_id}: {','.join(mismatch_fields)}")
         return_state = returned.get("result_state")
-        actual_model_id = returned.get("actual_model_id_or_unknown")
+        optional_runtime_fields = (
+            "model_reported_run_id",
+            "model_reported_started_at",
+            "model_reported_returned_at",
+        )
+        optional_runtime_ok = all(
+            returned.get(field) is None or nonempty_text(returned.get(field))
+            for field in optional_runtime_fields
+        )
         return_shape_ok = (
-            return_state in {"PASS", "FAIL", "UNVERIFIED"}
-            and nonempty_text(returned.get("provider"))
-            and nonempty_text(run_id)
-            and nonempty_text(returned.get("run_started_at"))
-            and nonempty_text(returned.get("returned_at"))
+            payload.get("schema_version") == "1.1"
+            and set(returned) == MODEL_RETURN_FIELDS
+            and return_state in {"PASS", "FAIL", "UNVERIFIED"}
+            and nonempty_text(returned.get("actual_model_id_or_unknown"))
+            and nonempty_text(returned.get("provider_or_unknown"))
+            and optional_runtime_ok
             and isinstance(returned.get("reason_codes"), list)
+            and bool(returned.get("reason_codes"))
             and isinstance(returned.get("source_access_results"), list)
             and isinstance(returned.get("structured_findings"), list)
             and isinstance(returned.get("unknowns"), list)
         )
         if not return_shape_ok:
             add(errors, "MODEL_RETURN_INVALID", f"{path.name}: {task_id}")
-        if actual_model_id in {None, "", "unknown"} and return_state != "UNVERIFIED":
-            add(errors, "MODEL_ID_UNVERIFIED", f"{path.name}: {task_id}")
+        receiver_owned_fields = set(task.get("field_ownership", {}).get("receiver_owned_fields", []))
+        receiver_field_leaks = sorted(receiver_owned_fields & set(returned))
+        if receiver_field_leaks:
+            add(errors, "MODEL_RETURN_RECEIVER_FIELD_VIOLATION", f"{path.name}: {','.join(receiver_field_leaks)}")
+        receipt = receipts.get(task_id)
+        if receipt is None:
+            add(errors, "MODEL_RECEIPT_MISSING", f"{path.name}: {task_id}")
+        else:
+            expected_return_path = receipt_return_paths.get(task_id)
+            if expected_return_path != path.resolve():
+                add(errors, "MODEL_RECEIPT_RETURN_REFERENCE_MISMATCH", f"{task_id}: {path}")
+            if not receipt_validity.get(task_id, False):
+                add(errors, "MODEL_RETURN_NOT_ADMISSIBLE", str(task_id))
         if task.get("role") == "B":
             leaked = sorted(FORBIDDEN_B_KEYS & nested_keys(returned))
             if leaked:

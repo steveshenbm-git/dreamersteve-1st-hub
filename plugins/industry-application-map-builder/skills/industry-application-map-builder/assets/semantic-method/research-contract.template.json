@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "semantic_research_contract": {
     "research_contract_id": null,
     "contract_version": null,
@@ -8,8 +8,8 @@
     "frozen_at": null,
     "owner_authorization_reference": null,
     "skill_git_commit": null,
-    "map_builder_plugin_version": "0.3.0-beta.1",
-    "workflow_director_plugin_version": "0.2.0-beta.1",
+    "map_builder_plugin_version": "0.3.0-beta.2",
+    "workflow_director_plugin_version": "0.2.0-beta.2",
     "taxonomy_snapshot_reference": null,
     "taxonomy_snapshot_sha256": null,
     "terminal_node_count": null,
@@ -20,11 +20,25 @@
       "exclusions": [],
       "product_neutrality_review": "UNVERIFIED"
     },
-    "model_profile_id": "rc2-pilot-v1",
+    "model_profile_id": "rc2-pilot-v1.1",
     "model_roles": {
       "A": "generate_search_and_package",
       "B": "blind_source_review",
       "C": "dispute_and_reverse_audit"
+    },
+    "model_identity_evidence_policy": {
+      "A": {
+        "minimum_level": "platform_verified",
+        "accepted_types": ["connector_verified", "platform_export"]
+      },
+      "B": {
+        "minimum_level": "operator_attested",
+        "accepted_types": ["connector_verified", "platform_export", "ui_observed", "user_attested"]
+      },
+      "C": {
+        "minimum_level": "operator_attested",
+        "accepted_types": ["connector_verified", "platform_export", "ui_observed", "user_attested"]
+      }
     },
     "prompt_template_references_and_hashes": [],
     "source_scope": [

@@ -35,7 +35,7 @@ class IndustryApplicationMapContractTests(unittest.TestCase):
         )
 
         self.assertEqual(manifest["name"], "industry-application-map-builder")
-        self.assertEqual(manifest["version"], "0.3.0-beta.1")
+        self.assertEqual(manifest["version"], "0.3.0-beta.2")
         self.assertEqual(manifest["interface"]["displayName"], "行业应用地图构建")
         self.assertTrue(
             any(
@@ -141,6 +141,7 @@ class IndustryApplicationMapContractTests(unittest.TestCase):
             self.assertIn(reference, skill_text)
 
         for script in (
+            "build_semantic_model_handoff.py",
             "init_semantic_research_workspace.py",
             "freeze_semantic_taxonomy_snapshot.py",
             "validate_semantic_research_workspace.py",
@@ -195,6 +196,7 @@ class IndustryApplicationMapContractTests(unittest.TestCase):
             "model-profile.rc2-pilot.template.json",
             "model-task.template.json",
             "model-return.template.json",
+            "model-receipt.template.json",
             "screening-record.template.json",
             "audit-plan.template.json",
         )
@@ -211,6 +213,55 @@ class IndustryApplicationMapContractTests(unittest.TestCase):
                 json.loads(line)
         for secret_name in ("api_key", "access_token", "password", "private_key"):
             self.assertNotIn(secret_name, combined.lower())
+
+    def test_manual_handoff_assets_define_self_contained_output_and_receiver_receipt(self):
+        asset_root = SKILL_ROOT / "assets" / "semantic-method"
+        task = json.loads(
+            (asset_root / "model-task.template.json").read_text(encoding="utf-8")
+        )["semantic_model_task"]
+        returned = json.loads(
+            (asset_root / "model-return.template.json").read_text(encoding="utf-8")
+        )["semantic_model_return"]
+        receipt = json.loads(
+            (asset_root / "model-receipt.template.json").read_text(encoding="utf-8")
+        )["semantic_model_receipt"]
+        research_contract = json.loads(
+            (asset_root / "research-contract.template.json").read_text(encoding="utf-8")
+        )["semantic_research_contract"]
+
+        for required in (
+            "visible_input",
+            "input_hash_algorithm",
+            "expected_return_schema",
+            "field_ownership",
+            "manual_transport_rules",
+            "identity_evidence_policy",
+            "source_permissions",
+            "stop_condition",
+        ):
+            self.assertIn(required, task)
+        for optional_runtime_field in (
+            "model_reported_run_id",
+            "model_reported_started_at",
+            "model_reported_returned_at",
+        ):
+            self.assertIn(optional_runtime_field, returned)
+            self.assertIsNone(returned[optional_runtime_field])
+        for receiver_owned in (
+            "receipt_id",
+            "received_at",
+            "raw_return_reference",
+            "raw_return_sha256",
+            "identity_evidence",
+            "executor_metadata",
+            "acceptance_state",
+        ):
+            self.assertIn(receiver_owned, receipt)
+        self.assertIn("model_identity_evidence_policy", research_contract)
+        self.assertEqual(
+            research_contract["model_identity_evidence_policy"]["B"]["minimum_level"],
+            "operator_attested",
+        )
 
 
 if __name__ == "__main__":

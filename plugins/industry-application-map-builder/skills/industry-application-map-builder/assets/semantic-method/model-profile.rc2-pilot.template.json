@@ -1,7 +1,7 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "model_profile": {
-    "model_profile_id": "rc2-pilot-v1",
+    "model_profile_id": "rc2-pilot-v1.1",
     "contract_state": "draft",
     "roles": {
       "A": {
@@ -9,6 +9,10 @@
         "declared_model_name": "GPT-5.6 Terra",
         "actual_model_id_or_unknown": "unknown",
         "access_mode": "codex_or_authorized_api",
+        "identity_evidence_policy": {
+          "minimum_level": "platform_verified",
+          "accepted_types": ["connector_verified", "platform_export"]
+        },
         "search_tool": null,
         "source_permissions": [],
         "availability": "UNVERIFIED"
@@ -18,6 +22,10 @@
         "declared_model_name": "Claude Sonnet 5",
         "actual_model_id_or_unknown": "unknown",
         "access_mode": "manual_external_handoff",
+        "identity_evidence_policy": {
+          "minimum_level": "operator_attested",
+          "accepted_types": ["connector_verified", "platform_export", "ui_observed", "user_attested"]
+        },
         "search_tool": null,
         "source_permissions": [],
         "availability": "UNVERIFIED"
@@ -27,6 +35,10 @@
         "declared_model_name": "Grok 4.5",
         "actual_model_id_or_unknown": "unknown",
         "access_mode": "manual_external_handoff",
+        "identity_evidence_policy": {
+          "minimum_level": "operator_attested",
+          "accepted_types": ["connector_verified", "platform_export", "ui_observed", "user_attested"]
+        },
         "search_tool": null,
         "source_permissions": [],
         "availability": "UNVERIFIED"

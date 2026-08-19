@@ -2,7 +2,7 @@
 
 `blueprint_id: foreign-trade-complete-workflow`
 
-`blueprint_version: 0.2.0-beta.1`
+`blueprint_version: 0.2.0-beta.2`
 
 ## 判定原则
 
@@ -56,7 +56,7 @@ semantic_contract_prepare
 
 `semantic_method_validation_state` 只允许 `INCONCLUSIVE / EFFECTIVE / NOT_EFFECTIVE`。结构测试、文档完整、单模型自评或外部模型多数意见都不能把它改为 `EFFECTIVE`。40例通过也不能把 `industry_semantic_expansion` 记为 PASS，更不能自动获得全量筛查或 `application_base_write_authorization`。
 
-当前外部模型运输方式是 `manual_external_handoff`。没有经过另行授权和验证的API/MCP连接器时，控制器不自动调用外部模型；它只生成带合同和输入哈希的任务包，等待原始返回。
+当前外部模型运输方式是 `manual_external_handoff`。没有经过另行授权和验证的API/MCP连接器时，控制器不自动调用外部模型；它只生成一份自包含任务包，包内含可见输入、规范化输入哈希、精确返回Schema、字段责任、允许空值和停止点。外部原始返回与receiver-owned接收封套分开保存；手工交接不得伪造执行器运行ID或运行时间。
 
 ## 必需能力依赖
 
@@ -122,6 +122,9 @@ company_workflow_state:
     full_screening_authorization
     application_base_write_authorization
     latest_semantic_return_reference
+    latest_semantic_receipt_reference
+    latest_review_result
+    latest_admissibility_state
   active_work_unit
   work_units:
     - work_unit_type: route_instance | direction_instance | customer_thread | review_cycle

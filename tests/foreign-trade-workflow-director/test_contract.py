@@ -34,10 +34,10 @@ class WorkflowDirectorContractTests(unittest.TestCase):
         marketplace = json.loads(read(ROOT / ".agents" / "plugins" / "marketplace.json"))
 
         self.assertEqual(manifest["name"], "foreign-trade-workflow-director")
-        self.assertEqual(manifest["version"], "0.2.0-beta.1")
+        self.assertEqual(manifest["version"], "0.2.0-beta.2")
         self.assertRegex(
             manifest["version"],
-            r"^0\.2\.0-beta\.1$",
+            r"^0\.2\.0-beta\.2$",
         )
         self.assertTrue(
             any(
@@ -128,8 +128,13 @@ class WorkflowDirectorContractTests(unittest.TestCase):
         )
 
         self.assertIn("company_id: null", state)
+        self.assertIn("blueprint_version: 0.2.0-beta.2", state)
+        self.assertIn("blueprint_version: 0.2.0-beta.2", replication)
         self.assertIn("first_incomplete_stage: environment_audit", state)
         self.assertIn("active_work_unit: null", state)
+        self.assertIn("latest_semantic_receipt_reference: null", state)
+        self.assertIn("latest_review_result: UNVERIFIED", state)
+        self.assertIn("latest_admissibility_state: UNVERIFIED", state)
         self.assertIn("work_units: []", state)
         self.assertIn("company_foundation:", state)
         for stage in (
@@ -237,6 +242,11 @@ class WorkflowDirectorContractTests(unittest.TestCase):
             "full_screening_authorization",
             "application_base_write_authorization",
             "semantic_model_handoff_packet",
+            "semantic_model_receipt",
+            "review_result",
+            "admissibility_state",
+            "raw_return_sha256",
+            "receiver-owned",
             "manual_external_handoff",
         ):
             self.assertIn(required, combined)
