@@ -34,7 +34,11 @@ class WorkflowDirectorContractTests(unittest.TestCase):
         marketplace = json.loads(read(ROOT / ".agents" / "plugins" / "marketplace.json"))
 
         self.assertEqual(manifest["name"], "foreign-trade-workflow-director")
-        self.assertRegex(manifest["version"], r"^0\.1\.0-beta\.\d+$")
+        self.assertEqual(manifest["version"].split("+", 1)[0], "0.1.0-beta.2")
+        self.assertRegex(
+            manifest["version"],
+            r"^0\.1\.0-beta\.2(?:\+codex\.[A-Za-z0-9._-]+)?$",
+        )
         self.assertTrue(
             any(
                 entry["name"] == "foreign-trade-workflow-director"
@@ -44,19 +48,34 @@ class WorkflowDirectorContractTests(unittest.TestCase):
             )
         )
 
-    def test_skill_is_single_salesperson_front_door(self):
+    def test_skill_is_portable_workflow_controller(self):
         skill = read(SKILL_ROOT / "SKILL.md")
 
         self.assertEqual(frontmatter_keys(skill), ["name", "description"])
         for required in (
-            "single_salesperson_beta",
-            "workbench_bootstrap",
-            "workbench_resume",
+            "portable_workflow_blueprint_beta",
+            "framework_audit",
+            "company_framework_bootstrap",
+            "framework_resume",
             "specialist_handoff",
+            "framework_replication_plan",
             "business_decision_record",
+            "environment_audit",
+            "company_identity",
+            "product_knowledge",
+            "industry_taxonomy",
+            "industry_semantic_expansion",
+            "company_industry_match",
+            "route_pool_handoff",
+            "direction_decision",
+            "candidate_development",
+            "customer_operations",
+            "framework_review",
+            "最早未完成",
             "foreign-trade-customer-development",
             "foreign-trade-customer-operations",
             "industry-application-map-builder",
+            "salesperson_workbench",
             "不搜索具体客户",
             "不得发送",
             "未写入",
@@ -65,10 +84,92 @@ class WorkflowDirectorContractTests(unittest.TestCase):
         ):
             self.assertIn(required, skill)
 
+    def test_blueprint_orders_stages_and_blocks_semantic_gap(self):
+        blueprint = read(SKILL_ROOT / "references" / "workflow-blueprint.md")
+        stages = (
+            "environment_audit",
+            "company_identity",
+            "product_knowledge",
+            "industry_taxonomy",
+            "industry_semantic_expansion",
+            "company_industry_match",
+            "route_pool_handoff",
+            "direction_decision",
+            "candidate_development",
+            "customer_operations",
+            "framework_review",
+        )
+
+        positions = [blueprint.index(stage) for stage in stages]
+        self.assertEqual(positions, sorted(positions))
+        for required in (
+            "first_incomplete_stage",
+            "not_expanded",
+            "full registered terminal-node scope",
+            "pilot",
+            "company_foundation",
+            "route_instance",
+            "direction_instance",
+            "customer_thread",
+            "workflow_blueprint",
+            "company_workflow_state",
+            "workflow_replication_manifest",
+            "company_id",
+            "private company data",
+            "separate authorization",
+            "PASS | FAIL | UNVERIFIED",
+        ):
+            self.assertIn(required, blueprint)
+
+    def test_portable_templates_are_empty_and_complete(self):
+        state = read(SKILL_ROOT / "assets" / "company-workflow-state.template.yaml")
+        replication = read(
+            SKILL_ROOT / "assets" / "workflow-replication-manifest.template.yaml"
+        )
+
+        self.assertIn("company_id: null", state)
+        self.assertIn("first_incomplete_stage: environment_audit", state)
+        self.assertIn("active_work_unit: null", state)
+        self.assertIn("work_units: []", state)
+        self.assertIn("company_foundation:", state)
+        for stage in (
+            "environment_audit",
+            "company_identity",
+            "product_knowledge",
+            "industry_taxonomy",
+            "industry_semantic_expansion",
+            "company_industry_match",
+            "route_pool_handoff",
+        ):
+            self.assertIn(f"stage_id: {stage}", state)
+        for recurring_stage in (
+            "stage_id: direction_decision",
+            "stage_id: candidate_development",
+            "stage_id: customer_operations",
+            "stage_id: framework_review",
+        ):
+            self.assertNotIn(recurring_stage, state)
+
+        for required in (
+            "required_plugins_and_compatible_versions",
+            "company-product-knowledge-builder",
+            "industry-application-map-builder",
+            "foreign-trade-customer-development",
+            "foreign-trade-customer-operations",
+            "excluded_company_data_classes",
+            "target_environment_write_authorization: false",
+        ):
+            self.assertIn(required, replication)
+
     def test_packet_contract_separates_front_back_and_collector(self):
         contract = read(SKILL_ROOT / "references" / "workflow-and-packet-contracts.md")
 
         for required in (
+            "framework_audit_packet",
+            "company_framework_bootstrap_packet",
+            "workflow_replication_manifest",
+            "operator_task_card",
+            "first_incomplete_stage",
             "salesperson_workbench",
             "specialist_handoff_packet",
             "workbench_update_packet",
@@ -87,6 +188,8 @@ class WorkflowDirectorContractTests(unittest.TestCase):
     def test_agent_prompt_explicitly_invokes_skill(self):
         agent = read(SKILL_ROOT / "agents" / "openai.yaml")
         self.assertIn("$foreign-trade-workflow-director", agent)
+        self.assertIn("完整外贸流程", agent)
+        self.assertIn("最早未完成", agent)
         for key in ("display_name", "short_description", "default_prompt"):
             self.assertRegex(agent, re.compile(rf"(?m)^\s+{key}:\s+[\"']"))
 

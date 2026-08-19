@@ -2,6 +2,10 @@
 
 ## Unreleased - 2026-08-18
 
+- Reframed `foreign-trade-workflow-director` as a portable full-workflow Beta controller that audits the environment, initializes isolated company workflows, resumes from the earliest incomplete stage, and prepares bounded cross-account replication manifests.
+- Added an authoritative stage gate between the official industry taxonomy and company matching: unexpanded product-neutral industry/application semantics now block stale company maps, route packets, and customer scanning.
+- Kept the six-sheet single-editor workbench as the downstream salesperson interface while excluding company facts, routes, customers, communications, and credentials from portable framework assets.
+- Marked blank second-company cold start and independent-account replication as live validation gates that remain unverified by source tests.
 - Added the Beta `foreign-trade-workflow-director` plugin and a six-sheet, single-salesperson business workbench for tasks, route decisions, candidate screening, follow-up, communication drafts, and exceptions/risks.
 - Kept the existing industry/application and customer-development workbooks as machine evidence backends rather than renaming their technical sheets into a salesperson interface.
 - Split direction-led candidate collection into a bounded task export, append-only raw batch intake, and independent evidence review while retaining `candidate_scan` as a compatibility entry.

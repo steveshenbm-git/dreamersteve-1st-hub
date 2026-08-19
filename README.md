@@ -14,7 +14,7 @@ The package currently includes:
 - `industry-application-map-builder` maintains the shared industry/application framework, creates company-specific route candidates, audits coverage, and exports a controlled route-pool packet without searching companies.
 - `foreign-trade-customer-development` compiles a salesperson-selected, validated route into a development direction, validates it before scanning, returns all qualified candidate companies in the declared scope, and prepares an evidence-bound communication handoff without drafting or sending messages.
 - `foreign-trade-customer-operations` is the primary communication plugin for selected prospects and existing customers: first cold outreach, unanswered follow-up, replies, and customer-operation materials.
-- `foreign-trade-workflow-director` is the single-salesperson Beta front door: a six-sheet business workbench that routes work across industry mapping, customer development, customer operations, and an approved replaceable collection executor without exposing machine evidence sheets as daily forms.
+- `foreign-trade-workflow-director` is the portable full-workflow Beta controller: it audits, initializes, resumes, and prepares replication of the chain from company product knowledge through industry semantics, route decisions, customer development, and customer operations. Its six-sheet workbench remains the downstream salesperson interface.
 
 The user remains the final reviewer for page strategy, claims, visual approval, business judgment, email wording, and sending.
 
@@ -87,7 +87,7 @@ Use $company-product-knowledge-builder to create an approved product-fact packet
 Use $industry-application-map-builder to build that company's industry/application route pool from approved product facts and sourced application requirements.
 Use $foreign-trade-customer-development to compile a selected route, validate it, or scan a salesperson-confirmed direction for qualified candidates.
 Use $foreign-trade-customer-operations to prepare the first outreach, a due follow-up, or a reply from a complete customer thread.
-Use $foreign-trade-workflow-director to open the six-sheet salesperson workbench and route the next business action without editing machine evidence sheets.
+Use $foreign-trade-workflow-director to audit or initialize the complete foreign-trade workflow, identify the earliest incomplete stage, and route one bounded next action without copying private company data.
 ```
 
 ## Recommended Workflow
@@ -100,16 +100,18 @@ Use $foreign-trade-workflow-director to open the six-sheet salesperson workbench
 
 ## Foreign Trade Customer Development Workflow
 
-The specialist chain is `company-product-knowledge-builder → industry-application-map-builder → foreign-trade-customer-development → foreign-trade-customer-operations`. For the single-salesperson Beta, `foreign-trade-workflow-director` is the business-facing front door over that chain.
+The specialist chain is `company-product-knowledge-builder → industry-application-map-builder → foreign-trade-customer-development → foreign-trade-customer-operations`. `foreign-trade-workflow-director` controls the stage graph, environment audit, company initialization, handoffs, STOP gates, and replication manifest over that chain; it does not replace specialist evidence judgments.
 
 1. Build or update the selected company's product library and export a controlled `product_development_fact_packet`.
-2. Build the shared industry/application base, match the approved product facts for that company, review coverage, and export a validated `company_route_pool_packet`.
-3. Let the salesperson select one route candidate; compile it through `direction_discovery`, validate the rule, and obtain the salesperson's `已确认可扫描` decision before scanning that direction.
-4. For a confirmed direction, export a `candidate_collection_task`, accept append-only `raw_candidate_batch` results from an approved replaceable executor, and run independent `candidate_review`; for a separately supplied named prospect, keep the compatible `candidate_scan` initial-check entry. Return all qualified candidates in the declared scope and stop for salesperson selection.
-5. Run full due diligence only after potential-customer classification and explicit start are both recorded.
-6. When the salesperson asks to start communication, output an `outreach_handoff_packet`; do not draft or send a message in customer development.
-7. Use `foreign-trade-customer-operations` for first outreach, no-reply follow-up, replies, and customer-operation work. Write only to a user-designated local workbook.
-8. Project only the necessary route, candidate, follow-up, draft, and risk summaries into the six-sheet salesperson workbench. Keep machine evidence workbooks and raw collection batches in the backend.
+2. Build the versioned official industry taxonomy, then expand the declared industry scope into product-neutral output, process/use-point, application, requirement, evidence, limitation, and coverage records. A taxonomy skeleton with `not_expanded` nodes is not a completed application layer.
+3. Match approved company capability atoms to the current product-neutral application layer, review coverage, and export a validated `company_route_pool_packet`.
+4. Let the salesperson select one route candidate; compile it through `direction_discovery`, validate the rule, and obtain the salesperson's `已确认可扫描` decision before scanning that direction.
+5. For a confirmed direction, export a `candidate_collection_task`, accept append-only `raw_candidate_batch` results from an approved replaceable executor, and run independent `candidate_review`; for a separately supplied named prospect, keep the compatible `candidate_scan` initial-check entry. Return all qualified candidates in the declared scope and stop for salesperson selection.
+6. Run full due diligence only after potential-customer classification and explicit start are both recorded.
+7. When the salesperson asks to start communication, output an `outreach_handoff_packet`; do not draft or send a message in customer development.
+8. Use `foreign-trade-customer-operations` for first outreach, no-reply follow-up, replies, and customer-operation work. Write only to a user-designated local workbook.
+9. Project only the necessary route, candidate, follow-up, draft, and risk summaries into the six-sheet salesperson workbench. Keep machine evidence workbooks and raw collection batches in the backend.
+10. For a new company or another account, reuse only the versioned blueprint, contracts, empty templates, dependency list, and authorized product-neutral references. Re-audit the receiving environment; do not copy company facts or treat installation as proof of successful replication.
 
 ## Standalone Compatibility Email Workflow
 

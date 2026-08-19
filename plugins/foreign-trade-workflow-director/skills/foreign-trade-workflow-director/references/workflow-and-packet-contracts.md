@@ -1,4 +1,101 @@
-# 业务前台与交接合同
+# 全流程状态、业务前台与交接合同
+
+## 框架审计包
+
+```text
+framework_audit_packet:
+  audit_id
+  blueprint_id
+  blueprint_version
+  company_id_or_missing
+  inspected_environment
+  dependency_results:
+    - plugin_name
+      observed_version
+      required_capabilities
+      result: PASS | FAIL | UNVERIFIED
+      evidence_reference
+  stage_results:
+    - stage_id
+      gate_result: PASS | FAIL | UNVERIFIED
+      freshness: current | stale | unknown
+      artifact_reference
+      artifact_version_or_hash
+      reason
+  first_incomplete_stage
+  active_work_unit
+  one_next_action
+  next_action_owner
+  allowed_writes
+  prohibited_actions
+  audited_at
+```
+
+`first_incomplete_stage` 必须按蓝图固定顺序计算，不能按聊天中最后提到的文件、工作簿当前页或用户想直接开始的后期动作决定。
+
+## 公司框架初始化包
+
+```text
+company_framework_bootstrap_packet:
+  bootstrap_id
+  blueprint_id
+  blueprint_version
+  new_company_id
+  isolated_company_root
+  approved_source_scope
+  empty_template_references_and_hashes
+  state_registry_path
+  system_exchange_paths
+  current_single_editor
+  copied_company_data: none
+  user_authorization
+  reopen_validation
+  created_at
+```
+
+初始化只创建空结构和登记。若 `new_company_id`、根目录、模板来源或用户授权任一项不明确，返回 `UNVERIFIED` 并停止。
+
+## 框架续作包
+
+```text
+framework_resume_packet:
+  resume_id
+  company_id
+  blueprint_version
+  state_registry_reference
+  directly_inspected_artifacts
+  stale_or_conflicting_artifacts
+  first_incomplete_stage
+  active_work_unit
+  one_next_action
+  next_action_owner
+  resume_result: PASS | FAIL | UNVERIFIED
+  resumed_at
+```
+
+## 复刻清单
+
+```text
+workflow_replication_manifest:
+  manifest_id
+  blueprint_id
+  blueprint_version
+  required_plugins_and_compatible_versions
+  empty_template_references_and_hashes
+  contract_and_schema_versions
+  authorized_shared_product_neutral_references
+  required_permissions
+  installation_or_copy_steps
+  validation_steps
+  recovery_checkpoints
+  missing_dependencies
+  unverified_items
+  excluded_company_data_classes
+  target_environment_write_authorization
+  created_at
+```
+
+清单默认不执行安装、复制或目标环境写入。公司产品事实、公司地图、路线决定、客户、联系人、草稿、实发、回复和凭证必须列入排除类别。
 
 ## 目录与文件
 
@@ -16,12 +113,33 @@
 
 `salesperson_workbench` 是业务员前台。专业工作簿、机器交接包和采集文件不得伪装成附页塞入该工作簿。系统交换目录对业务前台只提供稳定引用。
 
+框架蓝图、合同与空模板属于便携框架资产；`company_workflow_state` 和全部业务产物属于单一 `company_id`。插件源目录不得保存公司私有事实或客户数据。
+
 ## 协调器交接
+
+给同事或专业技能的每项任务先输出一张人能直接执行的任务卡：
+
+```text
+operator_task_card:
+  stage_id
+  why_this_stage_is_now
+  owner_role
+  one_task
+  approved_input_references
+  expected_output
+  acceptance_check
+  stop_condition
+  prohibited_actions
+  decision_required_after_return
+```
+
+任务卡不能只写“继续完善”“同步数据”等抽象动作，也不能要求执行人自己推断前置条件。机器交接包与任务卡必须指向同一 `stage_id` 和同一停止点。
 
 ```text
 specialist_handoff_packet:
   handoff_id
   company_id
+  stage_id
   target_skill
   target_route
   business_question
@@ -32,10 +150,11 @@ specialist_handoff_packet:
   allowed_writes
   prohibited_actions
   expected_return_packet
+  operator_task_card_reference
   requested_at
 ```
 
-`target_skill` 只允许 `industry-application-map-builder`、`foreign-trade-customer-development` 或 `foreign-trade-customer-operations`。包必须说明本次允许写什么；没有写入授权时 `allowed_writes = none`。
+`target_skill` 只允许 `company-product-knowledge-builder`、`industry-application-map-builder`、`foreign-trade-customer-development` 或 `foreign-trade-customer-operations`。包必须说明本次允许写什么；没有写入授权时 `allowed_writes = none`。
 
 专业技能返回时使用：
 
