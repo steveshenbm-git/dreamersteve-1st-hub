@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.1",
+  "schema_version": "1.2",
   "semantic_research_contract": {
     "research_contract_id": null,
     "contract_version": null,
@@ -8,8 +8,8 @@
     "frozen_at": null,
     "owner_authorization_reference": null,
     "skill_git_commit": null,
-    "map_builder_plugin_version": "0.3.0-beta.2",
-    "workflow_director_plugin_version": "0.2.0-beta.2",
+    "map_builder_plugin_version": "0.3.0-beta.3",
+    "workflow_director_plugin_version": "0.2.0-beta.3",
     "taxonomy_snapshot_reference": null,
     "taxonomy_snapshot_sha256": null,
     "terminal_node_count": null,
@@ -66,6 +66,14 @@
     },
     "baseline_method_contract": "baseline_full_depth",
     "candidate_method_contract": "candidate_screen_then_expand",
+    "case_preparation_gate": {
+      "authorization": false,
+      "authorization_reference": null,
+      "preparation_contract_version": null,
+      "state": "draft",
+      "locked_at": null,
+      "locked_input_sha256": null
+    },
     "calibration_case_set_reference_and_hash": {
       "reference": null,
       "sha256": null

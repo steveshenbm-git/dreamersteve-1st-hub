@@ -155,3 +155,6 @@ Continue the batch when frozen control sources on multiple domains are simultane
 
 ### P44 — UNVERIFIED state inflation
 Promote one UNVERIFIED relationship to supported or block unrelated valid records without the batch rule requiring it.
+
+### P50 — Circular contract shortcut
+Fill a placeholder case-set hash or invented control case to freeze the contract before the 40 cases exist, or start candidate preparation without a hash-valid `case_preparation_locked` input. Both must fail; recovery requires locking preparation inputs first and binding the real case set only into a new final contract version.

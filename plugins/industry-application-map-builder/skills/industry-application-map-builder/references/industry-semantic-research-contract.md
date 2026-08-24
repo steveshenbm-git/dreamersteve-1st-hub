@@ -4,7 +4,7 @@
 
 1. 适用范围
 2. 三条状态轴
-3. 冻结合同
+3. 案例准备锁与最终冻结合同
 4. 产品中性主题
 5. 合同版本与授权
 6. 可观察检索门
@@ -30,16 +30,21 @@ evidence_state: supported | hypothesis | unknown | conflicted
 过程状态另行保存：
 
 ```text
-contract_state: draft | frozen | superseded | invalidated
+contract_state: draft | case_preparation_locked | frozen | superseded | invalidated
 method_validation_state: INCONCLUSIVE | EFFECTIVE | NOT_EFFECTIVE
 run_state: planned | running | stopped | completed | invalidated
 blind_review_state: pending | PASS | FAIL | UNVERIFIED | escalated
 retrieval_status: complete | partial | failed | source_scarce | source_inaccessible
 ```
 
-## 3. 冻结合同
+## 3. 案例准备锁与最终冻结合同
 
-从 `../assets/semantic-method/research-contract.template.json` 创建 `semantic_research_contract`。冻结前至少核对：
+从 `../assets/semantic-method/research-contract.template.json` 创建 `semantic_research_contract`。合同分两道门，不得合并：
+
+1. `case_preparation_locked`：锁定候选池与案例准备的全部前置输入；
+2. `frozen`：40例真值包完成后，绑定实际案例集哈希与真实控制案例，形成可运行模型的新合同版本。
+
+准备锁定前至少核对：
 
 - 合同ID、版本、用户授权引用和当前Git提交；
 - 两个插件版本；
@@ -47,12 +52,16 @@ retrieval_status: complete | partial | failed | source_scarce | source_inaccessi
 - 研究主题三要素及独立去公司化结果；
 - 模型配置、身份依据最低等级、允许的身份依据类型、提示词文件及哈希；
 - 来源范围、检索工具、语言、地区和最低检索规则；
-- 证据门、基线臂、候选臂和40例真值包哈希；
-- 批次、控制案例、预算停止、风险分层、随机种子和统计公式；
+- 证据门、基线臂和候选臂；
+- 预算停止、风险分层、随机种子和统计公式；
 - 硬门、允许写入和禁止动作；
 - `full_screening_authorization` 与 `application_base_write_authorization`，两者默认均为 `false`。
 
-合同不得保存密钥、密码、私人凭证或登录会话。缺字段、未冻结、快照不匹配或模型身份依据未达到冻结门槛都返回 `UNVERIFIED` 并停止受影响动作。手工交接中的用户确认可以按合同记为 `operator_attested`，但不能写成连接器验证。
+运行 `lock_semantic_case_preparation_contract.py` 后，`case_preparation_gate.authorization = true`、准备授权引用、准备合同版本、锁定时间和 `locked_input_sha256` 必须齐全。此时案例集哈希和控制案例必须保持为空，批次大小也不得用猜测值占位。锁定后只能在合同允许的隔离目录中追加候选与案例准备记录；主题、快照、模型、提示词、检索、证据、预算、抽样或写入边界任一变化都会造成锁哈希不匹配，必须创建新的准备合同版本。
+
+40例真值包完成且独立验收后，运行 `finalize_semantic_research_contract.py`：校验恰好40个唯一案例、实际案例集哈希和真实控制案例，写入批次大小，并生成一个不同于准备版本的新合同版本。只有这个 `contract_state = frozen` 的最终合同可用于模型运行和 `init_semantic_research_workspace.py`。`case_preparation_locked` 不得生成A/B/C任务，不能计入40例运行。
+
+不得填写占位案例集哈希、空模板哈希、虚构控制案例或把准备授权扩张成模型运行授权。合同不得保存密钥、密码、私人凭证或登录会话。缺字段、锁哈希不匹配、未最终冻结、快照不匹配或模型身份依据未达到冻结门槛都返回 `UNVERIFIED` 并停止受影响动作。手工交接中的用户确认可以按合同记为 `operator_attested`，但不能写成连接器验证。
 
 ## 4. 产品中性主题
 

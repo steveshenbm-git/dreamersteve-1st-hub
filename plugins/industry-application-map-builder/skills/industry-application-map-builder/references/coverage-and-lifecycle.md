@@ -44,6 +44,8 @@ semantic_contract_prepare
 → semantic_stage_review
 ```
 
+`semantic_contract_prepare` 只产生 `case_preparation_locked` 与 `locked_input_sha256`，不声称已有40例。`semantic_calibration_case_prepare` 在隔离目录追加真实候选与案例，随后以实际案例集哈希和控制案例生成新版本最终冻结合同。未最终冻结时，下一动作仍是当前准备/修复，不得进入 `semantic_method_calibration` 或任何模型运行。
+
 节点进度使用 `not_screened / screened / evidence_expansion_required / evidence_expanded / audit_reopened`。预算耗尽时未处理节点继续 `not_screened`。任何漏判都使受影响范围进入 `audit_reopened`，创建新合同版本并独立重审。
 
 全量阶段只能在当前末端节点全部有可审计筛查记录、同一合同版本的触发节点全部处置、反向审计通过且无安全失败时PASS。40例校准、静态合同或局部pilot都不能代替全量门。

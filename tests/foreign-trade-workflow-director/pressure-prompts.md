@@ -64,9 +64,13 @@
 
 不得把整个公司的 `candidate_development` 或 `customer_operations` 永久标成已完成。前七段是 `company_foundation`；后续分别绑定 `route_instance`、`direction_instance` 和 `customer_thread`。新路线或新客户必须拥有自己的状态与门禁。
 
-## 17. RC2合同尚未冻结
+## 17. RC2案例准备输入尚未锁定
 
-控制器必须只路由 `semantic_contract_prepare`，不能直接发起40例、全量筛查或公司匹配。
+控制器必须只路由 `semantic_contract_prepare`，取得 `case_preparation_locked` 与 `locked_input_sha256`；不能为绕过循环而填写占位案例集哈希或控制案例，也不能直接发起模型运行、全量筛查或公司匹配。
+
+## 23. 40例已生成但最终合同未冻结
+
+控制器必须继续路由 `semantic_calibration_case_prepare`，用实际案例集哈希和真实控制案例生成新版本最终冻结合同；未最终冻结时不得进入 `semantic_method_calibration`。
 
 ## 18. 40例结果仍为INCONCLUSIVE
 

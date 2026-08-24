@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased - 2026-08-24
+
+- Advanced `industry-application-map-builder` to `0.3.0-beta.3` and `foreign-trade-workflow-director` to `0.2.0-beta.3` for the RC2 contract-cycle repair.
+- Added a hash-bound `case_preparation_locked` gate that permits isolated candidate/case preparation while case-set hashes, batch size, and control IDs remain genuinely empty.
+- Added deterministic, refuse-overwrite scripts that lock preparation inputs and bind a real frozen 40-case set into a new final contract version.
+- Kept model workspace initialization final-`frozen` only and added regression pressure for placeholders, lock drift, incomplete case sets, and premature model runs.
+- Kept this repair source-only pending separate Git commit, plugin installation, and candidate-pool resumption authorization.
+
 ## Unreleased - 2026-08-18
 
 - Reframed `foreign-trade-workflow-director` as a portable full-workflow Beta controller that audits the environment, initializes isolated company workflows, resumes from the earliest incomplete stage, and prepares bounded cross-account replication manifests.

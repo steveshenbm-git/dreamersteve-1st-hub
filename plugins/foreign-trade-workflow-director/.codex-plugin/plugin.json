@@ -1,6 +1,6 @@
 {
   "name": "foreign-trade-workflow-director",
-  "version": "0.2.0-beta.2",
+  "version": "0.2.0-beta.3",
   "description": "审计、搭建、续作和复刻完整外贸流程，按最早未完成阶段协调产品知识、行业语义方法校准、行业应用、客户开发与客户运营。",
   "author": {
     "name": "steveshenbm-git"

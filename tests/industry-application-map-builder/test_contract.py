@@ -35,7 +35,7 @@ class IndustryApplicationMapContractTests(unittest.TestCase):
         )
 
         self.assertEqual(manifest["name"], "industry-application-map-builder")
-        self.assertEqual(manifest["version"], "0.3.0-beta.2")
+        self.assertEqual(manifest["version"], "0.3.0-beta.3")
         self.assertEqual(manifest["interface"]["displayName"], "行业应用地图构建")
         self.assertTrue(
             any(
@@ -142,6 +142,8 @@ class IndustryApplicationMapContractTests(unittest.TestCase):
 
         for script in (
             "build_semantic_model_handoff.py",
+            "lock_semantic_case_preparation_contract.py",
+            "finalize_semantic_research_contract.py",
             "init_semantic_research_workspace.py",
             "freeze_semantic_taxonomy_snapshot.py",
             "validate_semantic_research_workspace.py",
@@ -149,6 +151,30 @@ class IndustryApplicationMapContractTests(unittest.TestCase):
             "evaluate_semantic_calibration.py",
         ):
             self.assertTrue((SKILL_ROOT / "scripts" / script).is_file(), script)
+
+    def test_rc2_case_preparation_has_a_non_circular_gate_before_final_freeze(self):
+        combined = "\n".join(
+            (SKILL_ROOT / path).read_text(encoding="utf-8")
+            for path in (
+                "SKILL.md",
+                "references/industry-semantic-research-contract.md",
+                "references/industry-semantic-calibration-and-audit.md",
+                "references/coverage-and-lifecycle.md",
+                "references/pressure-scenarios.md",
+            )
+        )
+        for required in (
+            "case_preparation_locked",
+            "locked_input_sha256",
+            "案例集哈希和控制案例必须保持为空",
+            "新合同版本",
+            "实际案例集哈希",
+            "lock_semantic_case_preparation_contract.py",
+            "finalize_semantic_research_contract.py",
+            "模型运行",
+        ):
+            self.assertIn(required, combined)
+        self.assertIn("占位案例集哈希", combined)
 
     def test_rc2_contract_separates_status_axes_models_and_authorizations(self):
         for name in (

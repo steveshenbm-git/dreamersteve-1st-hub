@@ -33,6 +33,7 @@ CONTRACT_REQUIRED = {
     "evidence_rule",
     "baseline_method_contract",
     "candidate_method_contract",
+    "case_preparation_gate",
     "calibration_case_set_reference_and_hash",
     "batch_rule",
     "control_case_rule",
@@ -209,7 +210,59 @@ def positive_number(value: object) -> bool:
     return isinstance(value, (int, float)) and not isinstance(value, bool) and value > 0
 
 
-def frozen_contract_completeness_errors(contract: object) -> list[str]:
+def case_preparation_input_projection(contract: dict) -> dict:
+    """Return the immutable case-preparation input projection.
+
+    Finalization is allowed to change only the normalized fields below. The
+    returned projection is never serialized as a contract and therefore does
+    not create placeholder case evidence.
+    """
+    projection = json.loads(json.dumps(contract))
+    gate = projection.get("case_preparation_gate")
+    if not isinstance(gate, dict):
+        gate = {}
+        projection["case_preparation_gate"] = gate
+    preparation_version = gate.get("preparation_contract_version")
+    projection["contract_version"] = preparation_version
+    projection["contract_state"] = "case_preparation_locked"
+    projection["frozen_at"] = None
+    projection["calibration_case_set_reference_and_hash"] = {
+        "reference": None,
+        "sha256": None,
+    }
+    batch = projection.get("batch_rule")
+    if isinstance(batch, dict):
+        batch["batch_size"] = None
+    controls = projection.get("control_case_rule")
+    if isinstance(controls, dict):
+        controls["case_ids"] = []
+    gate["locked_input_sha256"] = None
+    return projection
+
+
+def case_preparation_input_sha256(contract: dict) -> str:
+    return canonical_json_sha256(case_preparation_input_projection(contract))
+
+
+def case_preparation_outputs_are_empty(contract: dict) -> bool:
+    case_set = contract.get("calibration_case_set_reference_and_hash")
+    batch = contract.get("batch_rule")
+    controls = contract.get("control_case_rule")
+    return (
+        isinstance(case_set, dict)
+        and case_set.get("reference") is None
+        and case_set.get("sha256") is None
+        and isinstance(batch, dict)
+        and batch.get("batch_size") is None
+        and isinstance(controls, dict)
+        and controls.get("case_ids") == []
+        and contract.get("frozen_at") is None
+    )
+
+
+def frozen_contract_completeness_errors(
+    contract: object, *, validate_case_preparation_gate: bool = True
+) -> list[str]:
     if not isinstance(contract, dict):
         return ["semantic_research_contract must be an object"]
     problems: list[str] = []
@@ -373,6 +426,81 @@ def frozen_contract_completeness_errors(contract: object) -> list[str]:
     for field in ("full_screening_authorization", "application_base_write_authorization"):
         if not isinstance(contract.get(field), bool):
             problems.append(f"{field}:not_boolean")
+    if validate_case_preparation_gate:
+        gate = contract.get("case_preparation_gate")
+        if not isinstance(gate, dict):
+            problems.append("case_preparation_gate:invalid")
+        else:
+            for field in (
+                "authorization_reference",
+                "preparation_contract_version",
+                "locked_at",
+            ):
+                if not nonempty_text(gate.get(field)):
+                    problems.append(f"case_preparation_gate.{field}:empty")
+            if gate.get("authorization") is not True:
+                problems.append("case_preparation_gate.authorization:not_true")
+            if gate.get("state") != "locked":
+                problems.append("case_preparation_gate.state:not_locked")
+            if not sha256_text(gate.get("locked_input_sha256")):
+                problems.append("case_preparation_gate.locked_input_sha256:invalid")
+            elif gate.get("locked_input_sha256") != case_preparation_input_sha256(contract):
+                problems.append("case_preparation_gate.locked_input_sha256:mismatch")
+            if gate.get("preparation_contract_version") == contract.get("contract_version"):
+                problems.append("contract_version:not_new_after_case_preparation")
+    return problems
+
+
+def case_preparation_contract_completeness_errors(contract: object) -> list[str]:
+    if not isinstance(contract, dict):
+        return ["semantic_research_contract must be an object"]
+    problems: list[str] = []
+    if contract.get("contract_state") != "case_preparation_locked":
+        problems.append("contract_state:not_case_preparation_locked")
+    if not case_preparation_outputs_are_empty(contract):
+        problems.append("case_preparation_outputs:not_empty")
+
+    # Reuse every final-contract rule except the fields that case preparation
+    # must genuinely produce. These internal sentinels are not returned or
+    # written to disk.
+    common_candidate = json.loads(json.dumps(contract))
+    common_candidate["contract_state"] = "frozen"
+    common_candidate["frozen_at"] = "INTERNAL-COMMON-VALIDATION"
+    common_candidate["calibration_case_set_reference_and_hash"] = {
+        "reference": "INTERNAL-NOT-SERIALIZED.jsonl",
+        "sha256": "0" * 64,
+    }
+    if isinstance(common_candidate.get("batch_rule"), dict):
+        common_candidate["batch_rule"]["batch_size"] = 1
+    if isinstance(common_candidate.get("control_case_rule"), dict):
+        common_candidate["control_case_rule"]["case_ids"] = ["INTERNAL-NOT-SERIALIZED"]
+    problems.extend(
+        frozen_contract_completeness_errors(
+            common_candidate, validate_case_preparation_gate=False
+        )
+    )
+
+    gate = contract.get("case_preparation_gate")
+    if not isinstance(gate, dict):
+        problems.append("case_preparation_gate:invalid")
+    else:
+        for field in (
+            "authorization_reference",
+            "preparation_contract_version",
+            "locked_at",
+        ):
+            if not nonempty_text(gate.get(field)):
+                problems.append(f"case_preparation_gate.{field}:empty")
+        if gate.get("authorization") is not True:
+            problems.append("case_preparation_gate.authorization:not_true")
+        if gate.get("preparation_contract_version") != contract.get("contract_version"):
+            problems.append("case_preparation_gate.preparation_contract_version:mismatch")
+        if gate.get("state") != "locked":
+            problems.append("case_preparation_gate.state:not_locked")
+        if not sha256_text(gate.get("locked_input_sha256")):
+            problems.append("case_preparation_gate.locked_input_sha256:invalid")
+        elif gate.get("locked_input_sha256") != case_preparation_input_sha256(contract):
+            problems.append("case_preparation_gate.locked_input_sha256:mismatch")
     return problems
 
 

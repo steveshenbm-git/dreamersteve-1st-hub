@@ -34,10 +34,10 @@ class WorkflowDirectorContractTests(unittest.TestCase):
         marketplace = json.loads(read(ROOT / ".agents" / "plugins" / "marketplace.json"))
 
         self.assertEqual(manifest["name"], "foreign-trade-workflow-director")
-        self.assertEqual(manifest["version"], "0.2.0-beta.2")
+        self.assertEqual(manifest["version"], "0.2.0-beta.3")
         self.assertRegex(
             manifest["version"],
-            r"^0\.2\.0-beta\.2$",
+            r"^0\.2\.0-beta\.3$",
         )
         self.assertTrue(
             any(
@@ -128,8 +128,8 @@ class WorkflowDirectorContractTests(unittest.TestCase):
         )
 
         self.assertIn("company_id: null", state)
-        self.assertIn("blueprint_version: 0.2.0-beta.2", state)
-        self.assertIn("blueprint_version: 0.2.0-beta.2", replication)
+        self.assertIn("blueprint_version: 0.2.0-beta.3", state)
+        self.assertIn("blueprint_version: 0.2.0-beta.3", replication)
         self.assertIn("first_incomplete_stage: environment_audit", state)
         self.assertIn("active_work_unit: null", state)
         self.assertIn("latest_semantic_receipt_reference: null", state)
@@ -252,6 +252,10 @@ class WorkflowDirectorContractTests(unittest.TestCase):
             self.assertIn(required, combined)
 
         self.assertIn("40例", combined)
+        self.assertIn("case_preparation_locked", combined)
+        self.assertIn("实际案例集哈希", combined)
+        self.assertIn("新版本最终冻结合同", combined)
+        self.assertIn("未最终冻结", combined)
         self.assertIn("不能把 `industry_semantic_expansion` 记为 PASS", combined)
         self.assertIn("不自动调用", combined)
 

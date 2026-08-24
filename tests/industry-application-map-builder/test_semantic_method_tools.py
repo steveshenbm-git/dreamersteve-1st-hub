@@ -21,6 +21,12 @@ SKILL_ROOT = (
 )
 ASSET_ROOT = SKILL_ROOT / "assets" / "semantic-method"
 INIT_SCRIPT = SKILL_ROOT / "scripts" / "init_semantic_research_workspace.py"
+LOCK_PREPARATION_SCRIPT = (
+    SKILL_ROOT / "scripts" / "lock_semantic_case_preparation_contract.py"
+)
+FINALIZE_CONTRACT_SCRIPT = (
+    SKILL_ROOT / "scripts" / "finalize_semantic_research_contract.py"
+)
 FREEZE_SCRIPT = SKILL_ROOT / "scripts" / "freeze_semantic_taxonomy_snapshot.py"
 VALIDATE_SCRIPT = SKILL_ROOT / "scripts" / "validate_semantic_research_workspace.py"
 BUILD_HANDOFF_SCRIPT = SKILL_ROOT / "scripts" / "build_semantic_model_handoff.py"
@@ -60,6 +66,22 @@ def canonical_json_sha256(value: object) -> str:
         separators=(",", ":"),
     ).encode("utf-8")
     return hashlib.sha256(encoded).hexdigest()
+
+
+def preparation_lock_sha256(contract: dict) -> str:
+    projection = json.loads(json.dumps(contract))
+    gate = projection["case_preparation_gate"]
+    projection["contract_version"] = gate["preparation_contract_version"]
+    projection["contract_state"] = "case_preparation_locked"
+    projection["frozen_at"] = None
+    projection["calibration_case_set_reference_and_hash"] = {
+        "reference": None,
+        "sha256": None,
+    }
+    projection["batch_rule"]["batch_size"] = None
+    projection["control_case_rule"]["case_ids"] = []
+    gate["locked_input_sha256"] = None
+    return canonical_json_sha256(projection)
 
 
 class SemanticMethodToolTests(unittest.TestCase):
@@ -133,9 +155,77 @@ class SemanticMethodToolTests(unittest.TestCase):
                     "algorithm": "python_random_v1_srswor",
                 },
                 "allowed_writes": ["05-工作区/行业语义研究/SEM-RC2-001"],
+                "case_preparation_gate": {
+                    "authorization": True,
+                    "authorization_reference": "USER-CASE-PREP-LEGACY-TEST",
+                    "preparation_contract_version": "0.9.0-prep.1",
+                    "state": "locked",
+                    "locked_at": "2026-08-18T23:00:00Z",
+                    "locked_input_sha256": None,
+                },
+            }
+        )
+        contract["case_preparation_gate"]["locked_input_sha256"] = (
+            preparation_lock_sha256(contract)
+        )
+        return payload
+
+    def preparation_draft_contract(self) -> dict:
+        payload = self.frozen_contract()
+        contract = payload["semantic_research_contract"]
+        contract.update(
+            {
+                "contract_version": "1.0.0-prep.1",
+                "contract_state": "draft",
+                "frozen_at": None,
+                "calibration_case_set_reference_and_hash": {
+                    "reference": None,
+                    "sha256": None,
+                },
+                "batch_rule": {
+                    "batch_size": None,
+                    "stop_after_each_batch": True,
+                    "trigger_rate_is_diagnostic_not_pass_gate": True,
+                },
+                "control_case_rule": {
+                    "case_ids": [],
+                    "drift_requires_pause": True,
+                },
+                "case_preparation_gate": {
+                    "authorization": False,
+                    "authorization_reference": None,
+                    "preparation_contract_version": None,
+                    "state": "draft",
+                    "locked_at": None,
+                    "locked_input_sha256": None,
+                },
             }
         )
         return payload
+
+    def write_frozen_case_set(self, path: Path, count: int = 40) -> list[str]:
+        case_ids = [f"CASE-{index:03d}" for index in range(1, count + 1)]
+        rows = [
+            {
+                "record_type": "case_set_contract",
+                "schema_version": "1.1",
+                "case_set_id": "RC2-40-001",
+                "research_contract_id": "SEM-RC2-001",
+                "case_set_state": "frozen",
+                "case_count": 40,
+                "actual_case_record_count": count,
+            },
+            *[
+                {
+                    "record_type": "calibration_case",
+                    "case_id": case_id,
+                    "research_contract_id": "SEM-RC2-001",
+                }
+                for case_id in case_ids
+            ],
+        ]
+        write_jsonl(path, rows)
+        return case_ids
 
     def initialize_workspace(self, parent: Path) -> Path:
         map_root = parent / "industry-map"
@@ -205,6 +295,209 @@ class SemanticMethodToolTests(unittest.TestCase):
             )
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("CONTRACT_INCOMPLETE", result.stderr + result.stdout)
+
+    def test_case_preparation_lock_and_real_case_set_create_only_then_final_frozen_contract(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            parent = Path(tmp)
+            draft_path = parent / "research-contract.draft.json"
+            locked_path = parent / "case-preparation-contract.locked.json"
+            final_path = parent / "semantic-research-contract.json"
+            case_set_path = parent / "calibration-case-set.jsonl"
+            write_json(draft_path, self.preparation_draft_contract())
+
+            locked = run_script(
+                LOCK_PREPARATION_SCRIPT,
+                "--contract",
+                str(draft_path),
+                "--authorization-reference",
+                "USER-CASE-PREP-001",
+                "--locked-at",
+                "2026-08-24T12:00:00Z",
+                "--output",
+                str(locked_path),
+            )
+            self.assertEqual(locked.returncode, 0, locked.stderr + locked.stdout)
+            locked_contract = json.loads(locked_path.read_text(encoding="utf-8"))[
+                "semantic_research_contract"
+            ]
+            self.assertEqual(locked_contract["contract_state"], "case_preparation_locked")
+            self.assertEqual(
+                locked_contract["calibration_case_set_reference_and_hash"],
+                {"reference": None, "sha256": None},
+            )
+            self.assertEqual(locked_contract["control_case_rule"]["case_ids"], [])
+            self.assertRegex(
+                locked_contract["case_preparation_gate"]["locked_input_sha256"],
+                r"^[0-9a-f]{64}$",
+            )
+
+            map_root = parent / "industry-map"
+            map_root.mkdir()
+            premature = run_script(
+                INIT_SCRIPT,
+                "--map-root",
+                str(map_root),
+                "--contract",
+                str(locked_path),
+            )
+            self.assertNotEqual(premature.returncode, 0)
+            self.assertIn("CONTRACT_NOT_FROZEN", premature.stderr + premature.stdout)
+
+            case_ids = self.write_frozen_case_set(case_set_path)
+            finalized = run_script(
+                FINALIZE_CONTRACT_SCRIPT,
+                "--preparation-contract",
+                str(locked_path),
+                "--case-set",
+                str(case_set_path),
+                "--case-set-reference",
+                "02-校准案例/calibration-case-set.jsonl",
+                "--final-contract-version",
+                "1.0.0",
+                "--batch-size",
+                "10",
+                "--control-case-id",
+                case_ids[0],
+                "--control-case-id",
+                case_ids[1],
+                "--frozen-at",
+                "2026-08-24T13:00:00Z",
+                "--output",
+                str(final_path),
+            )
+            self.assertEqual(finalized.returncode, 0, finalized.stderr + finalized.stdout)
+            final_contract = json.loads(final_path.read_text(encoding="utf-8"))[
+                "semantic_research_contract"
+            ]
+            self.assertEqual(final_contract["contract_state"], "frozen")
+            self.assertEqual(final_contract["contract_version"], "1.0.0")
+            self.assertEqual(
+                final_contract["calibration_case_set_reference_and_hash"]["sha256"],
+                hashlib.sha256(case_set_path.read_bytes()).hexdigest(),
+            )
+            self.assertEqual(
+                final_contract["control_case_rule"]["case_ids"], case_ids[:2]
+            )
+            accepted = run_script(
+                INIT_SCRIPT,
+                "--map-root",
+                str(map_root),
+                "--contract",
+                str(final_path),
+            )
+            self.assertEqual(accepted.returncode, 0, accepted.stderr + accepted.stdout)
+
+    def test_case_preparation_lock_rejects_placeholder_case_outputs(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            parent = Path(tmp)
+            payload = self.preparation_draft_contract()
+            contract = payload["semantic_research_contract"]
+            contract["calibration_case_set_reference_and_hash"] = {
+                "reference": "placeholder.jsonl",
+                "sha256": "0" * 64,
+            }
+            contract["control_case_rule"]["case_ids"] = ["CASE-PLACEHOLDER"]
+            draft_path = parent / "draft.json"
+            write_json(draft_path, payload)
+            result = run_script(
+                LOCK_PREPARATION_SCRIPT,
+                "--contract",
+                str(draft_path),
+                "--authorization-reference",
+                "USER-CASE-PREP-001",
+                "--locked-at",
+                "2026-08-24T12:00:00Z",
+                "--output",
+                str(parent / "locked.json"),
+            )
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("PREPARATION_OUTPUTS_NOT_EMPTY", result.stderr + result.stdout)
+
+    def test_finalizer_rejects_preparation_contract_drift_and_incomplete_case_set(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            parent = Path(tmp)
+            draft_path = parent / "draft.json"
+            locked_path = parent / "locked.json"
+            write_json(draft_path, self.preparation_draft_contract())
+            locked = run_script(
+                LOCK_PREPARATION_SCRIPT,
+                "--contract",
+                str(draft_path),
+                "--authorization-reference",
+                "USER-CASE-PREP-001",
+                "--locked-at",
+                "2026-08-24T12:00:00Z",
+                "--output",
+                str(locked_path),
+            )
+            self.assertEqual(locked.returncode, 0, locked.stderr + locked.stdout)
+
+            tampered = json.loads(locked_path.read_text(encoding="utf-8"))
+            tampered["semantic_research_contract"]["research_theme"]["mechanism"] = (
+                "mutated after lock"
+            )
+            write_json(locked_path, tampered)
+            case_set_path = parent / "case-set.jsonl"
+            case_ids = self.write_frozen_case_set(case_set_path)
+            drift = run_script(
+                FINALIZE_CONTRACT_SCRIPT,
+                "--preparation-contract",
+                str(locked_path),
+                "--case-set",
+                str(case_set_path),
+                "--case-set-reference",
+                "02-校准案例/calibration-case-set.jsonl",
+                "--final-contract-version",
+                "1.0.0",
+                "--batch-size",
+                "10",
+                "--control-case-id",
+                case_ids[0],
+                "--frozen-at",
+                "2026-08-24T13:00:00Z",
+                "--output",
+                str(parent / "final.json"),
+            )
+            self.assertNotEqual(drift.returncode, 0)
+            self.assertIn("PREPARATION_LOCK_HASH_MISMATCH", drift.stderr + drift.stdout)
+
+            write_json(draft_path, self.preparation_draft_contract())
+            locked_path = parent / "locked-clean.json"
+            locked = run_script(
+                LOCK_PREPARATION_SCRIPT,
+                "--contract",
+                str(draft_path),
+                "--authorization-reference",
+                "USER-CASE-PREP-001",
+                "--locked-at",
+                "2026-08-24T12:00:00Z",
+                "--output",
+                str(locked_path),
+            )
+            self.assertEqual(locked.returncode, 0, locked.stderr + locked.stdout)
+            incomplete_case_set = parent / "incomplete-case-set.jsonl"
+            incomplete_ids = self.write_frozen_case_set(incomplete_case_set, count=39)
+            incomplete = run_script(
+                FINALIZE_CONTRACT_SCRIPT,
+                "--preparation-contract",
+                str(locked_path),
+                "--case-set",
+                str(incomplete_case_set),
+                "--case-set-reference",
+                "02-校准案例/calibration-case-set.jsonl",
+                "--final-contract-version",
+                "1.0.0",
+                "--batch-size",
+                "10",
+                "--control-case-id",
+                incomplete_ids[0],
+                "--frozen-at",
+                "2026-08-24T13:00:00Z",
+                "--output",
+                str(parent / "final-incomplete.json"),
+            )
+            self.assertNotEqual(incomplete.returncode, 0)
+            self.assertIn("CASE_SET_INVALID", incomplete.stderr + incomplete.stdout)
 
     def test_taxonomy_snapshot_uses_leaf_nodes_and_is_reproducible(self):
         with tempfile.TemporaryDirectory() as tmp:

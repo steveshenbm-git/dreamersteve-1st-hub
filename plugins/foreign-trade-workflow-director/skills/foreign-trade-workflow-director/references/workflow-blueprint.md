@@ -2,7 +2,7 @@
 
 `blueprint_id: foreign-trade-complete-workflow`
 
-`blueprint_version: 0.2.0-beta.2`
+`blueprint_version: 0.2.0-beta.3`
 
 ## 判定原则
 
@@ -53,6 +53,8 @@ semantic_contract_prepare
 → semantic_reverse_audit
 → semantic_stage_review
 ```
+
+前两步包含两个独立门：`semantic_contract_prepare` 产出哈希锁定的 `case_preparation_locked` 输入，案例集哈希与控制案例仍为空；`semantic_calibration_case_prepare` 产出真实40例，再把实际案例集哈希和真实控制案例绑定到新版本最终冻结合同。未最终冻结时，不得进入 `semantic_method_calibration`，也不得生成模型运行任务。
 
 `semantic_method_validation_state` 只允许 `INCONCLUSIVE / EFFECTIVE / NOT_EFFECTIVE`。结构测试、文档完整、单模型自评或外部模型多数意见都不能把它改为 `EFFECTIVE`。40例通过也不能把 `industry_semantic_expansion` 记为 PASS，更不能自动获得全量筛查或 `application_base_write_authorization`。
 

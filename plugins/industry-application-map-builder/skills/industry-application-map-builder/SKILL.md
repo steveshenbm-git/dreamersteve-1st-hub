@@ -17,7 +17,7 @@ This skill owns shared industry/application knowledge, RC2 semantic-method resea
 
 1. Select exactly one route from the table below.
 2. Determine whether the request authorizes writes. Review, audit, explain, and diagnose requests remain read-only.
-3. For semantic-method routes, require one map root, frozen taxonomy snapshot, product-neutral research theme, contract version, model profile, allowed source scope, budget, and explicit authorization for the requested phase. Do not require or load company facts.
+3. For semantic-method routes, require one map root, frozen taxonomy snapshot, product-neutral research theme, contract version, model profile, allowed source scope, budget, and explicit authorization for the requested phase. `semantic_calibration_case_prepare` requires a hash-valid `case_preparation_locked` contract; model tasks require the new-version final `frozen` contract. Do not require or load company facts.
 4. For company routes, require one explicit `company_id`, company product-library root, product fact packet, product scope, map root, and declared research scope. Resolve every fact ID to the same company's `facts.json` and freeze all input hashes before matching.
 5. Stop if an input is missing, another company appears, a hash or contract changed, a confirmed ID does not resolve, the taxonomy version is unfrozen, or the requested semantic phase lacks its own authorization.
 
@@ -30,8 +30,8 @@ This skill owns shared industry/application knowledge, RC2 semantic-method resea
 | `company_map_build` | Match one approved product fact packet to the shared application base | [evidence-and-derivation.md](references/evidence-and-derivation.md) and [coverage-and-lifecycle.md](references/coverage-and-lifecycle.md) | Company routes and coverage dispositions are recorded; no customer search starts |
 | `company_map_review` | Review coverage, conflicts, stale inputs, exclusions, or route lifecycle | [coverage-and-lifecycle.md](references/coverage-and-lifecycle.md) and [pressure-scenarios.md](references/pressure-scenarios.md) | `PASS / FAIL / UNVERIFIED` review and required action are recorded |
 | `route_pool_handoff` | Export validated route candidates for customer-development direction work | [handoff-contracts.md](references/handoff-contracts.md) | A registered `company_route_pool_packet` is written inside the company map; stop before direction or company research |
-| `semantic_contract_prepare` | Freeze the product-neutral theme, taxonomy snapshot, model profile, prompts, budget, sampling and write boundary | [industry-semantic-research-contract.md](references/industry-semantic-research-contract.md) | Frozen `semantic_research_contract`; stop before case preparation |
-| `semantic_calibration_case_prepare` | Build the frozen 40-case truth package | [industry-semantic-calibration-and-audit.md](references/industry-semantic-calibration-and-audit.md) | Versioned case set and hashes; incomplete truth returns `INCONCLUSIVE` |
+| `semantic_contract_prepare` | Complete and lock the product-neutral theme, taxonomy snapshot, model profile, prompts, budget, sampling and isolated write boundary | [industry-semantic-research-contract.md](references/industry-semantic-research-contract.md) | `case_preparation_locked` contract with `locked_input_sha256`; case-set hash and control IDs remain empty; stop before candidate preparation |
+| `semantic_calibration_case_prepare` | Build and freeze the 40-case truth package, then bind it to a new final contract version | [industry-semantic-calibration-and-audit.md](references/industry-semantic-calibration-and-audit.md) | Real case-set hash, real control IDs and new-version final `frozen` contract; incomplete truth returns `INCONCLUSIVE` and no model task is issued |
 | `semantic_method_calibration` | Run paired baseline and candidate arms under identical controls | [industry-semantic-calibration-and-audit.md](references/industry-semantic-calibration-and-audit.md) and [industry-semantic-model-protocol.md](references/industry-semantic-model-protocol.md) | `EFFECTIVE / NOT_EFFECTIVE / INCONCLUSIVE`; stop before full screening |
 | `semantic_full_screening` | Shallow-screen every frozen terminal node in controlled batches | [industry-semantic-research-contract.md](references/industry-semantic-research-contract.md) | Append-only screening batch; stop after each batch and check drift/budget |
 | `semantic_evidence_expansion` | Expand triggered nodes into minimal claims and source packets | [industry-semantic-model-protocol.md](references/industry-semantic-model-protocol.md) | Evidence packets and B-review tasks; no `supported` before B PASS |
@@ -65,6 +65,8 @@ Keep `review_result` separate from `admissibility_state`. An external reviewer m
 Use deterministic scripts for repeatable operations:
 
 ```bash
+python3 scripts/lock_semantic_case_preparation_contract.py --contract /absolute/research-contract.draft.json --authorization-reference /absolute/authorization-event.json --locked-at 2026-01-01T00:00:00Z --output /absolute/case-preparation-contract.locked.json
+python3 scripts/finalize_semantic_research_contract.py --preparation-contract /absolute/case-preparation-contract.locked.json --case-set /absolute/calibration-case-set.jsonl --case-set-reference 02-校准案例/calibration-case-set.jsonl --final-contract-version 1.0.0 --batch-size 10 --control-case-id CASE-001 --frozen-at 2026-01-02T00:00:00Z --output /absolute/semantic-research-contract.json
 python3 scripts/init_semantic_research_workspace.py --map-root /absolute/map-root --contract /absolute/semantic-research-contract.json
 python3 scripts/build_semantic_model_handoff.py --task /absolute/filled-model-task.json --input /absolute/visible-input.json --output /absolute/self-contained-handoff.json
 python3 scripts/freeze_semantic_taxonomy_snapshot.py --taxonomy-workbook /absolute/industry-taxonomy.xlsx --output /absolute/taxonomy-snapshot.json
@@ -74,6 +76,8 @@ python3 scripts/evaluate_semantic_calibration.py --baseline /absolute/baseline.j
 ```
 
 These scripts refuse overwrites where results are append-only. Do not add force flags or delete prior runs to reuse an ID.
+
+The preparation lock permits only candidate/case preparation inside its isolated write scope. It is not a model-run contract. Never invent a placeholder case-set hash or control case ID to make a draft look frozen; the runtime initializer remains final-`frozen` only.
 
 ## Ownership and isolation
 

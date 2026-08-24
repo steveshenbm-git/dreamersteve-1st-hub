@@ -72,8 +72,9 @@ description: Use when a company needs to audit, build, resume, or reproduce the 
 固定路由顺序为：
 
 ```text
-合同未冻结 → semantic_contract_prepare
-40例未准备 → semantic_calibration_case_prepare
+候选/案例准备输入未锁为 case_preparation_locked → semantic_contract_prepare
+40例或新版本最终冻结合同未准备 → semantic_calibration_case_prepare
+未最终冻结 → 继续停在 semantic_calibration_case_prepare
 方法未EFFECTIVE → semantic_method_calibration
 未获全量授权 → 等待用户决定
 全量未筛完 → semantic_full_screening
@@ -81,6 +82,8 @@ description: Use when a company needs to audit, build, resume, or reproduce the 
 反向审计未通过 → semantic_reverse_audit
 阶段尚未验收 → semantic_stage_review
 ```
+
+`semantic_contract_prepare` 只验收产品中性主题、节点快照、模型/提示词、检索、证据、预算、抽样和隔离写入边界，并产生 `locked_input_sha256`；不得要求尚未生成的案例集哈希或控制案例，也不得称为模型运行合同。`semantic_calibration_case_prepare` 只有在该锁有效时才能准备候选与40例，完成后必须用实际案例集哈希和真实控制案例生成新版本最终冻结合同。任何A/B/C任务都继续要求最终 `contract_state = frozen`。
 
 每次只生成一个 `specialist_handoff_packet` 和一项下一动作。步骤返回 `FAIL` 或 `UNVERIFIED` 时只路由该步的修复，不越过它。40例结果即使 `EFFECTIVE`，也不能把 `industry_semantic_expansion` 记为 PASS。
 

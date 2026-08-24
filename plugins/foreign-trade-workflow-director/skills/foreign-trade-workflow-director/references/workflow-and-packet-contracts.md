@@ -191,6 +191,8 @@ semantic_reverse_audit
 semantic_stage_review
 ```
 
+`semantic_contract_prepare` 的返回必须包含 `contract_state = case_preparation_locked`、`locked_input_sha256`、准备授权引用和隔离写入范围，同时证明案例集哈希、批次大小和控制案例尚未伪造。`semantic_calibration_case_prepare` 的返回必须包含40例案例集的实际哈希、真实控制案例以及新版本最终冻结合同。未最终冻结时，控制器只能重派当前准备/修复动作；不得创建 `semantic_model_handoff_packet`。
+
 需要外部模型时，附加只读运输包：
 
 ```text
