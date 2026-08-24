@@ -106,22 +106,13 @@ Only user-confirmed `approved` final visuals enter `brand-source/_approved-libra
 When a final website visual is confirmed as `approved`:
 
 1. Keep the original task folder unchanged for reproduction and audit context.
-2. Copy the reusable final image into the matching library folder under `brand-source/_approved-library/`:
-
-```text
-/Users/lirongjing/Documents/JY TECH WEB/brand-source/_approved-library/backgrounds/
-/Users/lirongjing/Documents/JY TECH WEB/brand-source/_approved-library/hero/
-/Users/lirongjing/Documents/JY TECH WEB/brand-source/_approved-library/product/
-/Users/lirongjing/Documents/JY TECH WEB/brand-source/_approved-library/modules/
-```
-
-3. Generate a small preview under:
-
-```text
-/Users/lirongjing/Documents/JY TECH WEB/brand-source/_approved-library/thumbnails/
-```
-
-4. Update:
+2. Determine the library destination before copying:
+   - If the approved use names one primary website page, use `/Users/lirongjing/Documents/JY TECH WEB/brand-source/_approved-library/{page-slug}/{role}/`. Use the site primary-page slug, for example `home/hero/`, `home/application-areas/`, `about/hero/`, `support/hero/`, or `support/technical-documents/`.
+   - If no primary page is confirmed, classify by reusable content role under `/Users/lirongjing/Documents/JY TECH WEB/brand-source/_approved-library/shared/{content-role}/`; do not force it into a page folder.
+   - Store each preview with its owning page under `{page-slug}/thumbnails/`, or under `shared/thumbnails/` for page-agnostic material.
+3. Copy the reusable final image into that destination without changing its approved status, original task folder, filename semantics, approved use, or limitations.
+4. Generate a small preview in the matching thumbnails destination.
+5. Update:
 
 ```text
 /Users/lirongjing/Documents/JY TECH WEB/brand-source/_approved-library/asset-library-index.md
