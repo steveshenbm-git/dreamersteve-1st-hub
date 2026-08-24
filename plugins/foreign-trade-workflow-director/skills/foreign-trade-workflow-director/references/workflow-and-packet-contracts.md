@@ -179,6 +179,25 @@ specialist_return_packet:
 
 ## 阶段5行业语义交接
 
+`semantic_evaluation_mode` 必须与研究合同一致：新准备 RC2 合同默认 `content_first`；缺省历史合同是 `strict_audit`。内容优先返回包还必须保留 `content_method_state`、`content_full_screening_state`、`content_full_screening_authorization_reference`、`content_terminal_scope_sha256`、`downstream_release_state = RESEARCH_ONLY_BLOCKED`，以及原始回答、来源真值与逐项评分的稳定引用。`CONTENT_CALIBRATION_PASS` 只能继续到全量授权门，不能被写成 beta.3 `EFFECTIVE` 或阶段 PASS。
+
+内容优先的接收包：
+
+```text
+content_first_semantic_return:
+  semantic_evaluation_mode: content_first
+  content_method_state: CONTENT_CALIBRATION_INCOMPLETE | CONTENT_CALIBRATION_PASS | CONTENT_CALIBRATION_FAIL
+  content_full_screening_state: NOT_AUTHORIZED | AUTHORIZED_NOT_STARTED | IN_PROGRESS | COVERAGE_INCOMPLETE | READY_FOR_REVERSE_AUDIT | BLOCKED
+  raw_answer_references_and_hashes
+  source_truth_references_and_hashes
+  scorecard_references_and_hashes
+  unknown_items_references
+  platform_audit_state
+  downstream_release_state: RESEARCH_ONLY_BLOCKED
+```
+
+缺失原始回答、来源真值、评分卡或未知项时，接收结果只能为 `UNVERIFIED`。平台审计缺失单独记录，不得删除可评分回答或覆盖内容结论。
+
 阶段5仍使用 `specialist_handoff_packet`，但 `target_route` 只按以下顺序取一个：
 
 ```text

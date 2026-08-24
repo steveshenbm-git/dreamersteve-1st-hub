@@ -29,15 +29,15 @@ def frontmatter_keys(text: str) -> list[str]:
 
 
 class WorkflowDirectorContractTests(unittest.TestCase):
-    def test_plugin_identity_marketplace_and_beta_version(self):
+    def test_plugin_identity_marketplace_and_next_beta_version(self):
         manifest = json.loads(read(PLUGIN_ROOT / ".codex-plugin" / "plugin.json"))
         marketplace = json.loads(read(ROOT / ".agents" / "plugins" / "marketplace.json"))
 
         self.assertEqual(manifest["name"], "foreign-trade-workflow-director")
-        self.assertEqual(manifest["version"], "0.2.0-beta.3")
+        self.assertEqual(manifest["version"], "0.3.0-beta.1")
         self.assertRegex(
             manifest["version"],
-            r"^0\.2\.0-beta\.3$",
+            r"^0\.3\.0-beta\.1$",
         )
         self.assertTrue(
             any(
@@ -128,8 +128,11 @@ class WorkflowDirectorContractTests(unittest.TestCase):
         )
 
         self.assertIn("company_id: null", state)
-        self.assertIn("blueprint_version: 0.2.0-beta.3", state)
-        self.assertIn("blueprint_version: 0.2.0-beta.3", replication)
+        self.assertIn("blueprint_version: 0.3.0-beta.1", state)
+        self.assertIn("blueprint_version: 0.3.0-beta.1", replication)
+        self.assertIn("semantic_evaluation_mode: content_first", state)
+        self.assertIn("strict_audit", state)
+        self.assertIn("RESEARCH_ONLY_BLOCKED", state)
         self.assertIn("first_incomplete_stage: environment_audit", state)
         self.assertIn("active_work_unit: null", state)
         self.assertIn("latest_semantic_receipt_reference: null", state)

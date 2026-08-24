@@ -1,9 +1,15 @@
 ---
 name: foreign-trade-workflow-director
-description: Use when a company needs to audit, build, resume, or reproduce the complete foreign-trade workflow across product knowledge, industry taxonomy and semantic expansion, company-industry matching, route decisions, candidate development, and customer operations; also use when a salesperson needs the next valid action or an authorized decision recorded in the downstream workbench.
+description: Use when a company needs to audit, build, resume, or reproduce the complete foreign-trade workflow across product knowledge, content-first or strict-audit industry semantics, company-industry matching, route decisions, candidate development, and customer operations.
 ---
 
 # 外贸全流程控制与复刻
+
+## RC2 semantic mode
+
+For a newly prepared RC2 research contract, use `content_first` as the default semantic route. It requires a content envelope, unchanged raw-response hash, visible-input hash, source/truth comparison, itemized scorecard, unknown items, method arm, and separate `platform_audit_state`. Platform run IDs, platform time, or strong model identity are not content-PASS prerequisites and their absence cannot justify deleting a scoreable raw answer.
+
+Use `strict_audit` when it is explicitly selected or a legacy beta.3 contract has no mode field. Preserve its `INCONCLUSIVE / EFFECTIVE / NOT_EFFECTIVE` semantics and every identity, transport, receipt, and admissibility gate unchanged. `CONTENT_CALIBRATION_PASS` is not strict `EFFECTIVE`; it yields only a check for explicit full-scope authorization. `RESEARCH_ONLY_BLOCKED` always prohibits shared-base writes, company matching, route handoff, candidate work, customer work, and sending.
 
 ## 核心角色
 
@@ -68,6 +74,21 @@ description: Use when a company needs to audit, build, resume, or reproduce the 
 - `full_screening_authorization`；
 - `application_base_write_authorization`；
 - 最新 `semantic_specialist_return_packet` 及其哈希。
+
+Also read `semantic_evaluation_mode`. If it is `content_first`, read `content_method_state`, `content_full_screening_state`, `content_full_screening_authorization_reference`, `content_terminal_scope_sha256`, and `downstream_release_state`. Select exactly one content-first route:
+
+```text
+content contract not final frozen or rubric incomplete → content_first_contract_prepare
+40 content evidence incomplete → content_first_calibration_review
+CONTENT_CALIBRATION_FAIL or CONTENT_CALIBRATION_INCOMPLETE → stop for repair or evidence
+CONTENT_CALIBRATION_PASS but authorization missing → content_first_full_screening_gate (NOT_AUTHORIZED)
+authorization present but no batches → content_first_full_screening_gate (AUTHORIZED_NOT_STARTED)
+authorized batches incomplete → content_first_full_screening
+coverage complete → semantic_evidence_expansion then semantic_reverse_audit
+any attempted downstream release → FAIL and keep RESEARCH_ONLY_BLOCKED
+```
+
+No controller action may change `RESEARCH_ONLY_BLOCKED` to a downstream PASS. A future bridge from content-first research into the official workflow requires a separately authored migration contract and user authorization; this skill does not implement that bridge.
 
 固定路由顺序为：
 

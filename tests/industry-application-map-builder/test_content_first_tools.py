@@ -13,9 +13,9 @@ ROOT = Path(__file__).resolve().parents[2]
 SKILL_ROOT = (
     ROOT
     / "plugins"
-    / "industry-application-map-builder-rc2-content-first"
+    / "industry-application-map-builder"
     / "skills"
-    / "industry-application-map-builder-rc2-content-first"
+    / "industry-application-map-builder"
 )
 VALIDATE = SKILL_ROOT / "scripts" / "validate_content_first_workspace.py"
 EVALUATE = SKILL_ROOT / "scripts" / "evaluate_content_first_calibration.py"
@@ -331,7 +331,7 @@ class ContentFirstToolTests(unittest.TestCase):
             self.assertNotIn("EFFECTIVE", report["content_method_state"])
             self.assertFalse(report["platform_audit_used_as_content_gate"])
 
-    def test_candidate_retains_strict_audit_evaluator_for_legacy_contracts(self):
+    def test_unified_skill_retains_strict_audit_evaluator_for_legacy_contracts(self):
         with tempfile.TemporaryDirectory() as tmp:
             parent = Path(tmp)
             fields = {

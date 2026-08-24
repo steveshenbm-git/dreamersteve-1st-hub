@@ -1,4 +1,0 @@
-interface:
-  display_name: "外贸全流程控制器 RC2 内容优先候选版"
-  short_description: "守住内容优先研究、全量授权与下游阻断边界"
-  default_prompt: "使用 $foreign-trade-workflow-director-rc2-content-first 审计内容优先候选研究。先检查完整原始回答、可见输入哈希、来源真值、逐项评分和未知项；平台审计是独立层。CONTENT_CALIBRATION_PASS 不是 beta.3 EFFECTIVE，只能等待人工全量授权。任何缺口都停在 industry_semantic_expansion，不得进入共享底座、公司匹配、路线、客户或发送。"

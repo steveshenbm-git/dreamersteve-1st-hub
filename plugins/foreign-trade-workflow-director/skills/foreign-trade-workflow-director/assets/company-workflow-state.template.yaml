@@ -2,7 +2,7 @@ company_workflow_state:
   company_id: null
   company_root: null
   blueprint_id: foreign-trade-complete-workflow
-  blueprint_version: 0.2.0-beta.3
+  blueprint_version: 0.3.0-beta.1
   first_incomplete_stage: environment_audit
   company_foundation:
     - stage_id: environment_audit
@@ -43,7 +43,20 @@ company_workflow_state:
   pending_handoff: null
   pending_human_decision: null
   semantic_method:
+    semantic_evaluation_mode: content_first
+    allowed_semantic_evaluation_modes:
+      - content_first
+      - strict_audit
     semantic_method_validation_state: INCONCLUSIVE
+    content_method_state: CONTENT_CALIBRATION_INCOMPLETE
+    allowed_content_method_states:
+      - CONTENT_CALIBRATION_INCOMPLETE
+      - CONTENT_CALIBRATION_PASS
+      - CONTENT_CALIBRATION_FAIL
+    content_full_screening_state: NOT_AUTHORIZED
+    content_full_screening_authorization_reference: null
+    content_terminal_scope_sha256: null
+    downstream_release_state: RESEARCH_ONLY_BLOCKED
     active_research_contract_id: null
     active_research_contract_version: null
     active_semantic_work_unit: semantic_contract_prepare

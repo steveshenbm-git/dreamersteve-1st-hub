@@ -35,7 +35,7 @@ class IndustryApplicationMapContractTests(unittest.TestCase):
         )
 
         self.assertEqual(manifest["name"], "industry-application-map-builder")
-        self.assertEqual(manifest["version"], "0.3.0-beta.3")
+        self.assertEqual(manifest["version"], "0.4.0-beta.1")
         self.assertEqual(manifest["interface"]["displayName"], "行业应用地图构建")
         self.assertTrue(
             any(

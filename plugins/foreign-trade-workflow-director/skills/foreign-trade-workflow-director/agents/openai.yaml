@@ -1,4 +1,4 @@
 interface:
   display_name: "外贸全流程控制器"
-  short_description: "审计并控制含行业语义校准门的完整外贸流程"
-  default_prompt: "使用 $foreign-trade-workflow-director 审计当前公司或新公司的完整外贸流程，按真实产物找出最早未完成阶段，只给我一项下一动作。行业语义阶段必须分别检查研究合同、40例校准、全量浅筛、证据展开、反向审计和写入授权；没有外部模型连接器时只接收专业技能生成的自包含manual_external_handoff，并把外部原始返回与receiver-owned接收封套分开验收，不要伪造运行元数据、越过专业技能门禁、跨公司复制私有数据或发送消息。"
+  short_description: "控制内容优先研究、严格兼容与全量下游停止门"
+  default_prompt: "使用 $foreign-trade-workflow-director 审计当前公司或新公司的完整外贸流程，按真实产物找出最早未完成阶段。新 RC2 合同默认 content_first，历史或明确 strict_audit 合同按兼容路径处理；任何内容40例结果均停在显式全量授权门，不得越过共享底座、公司匹配、路线、客户或发送边界。"

@@ -2,7 +2,7 @@
 
 `blueprint_id: foreign-trade-complete-workflow`
 
-`blueprint_version: 0.2.0-beta.3`
+`blueprint_version: 0.3.0-beta.1`
 
 ## 判定原则
 
@@ -41,6 +41,8 @@
 
 ## 阶段5内部状态机
 
+### 严格审计兼容模式
+
 控制器按以下顺序选择一个且仅一个专业路由：
 
 ```text
@@ -59,6 +61,24 @@ semantic_contract_prepare
 `semantic_method_validation_state` 只允许 `INCONCLUSIVE / EFFECTIVE / NOT_EFFECTIVE`。结构测试、文档完整、单模型自评或外部模型多数意见都不能把它改为 `EFFECTIVE`。40例通过也不能把 `industry_semantic_expansion` 记为 PASS，更不能自动获得全量筛查或 `application_base_write_authorization`。
 
 当前外部模型运输方式是 `manual_external_handoff`。没有经过另行授权和验证的API/MCP连接器时，控制器不自动调用外部模型；它只生成一份自包含任务包，包内含可见输入、规范化输入哈希、精确返回Schema、字段责任、允许空值和停止点。外部原始返回与receiver-owned接收封套分开保存；手工交接不得伪造执行器运行ID或运行时间。
+
+### 内容优先默认模式
+
+新准备的 RC2 合同默认 `semantic_evaluation_mode = content_first`；缺省或历史 beta.3 合同按 `strict_audit`。内容优先的每个评分对象必须有完整原始回答、可见输入哈希、来源真值对照、逐项评分、未知项和独立 `platform_audit_state`。
+
+内容优先固定按以下顺序路由，任何非 PASS 或不完整证据都停在当前步：
+
+```text
+content_first_contract_prepare
+→ content_first_calibration_review
+→ content_first_full_screening_gate
+→ content_first_full_screening
+→ semantic_evidence_expansion
+→ semantic_reverse_audit
+→ semantic_stage_review
+```
+
+`CONTENT_CALIBRATION_PASS` 只能证明内容门已通过；它不是 beta.3 `EFFECTIVE`，也不能让 `industry_semantic_expansion` 变为 `PASS`。全量默认 `NOT_AUTHORIZED`；只有单独的授权引用、冻结的末端范围哈希和零安全失败才允许 `AUTHORIZED_NOT_STARTED`。全量、证据展开和反向审计完成后仍保持 `RESEARCH_ONLY_BLOCKED`：不得写共享应用底座、公司匹配、路线包、候选客户或对外沟通。
 
 ## 必需能力依赖
 
@@ -117,7 +137,13 @@ company_workflow_state:
   pending_handoff
   pending_human_decision
   semantic_method:
+    semantic_evaluation_mode: content_first | strict_audit
     semantic_method_validation_state
+    content_method_state
+    content_full_screening_state
+    content_full_screening_authorization_reference
+    content_terminal_scope_sha256
+    downstream_release_state
     active_research_contract_id
     active_research_contract_version
     active_semantic_work_unit

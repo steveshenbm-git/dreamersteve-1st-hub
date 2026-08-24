@@ -6,22 +6,14 @@ import unittest
 
 
 ROOT = Path(__file__).resolve().parents[2]
-MAP_PLUGIN = ROOT / "plugins" / "industry-application-map-builder-rc2-content-first"
-WORKFLOW_PLUGIN = ROOT / "plugins" / "foreign-trade-workflow-director-rc2-content-first"
-MAP_SKILL = (
-    MAP_PLUGIN
-    / "skills"
-    / "industry-application-map-builder-rc2-content-first"
-)
-WORKFLOW_SKILL = (
-    WORKFLOW_PLUGIN
-    / "skills"
-    / "foreign-trade-workflow-director-rc2-content-first"
-)
+MAP_PLUGIN = ROOT / "plugins" / "industry-application-map-builder"
+WORKFLOW_PLUGIN = ROOT / "plugins" / "foreign-trade-workflow-director"
+MAP_SKILL = MAP_PLUGIN / "skills" / "industry-application-map-builder"
+WORKFLOW_SKILL = WORKFLOW_PLUGIN / "skills" / "foreign-trade-workflow-director"
 
 
-class ContentFirstCandidateContractTests(unittest.TestCase):
-    def test_candidates_have_distinct_names_and_versions(self):
+class ContentFirstUnifiedContractTests(unittest.TestCase):
+    def test_existing_plugins_have_next_versions(self):
         map_manifest = json.loads(
             (MAP_PLUGIN / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8")
         )
@@ -32,13 +24,13 @@ class ContentFirstCandidateContractTests(unittest.TestCase):
         )
 
         self.assertEqual(
-            map_manifest["name"], "industry-application-map-builder-rc2-content-first"
+            map_manifest["name"], "industry-application-map-builder"
         )
-        self.assertEqual(map_manifest["version"], "0.4.0-rc2-content-first.1")
+        self.assertEqual(map_manifest["version"], "0.4.0-beta.1")
         self.assertEqual(
-            workflow_manifest["name"], "foreign-trade-workflow-director-rc2-content-first"
+            workflow_manifest["name"], "foreign-trade-workflow-director"
         )
-        self.assertEqual(workflow_manifest["version"], "0.3.0-rc2-content-first.1")
+        self.assertEqual(workflow_manifest["version"], "0.3.0-beta.1")
 
     def test_content_first_contract_keeps_raw_content_and_separates_platform_audit(self):
         map_skill = (MAP_SKILL / "SKILL.md").read_text(encoding="utf-8")
@@ -57,8 +49,8 @@ class ContentFirstCandidateContractTests(unittest.TestCase):
             )
         )["semantic_content_scorecard"]
 
-        self.assertIn("name: industry-application-map-builder-rc2-content-first", map_skill)
-        self.assertIn("name: foreign-trade-workflow-director-rc2-content-first", workflow_skill)
+        self.assertIn("name: industry-application-map-builder", map_skill)
+        self.assertIn("name: foreign-trade-workflow-director", workflow_skill)
         for required in (
             "strict_audit",
             "content_first",
@@ -88,7 +80,7 @@ class ContentFirstCandidateContractTests(unittest.TestCase):
         self.assertNotIn("style", "\n".join(scorecard_template["scoring_items"].keys()).lower())
         self.assertIn("RESEARCH_ONLY_BLOCKED", workflow_skill)
 
-    def test_workflow_candidate_keeps_content_first_research_out_of_downstream_stages(self):
+    def test_unified_workflow_keeps_content_first_research_out_of_downstream_stages(self):
         blueprint = (WORKFLOW_SKILL / "references" / "workflow-blueprint.md").read_text(
             encoding="utf-8"
         )

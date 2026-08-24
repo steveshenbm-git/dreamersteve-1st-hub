@@ -1,4 +1,4 @@
 interface:
   display_name: "行业应用地图构建"
-  short_description: "校准行业语义方法并构建可追溯的公司路线候选池"
-  default_prompt: "使用 $industry-application-map-builder 先识别当前是研究合同、40例校准、全量浅筛、证据展开、反向审计、共享底座写入还是公司路线阶段；严格分离筛查、进度和证据状态。手工外部模型交接只生成一份自包含任务包，原始模型返回与receiver-owned接收封套分开保存，不补造运行ID或时间。未通过方法门、证据门和单独写入授权时，不要更新正式共享应用底座或进入公司匹配。"
+  short_description: "以内容证据校准行业语义，并保留严格审计兼容模式"
+  default_prompt: "使用 $industry-application-map-builder 为新 RC2 研究选择默认 content_first：保存完整原始回答、可见输入哈希、来源真值、逐项评分和未知项；平台审计另存。历史合同或明确要求时使用 strict_audit。任何内容40例结果都需单独全量授权，并保持共享底座、公司匹配、路线和客户工作被阻断。"

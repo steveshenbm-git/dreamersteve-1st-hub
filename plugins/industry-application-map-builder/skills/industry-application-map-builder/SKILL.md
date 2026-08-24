@@ -1,9 +1,20 @@
 ---
 name: industry-application-map-builder
-description: Use when work involves an official industry taxonomy, product-neutral industry semantic screening, method calibration, evidence expansion, reverse-audit coverage, a company-specific industry application map, route candidates, or a controlled route-pool handoff before customer-development validation.
+description: Use when work involves an official industry taxonomy, content-first or strict-audit RC2 semantic screening, 40-case scoring, evidence expansion, reverse-audit coverage, a company-specific industry application map, route candidates, or controlled handoff before customer-development validation.
 ---
 
 # 行业应用地图构建
+
+## RC2 mode selection
+
+Use one semantic evaluation mode per research contract. For a newly prepared RC2 research contract, set `execution_mode = content_first`; this is the current default route. Use `strict_audit` only when the user explicitly selects it, or when a legacy beta.3 contract has no mode field. A legacy no-mode contract remains strict-audit compatible and retains every beta.3 identity, transport, receipt, and admissibility gate unchanged.
+
+| Mode | Content decision evidence | Status vocabulary | Boundary |
+| --- | --- | --- | --- |
+| `content_first` | Complete raw answer, visible input/hash, source/truth comparison, itemized scorecard, and unknown items; platform audit is separate | `CONTENT_CONTRACT_FROZEN`, `CONTENT_CALIBRATION_*`, content full-scope states | Research-only; never emit strict `EFFECTIVE` or release downstream work. |
+| `strict_audit` | The existing beta.3 evidence and admissibility contract | `INCONCLUSIVE / EFFECTIVE / NOT_EFFECTIVE` | Preserve the existing route and tools unchanged. |
+
+Never infer `content_first` from missing platform metadata. Read [content-first-mode-contract.md](references/content-first-mode-contract.md) and [compatibility-matrix.md](references/compatibility-matrix.md) before a content-first route. Use `assets/content-first/` only for a new content-first contract; never retrofit its fields into a frozen beta.3 contract.
 
 ## Core principle
 
@@ -37,12 +48,18 @@ This skill owns shared industry/application knowledge, RC2 semantic-method resea
 | `semantic_evidence_expansion` | Expand triggered nodes into minimal claims and source packets | [industry-semantic-model-protocol.md](references/industry-semantic-model-protocol.md) | Evidence packets and B-review tasks; no `supported` before B PASS |
 | `semantic_reverse_audit` | Sample the rejected population by risk and calculate the finite-population bound | [industry-semantic-calibration-and-audit.md](references/industry-semantic-calibration-and-audit.md) | Audit plan/report; any confirmed miss fails the contract |
 | `semantic_stage_review` | Validate full coverage, one contract version, evidence gates, audit and safety | [coverage-and-lifecycle.md](references/coverage-and-lifecycle.md) | Stage `PASS / FAIL / UNVERIFIED`; stop before company matching |
+| `content_first_contract_prepare` | Freeze a content-first contract and rubric after the existing preparation/case-set gates | [content-first-mode-contract.md](references/content-first-mode-contract.md) | `CONTENT_CONTRACT_FROZEN`; stop before 40-case content work |
+| `content_first_calibration_review` | Score both 40-case arms from raw-answer envelopes and source/truth packets | [content-first-mode-contract.md](references/content-first-mode-contract.md) | `CONTENT_CALIBRATION_*`; stop at a full-scope authorization request |
+| `content_first_full_screening_gate` | Check content calibration and explicit human full-scope authorization | [content-first-mode-contract.md](references/content-first-mode-contract.md) | `NOT_AUTHORIZED` or `AUTHORIZED_NOT_STARTED`; do not run nodes automatically |
+| `content_first_full_screening` | Run only explicitly authorized append-only content screening batches | [content-first-mode-contract.md](references/content-first-mode-contract.md) | `IN_PROGRESS / COVERAGE_INCOMPLETE / READY_FOR_REVERSE_AUDIT`; stop after every batch |
 
 Do not combine routes merely because the next step is convenient. Complete the requested route, validate it, and stop unless the user separately authorized the next route.
 
 ## RC2 semantic-method gate
 
 Keep method status `INCONCLUSIVE` until the frozen 40-case paired run passes. Writing clearer rules, passing static tests, or producing a pilot does not prove method effectiveness.
+
+For `content_first`, keep `content_method_state = CONTENT_CALIBRATION_INCOMPLETE` until its frozen 40-case content evidence gate passes. This state can only determine whether explicit full-scope authorization may be requested; it is not a real-world effectiveness claim and must never be relabeled as strict-audit `EFFECTIVE`.
 
 Preserve three independent semantic axes:
 
@@ -62,6 +79,10 @@ Use the templates under `assets/semantic-method/`. Current external-model transp
 
 Keep `review_result` separate from `admissibility_state`. An external reviewer may return `PASS` on source content while the transport or identity evidence remains `UNVERIFIED`; in that case do not upgrade evidence or count the run in the 40-case calibration.
 
+In `content_first`, preserve the actual raw response in a separate immutable file and make the content envelope point to its byte SHA-256. Every case or node must retain: case/node ID, visible input and hash, method arm, raw response reference and hash, source/truth comparison reference and hash, a non-style itemized scorecard, and explicit unknown items. Platform transport, platform time, run IDs, and model identity evidence belong only to `platform_audit_state` and cannot replace this evidence. An unknown platform audit cannot by itself fail a complete content scorecard; a missing or changed raw response, input, source/truth packet, scorecard, or unknown list must return `UNVERIFIED` or `FAIL`.
+
+`content_first` retains product neutrality, known-positive recall, misleading negatives, source-scarce and cyclic-source handling, cross-company isolation, claim-inflation prevention, three independent semantic axes, direct-source evidence, evidence expansion, and reverse audit. `CONTENT_CALIBRATION_PASS` does not authorize all nodes. Full-scope authorization remains false by default and requires an explicit human authorization reference plus unchanged `terminal_node_manifest_sha256`. Use the coverage validator to compare every append-only node record with the frozen manifest; `READY_FOR_REVERSE_AUDIT` still requires the content-evidence validator and does not mean stage PASS. Keep `downstream_release_state = RESEARCH_ONLY_BLOCKED`; do not enter shared-base writes, company matching, routes, or customers without a separately authorized migration decision.
+
 Use deterministic scripts for repeatable operations:
 
 ```bash
@@ -73,6 +94,11 @@ python3 scripts/freeze_semantic_taxonomy_snapshot.py --taxonomy-workbook /absolu
 python3 scripts/validate_semantic_research_workspace.py /absolute/semantic-research-workspace --format json
 python3 scripts/sample_semantic_reverse_audit.py --screening-records /absolute/screening-records.jsonl --seed frozen-seed --output /absolute/audit-plan.json
 python3 scripts/evaluate_semantic_calibration.py --baseline /absolute/baseline.json --candidate /absolute/candidate.json --output /absolute/calibration-report.json
+python3 scripts/validate_content_first_workspace.py /absolute/content-first-workspace --format json
+python3 scripts/init_content_first_workspace.py --map-root /absolute/map-root --contract /absolute/content-first-contract.json
+python3 scripts/evaluate_content_first_calibration.py --baseline /absolute/content-baseline.json --candidate /absolute/content-candidate.json --output /absolute/content-calibration-report.json
+python3 scripts/check_content_first_full_screening_gate.py --contract /absolute/content-first-contract.json --calibration-report /absolute/content-calibration-report.json --output /absolute/full-scope-gate.json
+python3 scripts/validate_content_first_full_coverage.py --contract /absolute/content-first-contract.json --terminal-node-manifest /absolute/terminal-nodes.json --screening-index /absolute/content-screening-index.json --output /absolute/content-coverage-report.json
 ```
 
 These scripts refuse overwrites where results are append-only. Do not add force flags or delete prior runs to reuse an ID.
