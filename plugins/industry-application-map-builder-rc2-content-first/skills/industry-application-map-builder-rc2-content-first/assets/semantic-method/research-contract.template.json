@@ -1,0 +1,134 @@
+{
+  "schema_version": "1.2",
+  "semantic_research_contract": {
+    "research_contract_id": null,
+    "contract_version": null,
+    "contract_state": "draft",
+    "created_at": null,
+    "frozen_at": null,
+    "owner_authorization_reference": null,
+    "skill_git_commit": null,
+    "map_builder_plugin_version": "0.3.0-beta.3",
+    "workflow_director_plugin_version": "0.2.0-beta.3",
+    "taxonomy_snapshot_reference": null,
+    "taxonomy_snapshot_sha256": null,
+    "terminal_node_count": null,
+    "research_theme": {
+      "theme_id": null,
+      "mechanism": null,
+      "form_or_use_point": null,
+      "exclusions": [],
+      "product_neutrality_review": "UNVERIFIED"
+    },
+    "model_profile_id": "rc2-pilot-v1.1",
+    "model_roles": {
+      "A": "generate_search_and_package",
+      "B": "blind_source_review",
+      "C": "dispute_and_reverse_audit"
+    },
+    "model_identity_evidence_policy": {
+      "A": {
+        "minimum_level": "platform_verified",
+        "accepted_types": ["connector_verified", "platform_export"]
+      },
+      "B": {
+        "minimum_level": "operator_attested",
+        "accepted_types": ["connector_verified", "platform_export", "ui_observed", "user_attested"]
+      },
+      "C": {
+        "minimum_level": "operator_attested",
+        "accepted_types": ["connector_verified", "platform_export", "ui_observed", "user_attested"]
+      }
+    },
+    "prompt_template_references_and_hashes": [],
+    "source_scope": [
+      "public_primary_sources",
+      "traceable_technical_sources"
+    ],
+    "search_tool_and_locale": {
+      "tool": null,
+      "languages": [],
+      "regions": []
+    },
+    "minimum_retrieval_rule": {
+      "query_groups": [
+        "industry_output_or_process",
+        "mechanism_use_point_and_cross_domain_synonyms"
+      ],
+      "inspect_top_distinct_results_per_group": 5,
+      "open_potential_clues_per_group_max": 2,
+      "source_scarce_distinct_accessible_node_specific_results_below": 3
+    },
+    "evidence_rule": {
+      "supported_requires_direct_source": true,
+      "supported_requires_model_b_pass": true,
+      "model_consensus_is_not_evidence": true
+    },
+    "baseline_method_contract": "baseline_full_depth",
+    "candidate_method_contract": "candidate_screen_then_expand",
+    "case_preparation_gate": {
+      "authorization": false,
+      "authorization_reference": null,
+      "preparation_contract_version": null,
+      "state": "draft",
+      "locked_at": null,
+      "locked_input_sha256": null
+    },
+    "calibration_case_set_reference_and_hash": {
+      "reference": null,
+      "sha256": null
+    },
+    "batch_rule": {
+      "batch_size": null,
+      "stop_after_each_batch": true,
+      "trigger_rate_is_diagnostic_not_pass_gate": true
+    },
+    "control_case_rule": {
+      "case_ids": [],
+      "drift_requires_pause": true
+    },
+    "budget_rule": {
+      "token_limit": null,
+      "search_limit": null,
+      "time_limit_minutes": null,
+      "budget_stop_keeps_unprocessed_nodes_not_screened": true
+    },
+    "sampling_strata_rule": [
+      "signal_conflict",
+      "nec_or_miscellaneous",
+      "source_scarce",
+      "semantic_ambiguity",
+      "ordinary"
+    ],
+    "sampling_seed_rule": {
+      "seed": null,
+      "algorithm": "python_random_v1_srswor"
+    },
+    "confidence_bound_method": {
+      "family_alpha": 0.05,
+      "stratum_method": "exact_one_sided_hypergeometric_inversion",
+      "multiple_strata_correction": "Bonferroni",
+      "required_weighted_upper_bound": 0.05
+    },
+    "hard_gates": [
+      "known_positive_recall_100_percent",
+      "unsupported_supported_count_zero",
+      "circular_source_supported_count_zero",
+      "cross_company_contamination_zero",
+      "claim_inflation_zero",
+      "status_axis_mixing_zero",
+      "deep_expansion_reduction_at_least_20_percent",
+      "reproducible_run"
+    ],
+    "allowed_writes": [],
+    "prohibited_actions": [
+      "write_shared_application_base_during_calibration",
+      "company_matching_before_semantic_stage_pass",
+      "customer_search_before_semantic_stage_pass",
+      "silent_model_substitution",
+      "automatic_external_model_claim_without_connector"
+    ],
+    "full_screening_authorization": false,
+    "application_base_write_authorization": false
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "semantic_content_calibration_arm": {
+    "research_contract_id": null,
+    "contract_version": null,
+    "taxonomy_snapshot_sha256": null,
+    "calibration_case_set_sha256": null,
+    "source_truth_package_sha256": null,
+    "method_arm": "candidate_screen_then_expand",
+    "run_complete": false,
+    "case_evidence": [
+      {
+        "case_id": null,
+        "visible_input_sha256": null,
+        "raw_response_sha256": null,
+        "scorecard_sha256": null,
+        "content_score_result": "UNVERIFIED",
+        "unknown_items_present": false
+      }
+    ],
+    "known_positive_case_ids": [],
+    "known_positive_entered_expansion_case_ids": [],
+    "deep_expansion_count": null,
+    "safety_failures": [],
+    "content_reproducible": false,
+    "platform_audit_summary": "NOT_COLLECTED"
+  }
+}

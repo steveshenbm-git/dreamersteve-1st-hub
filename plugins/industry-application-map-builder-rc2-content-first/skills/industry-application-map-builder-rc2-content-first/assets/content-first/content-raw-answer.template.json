@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "semantic_content_raw_answer": {
+    "raw_answer_id": null,
+    "research_contract_id": null,
+    "contract_version": null,
+    "subject": {
+      "kind": "calibration_case",
+      "id": null
+    },
+    "method_arm": null,
+    "visible_input": null,
+    "visible_input_sha256": null,
+    "raw_response_reference": null,
+    "raw_response_sha256": null,
+    "raw_response_format": null,
+    "source_truth_comparison_reference": null,
+    "source_truth_comparison_sha256": null,
+    "platform_audit_state": "NOT_COLLECTED",
+    "platform_audit_reference_or_null": null,
+    "envelope_sha256": null
+  }
+}

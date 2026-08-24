@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "semantic_content_scorecard": {
+    "scorecard_id": null,
+    "raw_answer_reference": null,
+    "raw_answer_sha256": null,
+    "subject": {
+      "kind": "calibration_case",
+      "id": null
+    },
+    "method_arm": null,
+    "visible_input_sha256": null,
+    "source_truth_comparison_reference": null,
+    "source_truth_comparison_sha256": null,
+    "scoring_rubric_version": "1.0",
+    "scoring_items": {
+      "scope_taxonomy_grounding": {"score": null, "critical": true, "reason": null},
+      "three_axis_handling": {"score": null, "critical": true, "reason": null},
+      "source_truth_alignment": {"score": null, "critical": true, "reason": null},
+      "safety_boundary": {"score": null, "critical": true, "reason": null},
+      "unknown_disclosure": {"score": null, "critical": false, "reason": null}
+    },
+    "unknown_items": [],
+    "content_score_result": "UNVERIFIED",
+    "platform_audit_state": "NOT_COLLECTED",
+    "platform_audit_reference_or_null": null,
+    "scorecard_sha256": null
+  }
+}

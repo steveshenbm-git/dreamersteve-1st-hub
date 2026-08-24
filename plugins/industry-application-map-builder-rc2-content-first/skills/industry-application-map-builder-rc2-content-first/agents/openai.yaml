@@ -1,0 +1,4 @@
+interface:
+  display_name: "行业应用地图构建 RC2 内容优先候选版"
+  short_description: "用完整原始回答、来源真值和逐项评分校准行业语义"
+  default_prompt: "使用 $industry-application-map-builder-rc2-content-first 选择 strict_audit 或 content_first。content_first 每例必须保存完整原始回答、可见输入哈希、来源真值对照、逐项内容评分和未知项；平台审计另存且不能替代内容证据。40例仅能产生 CONTENT_CALIBRATION_* 状态，之后仍需人工授权全量，且不得进入共享底座、公司匹配、路线或客户阶段。"

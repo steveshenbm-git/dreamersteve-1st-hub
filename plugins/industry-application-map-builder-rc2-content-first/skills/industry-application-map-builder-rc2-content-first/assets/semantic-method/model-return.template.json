@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.1",
+  "semantic_model_return": {
+    "task_id": null,
+    "research_contract_id": null,
+    "contract_version": null,
+    "input_sha256": null,
+    "declared_model_name": null,
+    "actual_model_id_or_unknown": "unknown",
+    "provider_or_unknown": "unknown",
+    "model_reported_run_id": null,
+    "model_reported_started_at": null,
+    "result_state": "UNVERIFIED",
+    "reason_codes": [],
+    "source_access_results": [],
+    "structured_findings": [],
+    "unknowns": [],
+    "model_reported_returned_at": null
+  }
+}
