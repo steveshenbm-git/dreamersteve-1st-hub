@@ -75,6 +75,7 @@ class UnifiedContentFirstUpgradeTests(unittest.TestCase):
         marketplace = json.loads(MARKETPLACE.read_text(encoding="utf-8"))
         names = {plugin["name"] for plugin in marketplace["plugins"]}
 
+        self.assertEqual(marketplace["name"], "foreign-trade-team")
         self.assertIn("industry-application-map-builder", names)
         self.assertIn("foreign-trade-workflow-director", names)
         self.assertNotIn("industry-application-map-builder-rc2-content-first", names)

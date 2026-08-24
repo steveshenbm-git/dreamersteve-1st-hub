@@ -1,110 +1,14 @@
 {
-  "name": "jiangyue-team",
+  "name": "foreign-trade-team",
   "interface": {
-    "displayName": "Jiangyue Team"
+    "displayName": "Foreign Trade Team"
   },
   "plugins": [
-    {
-      "name": "jiangyue-website-workflow-director",
-      "source": {
-        "source": "local",
-        "path": "./plugins/jiangyue-website-workflow-director"
-      },
-      "policy": {
-        "installation": "AVAILABLE",
-        "authentication": "ON_INSTALL"
-      },
-      "category": "Productivity"
-    },
-    {
-      "name": "jiangyue-website-imagegen",
-      "source": {
-        "source": "local",
-        "path": "./plugins/jiangyue-website-imagegen"
-      },
-      "policy": {
-        "installation": "AVAILABLE",
-        "authentication": "ON_INSTALL"
-      },
-      "category": "Productivity"
-    },
-    {
-      "name": "jiangyue-website-planner",
-      "source": {
-        "source": "local",
-        "path": "./plugins/jiangyue-website-planner"
-      },
-      "policy": {
-        "installation": "AVAILABLE",
-        "authentication": "ON_INSTALL"
-      },
-      "category": "Productivity"
-    },
-    {
-      "name": "jiangyue-knowledge-curator",
-      "source": {
-        "source": "local",
-        "path": "./plugins/jiangyue-knowledge-curator"
-      },
-      "policy": {
-        "installation": "AVAILABLE",
-        "authentication": "ON_INSTALL"
-      },
-      "category": "Productivity"
-    },
-    {
-      "name": "jiangyue-skill-director",
-      "source": {
-        "source": "local",
-        "path": "./plugins/jiangyue-skill-director"
-      },
-      "policy": {
-        "installation": "AVAILABLE",
-        "authentication": "ON_INSTALL"
-      },
-      "category": "Productivity"
-    },
-    {
-      "name": "foreign-trade-email-assistant",
-      "source": {
-        "source": "local",
-        "path": "./plugins/foreign-trade-email-assistant"
-      },
-      "policy": {
-        "installation": "AVAILABLE",
-        "authentication": "ON_INSTALL"
-      },
-      "category": "Productivity"
-    },
     {
       "name": "foreign-trade-customer-development",
       "source": {
         "source": "local",
         "path": "./plugins/foreign-trade-customer-development"
-      },
-      "policy": {
-        "installation": "AVAILABLE",
-        "authentication": "ON_INSTALL"
-      },
-      "category": "Productivity"
-    },
-    {
-      "name": "foreign-trade-customer-operations",
-      "source": {
-        "source": "local",
-        "path": "./plugins/foreign-trade-customer-operations"
-      },
-      "policy": {
-        "installation": "AVAILABLE",
-        "authentication": "ON_INSTALL"
-      },
-      "category": "Productivity"
-    },
-    {
-      "name": "company-product-knowledge-builder",
-      "source": {
-        "source": "local",
-        "path": "./plugins/company-product-knowledge-builder"
       },
       "policy": {
         "installation": "AVAILABLE",

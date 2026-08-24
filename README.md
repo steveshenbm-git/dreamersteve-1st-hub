@@ -51,42 +51,20 @@ plugins/foreign-trade-workflow-director/.codex-plugin/plugin.json
 plugins/foreign-trade-workflow-director/skills/foreign-trade-workflow-director/
 ```
 
-## Install From This Repository
+## Install the Foreign-Trade Release from GitHub
 
-1. Clone or unzip this package.
-2. Add this repository as a local Codex plugin marketplace:
-
-```bash
-codex plugin marketplace add /absolute/path/to/dreamersteve-1st-hub
-```
-
-3. Install the recommended foreign-trade workflow and any Jiangyue plugins you use:
+Use the published `ft-customer-dev` branch as the marketplace source. Do not install these releases from an editable local checkout.
 
 ```bash
-codex plugin add jiangyue-website-planner@jiangyue-team
-codex plugin add jiangyue-website-imagegen@jiangyue-team
-codex plugin add company-product-knowledge-builder@jiangyue-team
-codex plugin add industry-application-map-builder@jiangyue-team
-codex plugin add foreign-trade-customer-development@jiangyue-team
-codex plugin add foreign-trade-customer-operations@jiangyue-team
-codex plugin add foreign-trade-workflow-director@jiangyue-team
+codex plugin marketplace add steveshenbm-git/dreamersteve-1st-hub --ref ft-customer-dev
+codex plugin add industry-application-map-builder@foreign-trade-team
+codex plugin add foreign-trade-workflow-director@foreign-trade-team
 ```
 
-If you need only the older standalone email workflow, install `foreign-trade-email-assistant` as an optional compatibility plugin instead of using it together with customer operations for the same task:
-
-```bash
-codex plugin add foreign-trade-email-assistant@jiangyue-team
-```
-
-4. Start a new Codex thread and use:
+Start a new Codex thread and use:
 
 ```text
-Use $jiangyue-website-planner to plan a Jiangyue website page and image brief.
-Use $jiangyue-website-imagegen to help me create a Jiangyue website visual.
-Use $company-product-knowledge-builder to create an approved product-fact packet for one company.
 Use $industry-application-map-builder to freeze and calibrate a product-neutral industry-semantic method before updating the shared application base or building a company route pool.
-Use $foreign-trade-customer-development to compile a selected route, validate it, or scan a salesperson-confirmed direction for qualified candidates.
-Use $foreign-trade-customer-operations to prepare the first outreach, a due follow-up, or a reply from a complete customer thread.
 Use $foreign-trade-workflow-director to audit or initialize the complete foreign-trade workflow, identify the earliest incomplete stage, and route one bounded next action without copying private company data.
 ```
 
