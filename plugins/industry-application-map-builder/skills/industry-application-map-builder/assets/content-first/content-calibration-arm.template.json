@@ -1,28 +1,53 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "2.0-r4",
   "semantic_content_calibration_arm": {
+    "calibration_contract_marker": "2.0-r4",
     "research_contract_id": null,
     "contract_version": null,
     "taxonomy_snapshot_sha256": null,
     "calibration_case_set_sha256": null,
     "source_truth_package_sha256": null,
-    "method_arm": "candidate_screen_then_expand",
+    "final_contract_reference_and_hash": {"reference": null, "sha256": null},
+    "paired_task_manifest_reference_and_hash": {"reference": null, "sha256": null},
+    "method_arm": "screen_then_expand_v2",
     "run_complete": false,
     "case_evidence": [
       {
         "case_id": null,
         "visible_input_sha256": null,
+        "task_id": null,
+        "task_reference": null,
+        "task_sha256": null,
+        "raw_envelope_reference": null,
+        "raw_envelope_sha256": null,
+        "raw_response_reference": null,
         "raw_response_sha256": null,
+        "scorecard_reference": null,
         "scorecard_sha256": null,
+        "resource_observation_reference": null,
+        "resource_observation_sha256": null,
+        "resource_observation_receipt_reference": null,
+        "resource_observation_receipt_sha256": null,
         "content_score_result": "UNVERIFIED",
-        "unknown_items_present": false
+        "unknown_items_present": false,
+        "critical_dispositions": {
+          "taxonomy_and_scope_grounding": "UNVERIFIED",
+          "semantic_decision_correctness": "UNVERIFIED",
+          "source_retrieval_equivalence": "UNVERIFIED",
+          "receiver_evidence_integrity": "UNVERIFIED",
+          "safety_boundary": "UNVERIFIED"
+        }
       }
     ],
     "known_positive_case_ids": [],
     "known_positive_entered_expansion_case_ids": [],
+    "query_count": null,
+    "source_open_count": null,
     "deep_expansion_count": null,
     "safety_failures": [],
     "content_reproducible": false,
+    "stability_task_manifest_reference_and_hash": {"reference": null, "sha256": null},
+    "stability_repeat_receipts": [],
     "platform_audit_summary": "NOT_COLLECTED"
   }
 }

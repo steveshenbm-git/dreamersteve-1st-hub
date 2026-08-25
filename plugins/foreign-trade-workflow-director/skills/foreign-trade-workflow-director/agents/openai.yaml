@@ -1,4 +1,4 @@
 interface:
   display_name: "外贸全流程控制器"
-  short_description: "控制内容优先研究、严格兼容与全量下游停止门"
-  default_prompt: "使用 $foreign-trade-workflow-director 审计当前公司或新公司的完整外贸流程，按真实产物找出最早未完成阶段。新 RC2 合同默认 content_first，历史或明确 strict_audit 合同按兼容路径处理；任何内容40例结果均停在显式全量授权门，不得越过共享底座、公司匹配、路线、客户或发送边界。"
+  short_description: "按30+10、80任务与稳定性证据控制R4下游停止门"
+  default_prompt: "使用 $foreign-trade-workflow-director 审计当前公司或新公司的完整外贸流程，按真实产物找出最早未完成阶段。新 RC2 合同默认 content_first，必须分别核对冻结术语桥、开发回归隔离、30+10保留集来源、80任务证据链和6个稳定性重复；历史缺省合同才按 strict_audit 兼容路径处理。内容通过后还必须核对独立授权引用、receipt引用/哈希、冻结范围哈希与Task 8 gate绑定；缺任一项仍为NOT_AUTHORIZED，共享底座、公司匹配、路线、客户和发送始终保持 RESEARCH_ONLY_BLOCKED。"

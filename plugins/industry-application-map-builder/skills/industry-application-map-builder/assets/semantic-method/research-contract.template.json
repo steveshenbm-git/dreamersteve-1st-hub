@@ -8,8 +8,8 @@
     "frozen_at": null,
     "owner_authorization_reference": null,
     "skill_git_commit": null,
-    "map_builder_plugin_version": "0.3.0-beta.3",
-    "workflow_director_plugin_version": "0.2.0-beta.3",
+    "map_builder_plugin_version": "0.4.0-beta.2",
+    "workflow_director_plugin_version": "0.3.0-beta.2",
     "taxonomy_snapshot_reference": null,
     "taxonomy_snapshot_sha256": null,
     "terminal_node_count": null,
@@ -50,6 +50,79 @@
       "languages": [],
       "regions": []
     },
+    "execution_mode": "content_first",
+    "execution_authorized": false,
+    "paired_execution_contract": {
+      "declared_model_and_configuration": null,
+      "tools": [],
+      "source_permissions": [],
+      "observation_window": {"starts_at": null, "ends_at": null},
+      "budgets": {},
+      "frozen_artifact_references_and_hashes": {"prompt": [], "schema": [], "config": [], "rubric": []},
+      "fresh_context_required": true,
+      "truth_isolation_required": true,
+      "other_arm_isolation_required": true,
+      "prior_case_isolation_required": true,
+      "append_only_outputs_required": true,
+      "model_execution_authorized": false
+    },
+    "terminology_architecture": {
+      "global_skill_fixed_domain_terms_allowed": false,
+      "case_specific_answer_terms_allowed_in_skill": false,
+      "company_terms_allowed_in_semantic_screening": false,
+      "concept_roles": [
+        "industry_output",
+        "material_form",
+        "phase_relation",
+        "process_action",
+        "use_point",
+        "exclusion"
+      ],
+      "term_pack_reference": null,
+      "term_pack_sha256": null,
+      "term_pack_state": "not_prepared",
+      "dynamic_discovery_enabled": true
+    },
+    "calibration_case_policy": {
+      "formal_case_count": 40,
+      "known_positive_count": 14,
+      "development_case_ids_excluded_from_formal": [],
+      "required_category_counts": {
+        "direct_supported_positive": 8,
+        "hidden_positive": 6,
+        "misleading_name_similarity": 6,
+        "source_sparse_or_inaccessible": 5,
+        "ambiguous_or_incomplete_conditions": 5,
+        "circular_or_mixed_company_source": 4,
+        "empty_generalization": 3,
+        "contamination_drift_or_structure_error": 3
+      },
+      "selection_origin_counts": {
+        "retained_r3_unexecuted": 30,
+        "new_unseen_positive": 10
+      },
+      "selection_origin_category_counts": {
+        "retained_r3_unexecuted": {
+          "hidden_positive": 4,
+          "misleading_name_similarity": 6,
+          "source_sparse_or_inaccessible": 5,
+          "ambiguous_or_incomplete_conditions": 5,
+          "circular_or_mixed_company_source": 4,
+          "empty_generalization": 3,
+          "contamination_drift_or_structure_error": 3
+        },
+        "new_unseen_positive": {
+          "direct_supported_positive": 8,
+          "hidden_positive": 2
+        }
+      }
+    },
+    "retrieval_efficiency_gates": {
+      "minimum_deep_expansion_reduction": 0.2,
+      "maximum_query_count_increase": 0.1,
+      "maximum_source_open_count_increase": 0.0,
+      "stability_repeat_case_count": 6
+    },
     "minimum_retrieval_rule": {
       "query_groups": [
         "industry_output_or_process",
@@ -64,8 +137,8 @@
       "supported_requires_model_b_pass": true,
       "model_consensus_is_not_evidence": true
     },
-    "baseline_method_contract": "baseline_full_depth",
-    "candidate_method_contract": "candidate_screen_then_expand",
+    "baseline_method_contract": "baseline_full_depth_v1",
+    "candidate_method_contract": "screen_then_expand_v2",
     "case_preparation_gate": {
       "authorization": false,
       "authorization_reference": null,
@@ -74,9 +147,43 @@
       "locked_at": null,
       "locked_input_sha256": null
     },
+    "r3_case_source_manifest_reference_and_hash": {
+      "reference": null,
+      "sha256": null
+    },
     "calibration_case_set_reference_and_hash": {
       "reference": null,
       "sha256": null
+    },
+    "visible_case_set_reference_and_hash": {
+      "reference": null,
+      "sha256": null
+    },
+    "visible_case_freeze_receipt_reference_and_hash": {
+      "reference": null,
+      "sha256": null
+    },
+    "source_truth_package_reference": null,
+    "source_truth_package_sha256": null,
+    "content_first_policy": {
+      "contract_version": "1.0",
+      "truth_scorecard_contract_version": "2.0-r4",
+      "raw_response_must_be_unchanged": true,
+      "platform_audit_required_for_content_pass": false,
+      "content_method_state": "CONTENT_CALIBRATION_INCOMPLETE",
+      "content_full_screening_state": "NOT_AUTHORIZED",
+      "downstream_release_state": "RESEARCH_ONLY_BLOCKED",
+      "minimum_evidence_fields": [
+        "subject",
+        "method_arm",
+        "visible_input",
+        "visible_input_sha256",
+        "raw_response_reference",
+        "raw_response_sha256",
+        "source_truth_comparison_reference",
+        "source_truth_comparison_sha256",
+        "unknown_items"
+      ]
     },
     "batch_rule": {
       "batch_size": null,
@@ -122,6 +229,11 @@
     ],
     "allowed_writes": [],
     "prohibited_actions": [
+      "full_screening_without_explicit_authorization",
+      "write_shared_application_base",
+      "company_matching",
+      "route_generation",
+      "customer_research",
       "write_shared_application_base_during_calibration",
       "company_matching_before_semantic_stage_pass",
       "customer_search_before_semantic_stage_pass",
@@ -129,6 +241,7 @@
       "automatic_external_model_claim_without_connector"
     ],
     "full_screening_authorization": false,
+    "full_screening_authorization_reference": null,
     "application_base_write_authorization": false
   }
 }

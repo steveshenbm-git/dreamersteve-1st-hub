@@ -43,7 +43,7 @@
 32. 控制案例跨批次漂移仍继续生产。
 33. 混用不同合同、模型、提示词、来源权限或Git提交的结果。
 34. 用40例声称全量漏判率低于5%。
-35. 方法未 `EFFECTIVE` 就启动全量筛查。
+35. legacy strict_audit 方法未 `EFFECTIVE` 就启动其全量筛查；content_first R4 不使用该状态词，必须走独立内容校准与全量授权门。
 36. 没有单独全量授权仍开始批处理。
 37. 校准证据写入正式共享应用底座。
 38. 浅筛状态直接进入公司匹配、路线或客户搜索。
@@ -70,3 +70,32 @@
 56. 40例内容评分通过后默认授权全量，或把 `CONTENT_CALIBRATION_PASS` 写成 beta.3 `EFFECTIVE`。预期：FAIL；只能转到明确全量授权请求。
 57. 未经授权开始1300+节点批次，或预算/漂移/覆盖缺口后把节点补记为已筛。预期：`NOT_AUTHORIZED`、`BLOCKED` 或 `COVERAGE_INCOMPLETE`；未处理节点保持 `not_screened`。
 58. 内容全量记录、证据展开或反向审计完成后试图进入共享底座、公司匹配、路线或客户。预期：`RESEARCH_ONLY_BLOCKED`；没有单独迁移合同与用户授权不得释放下游。
+
+## R4通用检索对抗表
+
+下表是生产合同，不是效果报告。表中 `FAIL` 表示 `contract/policy violation`；若损坏或缺失的证据使评估器无法得出内容结果，实际评估输出可为 `CONTENT_CALIBRATION_INCOMPLETE`。没有真实新上下文运行时，行为效果仍为UNVERIFIED。
+
+| ID | 压力/失败 | 预期 | 恢复 |
+|---|---|---|---|
+| R4-P59 | fixed production vocabulary：把某行业、品牌或案例答案词写进技能 | FAIL | 删除生产词表，以空的contract-local terminology包重新锁定。 |
+| R4-P60 | company-A leakage：公司A术语包被用于公司B或产品中性筛查 | FAIL | 隔离两个公司工作区，用B的可空本地包重新开始。 |
+| R4-P61 | term-pack mutation：单案例或模型发现词改动冻结术语桥 | FAIL | 保留当前案例检索记录，若需入包则新建合同版本并重跑。 |
+| R4-P62 | model terms treated as evidence：模型生成词直接满足三链 | FAIL | 降为retrieval-only候选，从可校验来源重建三链。 |
+| R4-P63 | class-name-only broad search：广节点只查分类名而不做output-family分解 | UNVERIFIED | 先分解节点产出族/子工艺，再重做冻结核心检索。 |
+| R4-P64 | incomplete link chains：缺分类归属、产出/子工艺或机理/作用点任一链 | UNVERIFIED | 补齐缺失链的独立来源、原位置和快照哈希。 |
+| R4-P65 | prose hashes：用“已查看”等文字代替小写64位SHA-256 | FAIL | 由接收方捕获字节、重算哈希并重建收据。 |
+| R4-P66 | formal-truth leakage或truth leakage：真值、选择理由或已知标签进入visible-only任务 | FAIL | 从真值前冻结的可见集重建整个配对包。 |
+| R4-P67 | development cases counted formally：`development_regression_only` 被算入40例、正例或重复 | FAIL | 恢复开发排除集，从30个未执行保留例与10个新未见正例重新冻结。 |
+| R4-P68 | sentinel-driven method changes：用开发漏判词临时改正式方法 | FAIL | 保留失败记录，仅在新合同版本修改通用机制并重新校准。 |
+| R4-P69 | shifted query/open work：候选臂把深度工作隐藏到更多查询或打开来源 | FAIL | 从receiver-owned资源观察重算计数，按固定10%查询与0打开增量门复评。 |
+| R4-P70 | missing repeats：6个预声明高风险单案例重复缺失或未完整覆盖 | UNVERIFIED | 按冻结ID、预授权和新鲜上下文补齐6例后重评。 |
+| R4-P71 | value laundering：编码、Unicode规范化或字符分隔后的真值值进入可见字段 | FAIL | 隔离包，以重复解码和规范化检查重建可见集。 |
+| R4-P72 | path aliases：绝对路径、`..`、反斜杠、重复分隔符或符号链接指向保护文件 | FAIL | 恢复工作区内标准POSIX相对引用并重算哈希。 |
+| R4-P73 | hardlinks：用不同文件名的同一inode跨真值、臂、案例或责任复用 | FAIL | 建立字节与物理身份均独立的文件后重新登记。 |
+| R4-P74 | receiver fields：模型回答或来源观察填写接收快照路径/哈希/收据 | FAIL | 丢弃污染封套，由接收方从原始来源重新捕获。 |
+| R4-P75 | workspace-file laundering：任意工作区JSON、另一臂文件或评分卡自身被当作当前评分证据 | FAIL | 只引用当前案例/当前臂允许的真值指针、封套和收据。 |
+| R4-P76 | wrong contract IDs：原回答、资源观察或预授权指向别的合同/版本 | FAIL | 隔离错包，从正确最终合同和任务重新生成。 |
+| R4-P77 | scorecard weakening：改reviewer/critical、空理由/证据或用旧五项评分代替`2.0-r4` | FAIL | 恢复六项固定责任与五维等价判断，重新评分。 |
+| R4-P78 | CLI threshold override：用命令行放宽20%、10%或0打开增量 | FAIL | 移除R4覆盖参数，只从冻结最终合同读取阈值。 |
+| R4-P79 | summary self-report：信任臂汇总中的正例ID、工作量、安全结果或哈希 | FAIL | 打开真实80任务链并从接收方记录重算。 |
+| R4-P80 | repeat ID-only copy或legacy downgrade：只换repeat ID复用原文件，或删R4 marker/臂字段选旧分支 | FAIL | 重建六个独立预授权、上下文与证据链；R4损坏则恢复/重生，仅显式`1.0-legacy`可走旧路。 |

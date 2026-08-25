@@ -8,6 +8,7 @@
 4. 产品中性主题
 5. 合同版本与授权
 6. 可观察检索门
+7. R4术语与广节点发现
 
 ## 1. 适用范围
 
@@ -31,7 +32,7 @@ evidence_state: supported | hypothesis | unknown | conflicted
 
 ```text
 contract_state: draft | case_preparation_locked | frozen | superseded | invalidated
-method_validation_state: INCONCLUSIVE | EFFECTIVE | NOT_EFFECTIVE
+method_validation_state: INCONCLUSIVE | EFFECTIVE | NOT_EFFECTIVE  # legacy_strict_audit_only
 run_state: planned | running | stopped | completed | invalidated
 blind_review_state: pending | PASS | FAIL | UNVERIFIED | escalated
 retrieval_status: complete | partial | failed | source_scarce | source_inaccessible
@@ -95,3 +96,17 @@ retrieval_status: complete | partial | failed | source_scarce | source_inaccessi
 每组保存查询词、工具、语言、地区和观察时间。有至少5个可用结果时必须检查排序最前的5个不同结果；不足5个时全部检查并记录不足原因。发现线索必须打开核查，单组最多2个；更多线索按冻结排序规则选择，并保留未打开引用。
 
 任一检索组未完成、工具失败、来源大面积不可访问、术语冲突或官方说明过于抽象时，只能记为 `ambiguous`。完成两组检索后，合计少于3个不同、可访问且包含节点特定产出物或工艺信息的结果时，默认 `retrieval_status = source_scarce`；该数字是校准前冻结的候选参数，不是已验证事实。
+
+## 7. R4术语与广节点发现
+
+R4只认三层术语，不在技能中收藏任何行业或公司生产词表：
+
+1. `global skill terminology schema`：只定义六个通用概念角色、发现行为、来源字段、隔离门和哈希规则，不保存任何生产词；
+2. `contract-local terminology`：当前研究合同内经来源观察、角色标注、快照哈希和审阅冻结的通用发现词；
+3. `company-local terminology pack`：公司、品牌、产品、工艺与销售用语，只存放于该公司工作区。
+
+官方分类名称、路径、定义和包含/排除活动是冻结案例输入，不是第四层术语，也不能变成技能内固定同义词表。
+
+`cold start may be empty`：术语桥可以用零条目的 `frozen_empty_cold_start` 开始。公司术语不得进入产品中性筛查，也不得跨公司复用。模型或单案例发现的词只能作为当前案例检索候选，不改动冻结术语桥，不污染后续案例。
+
+官方节点过宽时，先做 `output-family` 分解，再以广节点的具体产出物/子工艺执行冻结核心检索。只有核心检索未建立三链时才可执行有界发现；发现词的作用限于当前案例的retrieval。

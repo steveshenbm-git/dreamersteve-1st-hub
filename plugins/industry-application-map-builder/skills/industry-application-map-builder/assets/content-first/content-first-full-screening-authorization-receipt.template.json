@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "content_first_full_screening_authorization_receipt": {
+    "authorization_receipt_id": null,
+    "research_contract_id": null,
+    "contract_version": null,
+    "user_authorization_reference": null,
+    "authorized_at": null,
+    "final_contract_reference": null,
+    "final_contract_sha256": null,
+    "calibration_report_reference": null,
+    "calibration_report_sha256": null,
+    "terminal_node_manifest_reference": null,
+    "terminal_node_manifest_sha256": null,
+    "authorization_scope": "content_first_full_screening_research_only",
+    "runs_nodes": false,
+    "downstream_release_state": "RESEARCH_ONLY_BLOCKED",
+    "receipt_sha256": null
+  }
+}

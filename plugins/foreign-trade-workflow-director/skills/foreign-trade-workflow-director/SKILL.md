@@ -68,35 +68,56 @@ Use `strict_audit` when it is explicitly selected or a legacy beta.3 contract ha
 
 当 `first_incomplete_stage = industry_semantic_expansion` 时，读取：
 
-- `semantic_method_validation_state`；
+- `semantic_evaluation_mode`；
 - `active_research_contract_id` 和版本；
 - `active_semantic_work_unit`；
+- `terminology_bridge_reference` / `terminology_bridge_sha256` / `terminology_bridge_state`；
+- `development_regression_state` 和 `development_regression_only`；
+- `formal_holdout_case_set_sha256`、30 + 10 选择来源计数与 `formal_holdout_provenance_state`；
+- `paired_task_manifest_reference` / `paired_task_manifest_sha256` / `formal_paired_task_chain_state`、`source_truth_package_sha256`、`scorecard_package_sha256` 和 `receiver_evidence_manifest_sha256`；
+- `stability_task_manifest_reference` / `stability_task_manifest_sha256` / `stability_repeat_state`；
+- `content_method_state`、`content_full_screening_state`、`content_full_screening_authorization_reference`、`content_full_screening_authorization_receipt_reference`、`content_full_screening_authorization_receipt_sha256` 和 `content_terminal_scope_sha256`；
 - `full_screening_authorization`；
 - `application_base_write_authorization`；
+- `downstream_release_state`；
 - 最新 `semantic_specialist_return_packet` 及其哈希。
 
-Also read `semantic_evaluation_mode`. If it is `content_first`, read `content_method_state`, `content_full_screening_state`, `content_full_screening_authorization_reference`, `content_terminal_scope_sha256`, and `downstream_release_state`. Select exactly one content-first route:
+当前公司的前四阶段已是 `PASS + current`，但上述任一 R4 证据门不完整时，动态结果必须是：
 
 ```text
-content contract not final frozen or rubric incomplete → content_first_contract_prepare
-40 content evidence incomplete → content_first_calibration_review
-CONTENT_CALIBRATION_FAIL or CONTENT_CALIBRATION_INCOMPLETE → stop for repair or evidence
-CONTENT_CALIBRATION_PASS but authorization missing → content_first_full_screening_gate (NOT_AUTHORIZED)
-authorization present but no batches → content_first_full_screening_gate (AUTHORIZED_NOT_STARTED)
-authorized batches incomplete → content_first_full_screening
-coverage complete → semantic_evidence_expansion then semantic_reverse_audit
-any attempted downstream release → FAIL and keep RESEARCH_ONLY_BLOCKED
+first_incomplete_stage: industry_semantic_expansion
 ```
+
+空白新公司仍从 `environment_audit` 开始；不得为了满足 R4 示例而跳过前四阶段。
+
+`content_first` 只按下列顺序选择一条路由：
+
+```text
+术语引用/真实 SHA-256/冻结状态缺失或不匹配 → content_first_contract_prepare
+development_regression_state 为 not_started / in_progress / UNVERIFIED → content_first_calibration_review (development-only)
+development_regression_state 为 FAIL → content_first_contract_prepare（修复方法并重锁；开发结果仍为 development_regression_only）
+30个 retained_r3_unexecuted + 10个 new_unseen_positive 不完整、比例漂移、来源链不是 PASS 或无真实案例集哈希 → semantic_calibration_case_prepare
+80个正式成对任务链的真实 `paired_task_manifest_sha256`、来源真值、评分卡或receiver证据任一缺失 → content_first_calibration_review
+6个冻结稳定性重复的真实 `stability_task_manifest_sha256` 缺失或状态不是 PASS → content_first_calibration_review
+CONTENT_CALIBRATION_FAIL 或 CONTENT_CALIBRATION_INCOMPLETE → content_first_calibration_review
+授权引用、Task 8 gate绑定、独立receipt引用与真实SHA-256、冻结末端范围SHA-256任一缺失或错配 → content_first_full_screening_gate (NOT_AUTHORIZED)
+上述独立证据完整、互相匹配且Task 8 gate返回 AUTHORIZED_NOT_STARTED，但尚无批次 → content_first_full_screening_gate (AUTHORIZED_NOT_STARTED)
+已授权批次未完成 → content_first_full_screening
+覆盖完成 → semantic_evidence_expansion，然后重新计算并只路由 semantic_reverse_audit
+任何下游释放尝试 → FAIL 且保持 RESEARCH_ONLY_BLOCKED
+```
+
+只有真实、非空且符合冻结合同的哈希和闭集状态才能越过对应门。`full_screening_authorization` 布尔值或 `content_full_screening_state` 自报不能授权；只有授权引用、独立receipt引用与真实SHA-256、冻结末端范围SHA-256全部匹配，并由Task 8 gate验证绑定当前最终合同、校准报告和末端范围后，才能进入 `AUTHORIZED_NOT_STARTED`。静态结构测试、YAML可解析、插件版本正确或 `platform_audit_state = PASS` 都不得写成 `CONTENT_CALIBRATION_PASS`。平台审计缺失不抹消已完整保存的可评分内容；但内容哈希、真值、评分卡或receiver证据缺失必须停在内容门。
 
 No controller action may change `RESEARCH_ONLY_BLOCKED` to a downstream PASS. A future bridge from content-first research into the official workflow requires a separately authored migration contract and user authorization; this skill does not implement that bridge.
 
-固定路由顺序为：
+仅当 `semantic_evaluation_mode = strict_audit` 或历史 beta.3 合同确实没有模式字段时，使用下列兼容路由：
 
 ```text
-候选/案例准备输入未锁为 case_preparation_locked → semantic_contract_prepare
+strict_audit候选/案例准备输入未锁为 case_preparation_locked → semantic_contract_prepare
 40例或新版本最终冻结合同未准备 → semantic_calibration_case_prepare
 未最终冻结 → 继续停在 semantic_calibration_case_prepare
-方法未EFFECTIVE → semantic_method_calibration
+strict_audit的 semantic_method_validation_state 不是 EFFECTIVE → semantic_method_calibration
 未获全量授权 → 等待用户决定
 全量未筛完 → semantic_full_screening
 触发节点未处置 → semantic_evidence_expansion
@@ -104,13 +125,13 @@ No controller action may change `RESEARCH_ONLY_BLOCKED` to a downstream PASS. A 
 阶段尚未验收 → semantic_stage_review
 ```
 
-`semantic_contract_prepare` 只验收产品中性主题、节点快照、模型/提示词、检索、证据、预算、抽样和隔离写入边界，并产生 `locked_input_sha256`；不得要求尚未生成的案例集哈希或控制案例，也不得称为模型运行合同。`semantic_calibration_case_prepare` 只有在该锁有效时才能准备候选与40例，完成后必须用实际案例集哈希和真实控制案例生成新版本最终冻结合同。任何A/B/C任务都继续要求最终 `contract_state = frozen`。
+`content_first_contract_prepare` 是 R4 内容优先合同准备的唯一名称；`semantic_contract_prepare` 只用于上述 `strict_audit` 兼容路径。两者都只验收产品中性主题、节点快照、模型/提示词、检索、证据、预算、抽样、术语桥和隔离写入边界，并产生 `locked_input_sha256`；不得要求尚未生成的案例集哈希或控制案例，也不得称为模型运行合同。`semantic_calibration_case_prepare` 只有在该锁有效时才能准备 30 + 10 正式候选与闭集 provenance，完成后必须用实际案例集哈希和真实控制案例生成新版本最终冻结合同。任何A/B/C任务都继续要求最终 `contract_state = frozen`。
 
-每次只生成一个 `specialist_handoff_packet` 和一项下一动作。步骤返回 `FAIL` 或 `UNVERIFIED` 时只路由该步的修复，不越过它。40例结果即使 `EFFECTIVE`，也不能把 `industry_semantic_expansion` 记为 PASS。
+每次只生成一个 `specialist_handoff_packet` 和一项下一动作。步骤返回 `FAIL` 或 `UNVERIFIED` 时只路由该步的修复，不越过它。strict_audit 的40例 `EFFECTIVE` 与 content_first 的 `CONTENT_CALIBRATION_PASS` 都不能把 `industry_semantic_expansion` 记为 PASS。
 
 外部模型当前使用 `manual_external_handoff`：控制器只接收专业技能生成的一份自包含 `semantic_model_handoff_packet`，其中必须已有可见输入、规范化输入哈希、精确返回Schema、字段责任、允许空值和停止点。用户只传递完整任务包和原始返回，不寻找额外模板、不填写机器证据附页。原始返回由专业技能原样保存；收件时间、原件哈希、身份依据和真实运输元数据写入独立receiver-owned `semantic_model_receipt`。不得把Codex收件时间或自造编号回填成外部模型运行事实。
 
-控制器必须分别读取 `review_result` 与 `admissibility_state`。即使内容审查为 `PASS`，只要身份、运输、输入或原件哈希仍为 `UNVERIFIED`，就停在当前模型交接，不得升级证据、计入40例或进入下一阶段。
+`strict_audit` 必须分别读取 `review_result` 与 `admissibility_state`，且两者均为 PASS 才能计入它的正式证据。`content_first` 不得用平台身份或运输元数据覆盖内容结论：将这些缺口仅记入 `platform_audit_state`，并独立验收原始字节、内容哈希、真值、评分卡和receiver证据。
 
 ## 专业所有权
 

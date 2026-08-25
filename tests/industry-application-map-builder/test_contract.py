@@ -8,6 +8,17 @@ import unittest
 ROOT = Path(__file__).resolve().parents[2]
 PLUGIN_ROOT = ROOT / "plugins" / "industry-application-map-builder"
 SKILL_ROOT = PLUGIN_ROOT / "skills" / "industry-application-map-builder"
+R4_PRODUCTION_TEXT_FILES = (
+    SKILL_ROOT / "SKILL.md",
+    SKILL_ROOT / "agents" / "openai.yaml",
+    PLUGIN_ROOT / ".codex-plugin" / "plugin.json",
+    SKILL_ROOT / "references" / "content-first-mode-contract.md",
+    SKILL_ROOT / "references" / "industry-semantic-research-contract.md",
+    SKILL_ROOT / "references" / "industry-semantic-model-protocol.md",
+    SKILL_ROOT / "references" / "industry-semantic-calibration-and-audit.md",
+    SKILL_ROOT / "references" / "compatibility-matrix.md",
+    SKILL_ROOT / "references" / "pressure-scenarios.md",
+)
 
 
 def frontmatter_keys(text: str) -> list[str]:
@@ -35,7 +46,7 @@ class IndustryApplicationMapContractTests(unittest.TestCase):
         )
 
         self.assertEqual(manifest["name"], "industry-application-map-builder")
-        self.assertEqual(manifest["version"], "0.4.0-beta.1")
+        self.assertEqual(manifest["version"], "0.4.0-beta.2")
         self.assertEqual(manifest["interface"]["displayName"], "行业应用地图构建")
         self.assertTrue(
             any(
@@ -202,8 +213,8 @@ class IndustryApplicationMapContractTests(unittest.TestCase):
             "manual_external_handoff",
             "application_base_write_authorization",
             "INCONCLUSIVE",
-            "baseline_full_depth",
-            "candidate_screen_then_expand",
+            "baseline_full_depth_v1",
+            "screen_then_expand_v2",
             "Bonferroni",
             "超几何",
         ):
@@ -288,6 +299,203 @@ class IndustryApplicationMapContractTests(unittest.TestCase):
             research_contract["model_identity_evidence_policy"]["B"]["minimum_level"],
             "operator_attested",
         )
+
+    def test_skill_documents_generalized_r4_gates_across_production_contracts(self):
+        texts = {
+            path.relative_to(PLUGIN_ROOT).as_posix(): path.read_text(encoding="utf-8")
+            for path in R4_PRODUCTION_TEXT_FILES
+        }
+        combined = "\n".join(texts.values())
+
+        requirements_by_file = {
+            "skills/industry-application-map-builder/SKILL.md": (
+                "content_first_r4",
+                "contract-local terminology",
+                "output-family",
+                "40 pairs",
+                "6 predeclared high-risk single-case repeats",
+                "CONTENT_CALIBRATION_PASS",
+                "RESEARCH_ONLY_BLOCKED",
+                "first_incomplete_stage = industry_semantic_expansion",
+            ),
+            "skills/industry-application-map-builder/references/content-first-mode-contract.md": (
+                "visible-only",
+                "receiver_snapshot_sha256",
+                "truth_scorecard_contract_version",
+                "safety -> recall -> receiver evidence -> stability -> efficiency",
+                "real 80-task",
+            ),
+            "skills/industry-application-map-builder/references/industry-semantic-research-contract.md": (
+                "global skill terminology schema",
+                "contract-local terminology",
+                "company-local terminology pack",
+                "cold start may be empty",
+                "output-family",
+            ),
+            "skills/industry-application-map-builder/references/industry-semantic-model-protocol.md": (
+                "taxonomy membership basis",
+                "output or subprocess basis",
+                "mechanism or use-point basis",
+                "receiver-owned",
+                "wrong contract IDs",
+            ),
+            "skills/industry-application-map-builder/references/industry-semantic-calibration-and-audit.md": (
+                "30 unexecuted",
+                "10 new unseen positives",
+                "development_regression_only",
+                "40 pairs",
+                "6 predeclared high-risk single-case repeats",
+                "20 percent",
+                "10 percent",
+                "zero source-open increase",
+            ),
+            "skills/industry-application-map-builder/references/compatibility-matrix.md": (
+                "0.4.0-beta.2",
+                "legacy downgrade",
+                "1.0-legacy",
+            ),
+        }
+        for relative, required_values in requirements_by_file.items():
+            with self.subTest(production_file=relative):
+                for required in required_values:
+                    self.assertIn(required, texts[relative])
+
+        self.assertNotIn("fixed_domain_terms", combined)
+        self.assertNotIn("雅洋", combined)
+        self.assertNotIn("Yayang", combined)
+
+    def test_r4_pressure_contract_covers_failures_and_recovery_in_production_text(self):
+        pressure = (
+            SKILL_ROOT / "references" / "pressure-scenarios.md"
+        ).read_text(encoding="utf-8")
+        for scenario_id in range(59, 81):
+            marker = f"R4-P{scenario_id}"
+            with self.subTest(scenario=marker):
+                matching = [line for line in pressure.splitlines() if marker in line]
+                self.assertEqual(len(matching), 1)
+                self.assertRegex(matching[0], r"\| (?:FAIL|UNVERIFIED) \|")
+                self.assertGreaterEqual(matching[0].count("|"), 5)
+
+        for required in (
+            "fixed production vocabulary",
+            "company-A leakage",
+            "term-pack mutation",
+            "model terms treated as evidence",
+            "class-name-only broad search",
+            "incomplete link chains",
+            "prose hashes",
+            "formal-truth leakage",
+            "development cases counted formally",
+            "sentinel-driven method changes",
+            "shifted query/open work",
+            "missing repeats",
+            "value laundering",
+            "path aliases",
+            "hardlinks",
+            "receiver fields",
+            "workspace-file laundering",
+            "wrong contract IDs",
+            "scorecard weakening",
+            "CLI threshold override",
+            "summary self-report",
+            "repeat ID-only copy",
+            "legacy downgrade",
+        ):
+            self.assertIn(required, pressure)
+
+    def test_r4_docs_use_exact_arm_ids_and_quarantine_legacy_arm_names(self):
+        calibration = (
+            SKILL_ROOT
+            / "references"
+            / "industry-semantic-calibration-and-audit.md"
+        ).read_text(encoding="utf-8")
+        r4_text, legacy_text = calibration.split("### legacy strict_audit", 1)
+
+        self.assertIn("baseline_full_depth_v1", r4_text)
+        self.assertIn("screen_then_expand_v2", r4_text)
+        self.assertNotRegex(r4_text, r"(?<!_)baseline_full_depth(?!_)")
+        self.assertNotRegex(r4_text, r"(?<!_)candidate_screen_then_expand(?!_)")
+        self.assertIn("EFFECTIVE", legacy_text)
+
+        skill = (SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        r4_skill, legacy_skill = skill.split("## Legacy strict_audit semantic method", 1)
+        self.assertIn("baseline_full_depth_v1", r4_skill)
+        self.assertIn("screen_then_expand_v2", r4_skill)
+        self.assertNotRegex(r4_skill, r"(?<!_)baseline_full_depth(?!_)")
+        self.assertNotRegex(r4_skill, r"(?<!_)candidate_screen_then_expand(?!_)")
+        self.assertIn("EFFECTIVE", legacy_skill)
+
+    def test_content_first_and_legacy_acceptance_gates_are_explicitly_separate(self):
+        content = (
+            SKILL_ROOT / "references" / "content-first-mode-contract.md"
+        ).read_text(encoding="utf-8")
+        protocol = (
+            SKILL_ROOT / "references" / "industry-semantic-model-protocol.md"
+        ).read_text(encoding="utf-8")
+        calibration = (
+            SKILL_ROOT
+            / "references"
+            / "industry-semantic-calibration-and-audit.md"
+        ).read_text(encoding="utf-8")
+        compatibility = (
+            SKILL_ROOT / "references" / "compatibility-matrix.md"
+        ).read_text(encoding="utf-8")
+
+        for required in (
+            "platform audit is separate and is not a content PASS gate",
+            "CONTENT_CALIBRATION_*",
+            "CONTENT_CALIBRATION_PASS",
+            "explicit human full-screen authorization",
+            "unchanged scope",
+            "AUTHORIZED_NOT_STARTED",
+            "never emits strict-audit `EFFECTIVE`",
+        ):
+            self.assertIn(required, content)
+        self.assertIn("## content_first R4 return acceptance", protocol)
+        self.assertIn("## Legacy strict_audit return acceptance", protocol)
+        self.assertIn("identity/admissibility", protocol)
+        self.assertIn("### content_first R4 full-screen gate", calibration)
+        self.assertIn("### legacy strict_audit", calibration)
+        self.assertIn("missing platform audit alone", compatibility)
+
+        pressure = (
+            SKILL_ROOT / "references" / "pressure-scenarios.md"
+        ).read_text(encoding="utf-8")
+        self.assertIn("contract/policy violation", pressure)
+        self.assertIn("CONTENT_CALIBRATION_INCOMPLETE", pressure)
+        p80 = next(line for line in pressure.splitlines() if "R4-P80" in line)
+        self.assertNotIn("重延", p80)
+
+    def test_scorecard_limits_effective_calibration_vocabulary_to_legacy_strict_audit(self):
+        scorecard = (
+            ROOT / "tests" / "industry-application-map-builder" / "scorecard.md"
+        ).read_text(encoding="utf-8")
+        calibration_line = next(
+            line for line in scorecard.splitlines() if "| CALIBRATION-1 |" in line
+        )
+        self.assertIn("For legacy `strict_audit` only", calibration_line)
+        self.assertIn("EFFECTIVE, NOT_EFFECTIVE, or INCONCLUSIVE", calibration_line)
+
+    def test_remaining_effective_routes_are_explicitly_legacy_only(self):
+        skill = (SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        route_line = next(
+            line for line in skill.splitlines() if "| `semantic_method_calibration` |" in line
+        )
+        self.assertIn("legacy `strict_audit` only", route_line)
+
+        research_contract = (
+            SKILL_ROOT / "references" / "industry-semantic-research-contract.md"
+        ).read_text(encoding="utf-8")
+        state_line = next(
+            line for line in research_contract.splitlines() if "method_validation_state:" in line
+        )
+        self.assertIn("legacy_strict_audit_only", state_line)
+
+        pressure = (
+            SKILL_ROOT / "references" / "pressure-scenarios.md"
+        ).read_text(encoding="utf-8")
+        p35 = next(line for line in pressure.splitlines() if line.startswith("35."))
+        self.assertIn("legacy strict_audit", p35)
 
 
 if __name__ == "__main__":

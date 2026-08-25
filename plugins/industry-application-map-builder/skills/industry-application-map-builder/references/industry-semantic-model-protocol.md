@@ -7,7 +7,8 @@
 3. 模型B
 4. 模型C
 5. 手工接力
-6. 返回验收
+6. content_first R4返回验收
+7. legacy strict_audit返回验收
 
 ## 1. 模型配置
 
@@ -26,6 +27,8 @@
 ## 2. 模型A
 
 A读取官方节点、说明、父级路径、冻结主题、来源范围和检索规则，负责浅筛、最小命题、来源搜索、证据封装、未知和反证记录。
+
+R4对每个命题分开写入 `taxonomy membership basis`、`output or subprocess basis` 和 `mechanism or use-point basis`。三链任一不完整只能保持模糊/未验证；分类名称、模型生成词或查询命中不是证据。
 
 A不得自行审查或升级自己的证据，不得根据行业名称形成公司适配或行业排除，也不得把自身知识写成 `supported`。
 
@@ -69,6 +72,10 @@ C的意见不能因三模型多数同意而升级证据。只有直接来源和B
 
 用户不填写证据字段或机器附页。后台字段、哈希、查询记录和审查记录由本技能维护。
 
+R4运行中，外部回答只拥有回答内容和来源观察。接收方保存 `receiver-owned` 的来源/资源快照、字节哈希、预授权和收据；模型不得填写receiver fields。真值文件和六项评分卡是另外两个责任层，不得混写。
+
+每个任务、回答封套、资源观察和资源预授权都必须匹配最终 `research_contract_id` 和 `contract_version`。`wrong contract IDs` 或版本不一致直接拒绝，不能用顶层汇总或收件时间覆盖。
+
 字段所有权固定如下：
 
 | 层 | 字段 | 规则 |
@@ -79,7 +86,15 @@ C的意见不能因三模型多数同意而升级证据。只有直接来源和B
 
 `identity_evidence` 使用 `connector_verified / platform_export / ui_observed / user_attested / self_reported / unknown`。合同冻结最低等级；当前手工试验默认最低为 `operator_attested`。自报或未知不能伪装成已验证身份。
 
-## 6. 返回验收
+## content_first R4 return acceptance
+
+R4配对任务只能看冻结 `visible-only` 投影：不看正式真值、来源真值、选择理由、已知正例标记、对方臂结果或接收方字段。生成器只接收可见案例集，并为每个任务和整包生成可重算哈希。
+
+R4验收必须打开 `baseline_full_depth_v1` 和 `screen_then_expand_v2` 的真实原回答、封套、receiver-owned资源记录、真值和六项评分卡。平台身份/运输信息只写 `platform_audit_state`，与内容PASS分开。内容不完整时输出 `CONTENT_CALIBRATION_INCOMPLETE`；平台审计单独缺失不能覆盖内容结果，也不能绑定成legacy可采信性。
+
+## Legacy strict_audit return acceptance
+
+Legacy strict_audit保留beta.3的 `identity/admissibility` 和 `review_result / admissibility_state` 分层。身份或运输可采信性不达标时，不得计入strict 40例、升级证据或得出 `EFFECTIVE`。下列返回、收据和模型身份规则只属于这一legacy路线。
 
 每个 `semantic_model_return` 必须匹配对应任务的：
 

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 import sys
@@ -10,8 +11,12 @@ from validate_semantic_research_workspace import (
     case_preparation_contract_completeness_errors,
     case_preparation_input_sha256,
     case_preparation_outputs_are_empty,
+    content_first_default_deny_errors,
+    content_first_local_frozen_reference_errors,
     nonempty_text,
+    validate_r3_source_manifest,
 )
+from validate_terminology_bridge import load_rows, validate_rows
 
 
 def fail(code: str, detail: str) -> int:
@@ -34,6 +39,10 @@ def main() -> int:
         description="Lock complete RC2 inputs for candidate/case preparation without freezing a model-run contract."
     )
     parser.add_argument("--contract", required=True, type=Path)
+    parser.add_argument("--terminology-bridge", type=Path)
+    parser.add_argument("--terminology-bridge-reference")
+    parser.add_argument("--r3-source-manifest", type=Path)
+    parser.add_argument("--r3-source-manifest-reference")
     parser.add_argument("--authorization-reference", required=True)
     parser.add_argument("--locked-at", required=True)
     parser.add_argument("--output", required=True, type=Path)
@@ -56,6 +65,93 @@ def main() -> int:
         return fail("CONTRACT_INVALID", "semantic_research_contract must be an object")
     if contract.get("contract_state") != "draft":
         return fail("CONTRACT_NOT_DRAFT", str(contract.get("contract_state")))
+    if "execution_mode" in contract and contract.get("execution_mode") != "content_first":
+        return fail("EXECUTION_MODE_INVALID", str(contract.get("execution_mode")))
+    content_first = contract.get("execution_mode") == "content_first"
+    if content_first:
+        if content_first_default_deny_errors(contract):
+            return fail("CONTENT_FIRST_DEFAULT_DENY_REQUIRED", "execution and downstream authorization must remain default-deny")
+        if args.terminology_bridge is None or not nonempty_text(args.terminology_bridge_reference):
+            return fail("TERMINOLOGY_BRIDGE_REQUIRED", "content_first preparation requires a terminology bridge and reference")
+        preparation_root = source.parent.parent
+        if source.parent != preparation_root / "00-合同准备":
+            return fail("PREPARATION_CONTRACT_NOT_LOCAL", str(source))
+        term_path = args.terminology_bridge.resolve()
+        expected_term_path = preparation_root / "01-术语桥" / term_path.name
+        if term_path != expected_term_path:
+            return fail("TERMINOLOGY_BRIDGE_NOT_CONTRACT_LOCAL", str(term_path))
+        reference = Path(args.terminology_bridge_reference)
+        if reference.is_absolute() or ".." in reference.parts or reference.as_posix() != term_path.relative_to(preparation_root).as_posix():
+            return fail("TERMINOLOGY_BRIDGE_REFERENCE_INVALID", args.terminology_bridge_reference)
+        term_rows, term_errors = load_rows(term_path)
+        header = next(
+            (row for row in term_rows if row.get("record_type") == "terminology_bridge_contract"),
+            {},
+        )
+        if header.get("research_contract_id") != contract.get("research_contract_id"):
+            return fail("TERMINOLOGY_BRIDGE_CONTRACT_ID_MISMATCH", str(header.get("research_contract_id")))
+        if header.get("contract_version") != contract.get("contract_version"):
+            return fail("TERMINOLOGY_BRIDGE_VERSION_MISMATCH", str(header.get("contract_version")))
+        term_errors.extend(validate_rows(term_rows, contract.get("research_contract_id")))
+        if term_errors:
+            return fail("TERMINOLOGY_BRIDGE_INVALID", ";".join(error["code"] for error in term_errors))
+        architecture = contract.get("terminology_architecture")
+        if not isinstance(architecture, dict):
+            return fail("TERMINOLOGY_ARCHITECTURE_INVALID", "missing terminology_architecture")
+        architecture.update(
+            {
+                "term_pack_reference": args.terminology_bridge_reference,
+                "term_pack_sha256": hashlib.sha256(term_path.read_bytes()).hexdigest(),
+                "term_pack_state": (
+                    "frozen_reviewed"
+                    if header.get("term_pack_state") == "frozen"
+                    else header.get("term_pack_state")
+                ),
+            }
+        )
+        if args.r3_source_manifest is None or not nonempty_text(args.r3_source_manifest_reference):
+            return fail("R3_SOURCE_MANIFEST_REQUIRED", "content_first preparation requires an accepted R3 source manifest")
+        manifest_path = args.r3_source_manifest.resolve()
+        if not manifest_path.is_file():
+            return fail("R3_SOURCE_MANIFEST_MISSING", str(manifest_path))
+        expected_manifest_parent = preparation_root / "02-校准案例候选"
+        if manifest_path.parent != expected_manifest_parent:
+            return fail("R3_SOURCE_MANIFEST_NOT_CONTRACT_LOCAL", str(manifest_path))
+        manifest_reference = Path(args.r3_source_manifest_reference)
+        if (
+            manifest_reference.is_absolute()
+            or ".." in manifest_reference.parts
+            or manifest_reference.as_posix()
+            != manifest_path.relative_to(preparation_root).as_posix()
+        ):
+            return fail("R3_SOURCE_MANIFEST_REFERENCE_INVALID", args.r3_source_manifest_reference)
+        contract["r3_case_source_manifest_reference_and_hash"] = {
+            "reference": args.r3_source_manifest_reference,
+            "sha256": hashlib.sha256(manifest_path.read_bytes()).hexdigest(),
+        }
+        manifest_errors, _ = validate_r3_source_manifest(contract, preparation_root)
+        if manifest_errors:
+            return fail("R3_SOURCE_MANIFEST_INVALID", ";".join(manifest_errors))
+        contract.setdefault(
+            "calibration_case_set_reference_and_hash", {"reference": None, "sha256": None}
+        )
+        contract.setdefault(
+            "visible_case_set_reference_and_hash", {"reference": None, "sha256": None}
+        )
+        contract.setdefault(
+            "visible_case_freeze_receipt_reference_and_hash", {"reference": None, "sha256": None}
+        )
+        contract.setdefault(
+            "batch_rule",
+            {"batch_size": None, "stop_after_each_batch": True, "trigger_rate_is_diagnostic_not_pass_gate": True},
+        )
+        contract.setdefault(
+            "control_case_rule", {"case_ids": [], "drift_requires_pause": True}
+        )
+        contract.setdefault(
+            "case_preparation_gate",
+            {"authorization": False, "authorization_reference": None, "preparation_contract_version": None, "state": "draft", "locked_at": None, "locked_input_sha256": None},
+        )
     if not case_preparation_outputs_are_empty(contract):
         return fail(
             "PREPARATION_OUTPUTS_NOT_EMPTY",
@@ -84,6 +180,13 @@ def main() -> int:
     problems = case_preparation_contract_completeness_errors(contract)
     if problems:
         return fail("CASE_PREPARATION_CONTRACT_INCOMPLETE", ";".join(problems))
+    if content_first:
+        manifest_errors, _ = validate_r3_source_manifest(contract, preparation_root)
+        if manifest_errors:
+            return fail("R3_SOURCE_MANIFEST_INVALID", ";".join(manifest_errors))
+        reference_problems = content_first_local_frozen_reference_errors(contract, preparation_root)
+        if reference_problems:
+            return fail("FROZEN_REFERENCE_INVALID", ";".join(reference_problems))
 
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_bytes(canonical_bytes(payload))

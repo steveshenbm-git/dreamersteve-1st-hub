@@ -38,9 +38,28 @@ def valid_contract(contract: Any) -> bool:
         and nonempty(contract.get("source_truth_package_reference"))
         and nonempty(contract.get("source_truth_package_sha256"))
         and isinstance(policy, dict)
+        and policy.get("truth_scorecard_contract_version")
+        in {"2.0-r4", "1.0-legacy"}
         and policy.get("raw_response_must_be_unchanged") is True
         and policy.get("platform_audit_required_for_content_pass") is False
         and policy.get("downstream_release_state") == "RESEARCH_ONLY_BLOCKED"
+        and (
+            (
+                policy.get("truth_scorecard_contract_version") == "2.0-r4"
+                and contract.get("baseline_method_contract")
+                == "baseline_full_depth_v1"
+                and contract.get("candidate_method_contract")
+                == "screen_then_expand_v2"
+            )
+            or (
+                policy.get("truth_scorecard_contract_version") == "1.0-legacy"
+                and contract.get("contract_version") == "1.0.0-content.1"
+                and contract.get("baseline_method_contract")
+                in {None, "baseline_full_depth"}
+                and contract.get("candidate_method_contract")
+                in {None, "candidate_screen_then_expand"}
+            )
+        )
     )
 
 
@@ -69,13 +88,24 @@ def main() -> int:
     )
     if workspace.exists():
         return fail("DESTINATION_EXISTS", str(workspace))
+    marker = contract["content_first_policy"]["truth_scorecard_contract_version"]
+    arm_directories = (
+        (
+            "03-内容原始回答/baseline_full_depth_v1",
+            "03-内容原始回答/screen_then_expand_v2",
+        )
+        if marker == "2.0-r4"
+        else (
+            "03-内容原始回答/baseline_full_depth",
+            "03-内容原始回答/candidate_screen_then_expand",
+        )
+    )
     directories = (
         "00-合同",
         "01-节点快照",
         "02-校准案例",
         "02-来源真值",
-        "03-内容原始回答/baseline_full_depth",
-        "03-内容原始回答/candidate_screen_then_expand",
+        *arm_directories,
         "04-平台审计",
         "05-证据包",
         "06-反向审计",

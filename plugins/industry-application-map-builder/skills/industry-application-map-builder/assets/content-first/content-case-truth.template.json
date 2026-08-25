@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "semantic_content_case_truth": {
+    "truth_id": null,
+    "research_contract_id": null,
+    "contract_version": null,
+    "case_id": null,
+    "taxonomy_membership_basis": {
+      "basis_text": null,
+      "source_references": [
+        {
+          "reference": null,
+          "sha256": null
+        }
+      ]
+    },
+    "output_or_subprocess_basis": {
+      "basis_text": null,
+      "source_references": [
+        {
+          "reference": null,
+          "sha256": null
+        }
+      ]
+    },
+    "mechanism_basis": {
+      "basis_text": null,
+      "source_references": [
+        {
+          "reference": null,
+          "sha256": null
+        }
+      ]
+    },
+    "expected_semantic_axes": {
+      "screening_result": null,
+      "semantic_work_state": null,
+      "evidence_state": null
+    },
+    "conditions": [],
+    "limitations": [],
+    "unknowns": [],
+    "truth_boundary": null,
+    "counts_toward_known_positive_recall": false,
+    "truth_sha256": null
+  }
+}

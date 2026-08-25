@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "content_resource_observation": {
+    "observation_id": null,
+    "research_contract_id": null,
+    "contract_version": null,
+    "case_id": null,
+    "method_arm": null,
+    "task_reference": null,
+    "task_sha256": null,
+    "deep_expansion_disposition": "screen_only",
+    "queries": [
+      {
+        "query_id": null,
+        "query_text": null,
+        "role": null,
+        "language": null,
+        "region": null,
+        "observed_result_references": [],
+        "inspected_result_count": null,
+        "opened_source_references": [],
+        "access_outcomes": []
+      }
+    ],
+    "query_count": null,
+    "source_open_count": null,
+    "observation_sha256": null
+  }
+}

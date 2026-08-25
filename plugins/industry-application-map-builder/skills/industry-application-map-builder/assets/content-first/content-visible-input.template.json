@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "content_visible_input": {
+    "case_id": null,
+    "taxonomy_node": {
+      "taxonomy_node_id": null,
+      "code": null,
+      "level": null,
+      "name_zh": null,
+      "breadcrumb": null,
+      "official_definition_or_null": null,
+      "included_activities_or_null": null,
+      "excluded_or_adjacent_activities_or_null": null,
+      "official_source_reference": null,
+      "official_source_sha256": null
+    },
+    "product_neutral_research_theme": null,
+    "risk_flags": []
+  }
+}

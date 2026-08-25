@@ -2,7 +2,7 @@
 
 `blueprint_id: foreign-trade-complete-workflow`
 
-`blueprint_version: 0.3.0-beta.1`
+`blueprint_version: 0.3.0-beta.2`
 
 ## 判定原则
 
@@ -58,7 +58,7 @@ semantic_contract_prepare
 
 前两步包含两个独立门：`semantic_contract_prepare` 产出哈希锁定的 `case_preparation_locked` 输入，案例集哈希与控制案例仍为空；`semantic_calibration_case_prepare` 产出真实40例，再把实际案例集哈希和真实控制案例绑定到新版本最终冻结合同。未最终冻结时，不得进入 `semantic_method_calibration`，也不得生成模型运行任务。
 
-`semantic_method_validation_state` 只允许 `INCONCLUSIVE / EFFECTIVE / NOT_EFFECTIVE`。结构测试、文档完整、单模型自评或外部模型多数意见都不能把它改为 `EFFECTIVE`。40例通过也不能把 `industry_semantic_expansion` 记为 PASS，更不能自动获得全量筛查或 `application_base_write_authorization`。
+strict_audit 的 `semantic_method_validation_state` 只允许 `INCONCLUSIVE / EFFECTIVE / NOT_EFFECTIVE`。结构测试、文档完整、单模型自评或外部模型多数意见都不能把它改为 strict_audit 的 `EFFECTIVE`。40例通过也不能把 `industry_semantic_expansion` 记为 PASS，更不能自动获得全量筛查或 `application_base_write_authorization`。
 
 当前外部模型运输方式是 `manual_external_handoff`。没有经过另行授权和验证的API/MCP连接器时，控制器不自动调用外部模型；它只生成一份自包含任务包，包内含可见输入、规范化输入哈希、精确返回Schema、字段责任、允许空值和停止点。外部原始返回与receiver-owned接收封套分开保存；手工交接不得伪造执行器运行ID或运行时间。
 
@@ -66,10 +66,13 @@ semantic_contract_prepare
 
 新准备的 RC2 合同默认 `semantic_evaluation_mode = content_first`；缺省或历史 beta.3 合同按 `strict_audit`。内容优先的每个评分对象必须有完整原始回答、可见输入哈希、来源真值对照、逐项评分、未知项和独立 `platform_audit_state`。
 
+当前四阶段已验收，但任一 R4 合同、开发回归、正式保留集、稳定性、全量、证据或反向审计门仍未通过时，动态状态为 `first_incomplete_stage: industry_semantic_expansion`。空白新公司的模板仍从 `environment_audit` 起算。
+
 内容优先固定按以下顺序路由，任何非 PASS 或不完整证据都停在当前步：
 
 ```text
 content_first_contract_prepare
+→ semantic_calibration_case_prepare
 → content_first_calibration_review
 → content_first_full_screening_gate
 → content_first_full_screening
@@ -78,7 +81,9 @@ content_first_contract_prepare
 → semantic_stage_review
 ```
 
-`CONTENT_CALIBRATION_PASS` 只能证明内容门已通过；它不是 beta.3 `EFFECTIVE`，也不能让 `industry_semantic_expansion` 变为 `PASS`。全量默认 `NOT_AUTHORIZED`；只有单独的授权引用、冻结的末端范围哈希和零安全失败才允许 `AUTHORIZED_NOT_STARTED`。全量、证据展开和反向审计完成后仍保持 `RESEARCH_ONLY_BLOCKED`：不得写共享应用底座、公司匹配、路线包、候选客户或对外沟通。
+术语桥引用、真实 SHA-256 或冻结状态缺失/错配时只路由 `content_first_contract_prepare`。10个开发回归必须标记 `development_regression_only` 并单独记录 `development_regression_state`；`not_started / in_progress / UNVERIFIED → content_first_calibration_review (development-only)`，只执行或复核开发集；`FAIL → content_first_contract_prepare`，修复方法并重锁。任何开发结果都不得计入正式效果。正式保留集必须是 30 + 10：30个 `retained_r3_unexecuted` 加10个 `new_unseen_positive`，并以 `formal_holdout_provenance_state` 和真实 `formal_holdout_case_set_sha256` 验收；不完整时只路由 `semantic_calibration_case_prepare`。正式80任务链必须绑定真实 `paired_task_manifest_sha256`，预声明的6个稳定性重复必须绑定真实 `stability_task_manifest_sha256`；任务清单、来源真值、评分卡、receiver证据或稳定性任一缺失时，只路由 `content_first_calibration_review`。
+
+`CONTENT_CALIBRATION_PASS` 只能证明内容门已通过；它不是 legacy strict_audit 的 `EFFECTIVE`，也不能让 `industry_semantic_expansion` 变为 `PASS`。静态结构测试或 `platform_audit_state = PASS` 都不能生成内容 PASS；平台审计缺失也不得删除字节完整且可评分的内容。全量默认 `NOT_AUTHORIZED`；授权引用、Task 8 gate绑定、独立receipt引用与真实SHA-256、冻结末端范围SHA-256任一缺失或错配 → content_first_full_screening_gate (NOT_AUTHORIZED)。只有这些证据全部非空且互相匹配、Task 8 gate验证其绑定当前最终合同/校准报告/末端范围且零安全失败，才允许 `AUTHORIZED_NOT_STARTED`；布尔值或状态自报无效。全量、证据展开和反向审计完成后仍保持 `RESEARCH_ONLY_BLOCKED`：不得写共享应用底座、公司匹配、路线包、候选客户或对外沟通。
 
 ## 必需能力依赖
 
@@ -139,9 +144,29 @@ company_workflow_state:
   semantic_method:
     semantic_evaluation_mode: content_first | strict_audit
     semantic_method_validation_state
+    terminology_bridge_reference
+    terminology_bridge_sha256
+    terminology_bridge_state
+    development_regression_only
+    development_regression_state
+    formal_holdout_case_set_sha256
+    retained_r3_unexecuted_case_count
+    new_unseen_positive_case_count
+    formal_holdout_provenance_state
+    paired_task_manifest_reference
+    paired_task_manifest_sha256
+    formal_paired_task_chain_state
+    source_truth_package_sha256
+    scorecard_package_sha256
+    receiver_evidence_manifest_sha256
+    stability_task_manifest_reference
+    stability_task_manifest_sha256
+    stability_repeat_state
     content_method_state
     content_full_screening_state
     content_full_screening_authorization_reference
+    content_full_screening_authorization_receipt_reference
+    content_full_screening_authorization_receipt_sha256
     content_terminal_scope_sha256
     downstream_release_state
     active_research_contract_id
@@ -180,6 +205,7 @@ workflow_replication_manifest:
   required_plugins_and_compatible_versions
   empty_template_paths_and_hashes
   contract_and_schema_versions
+  r4_semantic_contract_dependencies
   authorized_shared_product_neutral_references
   required_permissions
   installation_or_copy_steps
@@ -189,6 +215,8 @@ workflow_replication_manifest:
   unverified_items
   excluded_company_data_classes
 ```
+
+`r4_semantic_contract_dependencies` 必须闭集保留 `content_full_screening_state`、`content_full_screening_authorization_reference`、`content_full_screening_authorization_receipt_reference`、`content_full_screening_authorization_receipt_sha256` 与 `content_terminal_scope_sha256`。空白复刻清单默认为 `NOT_AUTHORIZED` 且四项绑定字段均为 null；复制布尔值或状态不能获得授权。
 
 每条获授权共享的产品中立知识引用还必须保留来源、访问范围和可转移权限；“产品中立”不自动等于允许跨账号复制。
 

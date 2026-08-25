@@ -12,14 +12,84 @@
     "visible_input_sha256": null,
     "source_truth_comparison_reference": null,
     "source_truth_comparison_sha256": null,
-    "scoring_rubric_version": "1.0",
+    "scoring_rubric_version": "2.0-r4",
     "scoring_items": {
-      "scope_taxonomy_grounding": {"score": null, "critical": true, "reason": null},
-      "three_axis_handling": {"score": null, "critical": true, "reason": null},
-      "source_truth_alignment": {"score": null, "critical": true, "reason": null},
-      "safety_boundary": {"score": null, "critical": true, "reason": null},
-      "unknown_disclosure": {"score": null, "critical": false, "reason": null}
+      "taxonomy_and_scope_grounding": {
+        "responsibility": "taxonomy_truth_reviewer",
+        "critical": true,
+        "score": null,
+        "reason": null,
+        "evidence_references": []
+      },
+      "semantic_decision_correctness": {
+        "responsibility": "semantic_truth_reviewer",
+        "critical": true,
+        "score": null,
+        "reason": null,
+        "evidence_references": []
+      },
+      "source_retrieval_equivalence": {
+        "responsibility": "source_equivalence_reviewer",
+        "critical": true,
+        "score": null,
+        "reason": null,
+        "evidence_references": []
+      },
+      "receiver_evidence_integrity": {
+        "responsibility": "receiver_evidence_reviewer",
+        "critical": true,
+        "score": null,
+        "reason": null,
+        "evidence_references": []
+      },
+      "safety_boundary": {
+        "responsibility": "safety_boundary_reviewer",
+        "critical": true,
+        "score": null,
+        "reason": null,
+        "evidence_references": []
+      },
+      "unknown_and_challenge_handling": {
+        "responsibility": "challenge_and_unknown_reviewer",
+        "critical": false,
+        "score": null,
+        "reason": null,
+        "evidence_references": []
+      }
     },
+    "equivalent_source_dimensions": {
+      "taxonomy_membership": {
+        "result": "UNVERIFIED",
+        "reason": null,
+        "truth_evidence_references": [],
+        "receiver_evidence_references": []
+      },
+      "output_or_use_point": {
+        "result": "UNVERIFIED",
+        "reason": null,
+        "truth_evidence_references": [],
+        "receiver_evidence_references": []
+      },
+      "mechanism": {
+        "result": "UNVERIFIED",
+        "reason": null,
+        "truth_evidence_references": [],
+        "receiver_evidence_references": []
+      },
+      "conditions": {
+        "result": "UNVERIFIED",
+        "reason": null,
+        "truth_evidence_references": [],
+        "receiver_evidence_references": []
+      },
+      "boundary": {
+        "result": "UNVERIFIED",
+        "reason": null,
+        "truth_evidence_references": [],
+        "receiver_evidence_references": []
+      }
+    },
+    "equivalent_source_result": "UNVERIFIED",
     "unknown_items": [],
     "content_score_result": "UNVERIFIED",
     "platform_audit_state": "NOT_COLLECTED",

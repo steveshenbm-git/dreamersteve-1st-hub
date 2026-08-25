@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "content_source_snapshot_receipt": {
+    "receipt_id": null,
+    "observation_id": null,
+    "source_observation_reference": null,
+    "receiver_snapshot_reference": null,
+    "receiver_snapshot_sha256": null,
+    "snapshot_capture_state": "captured | unavailable | failed",
+    "snapshot_captured_at": null,
+    "receipt_sha256": null
+  }
+}

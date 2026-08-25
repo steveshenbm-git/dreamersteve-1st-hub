@@ -4,9 +4,16 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 from pathlib import Path
 import sys
+import tempfile
 from typing import Any
+
+from check_content_first_full_screening_gate import (
+    Invalid as FullScreenChainInvalid,
+    validate_report as validate_r4_evaluator_report,
+)
 
 
 SCREENING_RESULTS = {"hypothesis_formed", "ambiguous", "no_hypothesis_formed"}
@@ -17,6 +24,23 @@ WORK_STATES = {
     "audit_reopened",
 }
 EVIDENCE_STATES = {"supported", "hypothesis", "unknown", "conflicted"}
+R4_MARKER = "2.0-r4"
+LEGACY_MARKER = "1.0-legacy"
+R4_GATE_FIELDS = {
+    "schema_version",
+    "research_contract_id",
+    "contract_version",
+    "final_contract_sha256",
+    "calibration_report_sha256",
+    "terminal_node_manifest_sha256",
+    "terminal_node_count",
+    "content_full_screening_state",
+    "authorization_reference",
+    "authorization_receipt_sha256",
+    "runs_nodes",
+    "downstream_release_state",
+    "reasons",
+}
 
 
 def fail(code: str, detail: str) -> int:
@@ -36,6 +60,29 @@ def sha256_text(value: Any) -> bool:
     return isinstance(value, str) and len(value) == 64 and all(char in "0123456789abcdef" for char in value)
 
 
+def atomic_publish(path: Path, report: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="w",
+            encoding="utf-8",
+            dir=path.parent,
+            prefix=f".{path.name}.",
+            suffix=".tmp",
+            delete=False,
+        ) as handle:
+            temporary = Path(handle.name)
+            json.dump(report, handle, ensure_ascii=False, sort_keys=True, indent=2)
+            handle.write("\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.link(temporary, path)
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Check frozen RC2 content-first terminal-node coverage without releasing downstream work."
@@ -43,6 +90,10 @@ def main() -> int:
     parser.add_argument("--contract", required=True, type=Path)
     parser.add_argument("--terminal-node-manifest", required=True, type=Path)
     parser.add_argument("--screening-index", required=True, type=Path)
+    parser.add_argument("--full-screen-gate-report", type=Path)
+    parser.add_argument("--expected-full-screen-gate-report-sha256")
+    parser.add_argument("--calibration-report", type=Path)
+    parser.add_argument("--expected-calibration-report-sha256")
     parser.add_argument("--output", required=True, type=Path)
     args = parser.parse_args()
     if args.output.exists():
@@ -61,6 +112,18 @@ def main() -> int:
             if isinstance(index_payload, dict)
             else {}
         )
+        gate_report = (
+            json.loads(args.full_screen_gate_report.read_text(encoding="utf-8"))
+            if args.full_screen_gate_report is not None
+            and args.full_screen_gate_report.is_file()
+            else None
+        )
+        calibration_report = (
+            json.loads(args.calibration_report.read_text(encoding="utf-8"))
+            if args.calibration_report is not None
+            and args.calibration_report.is_file()
+            else None
+        )
     except (OSError, json.JSONDecodeError) as exc:
         return fail("FULL_COVERAGE_INPUT_INVALID", str(exc))
 
@@ -75,22 +138,91 @@ def main() -> int:
         and contract.get("terminal_node_count") == len(node_ids)
         and contract.get("terminal_node_manifest_sha256") == sha256_file(args.terminal_node_manifest)
     )
-    contract_valid = (
+    marker = policy.get("truth_scorecard_contract_version") if isinstance(policy, dict) else None
+    common_contract_valid = (
         contract.get("execution_mode") == "content_first"
         and contract.get("contract_state") == "frozen"
-        and contract.get("full_screening_authorization") is True
-        and nonempty(contract.get("full_screening_authorization_reference"))
         and isinstance(policy, dict)
-        and policy.get("content_method_state") == "CONTENT_CALIBRATION_PASS"
-        and policy.get("content_full_screening_state")
-        in {"AUTHORIZED_NOT_STARTED", "IN_PROGRESS", "COVERAGE_INCOMPLETE"}
         and policy.get("downstream_release_state") == "RESEARCH_ONLY_BLOCKED"
     )
+    r4_calibration_report_valid = (
+        marker == R4_MARKER
+        and isinstance(calibration_report, dict)
+        and args.calibration_report is not None
+        and sha256_text(args.expected_calibration_report_sha256)
+        and sha256_file(args.calibration_report)
+        == args.expected_calibration_report_sha256
+    )
+    if r4_calibration_report_valid:
+        try:
+            validate_r4_evaluator_report(
+                calibration_report,
+                contract,
+                sha256_file(args.contract),
+            )
+        except (FullScreenChainInvalid, KeyError, TypeError, ValueError):
+            r4_calibration_report_valid = False
+    r4_gate_valid = (
+        isinstance(gate_report, dict)
+        and set(gate_report) == R4_GATE_FIELDS
+        and args.full_screen_gate_report is not None
+        and sha256_text(args.expected_full_screen_gate_report_sha256)
+        and sha256_file(args.full_screen_gate_report)
+        == args.expected_full_screen_gate_report_sha256
+        and gate_report.get("schema_version") == R4_MARKER
+        and gate_report.get("research_contract_id")
+        == contract.get("research_contract_id")
+        and gate_report.get("contract_version") == contract.get("contract_version")
+        and gate_report.get("final_contract_sha256") == sha256_file(args.contract)
+        and gate_report.get("terminal_node_manifest_sha256")
+        == contract.get("terminal_node_manifest_sha256")
+        and gate_report.get("terminal_node_count") == contract.get("terminal_node_count")
+        and gate_report.get("content_full_screening_state")
+        == "AUTHORIZED_NOT_STARTED"
+        and nonempty(gate_report.get("authorization_reference"))
+        and sha256_text(gate_report.get("calibration_report_sha256"))
+        and r4_calibration_report_valid
+        and gate_report.get("calibration_report_sha256")
+        == args.expected_calibration_report_sha256
+        and sha256_text(gate_report.get("authorization_receipt_sha256"))
+        and gate_report.get("runs_nodes") is False
+        and gate_report.get("downstream_release_state") == "RESEARCH_ONLY_BLOCKED"
+        and gate_report.get("reasons") == []
+    )
+    if marker == R4_MARKER:
+        contract_valid = (
+            common_contract_valid
+            and contract.get("baseline_method_contract") == "baseline_full_depth_v1"
+            and contract.get("candidate_method_contract") == "screen_then_expand_v2"
+            and contract.get("full_screening_authorization") is False
+            and contract.get("full_screening_authorization_reference") is None
+            and policy.get("content_full_screening_state") == "NOT_AUTHORIZED"
+            and r4_gate_valid
+        )
+        expected_arm = "screen_then_expand_v2"
+    elif marker == LEGACY_MARKER:
+        contract_valid = (
+            common_contract_valid
+            and contract.get("contract_version") == "1.0.0-content.1"
+            and contract.get("baseline_method_contract")
+            in {None, "baseline_full_depth"}
+            and contract.get("candidate_method_contract")
+            in {None, "candidate_screen_then_expand"}
+            and contract.get("full_screening_authorization") is True
+            and nonempty(contract.get("full_screening_authorization_reference"))
+            and policy.get("content_method_state") == "CONTENT_CALIBRATION_PASS"
+            and policy.get("content_full_screening_state")
+            in {"AUTHORIZED_NOT_STARTED", "IN_PROGRESS", "COVERAGE_INCOMPLETE"}
+        )
+        expected_arm = "candidate_screen_then_expand"
+    else:
+        contract_valid = False
+        expected_arm = None
     shared_fields = ("research_contract_id", "contract_version", "terminal_node_manifest_sha256")
     index_matches = all(index.get(field) == contract.get(field) for field in shared_fields)
     rows = index.get("node_evidence") if isinstance(index, dict) else None
     indexed: dict[str, dict[str, Any]] = {}
-    rows_valid = isinstance(rows, list) and index.get("method_arm") == "candidate_screen_then_expand"
+    rows_valid = isinstance(rows, list) and index.get("method_arm") == expected_arm
     required_row_fields = {
         "industry_node_id",
         "visible_input_sha256",
@@ -142,7 +274,7 @@ def main() -> int:
         else:
             state = "READY_FOR_REVERSE_AUDIT"
     report = {
-        "schema_version": "1.0",
+        "schema_version": R4_MARKER if marker == R4_MARKER else "1.0-legacy",
         "research_contract_id": contract.get("research_contract_id"),
         "contract_version": contract.get("contract_version"),
         "terminal_node_manifest_sha256": contract.get("terminal_node_manifest_sha256"),
@@ -155,8 +287,12 @@ def main() -> int:
         "downstream_release_state": "RESEARCH_ONLY_BLOCKED",
         "reasons": reasons,
     }
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(report, ensure_ascii=False, sort_keys=True, indent=2) + "\n", encoding="utf-8")
+    try:
+        atomic_publish(args.output, report)
+    except FileExistsError:
+        return fail("OUTPUT_EXISTS", str(args.output))
+    except OSError as exc:
+        return fail("OUTPUT_PUBLICATION_FAILED", str(exc))
     print(json.dumps({"status": "PASS" if state == "READY_FOR_REVERSE_AUDIT" else "FAIL", "content_full_screening_state": state, "output": str(args.output)}, ensure_ascii=False))
     return 0 if state == "READY_FOR_REVERSE_AUDIT" else 1
 

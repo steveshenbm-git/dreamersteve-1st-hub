@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "content_resource_observation_receipt": {
+    "receipt_id": null,
+    "receiver_owned": true,
+    "preauthorization_reference": null,
+    "preauthorization_sha256": null,
+    "resource_observation_reference": null,
+    "resource_observation_sha256": null,
+    "captured_at": null,
+    "receipt_sha256": null
+  }
+}

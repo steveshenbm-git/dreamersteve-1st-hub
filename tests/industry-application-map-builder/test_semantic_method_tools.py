@@ -90,11 +90,14 @@ class SemanticMethodToolTests(unittest.TestCase):
         self.assertTrue(template.is_file(), template.name)
         payload = json.loads(template.read_text(encoding="utf-8"))
         contract = payload["semantic_research_contract"]
+        contract.pop("execution_mode", None)
         contract.update(
             {
                 "research_contract_id": "SEM-RC2-001",
                 "contract_version": "1.0.0",
                 "contract_state": "frozen",
+                "baseline_method_contract": "baseline_full_depth",
+                "candidate_method_contract": "candidate_screen_then_expand",
                 "created_at": "2026-08-19T00:00:00Z",
                 "frozen_at": "2026-08-19T00:00:00Z",
                 "owner_authorization_reference": "USER-APPROVAL-001",
@@ -214,6 +217,7 @@ class SemanticMethodToolTests(unittest.TestCase):
                 "case_set_state": "frozen",
                 "case_count": 40,
                 "actual_case_record_count": count,
+                "formal_case_ids": case_ids,
             },
             *[
                 {

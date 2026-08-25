@@ -10,9 +10,74 @@ MAP_PLUGIN = ROOT / "plugins" / "industry-application-map-builder"
 WORKFLOW_PLUGIN = ROOT / "plugins" / "foreign-trade-workflow-director"
 MAP_SKILL = MAP_PLUGIN / "skills" / "industry-application-map-builder"
 WORKFLOW_SKILL = WORKFLOW_PLUGIN / "skills" / "foreign-trade-workflow-director"
+CONTENT_FIRST_ASSETS = MAP_SKILL / "assets" / "content-first"
+TRUTH_TEMPLATE = CONTENT_FIRST_ASSETS / "content-case-truth.template.json"
+SCORE_TEMPLATE = CONTENT_FIRST_ASSETS / "content-scorecard.template.json"
+EXPECTED_R4_SCORE_ITEMS = {
+    "taxonomy_and_scope_grounding",
+    "semantic_decision_correctness",
+    "source_retrieval_equivalence",
+    "receiver_evidence_integrity",
+    "safety_boundary",
+    "unknown_and_challenge_handling",
+}
 
 
 class ContentFirstUnifiedContractTests(unittest.TestCase):
+    def test_r4_truth_and_scorecard_are_separate_and_expose_three_truth_links(self):
+        truth = json.loads(TRUTH_TEMPLATE.read_text(encoding="utf-8"))[
+            "semantic_content_case_truth"
+        ]
+        score = json.loads(SCORE_TEMPLATE.read_text(encoding="utf-8"))[
+            "semantic_content_scorecard"
+        ]
+
+        for basis_name in (
+            "taxonomy_membership_basis",
+            "output_or_subprocess_basis",
+            "mechanism_basis",
+        ):
+            self.assertEqual(
+                set(truth[basis_name]), {"basis_text", "source_references"}
+            )
+        for required in (
+            "expected_semantic_axes",
+            "conditions",
+            "limitations",
+            "unknowns",
+            "truth_boundary",
+            "counts_toward_known_positive_recall",
+        ):
+            self.assertIn(required, truth)
+        self.assertNotIn("scoring_items", truth)
+        self.assertEqual(set(score["scoring_items"]), EXPECTED_R4_SCORE_ITEMS)
+        self.assertEqual(
+            set(score["equivalent_source_dimensions"]),
+            {
+                "taxonomy_membership",
+                "output_or_use_point",
+                "mechanism",
+                "conditions",
+                "boundary",
+            },
+        )
+        self.assertIn(score["equivalent_source_result"], {"PASS", "FAIL", "UNVERIFIED"})
+        self.assertNotIn("taxonomy_membership_basis", score)
+
+    def test_r4_contract_templates_freeze_truth_scorecard_contract_version(self):
+        for template in (
+            CONTENT_FIRST_ASSETS / "content-first-research-contract.template.json",
+            MAP_SKILL / "assets" / "semantic-method" / "research-contract.template.json",
+        ):
+            with self.subTest(template=template.name):
+                contract = json.loads(template.read_text(encoding="utf-8"))[
+                    "semantic_research_contract"
+                ]
+                self.assertEqual(
+                    contract["content_first_policy"]["truth_scorecard_contract_version"],
+                    "2.0-r4",
+                )
+
     def test_existing_plugins_have_next_versions(self):
         map_manifest = json.loads(
             (MAP_PLUGIN / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8")
@@ -26,11 +91,11 @@ class ContentFirstUnifiedContractTests(unittest.TestCase):
         self.assertEqual(
             map_manifest["name"], "industry-application-map-builder"
         )
-        self.assertEqual(map_manifest["version"], "0.4.0-beta.1")
+        self.assertEqual(map_manifest["version"], "0.4.0-beta.2")
         self.assertEqual(
             workflow_manifest["name"], "foreign-trade-workflow-director"
         )
-        self.assertEqual(workflow_manifest["version"], "0.3.0-beta.1")
+        self.assertEqual(workflow_manifest["version"], "0.3.0-beta.2")
 
     def test_content_first_contract_keeps_raw_content_and_separates_platform_audit(self):
         map_skill = (MAP_SKILL / "SKILL.md").read_text(encoding="utf-8")

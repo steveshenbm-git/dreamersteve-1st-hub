@@ -83,6 +83,27 @@ workflow_replication_manifest:
   required_plugins_and_compatible_versions
   empty_template_references_and_hashes
   contract_and_schema_versions
+  r4_semantic_contract_dependencies:
+    terminology_bridge_reference
+    terminology_bridge_sha256
+    terminology_bridge_state
+    development_regression_state
+    formal_holdout_case_set_sha256
+    formal_holdout_provenance_state
+    paired_task_manifest_sha256
+    formal_paired_task_chain_state
+    source_truth_package_sha256
+    scorecard_package_sha256
+    receiver_evidence_manifest_sha256
+    stability_task_manifest_sha256
+    stability_repeat_state
+    content_method_state
+    content_full_screening_state
+    content_full_screening_authorization_reference
+    content_full_screening_authorization_receipt_reference
+    content_full_screening_authorization_receipt_sha256
+    content_terminal_scope_sha256
+    downstream_release_state: RESEARCH_ONLY_BLOCKED
   authorized_shared_product_neutral_references
   required_permissions
   installation_or_copy_steps
@@ -179,15 +200,38 @@ specialist_return_packet:
 
 ## 阶段5行业语义交接
 
-`semantic_evaluation_mode` 必须与研究合同一致：新准备 RC2 合同默认 `content_first`；缺省历史合同是 `strict_audit`。内容优先返回包还必须保留 `content_method_state`、`content_full_screening_state`、`content_full_screening_authorization_reference`、`content_terminal_scope_sha256`、`downstream_release_state = RESEARCH_ONLY_BLOCKED`，以及原始回答、来源真值与逐项评分的稳定引用。`CONTENT_CALIBRATION_PASS` 只能继续到全量授权门，不能被写成 beta.3 `EFFECTIVE` 或阶段 PASS。
+`semantic_evaluation_mode` 必须与研究合同一致：新准备 RC2 合同默认 `content_first`；缺省历史合同是 `strict_audit`。当前四阶段已验收但 R4 链仍不完整时，返回包必须保留 `first_incomplete_stage: industry_semantic_expansion`。`CONTENT_CALIBRATION_PASS` 只能继续到独立全量授权门，不能被写成 beta.3 `EFFECTIVE` 或阶段 PASS。
 
 内容优先的接收包：
 
 ```text
 content_first_semantic_return:
   semantic_evaluation_mode: content_first
+  terminology_bridge_reference
+  terminology_bridge_sha256
+  terminology_bridge_state: not_prepared | frozen_empty_cold_start | frozen_reviewed | hash_mismatch | invalidated
+  development_regression_only: true
+  development_regression_state: not_started | in_progress | PASS | FAIL | UNVERIFIED | invalidated
+  formal_holdout_selection_origin_counts:
+    retained_r3_unexecuted: 30
+    new_unseen_positive: 10
+  formal_holdout_provenance_state: not_prepared | PASS | FAIL | UNVERIFIED | invalidated
+  formal_holdout_case_set_sha256
+  paired_task_manifest_reference
+  paired_task_manifest_sha256
+  formal_paired_task_chain_state: not_started | in_progress | PASS | FAIL | UNVERIFIED | invalidated
+  source_truth_package_sha256
+  scorecard_package_sha256
+  receiver_evidence_manifest_sha256
+  stability_task_manifest_reference
+  stability_task_manifest_sha256
+  stability_repeat_state: not_started | in_progress | PASS | FAIL | UNVERIFIED | invalidated
   content_method_state: CONTENT_CALIBRATION_INCOMPLETE | CONTENT_CALIBRATION_PASS | CONTENT_CALIBRATION_FAIL
   content_full_screening_state: NOT_AUTHORIZED | AUTHORIZED_NOT_STARTED | IN_PROGRESS | COVERAGE_INCOMPLETE | READY_FOR_REVERSE_AUDIT | BLOCKED
+  content_full_screening_authorization_reference
+  content_full_screening_authorization_receipt_reference
+  content_full_screening_authorization_receipt_sha256
+  content_terminal_scope_sha256
   raw_answer_references_and_hashes
   source_truth_references_and_hashes
   scorecard_references_and_hashes
@@ -196,13 +240,19 @@ content_first_semantic_return:
   downstream_release_state: RESEARCH_ONLY_BLOCKED
 ```
 
-缺失原始回答、来源真值、评分卡或未知项时，接收结果只能为 `UNVERIFIED`。平台审计缺失单独记录，不得删除可评分回答或覆盖内容结论。
+术语桥引用、真实 SHA-256 或冻结状态缺失/错配时，返回 `content_first_contract_prepare`。`development_regression_state` 为 not_started / in_progress / UNVERIFIED 时，返回 `content_first_calibration_review (development-only)` 执行或复核开发集；只有 `FAIL → content_first_contract_prepare`，修复方法并重锁。所有开发结果仍为 `development_regression_only`，不计入正式评分。30 + 10 比例、闭集 provenance 或真实案例集哈希缺失时，返回 `semantic_calibration_case_prepare`。80个正式任务链必须绑定 `paired_task_manifest_reference` 和真实 `paired_task_manifest_sha256`；6个稳定性重复必须绑定 `stability_task_manifest_reference` 和真实 `stability_task_manifest_sha256`。这些清单、来源真值、评分卡或receiver证据任一不完整时，返回 `content_first_calibration_review`。
+
+缺失原始回答、来源真值、评分卡或未知项时，接收结果只能为 `UNVERIFIED`。平台审计缺失单独记录为 `platform_audit_state`，不得删除字节完整的可评分回答，也不得把平台 PASS 换成内容 PASS。授权引用、Task 8 gate绑定、独立receipt引用与真实SHA-256、冻结末端范围SHA-256任一缺失或错配 → content_first_full_screening_gate (NOT_AUTHORIZED)。`full_screening_authorization` 布尔值或 `content_full_screening_state` 自报不构成授权；只有Task 8 gate验证receipt绑定当前最终合同、校准报告与末端范围后，才允许 `AUTHORIZED_NOT_STARTED`。
 
 阶段5仍使用 `specialist_handoff_packet`，但 `target_route` 只按以下顺序取一个：
 
 ```text
-semantic_contract_prepare
+content_first_contract_prepare
 semantic_calibration_case_prepare
+content_first_calibration_review
+content_first_full_screening_gate
+content_first_full_screening
+semantic_contract_prepare (strict_audit only)
 semantic_method_calibration
 semantic_full_screening
 semantic_evidence_expansion
@@ -210,7 +260,7 @@ semantic_reverse_audit
 semantic_stage_review
 ```
 
-`semantic_contract_prepare` 的返回必须包含 `contract_state = case_preparation_locked`、`locked_input_sha256`、准备授权引用和隔离写入范围，同时证明案例集哈希、批次大小和控制案例尚未伪造。`semantic_calibration_case_prepare` 的返回必须包含40例案例集的实际哈希、真实控制案例以及新版本最终冻结合同。未最终冻结时，控制器只能重派当前准备/修复动作；不得创建 `semantic_model_handoff_packet`。
+`content_first_contract_prepare` 是 R4 内容优先的唯一合同准备名称；`semantic_contract_prepare` 只供 `strict_audit` 兼容。合同准备返回必须包含 `contract_state = case_preparation_locked`、`locked_input_sha256`、术语桥引用/哈希/状态、准备授权引用和隔离写入范围，同时证明案例集哈希、批次大小和控制案例尚未伪造。`semantic_calibration_case_prepare` 的返回必须包含 30 + 10 类别与来源计数、闭集 provenance、40例案例集的实际哈希、真实控制案例以及新版本最终冻结合同。未最终冻结时，控制器只能重派当前准备/修复动作；不得创建 `semantic_model_handoff_packet`。
 
 需要外部模型时，附加只读运输包：
 
@@ -282,7 +332,7 @@ review_result: PASS | FAIL | UNVERIFIED
 admissibility_state: PASS | FAIL | UNVERIFIED
 ```
 
-`review_result`来自模型内容结论；`admissibility_state`来自任务、输入哈希、返回结构、原件哈希、身份依据与运输检查。只有两者均为PASS，才能将该返回计入正式校准或用于证据升级。
+`review_result`来自模型内容结论；`admissibility_state`来自任务、输入哈希、返回结构、原件哈希、身份依据与运输检查。只有 `strict_audit` 要求两者均为PASS才能计入它的正式校准。`content_first` 将身份/运输缺口留在 `platform_audit_state`，另行核对原始字节、内容哈希、真值、评分卡和receiver证据；两轴不得相互覆盖。
 
 阶段5专业返回使用：
 
@@ -293,7 +343,28 @@ semantic_specialist_return_packet:
   contract_version
   source_route
   result_state: PASS | FAIL | UNVERIFIED
-  semantic_method_validation_state: INCONCLUSIVE | EFFECTIVE | NOT_EFFECTIVE
+  semantic_method_validation_state: null | INCONCLUSIVE | EFFECTIVE | NOT_EFFECTIVE (strict_audit only; content_first = null)
+  terminology_bridge_reference
+  terminology_bridge_sha256
+  terminology_bridge_state
+  development_regression_state
+  formal_holdout_case_set_sha256
+  formal_holdout_provenance_state
+  paired_task_manifest_reference
+  paired_task_manifest_sha256
+  formal_paired_task_chain_state
+  source_truth_package_sha256
+  scorecard_package_sha256
+  receiver_evidence_manifest_sha256
+  stability_task_manifest_reference
+  stability_task_manifest_sha256
+  stability_repeat_state
+  content_method_state: CONTENT_CALIBRATION_INCOMPLETE | CONTENT_CALIBRATION_PASS | CONTENT_CALIBRATION_FAIL
+  content_full_screening_state: NOT_AUTHORIZED | AUTHORIZED_NOT_STARTED | IN_PROGRESS | COVERAGE_INCOMPLETE | READY_FOR_REVERSE_AUDIT | BLOCKED
+  content_full_screening_authorization_reference
+  content_full_screening_authorization_receipt_reference
+  content_full_screening_authorization_receipt_sha256
+  content_terminal_scope_sha256
   active_semantic_work_unit
   artifact_references_and_hashes
   coverage_summary
@@ -305,7 +376,7 @@ semantic_specialist_return_packet:
   prohibited_downstream_actions
 ```
 
-返回包必须与当前合同、输入哈希和工作单元一致。40例 `EFFECTIVE` 只允许请求独立的 `full_screening_authorization`；不改变阶段5为PASS。全量筛查、`application_base_write_authorization`、公司匹配、客户搜索、Git提交和插件安装都是分开的用户授权。
+返回包必须与当前合同、输入哈希和工作单元一致。`CONTENT_CALIBRATION_PASS` 只允许进入 `content_first_full_screening_gate`；不改变阶段5为PASS，也不取消 `RESEARCH_ONLY_BLOCKED`。仅 `strict_audit` 的40例 `EFFECTIVE` 可请求它的独立 `full_screening_authorization`。全量筛查、`application_base_write_authorization`、公司匹配、客户搜索、Git提交和插件安装都是分开的用户授权。
 
 ## 业务工作簿更新包
 

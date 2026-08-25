@@ -12,6 +12,14 @@
 
 ## 1. 40例配对校准
 
+### content_first R4正式案例政策
+
+R4不重找另一组40例。从已冻结候选中保留 `30 unexecuted` 且未被开发调试使用的案例，再加入 `10 new unseen positives`，构成新的正式40例。任何标记 `development_regression_only = true` 的案例都只用于开发回归，不得计入正式40例、已知正例或稳定性统计。此政策必须冻结案例ID、选择来源、开发排除集和真实字节哈希；不以聊天记忆或文件名判定。
+
+正式任务包是 `40 pairs`：`baseline_full_depth_v1` 和 `screen_then_expand_v2` 各有40个独立任务，共享同一冻结可见输入，不共享上下文、输出文件或对方臂结果。另冻结 `6 predeclared high-risk single-case repeats`：候选臂的6个高风险案例各重复1次，不是6组40例，也不是复制ID或汇总。
+
+评估器必须实际打开并核对全80个任务的task、原回答、回答封套、六项scorecard、receiver-owned资源观察与收据，以及6个重复的新鲜上下文、预授权和独立文件。汇总自报、路径别名、符号链接、硬链接、跨案例/跨臂文件复用或只换repeat ID都必须拒绝。
+
 候选池与案例准备只能读取通过哈希校验的 `case_preparation_locked` 合同。该阶段允许在隔离目录中追加候选、排除记录、案例和答案键，但不得生成模型任务；案例集哈希和控制案例必须保持为空，直到40个案例真实完成并通过真值门。空模板、零记录头或占位案例集哈希都不能充当已准备案例集。
 
 案例集冻结后，用其实际案例集哈希、40个唯一案例ID、真实控制案例和批次大小生成新合同版本的最终 `frozen` 合同。准备合同与最终合同的不可变输入投影必须匹配 `locked_input_sha256`；若主题、快照、提示词、来源、预算或抽样规则漂移，停止并重新锁定。只有最终冻结合同可以进入模型运行。
@@ -31,14 +39,22 @@
 
 只有保留直接来源、原始位置、条件、限制、快照和哈希的案例可以进入已知真值。证据不足的 `open_case` 可观察行为但不计入已知正例召回率。
 
-同一新版技能定义两个同级方法臂：
+同一新版技能定义两个R4同级方法臂：
 
-- `baseline_full_depth`：40个节点逐一尝试完整深度链；
-- `candidate_screen_then_expand`：先浅筛，再按触发规则展开。
+- `baseline_full_depth_v1`：40个节点逐一尝试完整深度链；
+- `screen_then_expand_v2`：先浅筛，再按触发规则展开。
 
 两臂使用同一案例、A/B/C配置、来源权限、搜索工具、时间窗口、证据规则和预算口径；运行目录和运行ID分开，使用新鲜独立上下文。评估器必须核对研究合同ID/版本、分类快照哈希、40例案例ID与案例集哈希、模型配置ID以及正确的方法臂标签；任一不一致只能返回 `INCONCLUSIVE`。旧Git提交只负责回退，不是实验基线。
 
 ## 2. 校准硬门
+
+### content_first R4
+
+R4门顺序固定为安全、14个已知正例100%进入展开、接收方证据完整、6个单案例稳定重复、效率。前门未通过时，后门不评估，效率数值为null。冻结阈值为深度展开至少减少 `20 percent`、查询数最多增加 `10 percent`、`zero source-open increase`。R4 CLI不得放宽这些阈值。
+
+R4结果只能为 `PASS / FAIL / INCOMPLETE` 与对应 `CONTENT_CALIBRATION_*`。`CONTENT_CALIBRATION_PASS` 只表示这一内容合同的冻结门已满足；它不等于 `EFFECTIVE`，不证明真实产业效果，不授权full screening。全量、共享底座、公司匹配、路线和客户继续 `RESEARCH_ONLY_BLOCKED`。
+
+### legacy strict_audit
 
 先执行安全硬门，再计算效率：
 
@@ -59,6 +75,12 @@
 40例不证明全量被筛节点的漏判率低于5%，也不自动授权全量运行。
 
 ## 3. 全量浅筛
+
+### content_first R4 full-screen gate
+
+`CONTENT_CALIBRATION_PASS` 只能进入授权检查。只有独立的 `explicit human full-screen authorization` 存在、冻结末端范围的引用和哈希保持 `unchanged scope`、安全失败为零时，才可从 `NOT_AUTHORIZED` 进入 `AUTHORIZED_NOT_STARTED`。这一状态仍不是 `EFFECTIVE`，不会自动开始筛查，也不解除 `RESEARCH_ONLY_BLOCKED`。
+
+### legacy strict_audit
 
 只有方法 `EFFECTIVE`、用户另行批准全量、Git/插件/合同仍匹配、末端节点清单重新冻结、三模型可用性通过且预算规则冻结后，才能启动。
 

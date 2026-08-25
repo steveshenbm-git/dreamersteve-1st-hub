@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "content_source_observation": {
+    "case_id": null,
+    "method_arm": null,
+    "source_observations": [
+      {
+        "source_url_or_null": null,
+        "publisher_or_null": null,
+        "title_or_null": null,
+        "original_location_or_null": null,
+        "bounded_summary_or_null": null,
+        "access_state": "UNVERIFIED",
+        "conditions": [],
+        "limitations": [],
+        "counterevidence": []
+      }
+    ],
+    "unknown_items": []
+  }
+}

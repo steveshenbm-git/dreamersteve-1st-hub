@@ -1,6 +1,6 @@
 {
   "name": "foreign-trade-workflow-director",
-  "version": "0.3.0-beta.1",
+  "version": "0.3.0-beta.2",
   "description": "审计、搭建、续作和复刻完整外贸流程；新 RC2 合同默认内容优先，并保留严格审计兼容模式与全量、下游停止门。",
   "author": {
     "name": "steveshenbm-git"

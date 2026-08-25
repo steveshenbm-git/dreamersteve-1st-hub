@@ -2,11 +2,18 @@
 from __future__ import annotations
 
 import argparse
+from datetime import datetime
 import hashlib
 import json
 from pathlib import Path
 import re
 import sys
+import unicodedata
+from pathlib import PurePosixPath
+
+from validate_terminology_bridge import load_rows as load_terminology_rows
+from validate_terminology_bridge import validate_rows as validate_terminology_rows
+from content_first_visible_case_schema import frozen_visible_case_errors, visible_case_projection
 
 
 CONTRACT_REQUIRED = {
@@ -47,9 +54,126 @@ CONTRACT_REQUIRED = {
     "full_screening_authorization",
     "application_base_write_authorization",
 }
+CONTENT_FIRST_REQUIRED = {
+    "execution_mode",
+    "terminology_architecture",
+    "calibration_case_policy",
+    "retrieval_efficiency_gates",
+    "content_first_policy",
+    "source_truth_package_reference",
+    "source_truth_package_sha256",
+    "visible_case_set_reference_and_hash",
+    "visible_case_freeze_receipt_reference_and_hash",
+    "execution_authorized",
+    "paired_execution_contract",
+    "r3_case_source_manifest_reference_and_hash",
+    "full_screening_authorization",
+    "full_screening_authorization_reference",
+    "prohibited_actions",
+}
+R4_BASELINE_METHOD = "baseline_full_depth_v1"
+R4_CANDIDATE_METHOD = "screen_then_expand_v2"
+CONTENT_FIRST_CONCEPT_ROLES = {
+    "industry_output",
+    "material_form",
+    "phase_relation",
+    "process_action",
+    "use_point",
+    "exclusion",
+}
+CONTENT_FIRST_CATEGORY_COUNTS = {
+    "direct_supported_positive": 8,
+    "hidden_positive": 6,
+    "misleading_name_similarity": 6,
+    "source_sparse_or_inaccessible": 5,
+    "ambiguous_or_incomplete_conditions": 5,
+    "circular_or_mixed_company_source": 4,
+    "empty_generalization": 3,
+    "contamination_drift_or_structure_error": 3,
+}
+CONTENT_FIRST_SELECTION_ORIGIN_COUNTS = {
+    "retained_r3_unexecuted": 30,
+    "new_unseen_positive": 10,
+}
+CONTENT_FIRST_SELECTION_ORIGIN_CATEGORY_COUNTS = {
+    "retained_r3_unexecuted": {
+        "hidden_positive": 4,
+        "misleading_name_similarity": 6,
+        "source_sparse_or_inaccessible": 5,
+        "ambiguous_or_incomplete_conditions": 5,
+        "circular_or_mixed_company_source": 4,
+        "empty_generalization": 3,
+        "contamination_drift_or_structure_error": 3,
+    },
+    "new_unseen_positive": {
+        "direct_supported_positive": 8,
+        "hidden_positive": 2,
+    },
+}
+RETAINED_PROVENANCE_KEYS = {
+    "development_regression_only",
+    "selection_origin",
+    "r3_source_case_id",
+    "source_snapshot_reference",
+    "source_snapshot_sha256",
+}
+NEW_PROVENANCE_KEYS = {
+    "development_regression_only",
+    "selection_origin",
+    "selection_receipt_reference",
+    "selection_receipt_sha256",
+}
+RETAINED_SNAPSHOT_KEYS = {
+    "snapshot_id",
+    "r3_source_case_id",
+    "execution_state",
+    "captured_at",
+}
+NEW_SELECTION_RECEIPT_KEYS = {
+    "receipt_id",
+    "research_contract_id",
+    "case_id",
+    "source_node_id",
+    "selected_at",
+    "preparation_contract_version",
+    "locked_input_sha256",
+    "terminology_bridge_reference",
+    "terminology_bridge_sha256",
+    "official_terminal_node_snapshot_reference",
+    "official_terminal_node_snapshot_sha256",
+    "prior_method_exposure_state",
+    "selection_basis",
+}
+R3_SOURCE_MANIFEST_KEYS = {
+    "manifest_id", "research_contract_id", "source_round", "accepted_state",
+    "accepted_at", "acceptance_reference", "case_count",
+    "development_case_count", "unexecuted_case_count", "cases",
+}
+R3_SOURCE_MANIFEST_ENTRY_KEYS = {
+    "r3_source_case_id", "source_case_role", "execution_state",
+    "source_snapshot_reference", "source_snapshot_sha256",
+}
+def visible_case_set_workspace_errors(visible_rows: list[dict], formal_rows: list[dict], research_contract_id: object) -> list[str]:
+    visible_cases = [row for row in visible_rows if row.get("record_type") == "visible_calibration_case"]
+    formal_cases = [row for row in formal_rows if row.get("record_type") == "calibration_case"]
+    if frozen_visible_case_errors(visible_rows, research_contract_id):
+        return ["VISIBLE_CASE_SET_INVALID"]
+    visible_ids = [row.get("case_id") for row in visible_cases]
+    formal_ids = [row.get("case_id") for row in formal_cases]
+    if visible_ids != formal_ids:
+        return ["VISIBLE_CASE_SET_INVALID"]
+    for visible, formal in zip(visible_cases, formal_cases):
+        if visible_case_projection(visible) != visible_case_projection(formal):
+            return ["VISIBLE_CASE_SET_INVALID"]
+    return []
 SCREENING_RESULTS = {"hypothesis_formed", "ambiguous", "no_hypothesis_formed"}
 WORK_STATES = {"not_screened", "screened", "evidence_expansion_required", "evidence_expanded", "audit_reopened"}
 EVIDENCE_STATES = {"supported", "hypothesis", "unknown", "conflicted"}
+FORMAL_MODEL_RECORD_KEYS = (
+    "semantic_model_task",
+    "semantic_model_return",
+    "semantic_model_receipt",
+)
 QUERY_GROUPS = {"industry_output_or_process", "mechanism_use_point_and_cross_domain_synonyms"}
 PROMPT_ROLES = {
     "baseline",
@@ -196,6 +320,14 @@ def sha256_text(value: object) -> bool:
     return isinstance(value, str) and re.fullmatch(r"[0-9a-fA-F]{64}", value) is not None
 
 
+def real_lowercase_sha256(value: object) -> bool:
+    return (
+        isinstance(value, str)
+        and re.fullmatch(r"[0-9a-f]{64}", value) is not None
+        and len(set(value)) > 1
+    )
+
+
 def canonical_json_sha256(value: object) -> str:
     encoded = json.dumps(
         value,
@@ -230,6 +362,11 @@ def case_preparation_input_projection(contract: dict) -> dict:
         "reference": None,
         "sha256": None,
     }
+    if projection.get("execution_mode") == "content_first":
+        projection["visible_case_set_reference_and_hash"] = {"reference": None, "sha256": None}
+        projection["visible_case_freeze_receipt_reference_and_hash"] = {"reference": None, "sha256": None}
+        projection["source_truth_package_reference"] = None
+        projection["source_truth_package_sha256"] = None
     batch = projection.get("batch_rule")
     if isinstance(batch, dict):
         batch["batch_size"] = None
@@ -246,12 +383,25 @@ def case_preparation_input_sha256(contract: dict) -> str:
 
 def case_preparation_outputs_are_empty(contract: dict) -> bool:
     case_set = contract.get("calibration_case_set_reference_and_hash")
+    visible_case_set = contract.get("visible_case_set_reference_and_hash")
+    visible_freeze_receipt = contract.get("visible_case_freeze_receipt_reference_and_hash")
     batch = contract.get("batch_rule")
     controls = contract.get("control_case_rule")
     return (
         isinstance(case_set, dict)
         and case_set.get("reference") is None
         and case_set.get("sha256") is None
+        and (
+            contract.get("execution_mode") != "content_first"
+            or (
+                isinstance(visible_case_set, dict)
+                and visible_case_set.get("reference") is None
+                and visible_case_set.get("sha256") is None
+                and isinstance(visible_freeze_receipt, dict)
+                and visible_freeze_receipt.get("reference") is None
+                and visible_freeze_receipt.get("sha256") is None
+            )
+        )
         and isinstance(batch, dict)
         and batch.get("batch_size") is None
         and isinstance(controls, dict)
@@ -260,11 +410,900 @@ def case_preparation_outputs_are_empty(contract: dict) -> bool:
     )
 
 
+def execution_mode_errors(contract: dict) -> list[str]:
+    if "execution_mode" in contract and contract.get("execution_mode") != "content_first":
+        return ["execution_mode:invalid"]
+    return []
+
+
+def content_first_default_deny_errors(contract: dict) -> list[str]:
+    policy = contract.get("content_first_policy")
+    expected_prohibitions = {
+        "full_screening_without_explicit_authorization",
+        "write_shared_application_base",
+        "company_matching",
+        "route_generation",
+        "customer_research",
+    }
+    if (
+        contract.get("execution_authorized") is not False
+        or contract.get("full_screening_authorization") is not False
+        or contract.get("full_screening_authorization_reference") is not None
+        or contract.get("application_base_write_authorization") is not False
+        or not isinstance(policy, dict)
+        or policy.get("content_method_state") != "CONTENT_CALIBRATION_INCOMPLETE"
+        or policy.get("content_full_screening_state") != "NOT_AUTHORIZED"
+        or policy.get("downstream_release_state") != "RESEARCH_ONLY_BLOCKED"
+        or not expected_prohibitions.issubset(set(contract.get("prohibited_actions") or []))
+        or content_first_allowed_write_errors(contract)
+    ):
+        return ["content_first_default_deny:invalid"]
+    return []
+
+
+def content_first_allowed_write_errors(contract: dict) -> list[str]:
+    allowed_writes = contract.get("allowed_writes")
+    contract_id = contract.get("research_contract_id")
+    if not isinstance(allowed_writes, list) or not isinstance(contract_id, str):
+        return ["allowed_writes:invalid"]
+    marker = f"05-工作区/行业语义研究/{contract_id}"
+    forbidden_markers = ("02-共享应用知识", "company", "brand", "product", "route", "customer")
+    for item in allowed_writes:
+        if not nonempty_text(item):
+            return ["allowed_writes:invalid"]
+        normalized = item.replace("\\", "/")
+        if (
+            Path(normalized).is_absolute()
+            or ".." in Path(normalized).parts
+            or (normalized != marker and not normalized.startswith(marker + "/"))
+            or any(marker_text in normalized.lower() for marker_text in forbidden_markers)
+        ):
+            return ["allowed_writes:out_of_scope"]
+    return []
+
+
+def strict_paired_execution_contract_errors(paired: object) -> list[str]:
+    """Validate the frozen, task-visible paired-run contract without defaults."""
+    keys = {
+        "declared_model_and_configuration", "tools", "source_permissions", "observation_window",
+        "budgets", "frozen_artifact_references_and_hashes", "fresh_context_required",
+        "truth_isolation_required", "other_arm_isolation_required", "prior_case_isolation_required",
+        "append_only_outputs_required", "model_execution_authorized",
+    }
+    if not isinstance(paired, dict) or set(paired) != keys:
+        return ["paired_execution_contract:exact_schema_invalid"]
+    model = paired["declared_model_and_configuration"]
+    if not isinstance(model, dict) or set(model) != {"model", "configuration_reference", "configuration_sha256"} or not nonempty_text(model.get("model")) or not nonempty_text(model.get("configuration_reference")) or not real_lowercase_sha256(model.get("configuration_sha256")):
+        return ["paired_execution_contract.model:invalid"]
+    for field in ("tools", "source_permissions"):
+        values = paired[field]
+        if not isinstance(values, list) or not values or not all(nonempty_text(value) for value in values) or len(set(values)) != len(values):
+            return [f"paired_execution_contract.{field}:invalid"]
+    window = paired["observation_window"]
+    try:
+        starts = datetime.fromisoformat(str(window.get("starts_at")).replace("Z", "+00:00")) if isinstance(window, dict) and set(window) == {"starts_at", "ends_at"} else None
+        ends = datetime.fromisoformat(str(window.get("ends_at")).replace("Z", "+00:00")) if isinstance(window, dict) and set(window) == {"starts_at", "ends_at"} else None
+    except ValueError:
+        starts = ends = None
+    if starts is None or ends is None or starts.tzinfo is None or ends.tzinfo is None or starts >= ends:
+        return ["paired_execution_contract.observation_window:invalid"]
+    budgets = paired["budgets"]
+    if not isinstance(budgets, dict) or set(budgets) != {"query_budget", "source_open_budget", "elapsed_seconds_budget", "output_token_budget"} or any(type(value) is not int or value <= 0 for value in budgets.values()):
+        return ["paired_execution_contract.budgets:invalid"]
+    artifacts = paired["frozen_artifact_references_and_hashes"]
+    if not isinstance(artifacts, dict) or set(artifacts) != {"prompt", "schema", "config", "rubric"}:
+        return ["paired_execution_contract.artifacts:invalid"]
+    references: list[str] = []
+    config_rows: list[dict] = []
+    for group in ("prompt", "schema", "config", "rubric"):
+        rows = artifacts[group]
+        if not isinstance(rows, list) or not rows:
+            return [f"paired_execution_contract.artifacts.{group}:invalid"]
+        for row in rows:
+            if not isinstance(row, dict) or set(row) != {"reference", "sha256"} or not nonempty_text(row.get("reference")) or not real_lowercase_sha256(row.get("sha256")):
+                return [f"paired_execution_contract.artifacts.{group}:invalid"]
+            references.append(row["reference"])
+            if group == "config":
+                config_rows.append(row)
+    if len(references) != len(set(references)) or len(config_rows) != 1 or model["configuration_reference"] != config_rows[0]["reference"] or model["configuration_sha256"] != config_rows[0]["sha256"]:
+        return ["paired_execution_contract.artifact_identity:invalid"]
+    flags = ("fresh_context_required", "truth_isolation_required", "other_arm_isolation_required", "prior_case_isolation_required", "append_only_outputs_required")
+    if any(paired[field] is not True for field in flags) or paired["model_execution_authorized"] is not False:
+        return ["paired_execution_contract.isolation_or_authorization:invalid"]
+    return []
+
+
+def content_first_local_frozen_reference_errors(contract: object, root: Path) -> list[str]:
+    """Verify only task-visible frozen inputs under one explicit local root."""
+    if not isinstance(contract, dict) or not root.is_dir():
+        return ["CONTRACT_LOCAL_ROOT_INVALID"]
+    entries: list[tuple[str, object, object]] = []
+    architecture = contract.get("terminology_architecture")
+    if isinstance(architecture, dict) and architecture.get("term_pack_reference") is not None:
+        entries.append(("TERMINOLOGY_BRIDGE", architecture.get("term_pack_reference"), architecture.get("term_pack_sha256")))
+    if contract.get("taxonomy_snapshot_reference") is not None:
+        entries.append(("TAXONOMY_SNAPSHOT", contract.get("taxonomy_snapshot_reference"), contract.get("taxonomy_snapshot_sha256")))
+    prompts = contract.get("prompt_template_references_and_hashes")
+    if isinstance(prompts, list):
+        entries.extend(("PROMPT_TEMPLATE", row.get("reference"), row.get("sha256")) for row in prompts if isinstance(row, dict))
+    paired = contract.get("paired_execution_contract")
+    strict_errors = strict_paired_execution_contract_errors(paired)
+    if strict_errors:
+        return ["PAIRED_EXECUTION_CONTRACT_INVALID"]
+    artifacts = paired.get("frozen_artifact_references_and_hashes") if isinstance(paired, dict) else None
+    if not isinstance(artifacts, dict):
+        return ["PAIRED_EXECUTION_CONTRACT_INVALID"]
+    for group in ("prompt", "schema", "config", "rubric"):
+        rows = artifacts.get(group)
+        if not isinstance(rows, list):
+            return ["PAIRED_EXECUTION_CONTRACT_INVALID"]
+        entries.extend((f"PAIRED_{group.upper()}", row.get("reference"), row.get("sha256")) for row in rows if isinstance(row, dict))
+    errors: list[str] = []
+    root = root.resolve()
+    protected_hashes = {
+        (contract.get("calibration_case_set_reference_and_hash") or {}).get("sha256"),
+        (contract.get("visible_case_set_reference_and_hash") or {}).get("sha256"),
+        (contract.get("visible_case_freeze_receipt_reference_and_hash") or {}).get("sha256"),
+        contract.get("source_truth_package_sha256"),
+    }
+    protected_references = {
+        (contract.get("calibration_case_set_reference_and_hash") or {}).get("reference"),
+        (contract.get("visible_case_set_reference_and_hash") or {}).get("reference"),
+        (contract.get("visible_case_freeze_receipt_reference_and_hash") or {}).get("reference"),
+        contract.get("source_truth_package_reference"),
+    }
+    protected_parent_roots = {
+        PurePosixPath(reference).parent
+        for reference in (
+            (contract.get("calibration_case_set_reference_and_hash") or {}).get("reference"),
+            contract.get("source_truth_package_reference"),
+        )
+        if isinstance(reference, str) and PurePosixPath(reference).parent != PurePosixPath(".")
+    }
+    identities: set[tuple[int, int]] = set()
+    for label, reference, expected_hash in entries:
+        normalized = PurePosixPath(reference).as_posix() if isinstance(reference, str) else None
+        candidate = PurePosixPath(reference) if isinstance(reference, str) and normalized == reference and normalized != "." else None
+        if candidate is None or candidate.is_absolute() or any(part in {".", ".."} for part in candidate.parts) or "\\" in str(reference):
+            errors.append(f"{label}_REFERENCE_INVALID")
+            continue
+        if expected_hash in protected_hashes:
+            errors.append("TASK_VISIBLE_ARTIFACT_HASH_COLLISION")
+            continue
+        if reference in protected_references:
+            errors.append("TASK_VISIBLE_ARTIFACT_ROLE_COLLISION")
+            continue
+        if any(candidate.parts[:len(parent.parts)] == parent.parts for parent in protected_parent_roots):
+            errors.append("TASK_VISIBLE_ARTIFACT_ROOT_COLLISION")
+            continue
+        path = (root / candidate).resolve()
+        try:
+            path.relative_to(root)
+        except ValueError:
+            errors.append(f"{label}_PATH_ESCAPE")
+            continue
+        if not path.is_file():
+            errors.append(f"{label}_MISSING")
+        elif not real_lowercase_sha256(expected_hash) or hashlib.sha256(path.read_bytes()).hexdigest() != expected_hash:
+            errors.append(f"{label}_HASH_MISMATCH")
+        else:
+            if expected_hash in protected_hashes:
+                errors.append("TASK_VISIBLE_ARTIFACT_HASH_COLLISION")
+            if reference in protected_references:
+                errors.append("TASK_VISIBLE_ARTIFACT_ROLE_COLLISION")
+            stat = path.stat()
+            identity = (stat.st_dev, stat.st_ino)
+            if identity in identities:
+                errors.append("TASK_VISIBLE_ARTIFACT_IDENTITY_COLLISION")
+            identities.add(identity)
+    if not errors and isinstance(artifacts, dict):
+        schema_rows = artifacts.get("schema")
+        if not isinstance(schema_rows, list) or len(schema_rows) != 1:
+            errors.append("PAIRED_SCHEMA_INVALID")
+        else:
+            schema_path = root / schema_rows[0]["reference"]
+            try:
+                payload = json.loads(schema_path.read_text(encoding="utf-8"))
+                body = payload.get("content_source_observation") if isinstance(payload, dict) else None
+                item_keys = {"source_url_or_null", "publisher_or_null", "title_or_null", "original_location_or_null", "bounded_summary_or_null", "access_state", "conditions", "limitations", "counterevidence"}
+                item = body.get("source_observations", [None])[0] if isinstance(body, dict) and isinstance(body.get("source_observations"), list) and len(body["source_observations"]) == 1 else None
+                if set(payload) != {"schema_version", "content_source_observation"} or payload.get("schema_version") != "1.0" or not isinstance(body, dict) or set(body) != {"case_id", "method_arm", "source_observations", "unknown_items"} or body.get("case_id") is not None or body.get("method_arm") is not None or body.get("unknown_items") != [] or not isinstance(item, dict) or set(item) != item_keys or any(item[key] is not None for key in ("source_url_or_null", "publisher_or_null", "title_or_null", "original_location_or_null", "bounded_summary_or_null")) or item.get("access_state") != "UNVERIFIED" or any(item[key] != [] for key in ("conditions", "limitations", "counterevidence")):
+                    errors.append("PAIRED_SCHEMA_INVALID")
+            except (OSError, ValueError, TypeError, KeyError):
+                errors.append("PAIRED_SCHEMA_INVALID")
+    return errors
+
+
+def parse_aware_datetime(value: object) -> datetime | None:
+    if not isinstance(value, str) or not value.strip():
+        return None
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    return parsed if parsed.tzinfo is not None else None
+
+
+def normalized_identifier_key(value: object) -> str | None:
+    if (
+        not nonempty_text(value)
+        or not isinstance(value, str)
+        or "/" in value
+        or "\\" in value
+        or any(character.isspace() or ord(character) < 32 for character in value)
+    ):
+        return None
+    return unicodedata.normalize("NFKC", value).casefold()
+
+
+def secure_contract_local_file(
+    root: Path, reference: object, expected_hash: object
+) -> tuple[Path | None, bytes | None, tuple[int, int] | None, str | None]:
+    """Open a canonical regular file without accepting aliases or path escapes."""
+    if not isinstance(reference, str):
+        return None, None, None, "PROVENANCE_REFERENCE_INVALID"
+    candidate = PurePosixPath(reference)
+    if (
+        candidate.as_posix() != reference
+        or candidate.is_absolute()
+        or not candidate.parts
+        or any(part in {"", ".", ".."} for part in candidate.parts)
+        or "\\" in reference
+    ):
+        return None, None, None, "PROVENANCE_REFERENCE_INVALID"
+    root = root.resolve()
+    unresolved = root
+    for part in candidate.parts:
+        unresolved = unresolved / part
+        if unresolved.is_symlink():
+            return None, None, None, "PROVENANCE_SYMLINK_FORBIDDEN"
+    try:
+        resolved = unresolved.resolve(strict=True)
+        resolved.relative_to(root)
+    except (FileNotFoundError, OSError, ValueError):
+        return None, None, None, "PROVENANCE_ASSET_MISSING"
+    if not resolved.is_file():
+        return None, None, None, "PROVENANCE_ASSET_MISSING"
+    try:
+        body = resolved.read_bytes()
+        stat = resolved.stat()
+    except OSError:
+        return None, None, None, "PROVENANCE_ASSET_MISSING"
+    if (
+        not real_lowercase_sha256(expected_hash)
+        or hashlib.sha256(body).hexdigest() != expected_hash
+    ):
+        return resolved, body, (stat.st_dev, stat.st_ino), "PROVENANCE_ASSET_HASH_MISMATCH"
+    return resolved, body, (stat.st_dev, stat.st_ino), None
+
+
+def validate_r3_source_manifest(
+    contract: object, contract_local_root: Path | None
+) -> tuple[list[str], dict[str, dict]]:
+    if not isinstance(contract, dict) or contract_local_root is None or not contract_local_root.is_dir():
+        return ["R3_SOURCE_MANIFEST_ROOT_INVALID"], {}
+    binding = contract.get("r3_case_source_manifest_reference_and_hash")
+    if (
+        not isinstance(binding, dict)
+        or set(binding) != {"reference", "sha256"}
+        or not nonempty_text(binding.get("reference"))
+    ):
+        return ["R3_SOURCE_MANIFEST_BINDING_INVALID"], {}
+    _, manifest_bytes, _, error = secure_contract_local_file(
+        contract_local_root, binding.get("reference"), binding.get("sha256")
+    )
+    if error:
+        return [error], {}
+    try:
+        payload = json.loads(manifest_bytes)
+        manifest = payload["r3_case_source_manifest"]
+    except (ValueError, TypeError, KeyError):
+        return ["R3_SOURCE_MANIFEST_SCHEMA_INVALID"], {}
+    if (
+        not isinstance(payload, dict)
+        or set(payload) != {"schema_version", "r3_case_source_manifest"}
+        or payload.get("schema_version") != "1.0"
+        or not isinstance(manifest, dict)
+        or set(manifest) != R3_SOURCE_MANIFEST_KEYS
+        or not nonempty_text(manifest.get("manifest_id"))
+        or manifest.get("research_contract_id") != contract.get("research_contract_id")
+        or manifest.get("source_round") != "R3"
+        or manifest.get("accepted_state") != "accepted_source_truth"
+        or parse_aware_datetime(manifest.get("accepted_at")) is None
+        or not nonempty_text(manifest.get("acceptance_reference"))
+        or manifest.get("case_count") != 40
+        or manifest.get("development_case_count") != 10
+        or manifest.get("unexecuted_case_count") != 30
+        or not isinstance(manifest.get("cases"), list)
+        or len(manifest["cases"]) != 40
+    ):
+        return ["R3_SOURCE_MANIFEST_COMPOSITION_INVALID"], {}
+    errors: list[str] = []
+    accepted_at = parse_aware_datetime(manifest.get("accepted_at"))
+    locked_at = parse_aware_datetime(
+        (contract.get("case_preparation_gate") or {}).get("locked_at")
+    )
+    if locked_at is not None and accepted_at is not None and accepted_at >= locked_at:
+        errors.append("R3_SOURCE_MANIFEST_NOT_ACCEPTED_BEFORE_LOCK")
+    source_ids: set[str] = set()
+    snapshot_ids: set[str] = set()
+    references: set[str] = set()
+    hashes: set[str] = set()
+    identities: set[tuple[int, int]] = set()
+    by_id: dict[str, dict] = {}
+    role_counts = {"development_regression_only": 0, "formal_holdout_eligible": 0}
+    for entry in manifest["cases"]:
+        if not isinstance(entry, dict) or set(entry) != R3_SOURCE_MANIFEST_ENTRY_KEYS:
+            errors.append("R3_SOURCE_MANIFEST_ENTRY_INVALID")
+            continue
+        source_id = entry.get("r3_source_case_id")
+        source_key = normalized_identifier_key(source_id)
+        if source_key is None or source_key in source_ids:
+            errors.append("R3_SOURCE_CASE_ID_REUSE")
+        else:
+            source_ids.add(source_key)
+            by_id[source_key] = entry
+        role = entry.get("source_case_role")
+        expected_state = (
+            "executed_development"
+            if role == "development_regression_only"
+            else "unexecuted" if role == "formal_holdout_eligible" else None
+        )
+        if expected_state is None or entry.get("execution_state") != expected_state:
+            errors.append("R3_SOURCE_MANIFEST_ENTRY_INVALID")
+        else:
+            role_counts[role] += 1
+        reference = entry.get("source_snapshot_reference")
+        expected_hash = entry.get("source_snapshot_sha256")
+        if isinstance(reference, str) and reference in references:
+            errors.append("PROVENANCE_ASSET_REFERENCE_REUSE")
+        elif isinstance(reference, str):
+            references.add(reference)
+        if isinstance(expected_hash, str) and expected_hash in hashes:
+            errors.append("PROVENANCE_ASSET_HASH_REUSE")
+        elif isinstance(expected_hash, str):
+            hashes.add(expected_hash)
+        _, snapshot_bytes, identity, snapshot_error = secure_contract_local_file(
+            contract_local_root, reference, expected_hash
+        )
+        if snapshot_error:
+            errors.append(snapshot_error)
+            continue
+        if identity in identities:
+            errors.append("PROVENANCE_ASSET_IDENTITY_REUSE")
+        elif identity is not None:
+            identities.add(identity)
+        try:
+            snapshot_payload = json.loads(snapshot_bytes)
+            snapshot = snapshot_payload["retained_r3_case_snapshot"]
+        except (ValueError, TypeError, KeyError):
+            errors.append("R3_SOURCE_SNAPSHOT_INVALID")
+            continue
+        snapshot_key = normalized_identifier_key(snapshot.get("snapshot_id")) if isinstance(snapshot, dict) else None
+        if snapshot_key is None or snapshot_key in snapshot_ids:
+            errors.append("R3_SOURCE_SNAPSHOT_ID_REUSE")
+        else:
+            snapshot_ids.add(snapshot_key)
+        if (
+            not isinstance(snapshot_payload, dict)
+            or set(snapshot_payload) != {"schema_version", "retained_r3_case_snapshot"}
+            or snapshot_payload.get("schema_version") != "1.0"
+            or not isinstance(snapshot, dict)
+            or set(snapshot) != RETAINED_SNAPSHOT_KEYS
+            or snapshot.get("r3_source_case_id") != source_id
+            or snapshot.get("execution_state") != expected_state
+            or parse_aware_datetime(snapshot.get("captured_at")) is None
+        ):
+            errors.append("R3_SOURCE_SNAPSHOT_INVALID")
+    if role_counts != {"development_regression_only": 10, "formal_holdout_eligible": 30}:
+        errors.append("R3_SOURCE_MANIFEST_COMPOSITION_INVALID")
+    return list(dict.fromkeys(errors)), by_id
+
+
+def validate_content_first_case_provenance(
+    cases: list[dict], contract: object, contract_local_root: Path | None
+) -> list[str]:
+    """Validate the receiver-only 30 retained + 10 newly selected provenance chain."""
+    if not isinstance(contract, dict) or contract_local_root is None or not contract_local_root.is_dir():
+        return ["CONTRACT_LOCAL_ROOT_INVALID"]
+    policy = contract.get("calibration_case_policy")
+    if not isinstance(policy, dict):
+        return ["CALIBRATION_CASE_POLICY_INVALID"]
+    problems: list[str] = []
+    origin_counts: dict[str, int] = {}
+    origin_categories: dict[str, dict[str, int]] = {}
+    asset_references: set[str] = set()
+    asset_hashes: set[str] = set()
+    asset_identities: set[tuple[int, int]] = set()
+    r3_source_ids: set[str] = set()
+    receipt_ids: set[str] = set()
+    new_source_node_ids: set[str] = set()
+    retained_manifest_ids: set[str] = set()
+    locked_at = parse_aware_datetime((contract.get("case_preparation_gate") or {}).get("locked_at"))
+    gate = contract.get("case_preparation_gate") if isinstance(contract.get("case_preparation_gate"), dict) else {}
+    architecture = contract.get("terminology_architecture") if isinstance(contract.get("terminology_architecture"), dict) else {}
+    manifest_errors, manifest_by_id = validate_r3_source_manifest(
+        contract, contract_local_root
+    )
+    problems.extend(manifest_errors)
+    eligible_manifest_ids = {
+        key for key, entry in manifest_by_id.items()
+        if entry.get("source_case_role") == "formal_holdout_eligible"
+        and entry.get("execution_state") == "unexecuted"
+    }
+
+    taxonomy_reference = contract.get("taxonomy_snapshot_reference")
+    taxonomy_sha256 = contract.get("taxonomy_snapshot_sha256")
+    _, taxonomy_bytes, _, taxonomy_error = secure_contract_local_file(
+        contract_local_root, taxonomy_reference, taxonomy_sha256
+    )
+    if taxonomy_error:
+        problems.append(taxonomy_error)
+        terminal_node_ids: set[str] = set()
+        terminal_node_by_id: dict[str, dict] = {}
+    else:
+        try:
+            taxonomy_payload = json.loads(taxonomy_bytes)
+            terminal_nodes = taxonomy_payload.get("terminal_nodes")
+            terminal_node_by_id = {
+                normalized_identifier_key(row.get("taxonomy_node_id")): row
+                for row in terminal_nodes
+                if isinstance(row, dict)
+                and normalized_identifier_key(row.get("taxonomy_node_id")) is not None
+                and nonempty_text(row.get("code"))
+                and nonempty_text(row.get("name_zh"))
+            } if isinstance(terminal_nodes, list) else {}
+            terminal_node_ids = set(terminal_node_by_id)
+            if (
+                not isinstance(terminal_nodes, list)
+                or len(terminal_node_ids) != len(terminal_nodes)
+                or taxonomy_payload.get("terminal_node_count") != len(terminal_nodes)
+            ):
+                terminal_node_ids = set()
+                terminal_node_by_id = {}
+                problems.append("OFFICIAL_TERMINAL_NODE_SNAPSHOT_INVALID")
+        except (ValueError, TypeError, AttributeError):
+            terminal_node_ids = set()
+            terminal_node_by_id = {}
+            problems.append("OFFICIAL_TERMINAL_NODE_SNAPSHOT_INVALID")
+
+    # Receipts bind this shared terminology input; it remains one deliberate
+    # contract role and is not counted as 40 independent provenance assets.
+    _, _, _, terminology_error = secure_contract_local_file(
+        contract_local_root,
+        architecture.get("term_pack_reference"),
+        architecture.get("term_pack_sha256"),
+    )
+    if terminology_error:
+        problems.append(terminology_error)
+
+    for case in cases:
+        provenance = case.get("provenance")
+        if not isinstance(provenance, dict) or provenance.get("development_regression_only") is not False:
+            problems.append("CASE_PROVENANCE_INVALID")
+            continue
+        origin = provenance.get("selection_origin")
+        if origin not in CONTENT_FIRST_SELECTION_ORIGIN_COUNTS:
+            problems.append("CASE_PROVENANCE_INVALID")
+            continue
+        category = case.get("primary_category")
+        origin_counts[origin] = origin_counts.get(origin, 0) + 1
+        category_counts = origin_categories.setdefault(origin, {})
+        category_counts[category] = category_counts.get(category, 0) + 1
+        if origin == "retained_r3_unexecuted":
+            if set(provenance) != RETAINED_PROVENANCE_KEYS:
+                problems.append("CASE_PROVENANCE_INVALID")
+                continue
+            reference = provenance.get("source_snapshot_reference")
+            expected_hash = provenance.get("source_snapshot_sha256")
+            r3_case_id = provenance.get("r3_source_case_id")
+            r3_key = normalized_identifier_key(r3_case_id)
+            if r3_key is None or r3_key in r3_source_ids:
+                problems.append("R3_SOURCE_CASE_ID_REUSE")
+            else:
+                r3_source_ids.add(r3_key)
+                retained_manifest_ids.add(r3_key)
+                manifest_entry = manifest_by_id.get(r3_key)
+                if (
+                    manifest_entry is None
+                    or manifest_entry.get("source_case_role") != "formal_holdout_eligible"
+                    or manifest_entry.get("execution_state") != "unexecuted"
+                    or manifest_entry.get("source_snapshot_reference")
+                    != provenance.get("source_snapshot_reference")
+                    or manifest_entry.get("source_snapshot_sha256")
+                    != provenance.get("source_snapshot_sha256")
+                ):
+                    problems.append("R3_RETAINED_MEMBERSHIP_MISMATCH")
+            payload_key = "retained_r3_case_snapshot"
+        else:
+            if set(provenance) != NEW_PROVENANCE_KEYS:
+                problems.append("CASE_PROVENANCE_INVALID")
+                continue
+            if case.get("known_positive") is not True:
+                problems.append("NEW_UNSEEN_POSITIVE_REQUIRED")
+            reference = provenance.get("selection_receipt_reference")
+            expected_hash = provenance.get("selection_receipt_sha256")
+            payload_key = "new_unseen_selection_receipt"
+
+        if isinstance(reference, str) and reference in asset_references:
+            problems.append("PROVENANCE_ASSET_REFERENCE_REUSE")
+        elif isinstance(reference, str):
+            asset_references.add(reference)
+        if isinstance(expected_hash, str) and expected_hash in asset_hashes:
+            problems.append("PROVENANCE_ASSET_HASH_REUSE")
+        elif isinstance(expected_hash, str):
+            asset_hashes.add(expected_hash)
+        _, body, identity, asset_error = secure_contract_local_file(
+            contract_local_root, reference, expected_hash
+        )
+        if asset_error:
+            problems.append(asset_error)
+            continue
+        if identity in asset_identities:
+            problems.append("PROVENANCE_ASSET_IDENTITY_REUSE")
+        elif identity is not None:
+            asset_identities.add(identity)
+        try:
+            payload = json.loads(body)
+            record = payload[payload_key]
+        except (ValueError, TypeError, KeyError):
+            problems.append("PROVENANCE_ASSET_SCHEMA_INVALID")
+            continue
+        if (
+            not isinstance(payload, dict)
+            or set(payload) != {"schema_version", payload_key}
+            or payload.get("schema_version") != "1.0"
+            or not isinstance(record, dict)
+        ):
+            problems.append("PROVENANCE_ASSET_SCHEMA_INVALID")
+            continue
+        if origin == "retained_r3_unexecuted":
+            if set(record) != RETAINED_SNAPSHOT_KEYS:
+                problems.append("PROVENANCE_ASSET_SCHEMA_INVALID")
+                continue
+            if (
+                not nonempty_text(record.get("snapshot_id"))
+                or record.get("r3_source_case_id") != provenance.get("r3_source_case_id")
+                or parse_aware_datetime(record.get("captured_at")) is None
+            ):
+                problems.append("R3_SOURCE_SNAPSHOT_INVALID")
+            if record.get("execution_state") != "unexecuted":
+                problems.append("R3_SOURCE_NOT_UNEXECUTED")
+        else:
+            if set(record) != NEW_SELECTION_RECEIPT_KEYS:
+                problems.append("PROVENANCE_ASSET_SCHEMA_INVALID")
+                continue
+            receipt_id = record.get("receipt_id")
+            receipt_key = normalized_identifier_key(receipt_id)
+            if receipt_key is None or receipt_key in receipt_ids:
+                problems.append("NEW_SELECTION_RECEIPT_ID_REUSE")
+            else:
+                receipt_ids.add(receipt_key)
+            selected_at = parse_aware_datetime(record.get("selected_at"))
+            case_node = case.get("taxonomy_node") if isinstance(case.get("taxonomy_node"), dict) else {}
+            source_node_key = normalized_identifier_key(record.get("source_node_id"))
+            if source_node_key is None or source_node_key in new_source_node_ids:
+                problems.append("NEW_SELECTION_SOURCE_NODE_REUSE")
+            else:
+                new_source_node_ids.add(source_node_key)
+            case_node_key = normalized_identifier_key(case_node.get("taxonomy_node_id"))
+            if (
+                record.get("research_contract_id") != contract.get("research_contract_id")
+                or record.get("case_id") != case.get("case_id")
+                or source_node_key != case_node_key
+                or source_node_key not in terminal_node_ids
+            ):
+                problems.append("NEW_SELECTION_SOURCE_NODE_INVALID")
+            official_node = terminal_node_by_id.get(source_node_key)
+            if isinstance(official_node, dict) and any(
+                key in official_node and official_node.get(key) != case_node.get(key)
+                for key in ("code", "name_zh")
+            ):
+                problems.append("NEW_SELECTION_OFFICIAL_NODE_MISMATCH")
+            if locked_at is None or selected_at is None or selected_at <= locked_at:
+                problems.append("NEW_SELECTION_BEFORE_PREPARATION_LOCK")
+            if record.get("prior_method_exposure_state") != "unseen":
+                problems.append("NEW_SELECTION_NOT_UNSEEN")
+            if (
+                record.get("preparation_contract_version") != gate.get("preparation_contract_version")
+                or record.get("locked_input_sha256") != gate.get("locked_input_sha256")
+                or record.get("terminology_bridge_reference") != architecture.get("term_pack_reference")
+                or record.get("terminology_bridge_sha256") != architecture.get("term_pack_sha256")
+                or record.get("official_terminal_node_snapshot_reference") != taxonomy_reference
+                or record.get("official_terminal_node_snapshot_sha256") != taxonomy_sha256
+                or record.get("selection_basis")
+                != "official_terminal_node_after_method_and_terminology_lock"
+            ):
+                problems.append("NEW_SELECTION_LOCK_BINDING_INVALID")
+
+    if (
+        origin_counts != CONTENT_FIRST_SELECTION_ORIGIN_COUNTS
+        or origin_categories != CONTENT_FIRST_SELECTION_ORIGIN_CATEGORY_COUNTS
+    ):
+        problems.append("SELECTION_ORIGIN_COMPOSITION_INVALID")
+    if retained_manifest_ids != eligible_manifest_ids:
+        problems.append("R3_RETAINED_MEMBERSHIP_MISMATCH")
+    if len(new_source_node_ids) != 10:
+        problems.append("NEW_SELECTION_SOURCE_NODE_REUSE")
+    return list(dict.fromkeys(problems))
+
+
+def validate_content_first_case_truth_rows(
+    case_rows: list[dict],
+    truth_rows: list[dict],
+    research_contract_id: object,
+    calibration_policy: object,
+    control_case_ids: object,
+    stability_repeat_case_count: object,
+    *,
+    contract: object | None = None,
+    contract_local_root: Path | None = None,
+) -> list[str]:
+    problems: list[str] = []
+    if not isinstance(calibration_policy, dict):
+        return ["CALIBRATION_CASE_POLICY_INVALID"]
+    headers = [row for row in case_rows if row.get("record_type") == "case_set_contract"]
+    cases = [row for row in case_rows if row.get("record_type") == "calibration_case"]
+    if len(headers) != 1:
+        problems.append("CASE_SET_HEADER_INVALID")
+        header: dict = {}
+    else:
+        header = headers[0]
+    if any(row.get("record_type") not in {"case_set_contract", "calibration_case"} for row in case_rows):
+        problems.append("CASE_SET_RECORD_TYPE_INVALID")
+    case_ids = [row.get("case_id") for row in cases]
+    if (
+        header.get("case_count") != 40
+        or header.get("actual_case_record_count") != 40
+        or header.get("case_set_state") != "frozen"
+        or header.get("research_contract_id") != research_contract_id
+        or len(cases) != 40
+        or not all(nonempty_text(case_id) for case_id in case_ids)
+        or len(set(case_ids)) != 40
+        or any(row.get("research_contract_id") != research_contract_id for row in cases)
+    ):
+        problems.append("FORTY_UNIQUE_CONTRACT_BOUND_CASES_REQUIRED")
+    formal_case_ids = header.get("formal_case_ids")
+    if (
+        not isinstance(formal_case_ids, list)
+        or formal_case_ids != case_ids
+        or len(formal_case_ids) != 40
+        or not all(
+            isinstance(case_id, str)
+            and bool(case_id.strip())
+            and unicodedata.normalize("NFKC", case_id) == case_id
+            and "/" not in case_id and "\\" not in case_id and "." not in case_id
+            and not any(character.isspace() or ord(character) < 32 for character in case_id)
+            for case_id in formal_case_ids
+        )
+        or len({unicodedata.normalize("NFKC", case_id).casefold() for case_id in formal_case_ids if isinstance(case_id, str)}) != 40
+    ):
+        problems.append("FORMAL_CASE_IDS_INVALID")
+    expected_counts = calibration_policy.get("required_category_counts")
+    actual_counts: dict[object, int] = {}
+    for case in cases:
+        category = case.get("primary_category")
+        actual_counts[category] = actual_counts.get(category, 0) + 1
+    if header.get("category_counts") != expected_counts or actual_counts != expected_counts:
+        problems.append("CATEGORY_COUNT_DRIFT")
+    excluded_case_ids = calibration_policy.get("development_case_ids_excluded_from_formal")
+    if not isinstance(excluded_case_ids, list):
+        problems.append("DEVELOPMENT_CASE_EXCLUSION_POLICY_INVALID")
+    else:
+        excluded_keys = [normalized_identifier_key(value) for value in excluded_case_ids]
+        case_keys = {normalized_identifier_key(value) for value in case_ids}
+        if any(key is None for key in excluded_keys) or len(set(excluded_keys)) != len(excluded_keys):
+            problems.append("DEVELOPMENT_CASE_EXCLUSION_POLICY_INVALID")
+        elif set(excluded_keys).intersection(case_keys):
+            problems.append("DEVELOPMENT_CASE_ID_IN_FORMAL_SET")
+    positive_categories = {"direct_supported_positive", "hidden_positive"}
+    for case in cases:
+        provenance = case.get("provenance")
+        if not isinstance(provenance, dict) or "development_regression_only" not in provenance:
+            problems.append("CASE_PROVENANCE_INVALID")
+            break
+        if provenance.get("development_regression_only") is True:
+            problems.append("DEVELOPMENT_CASE_IN_FORMAL_SET")
+            break
+        if provenance.get("development_regression_only") is not False:
+            problems.append("CASE_PROVENANCE_INVALID")
+            break
+        if type(case.get("known_positive")) is not bool or case["known_positive"] != (case.get("primary_category") in positive_categories):
+            problems.append("CASE_KNOWN_POSITIVE_INVALID")
+            break
+    problems.extend(
+        validate_content_first_case_provenance(
+            cases, contract, contract_local_root
+        )
+    )
+    if sum(case.get("known_positive") is True for case in cases) != 14:
+        problems.append("KNOWN_POSITIVE_COUNT_DRIFT")
+    repeats = header.get("stability_repeat_case_ids")
+    if (
+        not isinstance(repeats, list)
+        or len(repeats) != stability_repeat_case_count
+        or len(set(repeats)) != len(repeats)
+        or not set(repeats).issubset(set(case_ids))
+    ):
+        problems.append("STABILITY_REPEAT_CASES_INVALID")
+    if (
+        not isinstance(control_case_ids, list)
+        or not control_case_ids
+        or len(set(control_case_ids)) != len(control_case_ids)
+        or not set(control_case_ids).issubset(set(case_ids))
+    ):
+        problems.append("CONTROL_CASE_IDS_INVALID")
+    if len(truth_rows) != 40:
+        problems.append("SOURCE_TRUTH_ROW_COUNT_INVALID")
+        return problems
+    case_by_id = {case["case_id"]: case for case in cases if nonempty_text(case.get("case_id"))}
+    truth_ids = [row.get("case_id") for row in truth_rows]
+    if (
+        any(row.get("record_type") != "source_truth" for row in truth_rows)
+        or not all(nonempty_text(case_id) for case_id in truth_ids)
+        or len(set(truth_ids)) != 40
+        or set(truth_ids) != set(case_by_id)
+    ):
+        problems.append("SOURCE_TRUTH_CASE_IDS_INVALID")
+    else:
+        for truth in truth_rows:
+            case = case_by_id[truth["case_id"]]
+            if type(truth.get("known_positive")) is not bool or truth["known_positive"] is not case["known_positive"]:
+                problems.append("SOURCE_TRUTH_DISPOSITION_MISMATCH")
+                break
+    return problems
+
+
+def content_first_contract_errors(
+    contract: dict, *, final_outputs_required: bool
+) -> list[str]:
+    problems: list[str] = []
+    missing = sorted(CONTENT_FIRST_REQUIRED - set(contract))
+    if missing:
+        problems.append("content_first_missing:" + ",".join(missing))
+    if contract.get("execution_mode") != "content_first":
+        problems.append("execution_mode:not_content_first")
+    if (
+        contract.get("baseline_method_contract") != R4_BASELINE_METHOD
+        or contract.get("candidate_method_contract") != R4_CANDIDATE_METHOD
+    ):
+        problems.append("METHOD_ARMS_INVALID")
+    problems.extend(content_first_default_deny_errors(contract))
+
+    architecture = contract.get("terminology_architecture")
+    if not isinstance(architecture, dict):
+        problems.append("terminology_architecture:invalid")
+    else:
+        for field in (
+            "global_skill_fixed_domain_terms_allowed",
+            "case_specific_answer_terms_allowed_in_skill",
+            "company_terms_allowed_in_semantic_screening",
+        ):
+            if architecture.get(field) is not False:
+                problems.append(f"terminology_architecture.{field}:not_false")
+        if set(architecture.get("concept_roles") or []) != CONTENT_FIRST_CONCEPT_ROLES:
+            problems.append("terminology_architecture.concept_roles:invalid")
+        if architecture.get("term_pack_state") not in {
+            "frozen_empty_cold_start",
+            "frozen_reviewed",
+        }:
+            problems.append("terminology_architecture.term_pack_state:invalid")
+        if not nonempty_text(architecture.get("term_pack_reference")):
+            problems.append("terminology_architecture.term_pack_reference:empty")
+        if not real_lowercase_sha256(architecture.get("term_pack_sha256")):
+            problems.append("terminology_architecture.term_pack_sha256:invalid")
+
+    policy = contract.get("calibration_case_policy")
+    if not isinstance(policy, dict):
+        problems.append("calibration_case_policy:invalid")
+    else:
+        if policy.get("formal_case_count") != 40:
+            problems.append("calibration_case_policy.formal_case_count:invalid")
+        if policy.get("known_positive_count") != 14:
+            problems.append("calibration_case_policy.known_positive_count:invalid")
+        counts = policy.get("required_category_counts")
+        if counts != CONTENT_FIRST_CATEGORY_COUNTS or sum(
+            counts.values() if isinstance(counts, dict) else []
+        ) != 40:
+            problems.append("calibration_case_policy.required_category_counts:invalid")
+        excluded_ids = policy.get("development_case_ids_excluded_from_formal")
+        excluded_keys = (
+            [normalized_identifier_key(value) for value in excluded_ids]
+            if isinstance(excluded_ids, list) else []
+        )
+        if (
+            not isinstance(excluded_ids, list)
+            or any(key is None for key in excluded_keys)
+            or len(set(excluded_keys)) != len(excluded_keys)
+        ):
+            problems.append("calibration_case_policy.development_case_ids_excluded_from_formal:invalid")
+        if policy.get("selection_origin_counts") != CONTENT_FIRST_SELECTION_ORIGIN_COUNTS:
+            problems.append("calibration_case_policy.selection_origin_counts:invalid")
+        if (
+            policy.get("selection_origin_category_counts")
+            != CONTENT_FIRST_SELECTION_ORIGIN_CATEGORY_COUNTS
+        ):
+            problems.append(
+                "calibration_case_policy.selection_origin_category_counts:invalid"
+            )
+
+    gates = contract.get("retrieval_efficiency_gates")
+    if not isinstance(gates, dict) or gates.get("stability_repeat_case_count") != 6:
+        problems.append("retrieval_efficiency_gates.stability_repeat_case_count:invalid")
+    content_policy = contract.get("content_first_policy")
+    if not isinstance(content_policy, dict):
+        problems.append("content_first_policy:invalid")
+    elif content_policy.get("truth_scorecard_contract_version") != "2.0-r4":
+        problems.append("content_first_policy.truth_scorecard_contract_version:invalid")
+
+    problems.extend(strict_paired_execution_contract_errors(contract.get("paired_execution_contract")))
+
+    r3_binding = contract.get("r3_case_source_manifest_reference_and_hash")
+    if (
+        not isinstance(r3_binding, dict)
+        or set(r3_binding) != {"reference", "sha256"}
+        or not nonempty_text(r3_binding.get("reference"))
+        or not real_lowercase_sha256(r3_binding.get("sha256"))
+    ):
+        problems.append("r3_case_source_manifest_reference_and_hash:invalid")
+
+    truth_reference = contract.get("source_truth_package_reference")
+    truth_sha256 = contract.get("source_truth_package_sha256")
+    if final_outputs_required:
+        if not nonempty_text(truth_reference) or not real_lowercase_sha256(truth_sha256):
+            problems.append("source_truth_package:invalid")
+        visible_case_set = contract.get("visible_case_set_reference_and_hash")
+        if not isinstance(visible_case_set, dict) or not nonempty_text(visible_case_set.get("reference")) or not real_lowercase_sha256(visible_case_set.get("sha256")):
+            problems.append("visible_case_set_reference_and_hash:invalid")
+        visible_freeze_receipt = contract.get("visible_case_freeze_receipt_reference_and_hash")
+        if not isinstance(visible_freeze_receipt, dict) or not nonempty_text(visible_freeze_receipt.get("reference")) or not real_lowercase_sha256(visible_freeze_receipt.get("sha256")):
+            problems.append("visible_case_freeze_receipt_reference_and_hash:invalid")
+    elif truth_reference is not None or truth_sha256 is not None:
+        problems.append("source_truth_package:not_empty_before_finalization")
+    return problems
+
+
 def frozen_contract_completeness_errors(
     contract: object, *, validate_case_preparation_gate: bool = True
 ) -> list[str]:
     if not isinstance(contract, dict):
         return ["semantic_research_contract must be an object"]
+    mode_problems = execution_mode_errors(contract)
+    if mode_problems:
+        return mode_problems
+    if contract.get("execution_mode") == "content_first":
+        problems = content_first_contract_errors(contract, final_outputs_required=True)
+        if contract.get("contract_state") != "frozen":
+            problems.append("contract_state:not_frozen")
+        case_set = contract.get("calibration_case_set_reference_and_hash")
+        if (
+            not isinstance(case_set, dict)
+            or not nonempty_text(case_set.get("reference"))
+            or not real_lowercase_sha256(case_set.get("sha256"))
+        ):
+            problems.append("calibration_case_set_reference_and_hash:invalid")
+        batch = contract.get("batch_rule")
+        if not isinstance(batch, dict) or not isinstance(batch.get("batch_size"), int) or batch["batch_size"] <= 0:
+            problems.append("batch_rule.batch_size:invalid")
+        controls = contract.get("control_case_rule")
+        if not isinstance(controls, dict) or not controls.get("case_ids"):
+            problems.append("control_case_rule:invalid")
+        if validate_case_preparation_gate:
+            gate = contract.get("case_preparation_gate")
+            if not isinstance(gate, dict) or gate.get("state") != "locked" or gate.get("authorization") is not True:
+                problems.append("case_preparation_gate:invalid")
+            elif (
+                not nonempty_text(gate.get("authorization_reference"))
+                or not nonempty_text(gate.get("preparation_contract_version"))
+                or not nonempty_text(gate.get("locked_at"))
+                or not real_lowercase_sha256(gate.get("locked_input_sha256"))
+            ):
+                problems.append("case_preparation_gate:incomplete")
+            elif gate.get("preparation_contract_version") == contract.get("contract_version"):
+                problems.append("contract_version:not_new_after_case_preparation")
+            elif gate.get("locked_input_sha256") != case_preparation_input_sha256(contract):
+                problems.append("case_preparation_gate.locked_input_sha256:mismatch")
+        return problems
     problems: list[str] = []
     missing = sorted(CONTRACT_REQUIRED - set(contract))
     if missing:
@@ -454,6 +1493,28 @@ def frozen_contract_completeness_errors(
 def case_preparation_contract_completeness_errors(contract: object) -> list[str]:
     if not isinstance(contract, dict):
         return ["semantic_research_contract must be an object"]
+    mode_problems = execution_mode_errors(contract)
+    if mode_problems:
+        return mode_problems
+    if contract.get("execution_mode") == "content_first":
+        problems = content_first_contract_errors(contract, final_outputs_required=False)
+        if contract.get("contract_state") != "case_preparation_locked":
+            problems.append("contract_state:not_case_preparation_locked")
+        if not case_preparation_outputs_are_empty(contract):
+            problems.append("case_preparation_outputs:not_empty")
+        gate = contract.get("case_preparation_gate")
+        if not isinstance(gate, dict) or gate.get("authorization") is not True or gate.get("state") != "locked":
+            problems.append("case_preparation_gate:invalid")
+        elif (
+            not nonempty_text(gate.get("authorization_reference"))
+            or gate.get("preparation_contract_version") != contract.get("contract_version")
+            or not nonempty_text(gate.get("locked_at"))
+            or not real_lowercase_sha256(gate.get("locked_input_sha256"))
+        ):
+            problems.append("case_preparation_gate:incomplete")
+        elif gate.get("locked_input_sha256") != case_preparation_input_sha256(contract):
+            problems.append("case_preparation_gate.locked_input_sha256:mismatch")
+        return problems
     problems: list[str] = []
     if contract.get("contract_state") != "case_preparation_locked":
         problems.append("contract_state:not_case_preparation_locked")
@@ -540,6 +1601,172 @@ def main() -> int:
         add(errors, "CONTRACT_INCOMPLETE", ";".join(completeness))
     contract_id = contract.get("research_contract_id")
     contract_version = contract.get("contract_version")
+
+    if isinstance(contract, dict) and contract.get("execution_mode") == "content_first":
+        for reference_problem in content_first_local_frozen_reference_errors(contract, workspace):
+            add(errors, reference_problem, str(workspace))
+        def verify_content_reference(reference: object, expected_hash: object, prefix: str) -> Path | None:
+            if (
+                not nonempty_text(reference)
+                or not real_lowercase_sha256(expected_hash)
+                or Path(reference).is_absolute()
+                or ".." in Path(reference).parts
+            ):
+                add(errors, f"{prefix}_REFERENCE_INVALID", repr(reference))
+                return None
+            path = (workspace / Path(reference)).resolve()
+            try:
+                path.relative_to(workspace)
+            except ValueError:
+                add(errors, f"{prefix}_PATH_ESCAPE", str(path))
+                return None
+            if not path.is_file():
+                add(errors, f"{prefix}_MISSING", str(path))
+                return None
+            if hashlib.sha256(path.read_bytes()).hexdigest() != expected_hash:
+                add(errors, f"{prefix}_HASH_MISMATCH", str(path))
+            return path
+
+        architecture = contract.get("terminology_architecture")
+        term_path = None
+        if isinstance(architecture, dict):
+            term_reference = architecture.get("term_pack_reference")
+            if not isinstance(term_reference, str) or not term_reference.startswith("01-术语桥/"):
+                add(errors, "TERMINOLOGY_BRIDGE_REFERENCE_INVALID", repr(term_reference))
+            else:
+                term_path = verify_content_reference(
+                    term_reference, architecture.get("term_pack_sha256"), "TERMINOLOGY_BRIDGE"
+                )
+        case_set = contract.get("calibration_case_set_reference_and_hash")
+        case_path = None
+        if isinstance(case_set, dict):
+            case_path = verify_content_reference(
+                case_set.get("reference"), case_set.get("sha256"), "CALIBRATION_CASE_SET"
+            )
+        visible_case_set = contract.get("visible_case_set_reference_and_hash")
+        visible_case_path = None
+        if isinstance(visible_case_set, dict):
+            visible_case_path = verify_content_reference(
+                visible_case_set.get("reference"), visible_case_set.get("sha256"), "VISIBLE_CASE_SET"
+            )
+        truth_path = verify_content_reference(
+            contract.get("source_truth_package_reference"),
+            contract.get("source_truth_package_sha256"),
+            "SOURCE_TRUTH_PACKAGE",
+        )
+        taxonomy_path = verify_content_reference(
+            contract.get("taxonomy_snapshot_reference"),
+            contract.get("taxonomy_snapshot_sha256"),
+            "TAXONOMY_SNAPSHOT",
+        )
+        if taxonomy_path is not None:
+            try:
+                taxonomy_payload = load_json(taxonomy_path)
+                if taxonomy_payload.get("terminal_node_count") != contract.get("terminal_node_count"):
+                    add(errors, "TAXONOMY_SNAPSHOT_COUNT_MISMATCH", str(taxonomy_path))
+            except (json.JSONDecodeError, OSError, AttributeError) as exc:
+                add(errors, "TAXONOMY_SNAPSHOT_INVALID", str(exc))
+        prompt_rows = contract.get("prompt_template_references_and_hashes")
+        if not isinstance(prompt_rows, list) or not prompt_rows:
+            add(errors, "PROMPT_TEMPLATE_REFERENCES_INVALID", "at least one frozen prompt is required")
+        else:
+            for row in prompt_rows:
+                if not isinstance(row, dict):
+                    add(errors, "PROMPT_TEMPLATE_REFERENCES_INVALID", repr(row))
+                    continue
+                verify_content_reference(
+                    row.get("reference"), row.get("sha256"), "PROMPT_TEMPLATE"
+                )
+        if term_path is not None:
+            term_rows, term_errors = load_terminology_rows(term_path)
+            term_errors.extend(validate_terminology_rows(term_rows, contract_id))
+            header = next(
+                (row for row in term_rows if row.get("record_type") == "terminology_bridge_contract"),
+                {},
+            )
+            gate = contract.get("case_preparation_gate")
+            if not isinstance(gate, dict) or header.get("contract_version") != gate.get("preparation_contract_version"):
+                add(errors, "TERMINOLOGY_BRIDGE_VERSION_MISMATCH", str(header.get("contract_version")))
+            if term_errors:
+                add(errors, "TERMINOLOGY_BRIDGE_INVALID", ";".join(error["code"] for error in term_errors))
+        if case_path is not None and truth_path is not None:
+            try:
+                content_problems = validate_content_first_case_truth_rows(
+                    load_jsonl(case_path),
+                    load_jsonl(truth_path),
+                    contract_id,
+                    contract.get("calibration_case_policy"),
+                    (contract.get("control_case_rule") or {}).get("case_ids"),
+                    (contract.get("retrieval_efficiency_gates") or {}).get("stability_repeat_case_count"),
+                    contract=contract,
+                    contract_local_root=workspace,
+                )
+                if content_problems:
+                    add(errors, "FORMAL_CONTENT_SET_INVALID", ";".join(content_problems))
+            except (json.JSONDecodeError, OSError, ValueError) as exc:
+                add(errors, "FORMAL_CONTENT_SET_INVALID", str(exc))
+        if case_path is not None and visible_case_path is not None:
+            try:
+                visible_problems = visible_case_set_workspace_errors(
+                    load_jsonl(visible_case_path), load_jsonl(case_path), contract_id
+                )
+                if visible_problems:
+                    add(errors, visible_problems[0], str(visible_case_path))
+            except (json.JSONDecodeError, OSError, ValueError) as exc:
+                add(errors, "VISIBLE_CASE_SET_INVALID", str(exc))
+        for relative, record_type, states in (
+            ("03-运行原始记录/candidate/screening-records.jsonl", "SCREENING", SCREENING_RESULTS),
+            ("05-证据包/evidence-records.jsonl", "EVIDENCE", EVIDENCE_STATES),
+        ):
+            record_path = workspace / relative
+            if not record_path.is_file():
+                continue
+            try:
+                for record in load_jsonl(record_path):
+                    if record.get("research_contract_id") != contract_id or record.get("contract_version") != contract_version:
+                        add(errors, f"{record_type}_CONTRACT_VERSION_MISMATCH", str(record_path))
+                    state_field = "screening_result" if record_type == "SCREENING" else "evidence_state"
+                    if record.get(state_field) not in states:
+                        add(errors, f"{record_type}_STATE_INVALID", str(record_path))
+            except (json.JSONDecodeError, OSError, ValueError) as exc:
+                add(errors, f"{record_type}_RECORDS_INVALID", str(exc))
+        handoff_root = workspace / "04-模型交接"
+        if handoff_root.is_dir():
+            for packet_path in handoff_root.rglob("*.json"):
+                try:
+                    packet = load_json(packet_path)
+                except (json.JSONDecodeError, OSError) as exc:
+                    add(errors, "MODEL_PACKET_INVALID", str(exc))
+                    continue
+                if not isinstance(packet, dict):
+                    add(errors, "MODEL_PACKET_FORMAL_RECORD_INVALID", str(packet_path))
+                    continue
+                selected_formal_keys = [
+                    key for key in FORMAL_MODEL_RECORD_KEYS if key in packet
+                ]
+                if len(selected_formal_keys) != 1:
+                    add(errors, "MODEL_PACKET_FORMAL_RECORD_INVALID", str(packet_path))
+                    continue
+                formal_record_key = selected_formal_keys[0]
+                packet_body = packet[formal_record_key]
+                if not isinstance(packet_body, dict):
+                    add(errors, "MODEL_PACKET_FORMAL_RECORD_INVALID", str(packet_path))
+                    continue
+                if packet_body.get("research_contract_id") != contract_id or packet_body.get("contract_version") != contract_version:
+                    add(errors, "MODEL_PACKET_CONTRACT_VERSION_MISMATCH", str(packet_path))
+                    continue
+                if formal_record_key == "semantic_model_return" and not nonempty_text(packet_body.get("result_state")):
+                    add(errors, "MODEL_RETURN_STATE_INVALID", str(packet_path))
+                if formal_record_key == "semantic_model_receipt" and not nonempty_text(packet_body.get("acceptance_state")):
+                    add(errors, "MODEL_RECEIPT_STATE_INVALID", str(packet_path))
+        report = {"status": "FAIL" if errors else "PASS", "errors": errors}
+        if args.format == "json":
+            print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+        else:
+            print(report["status"])
+            for error in errors:
+                print(f"{error['code']}: {error['detail']}")
+        return 1 if errors else 0
 
     def verify_reference(reference: object, expected_hash: object, code_prefix: str) -> Path | None:
         if not nonempty_text(reference) or not sha256_text(expected_hash):

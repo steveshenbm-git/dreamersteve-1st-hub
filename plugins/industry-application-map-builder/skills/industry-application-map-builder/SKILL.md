@@ -1,6 +1,6 @@
 ---
 name: industry-application-map-builder
-description: Use when work involves an official industry taxonomy, content-first or strict-audit RC2 semantic screening, 40-case scoring, evidence expansion, reverse-audit coverage, a company-specific industry application map, route candidates, or controlled handoff before customer-development validation.
+description: Use when work involves an official industry taxonomy, generalized content-first R4 or legacy strict-audit RC2 semantic screening, 40-case scoring, evidence expansion, reverse-audit coverage, a company-specific industry application map, route candidates, or controlled handoff before customer-development validation.
 ---
 
 # 行业应用地图构建
@@ -9,12 +9,34 @@ description: Use when work involves an official industry taxonomy, content-first
 
 Use one semantic evaluation mode per research contract. For a newly prepared RC2 research contract, set `execution_mode = content_first`; this is the current default route. Use `strict_audit` only when the user explicitly selects it, or when a legacy beta.3 contract has no mode field. A legacy no-mode contract remains strict-audit compatible and retains every beta.3 identity, transport, receipt, and admissibility gate unchanged.
 
+Within `content_first`, source version `0.4.0-beta.2` uses the `content_first_r4` contract marker and the R4 scripts described below. It remains the same `industry-application-map-builder` skill; do not create or route to a candidate skill. Never downgrade an R4 artifact because a marker or arm field is missing: that is a refusal, not legacy detection.
+
 | Mode | Content decision evidence | Status vocabulary | Boundary |
 | --- | --- | --- | --- |
 | `content_first` | Complete raw answer, visible input/hash, source/truth comparison, itemized scorecard, and unknown items; platform audit is separate | `CONTENT_CONTRACT_FROZEN`, `CONTENT_CALIBRATION_*`, content full-scope states | Research-only; never emit strict `EFFECTIVE` or release downstream work. |
 | `strict_audit` | The existing beta.3 evidence and admissibility contract | `INCONCLUSIVE / EFFECTIVE / NOT_EFFECTIVE` | Preserve the existing route and tools unchanged. |
 
 Never infer `content_first` from missing platform metadata. Read [content-first-mode-contract.md](references/content-first-mode-contract.md) and [compatibility-matrix.md](references/compatibility-matrix.md) before a content-first route. Use `assets/content-first/` only for a new content-first contract; never retrofit its fields into a frozen beta.3 contract.
+
+## Generalized R4 retrieval contract
+
+Keep three terminology layers separate:
+
+1. `global skill terminology schema`: only the six generic concept roles, discovery behavior, provenance fields, isolation gates and hashing rules; it contains no production terms;
+2. `contract-local terminology`: product-neutral discovery terms accepted for one research contract, stored and hashed in that contract's local terminology bridge;
+3. `company-local terminology pack`: company, brand, product, process and salesperson language stored only inside that company's workspace and never used by product-neutral semantic calibration.
+
+Official taxonomy semantics are frozen case inputs, not a terminology layer and not a production synonym list.
+
+A cold start may be empty. Do not ship a fixed production terminology list, company vocabulary, answer-derived sentinel list or any industry-specific shortcut in this skill. Do not copy a company-local terminology pack across companies. Model-discovered terms are case-local retrieval candidates only; they never become evidence and never mutate the frozen contract-local terminology bridge or later tasks.
+
+For a broad node, perform `output-family` decomposition before bounded discovery. The candidate arm may expand case-local queries only after the frozen core search cannot establish all three links. A research claim requires all of:
+
+- `taxonomy membership basis`;
+- `output or subprocess basis`;
+- `mechanism or use-point basis`.
+
+Classification names, query matches and model terms cannot satisfy those links by themselves.
 
 ## Core principle
 
@@ -43,7 +65,7 @@ This skill owns shared industry/application knowledge, RC2 semantic-method resea
 | `route_pool_handoff` | Export validated route candidates for customer-development direction work | [handoff-contracts.md](references/handoff-contracts.md) | A registered `company_route_pool_packet` is written inside the company map; stop before direction or company research |
 | `semantic_contract_prepare` | Complete and lock the product-neutral theme, taxonomy snapshot, model profile, prompts, budget, sampling and isolated write boundary | [industry-semantic-research-contract.md](references/industry-semantic-research-contract.md) | `case_preparation_locked` contract with `locked_input_sha256`; case-set hash and control IDs remain empty; stop before candidate preparation |
 | `semantic_calibration_case_prepare` | Build and freeze the 40-case truth package, then bind it to a new final contract version | [industry-semantic-calibration-and-audit.md](references/industry-semantic-calibration-and-audit.md) | Real case-set hash, real control IDs and new-version final `frozen` contract; incomplete truth returns `INCONCLUSIVE` and no model task is issued |
-| `semantic_method_calibration` | Run paired baseline and candidate arms under identical controls | [industry-semantic-calibration-and-audit.md](references/industry-semantic-calibration-and-audit.md) and [industry-semantic-model-protocol.md](references/industry-semantic-model-protocol.md) | `EFFECTIVE / NOT_EFFECTIVE / INCONCLUSIVE`; stop before full screening |
+| `semantic_method_calibration` | Run paired baseline and candidate arms under identical controls for legacy `strict_audit` only | [industry-semantic-calibration-and-audit.md](references/industry-semantic-calibration-and-audit.md) and [industry-semantic-model-protocol.md](references/industry-semantic-model-protocol.md) | Legacy `EFFECTIVE / NOT_EFFECTIVE / INCONCLUSIVE`; stop before full screening |
 | `semantic_full_screening` | Shallow-screen every frozen terminal node in controlled batches | [industry-semantic-research-contract.md](references/industry-semantic-research-contract.md) | Append-only screening batch; stop after each batch and check drift/budget |
 | `semantic_evidence_expansion` | Expand triggered nodes into minimal claims and source packets | [industry-semantic-model-protocol.md](references/industry-semantic-model-protocol.md) | Evidence packets and B-review tasks; no `supported` before B PASS |
 | `semantic_reverse_audit` | Sample the rejected population by risk and calculate the finite-population bound | [industry-semantic-calibration-and-audit.md](references/industry-semantic-calibration-and-audit.md) | Audit plan/report; any confirmed miss fails the contract |
@@ -52,6 +74,9 @@ This skill owns shared industry/application knowledge, RC2 semantic-method resea
 | `content_first_calibration_review` | Score both 40-case arms from raw-answer envelopes and source/truth packets | [content-first-mode-contract.md](references/content-first-mode-contract.md) | `CONTENT_CALIBRATION_*`; stop at a full-scope authorization request |
 | `content_first_full_screening_gate` | Check content calibration and explicit human full-scope authorization | [content-first-mode-contract.md](references/content-first-mode-contract.md) | `NOT_AUTHORIZED` or `AUTHORIZED_NOT_STARTED`; do not run nodes automatically |
 | `content_first_full_screening` | Run only explicitly authorized append-only content screening batches | [content-first-mode-contract.md](references/content-first-mode-contract.md) | `IN_PROGRESS / COVERAGE_INCOMPLETE / READY_FOR_REVERSE_AUDIT`; stop after every batch |
+| `content_first_r4_contract_prepare` | Prepare beta.2 generalized terminology, visible-only cases, truth and frozen R4 bindings | [content-first-mode-contract.md](references/content-first-mode-contract.md) | Frozen R4 contract inputs only; no model execution |
+| `content_first_r4_task_prepare` | Build truth-blind paired tasks from the frozen visible-only case set | [industry-semantic-model-protocol.md](references/industry-semantic-model-protocol.md) | Exactly `40 pairs`; model execution remains denied |
+| `content_first_r4_calibration_review` | Validate the real 80-task evidence chains and six repeats | [industry-semantic-calibration-and-audit.md](references/industry-semantic-calibration-and-audit.md) | `CONTENT_CALIBRATION_PASS / FAIL / INCOMPLETE`; never strict `EFFECTIVE` |
 
 Do not combine routes merely because the next step is convenient. Complete the requested route, validate it, and stop unless the user separately authorized the next route.
 
@@ -60,6 +85,8 @@ Do not combine routes merely because the next step is convenient. Complete the r
 Keep method status `INCONCLUSIVE` until the frozen 40-case paired run passes. Writing clearer rules, passing static tests, or producing a pilot does not prove method effectiveness.
 
 For `content_first`, keep `content_method_state = CONTENT_CALIBRATION_INCOMPLETE` until its frozen 40-case content evidence gate passes. This state can only determine whether explicit full-scope authorization may be requested; it is not a real-world effectiveness claim and must never be relabeled as strict-audit `EFFECTIVE`.
+
+R4 calibration uses `baseline_full_depth_v1` and `screen_then_expand_v2` on the same frozen visible inputs. Build exactly `40 pairs`, then validate each real task, raw response, raw envelope, six-item scorecard, receiver resource observation and receipt. Stability is `6 predeclared high-risk single-case repeats`, not six copied arm summaries or six additional 40-case runs. Apply gates in the frozen order: `safety -> recall -> receiver evidence -> stability -> efficiency`. Do not report efficiency metrics before all earlier gates close.
 
 Preserve three independent semantic axes:
 
@@ -83,6 +110,14 @@ In `content_first`, preserve the actual raw response in a separate immutable fil
 
 `content_first` retains product neutrality, known-positive recall, misleading negatives, source-scarce and cyclic-source handling, cross-company isolation, claim-inflation prevention, three independent semantic axes, direct-source evidence, evidence expansion, and reverse audit. `CONTENT_CALIBRATION_PASS` does not authorize all nodes. Full-scope authorization remains false by default and requires an explicit human authorization reference plus unchanged `terminal_node_manifest_sha256`. Use the coverage validator to compare every append-only node record with the frozen manifest; `READY_FOR_REVERSE_AUDIT` still requires the content-evidence validator and does not mean stage PASS. Keep `downstream_release_state = RESEARCH_ONLY_BLOCKED`; do not enter shared-base writes, company matching, routes, or customers without a separately authorized migration decision.
 
+Until all full-scope evidence and reverse-audit gates are genuinely satisfied, return `first_incomplete_stage = industry_semantic_expansion`. A static test, frozen task package or `CONTENT_CALIBRATION_PASS` cannot advance this lifecycle stage by itself.
+
+## Legacy strict_audit semantic method
+
+Only an explicit legacy strict-audit contract uses the retained beta.3 identity/admissibility gates and `INCONCLUSIVE / EFFECTIVE / NOT_EFFECTIVE` vocabulary. Do not apply those identity requirements as a content PASS gate, relabel `CONTENT_CALIBRATION_PASS` as `EFFECTIVE`, or downgrade a damaged R4 artifact into this branch.
+
+## Shared deterministic tools
+
 Use deterministic scripts for repeatable operations:
 
 ```bash
@@ -95,9 +130,12 @@ python3 scripts/validate_semantic_research_workspace.py /absolute/semantic-resea
 python3 scripts/sample_semantic_reverse_audit.py --screening-records /absolute/screening-records.jsonl --seed frozen-seed --output /absolute/audit-plan.json
 python3 scripts/evaluate_semantic_calibration.py --baseline /absolute/baseline.json --candidate /absolute/candidate.json --output /absolute/calibration-report.json
 python3 scripts/validate_content_first_workspace.py /absolute/content-first-workspace --format json
+python3 scripts/freeze_content_first_visible_case_set.py --visible-case-draft /absolute/visible-draft.jsonl --visible-case-set-reference 02-校准案例/visible-case-set.jsonl --freeze-authorization-reference USER-R4-VISIBLE-FREEZE --frozen-at 2026-01-01T00:00:00Z --output /absolute/visible-case-set.jsonl --receipt-output /absolute/visible-case-freeze-receipt.json
+python3 scripts/build_content_first_calibration_tasks.py --contract /absolute/final-contract.json --visible-case-set /absolute/visible-case-set.jsonl --contract-local-root /absolute/research-root --expected-final-contract-sha256 REAL_SHA256 --package-generation-authorization-receipt /absolute/package-generation-authorization.json --expected-package-generation-authorization-receipt-sha256 REAL_SHA256 --output /absolute/paired-tasks
+python3 scripts/freeze_content_first_stability_tasks.py --workspace /absolute/content-first-workspace --contract /absolute/final-contract.json --expected-final-contract-sha256 REAL_SHA256 --formal-case-set /absolute/formal-case-set.jsonl --expected-formal-case-set-sha256 REAL_SHA256 --paired-task-manifest /absolute/paired-tasks/paired-task-manifest.json --expected-paired-task-manifest-sha256 REAL_SHA256 --authorization-id-prefix R4-REPEAT --authorized-at 2026-01-01T00:00:00Z --output /absolute/stability-tasks
 python3 scripts/init_content_first_workspace.py --map-root /absolute/map-root --contract /absolute/content-first-contract.json
 python3 scripts/evaluate_content_first_calibration.py --baseline /absolute/content-baseline.json --candidate /absolute/content-candidate.json --output /absolute/content-calibration-report.json
-python3 scripts/check_content_first_full_screening_gate.py --contract /absolute/content-first-contract.json --calibration-report /absolute/content-calibration-report.json --output /absolute/full-scope-gate.json
+python3 scripts/check_content_first_full_screening_gate.py --workspace /absolute/preparation-workspace --contract /absolute/preparation-workspace/00-contract/final-contract.json --expected-final-contract-sha256 <sha256> --calibration-report /absolute/preparation-workspace/07-reports/r4-evaluation.json --expected-calibration-report-sha256 <sha256> --terminal-node-manifest /absolute/preparation-workspace/01-snapshots/terminal-node-manifest.json --expected-terminal-node-manifest-sha256 <sha256> --authorization-receipt /absolute/preparation-workspace/00-contract/full-screen-authorization.receipt.json --expected-authorization-receipt-sha256 <sha256> --output /absolute/full-scope-gate.json
 python3 scripts/validate_content_first_full_coverage.py --contract /absolute/content-first-contract.json --terminal-node-manifest /absolute/terminal-nodes.json --screening-index /absolute/content-screening-index.json --output /absolute/content-coverage-report.json
 ```
 

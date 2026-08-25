@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "receiver_resource_observation_preauthorization": {
+    "authorization_id": null,
+    "permitted_action": "capture_content_resource_observation_only",
+    "research_contract_id": null,
+    "contract_version": null,
+    "case_id": null,
+    "method_arm": null,
+    "original_candidate_task_reference": null,
+    "task_sha256": null,
+    "fresh_context_id": null,
+    "authorized_at": null,
+    "model_execution_authorized": false,
+    "downstream_authorized": false
+  }
+}

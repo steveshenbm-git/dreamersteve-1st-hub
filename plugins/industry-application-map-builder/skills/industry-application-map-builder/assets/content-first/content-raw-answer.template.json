@@ -14,8 +14,11 @@
     "raw_response_reference": null,
     "raw_response_sha256": null,
     "raw_response_format": null,
+    "source_observations": [],
+    "source_snapshot_receipt_references": [],
     "source_truth_comparison_reference": null,
     "source_truth_comparison_sha256": null,
+    "unknown_items": [],
     "platform_audit_state": "NOT_COLLECTED",
     "platform_audit_reference_or_null": null,
     "envelope_sha256": null
