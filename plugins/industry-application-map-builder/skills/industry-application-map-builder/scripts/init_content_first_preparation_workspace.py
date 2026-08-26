@@ -95,7 +95,7 @@ def main() -> int:
     workspace = (
         map_root
         / "05-工作区"
-        / "行业语义准备"
+        / "行业语义研究"
         / str(contract["research_contract_id"])
     )
     if workspace.exists():

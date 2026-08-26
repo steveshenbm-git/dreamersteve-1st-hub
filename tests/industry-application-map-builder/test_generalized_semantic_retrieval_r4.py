@@ -2202,13 +2202,13 @@ class GeneralizedSemanticRetrievalR4Tests(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("PREPARATION_", result.stderr)
 
-    def test_same_name_plugins_expose_beta2_generalized_contract(self):
+    def test_same_name_plugins_expose_beta3_generalized_contract(self):
         map_manifest = json.loads((MAP_PLUGIN / ".codex-plugin/plugin.json").read_text())
         director_manifest = json.loads(
             (DIRECTOR_PLUGIN / ".codex-plugin/plugin.json").read_text()
         )
         self.assertEqual(map_manifest["name"], "industry-application-map-builder")
-        self.assertEqual(map_manifest["version"], "0.4.0-beta.2")
+        self.assertEqual(map_manifest["version"], "0.4.0-beta.3")
         self.assertEqual(director_manifest["name"], "foreign-trade-workflow-director")
         self.assertEqual(director_manifest["version"], "0.3.0-beta.2")
         for contract_template in CONTRACT_TEMPLATES:
@@ -2232,6 +2232,21 @@ class GeneralizedSemanticRetrievalR4Tests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
             response = json.loads(result.stdout)
             workspace = Path(response["preparation_workspace"])
+            expected_workspace = (
+                map_root
+                / "05-工作区"
+                / "行业语义研究"
+                / "RC2-TERM-PACK-001"
+            )
+            self.assertEqual(workspace.resolve(), expected_workspace.resolve())
+            self.assertFalse(
+                (
+                    map_root
+                    / "05-工作区"
+                    / "行业语义准备"
+                    / "RC2-TERM-PACK-001"
+                ).exists()
+            )
             pack = Path(response["terminology_bridge"])
             self.assertTrue(pack.is_file())
             self.assertEqual(
@@ -2312,7 +2327,7 @@ class GeneralizedSemanticRetrievalR4Tests(unittest.TestCase):
             destination = (
                 map_root
                 / "05-工作区"
-                / "行业语义准备"
+                / "行业语义研究"
                 / "RC2-TERM-PACK-METHOD-DRIFT"
             )
             self.assertFalse(destination.exists())
@@ -2332,7 +2347,7 @@ class GeneralizedSemanticRetrievalR4Tests(unittest.TestCase):
             result = run(INIT_PREP, "--map-root", str(map_root), "--contract", str(contract_path))
 
             destination = (
-                map_root / "05-工作区" / "行业语义准备" / "RC2-TERM-PACK-INVALID"
+                map_root / "05-工作区" / "行业语义研究" / "RC2-TERM-PACK-INVALID"
             )
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("CONTRACT_STATE_INVALID", result.stderr)
@@ -2356,7 +2371,7 @@ class GeneralizedSemanticRetrievalR4Tests(unittest.TestCase):
             contract["contract_version"] = "1.0"
             contract_path.write_text(json.dumps(payload), encoding="utf-8")
             destination = (
-                map_root / "05-工作区" / "行业语义准备" / "RC2-TERM-PACK-CLEANUP"
+                map_root / "05-工作区" / "行业语义研究" / "RC2-TERM-PACK-CLEANUP"
             )
 
             first = run(

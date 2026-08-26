@@ -1,7 +1,7 @@
 {
   "name": "industry-application-map-builder",
-  "version": "0.4.0-beta.2",
-  "description": "维护官方行业骨架；同名0.4.0-beta.2技能为新RC2提供通用R4内容校准，将合同本地术语与公司本地术语隔离，保留显式严格审计兼容；内容通过不等于方法有效，不自动授权全量或下游。",
+  "version": "0.4.0-beta.3",
+  "description": "维护官方行业骨架；同名0.4.0-beta.3技能为新RC2提供通用R4内容校准，将合同本地术语与公司本地术语隔离，保留显式严格审计兼容；内容通过不等于方法有效，不自动授权全量或下游。",
   "author": {
     "name": "steveshenbm-git"
   },
@@ -19,8 +19,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "行业应用地图构建",
-    "shortDescription": "0.4.0-beta.2通用R4内容校准与legacy严格审计。",
-    "longDescription": "用于维护带版本的官方行业骨架。新RC2在同名0.4.0-beta.2技能内使用通用R4内容合同：官方分类语义、合同本地发现词与公司本地术语包分层；40对任务只读可见输入，真值、接收方证据与六项评分分工，并用6个预声明单案例重复检查稳定性。仅显式legacy合同走严格审计。本版本只提供合同与确定性验证，不声称已运行、已安装、方法有效或已授权全量/下游。",
+    "shortDescription": "0.4.0-beta.3通用R4内容校准与legacy严格审计。",
+    "longDescription": "用于维护带版本的官方行业骨架。新RC2在同名0.4.0-beta.3技能内使用通用R4内容合同：官方分类语义、合同本地发现词与公司本地术语包分层；40对任务只读可见输入，真值、接收方证据与六项评分分工，并用6个预声明单案例重复检查稳定性。仅显式legacy合同走严格审计。本版本只提供合同与确定性验证，不声称已运行、已安装、方法有效或已授权全量/下游。",
     "developerName": "steveshenbm-git",
     "category": "Productivity",
     "capabilities": [

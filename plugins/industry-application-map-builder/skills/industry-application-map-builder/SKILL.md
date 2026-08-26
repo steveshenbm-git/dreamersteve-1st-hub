@@ -9,7 +9,7 @@ description: Use when work involves an official industry taxonomy, generalized c
 
 Use one semantic evaluation mode per research contract. For a newly prepared RC2 research contract, set `execution_mode = content_first`; this is the current default route. Use `strict_audit` only when the user explicitly selects it, or when a legacy beta.3 contract has no mode field. A legacy no-mode contract remains strict-audit compatible and retains every beta.3 identity, transport, receipt, and admissibility gate unchanged.
 
-Within `content_first`, source version `0.4.0-beta.2` uses the `content_first_r4` contract marker and the R4 scripts described below. It remains the same `industry-application-map-builder` skill; do not create or route to a candidate skill. Never downgrade an R4 artifact because a marker or arm field is missing: that is a refusal, not legacy detection.
+Within `content_first`, source version `0.4.0-beta.3` uses the `content_first_r4` contract marker and the R4 scripts described below. It remains the same `industry-application-map-builder` skill; do not create or route to a candidate skill. Never downgrade an R4 artifact because a marker or arm field is missing: that is a refusal, not legacy detection.
 
 | Mode | Content decision evidence | Status vocabulary | Boundary |
 | --- | --- | --- | --- |
@@ -74,7 +74,7 @@ This skill owns shared industry/application knowledge, RC2 semantic-method resea
 | `content_first_calibration_review` | Score both 40-case arms from raw-answer envelopes and source/truth packets | [content-first-mode-contract.md](references/content-first-mode-contract.md) | `CONTENT_CALIBRATION_*`; stop at a full-scope authorization request |
 | `content_first_full_screening_gate` | Check content calibration and explicit human full-scope authorization | [content-first-mode-contract.md](references/content-first-mode-contract.md) | `NOT_AUTHORIZED` or `AUTHORIZED_NOT_STARTED`; do not run nodes automatically |
 | `content_first_full_screening` | Run only explicitly authorized append-only content screening batches | [content-first-mode-contract.md](references/content-first-mode-contract.md) | `IN_PROGRESS / COVERAGE_INCOMPLETE / READY_FOR_REVERSE_AUDIT`; stop after every batch |
-| `content_first_r4_contract_prepare` | Prepare beta.2 generalized terminology, visible-only cases, truth and frozen R4 bindings | [content-first-mode-contract.md](references/content-first-mode-contract.md) | Frozen R4 contract inputs only; no model execution |
+| `content_first_r4_contract_prepare` | Prepare beta.3 generalized terminology, visible-only cases, truth and frozen R4 bindings | [content-first-mode-contract.md](references/content-first-mode-contract.md) | Frozen R4 contract inputs only; no model execution |
 | `content_first_r4_task_prepare` | Build truth-blind paired tasks from the frozen visible-only case set | [industry-semantic-model-protocol.md](references/industry-semantic-model-protocol.md) | Exactly `40 pairs`; model execution remains denied |
 | `content_first_r4_calibration_review` | Validate the real 80-task evidence chains and six repeats | [industry-semantic-calibration-and-audit.md](references/industry-semantic-calibration-and-audit.md) | `CONTENT_CALIBRATION_PASS / FAIL / INCOMPLETE`; never strict `EFFECTIVE` |
 
