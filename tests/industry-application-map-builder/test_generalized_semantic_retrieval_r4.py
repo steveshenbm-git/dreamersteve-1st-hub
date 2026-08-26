@@ -279,15 +279,143 @@ def r4_case_rows(contract_id="RC2-TEST-001"):
 
 
 def r4_truth_rows(case_rows):
-    return [
-        {
+    truth_rows = []
+    for row in case_rows:
+        if row["record_type"] != "calibration_case":
+            continue
+        case_id = row["case_id"]
+        contract_id = row["research_contract_id"]
+        bases = {}
+        for role in (
+            "taxonomy_membership_basis",
+            "output_or_subprocess_basis",
+            "mechanism_or_use_point_basis",
+        ):
+            raw = f"receiver-captured-source\n{case_id}\n{role}\n".encode()
+            raw_reference = f"03-来源真值/raw/{case_id}-{role}.txt"
+            raw_sha = hashlib.sha256(raw).hexdigest()
+            receipt_reference = f"03-来源真值/receipts/{case_id}-{role}.json"
+            receipt = {
+                "schema_version": "1.0",
+                "source_capture_receipt": {
+                    "receipt_id": f"CAPTURE-{case_id}-{role}",
+                    "capture_contract_version": "1.0-receiver-owned",
+                    "receiver_owner": "content_source_receiver",
+                    "capture_method": "http_response_body_v1",
+                    "upstream_response_reference": f"https://example.invalid/{case_id}/{role}",
+                    "upstream_response_sha256": raw_sha,
+                    "research_contract_id": contract_id,
+                    "case_id": case_id,
+                    "basis_role": role,
+                    "source_reference": raw_reference,
+                    "source_sha256": raw_sha,
+                    "content_type": "text/plain",
+                    "byte_length": len(raw),
+                    "final_url": f"https://example.invalid/{case_id}/{role}",
+                    "captured_at": "2026-08-25T00:00:01Z",
+                },
+            }
+            receipt_bytes = (
+                json.dumps(
+                    receipt,
+                    ensure_ascii=False,
+                    sort_keys=True,
+                    separators=(",", ":"),
+                )
+                + "\n"
+            ).encode()
+            bases[role] = {
+                "source_kind": "receiver_captured_raw",
+                "source_reference": raw_reference,
+                "source_sha256": raw_sha,
+                "capture_receipt_reference": receipt_reference,
+                "capture_receipt_sha256": hashlib.sha256(receipt_bytes).hexdigest(),
+                "original_location": f"https://example.invalid/{case_id}/{role}",
+                "claim": f"product-neutral {role} claim for {case_id}",
+                "upstream_snapshot_reference": None,
+                "upstream_snapshot_sha256": None,
+                "upstream_node_id": None,
+                "upstream_json_pointer": None,
+                "projection_algorithm": None,
+                "projection_sha256": None,
+            }
+        truth = {
             "record_type": "source_truth",
-            "case_id": row["case_id"],
+            "truth_contract_version": "2.0-r4-complete",
+            "research_contract_id": contract_id,
+            "preparation_contract_version": "2.1.0-content-first.prep.1",
+            "locked_input_sha256": None,
+            "case_id": case_id,
             "known_positive": row["known_positive"],
+            "evidence_bases": bases,
+            "conditions": [],
+            "limitations": [],
+            "unknowns": [],
+            "exclusion_boundary": "product-neutral boundary",
+            "truth_sha256": None,
         }
-        for row in case_rows
-        if row["record_type"] == "calibration_case"
+        truth_rows.append(truth)
+    return truth_rows
+
+
+def bind_r4_truth_rows(locked_contract, truth_rows):
+    contract = json.loads(locked_contract.read_text(encoding="utf-8"))[
+        "semantic_research_contract"
     ]
+    for row in truth_rows:
+        row["preparation_contract_version"] = contract["case_preparation_gate"][
+            "preparation_contract_version"
+        ]
+        row["locked_input_sha256"] = contract["case_preparation_gate"][
+            "locked_input_sha256"
+        ]
+        row["truth_sha256"] = None
+        row["truth_sha256"] = canonical_json_sha256(row)
+    return truth_rows
+
+
+def materialize_r4_truth_sources(truth_rows, contract_local_root):
+    for row in truth_rows:
+        for role, basis in row["evidence_bases"].items():
+            raw = f"receiver-captured-source\n{row['case_id']}\n{role}\n".encode()
+            raw_path = contract_local_root / basis["source_reference"]
+            raw_path.parent.mkdir(parents=True, exist_ok=True)
+            raw_path.write_bytes(raw)
+            receipt = {
+                "schema_version": "1.0",
+                "source_capture_receipt": {
+                    "receipt_id": f"CAPTURE-{row['case_id']}-{role}",
+                    "capture_contract_version": "1.0-receiver-owned",
+                    "receiver_owner": "content_source_receiver",
+                    "capture_method": "http_response_body_v1",
+                    "upstream_response_reference": basis["original_location"],
+                    "upstream_response_sha256": basis["source_sha256"],
+                    "research_contract_id": row["research_contract_id"],
+                    "case_id": row["case_id"],
+                    "basis_role": role,
+                    "source_reference": basis["source_reference"],
+                    "source_sha256": basis["source_sha256"],
+                    "content_type": "text/plain",
+                    "byte_length": len(raw),
+                    "final_url": basis["original_location"],
+                    "captured_at": "2026-08-25T00:00:01Z",
+                },
+            }
+            receipt_path = contract_local_root / basis[
+                "capture_receipt_reference"
+            ]
+            receipt_path.parent.mkdir(parents=True, exist_ok=True)
+            receipt_path.write_bytes(
+                (
+                    json.dumps(
+                        receipt,
+                        ensure_ascii=False,
+                        sort_keys=True,
+                        separators=(",", ":"),
+                    )
+                    + "\n"
+                ).encode()
+            )
 
 
 def materialize_r4_case_provenance(locked_contract, case_rows, contract_local_root):
@@ -304,6 +432,15 @@ def materialize_r4_case_provenance(locked_contract, case_rows, contract_local_ro
     manifest = json.loads((contract_local_root / manifest_reference).read_text(encoding="utf-8"))[
         "r3_case_source_manifest"
     ]
+    taxonomy_reference = contract["taxonomy_snapshot_reference"]
+    taxonomy_sha256 = contract["taxonomy_snapshot_sha256"]
+    taxonomy = json.loads(
+        (contract_local_root / taxonomy_reference).read_text(encoding="utf-8")
+    )
+    taxonomy_index = {
+        node["taxonomy_node_id"]: index
+        for index, node in enumerate(taxonomy["terminal_nodes"])
+    }
     retained_entries = [
         row for row in manifest["cases"]
         if row["source_case_role"] == "formal_holdout_eligible"
@@ -312,6 +449,11 @@ def materialize_r4_case_provenance(locked_contract, case_rows, contract_local_ro
     for row in case_rows:
         if row.get("record_type") != "calibration_case":
             continue
+        node = row["taxonomy_node"]
+        node["official_source_reference"] = (
+            f"{taxonomy_reference}#/terminal_nodes/{taxonomy_index[node['taxonomy_node_id']]}"
+        )
+        node["official_source_sha256"] = taxonomy_sha256
         category = row["primary_category"]
         if category == "hidden_positive":
             hidden_seen += 1
@@ -503,6 +645,14 @@ class GeneralizedSemanticRetrievalR4Tests(unittest.TestCase):
         contract = payload["semantic_research_contract"]
         contract["research_contract_id"] = contract_id
         contract["contract_version"] = "2.1.0-content-first.prep.1"
+        contract.update(
+            {
+                "created_at": "2026-08-24T00:00:00Z",
+                "owner_authorization_reference": "USER-R4-PREP",
+                "skill_git_commit": "dbd67b0cc283c4d88d9b78b3d49fa6f5aeb2f02a",
+                "workflow_director_plugin_version": "0.3.0-beta.2",
+            }
+        )
         return payload
 
     def lock_r4(self, draft, term_pack, locked):
@@ -522,6 +672,8 @@ class GeneralizedSemanticRetrievalR4Tests(unittest.TestCase):
             r3_manifest.relative_to(preparation_root).as_posix(),
             "--authorization-reference",
             "USER-R4-PREP",
+            "--expected-skill-git-commit",
+            "dbd67b0cc283c4d88d9b78b3d49fa6f5aeb2f02a",
             "--locked-at",
             "2026-08-25T00:00:00Z",
             "--output",
@@ -568,6 +720,10 @@ class GeneralizedSemanticRetrievalR4Tests(unittest.TestCase):
         contract = payload["semantic_research_contract"]
         contract.update(
             {
+                "created_at": "2026-08-24T00:00:00Z",
+                "owner_authorization_reference": "USER-R4-PREP",
+                "skill_git_commit": "dbd67b0cc283c4d88d9b78b3d49fa6f5aeb2f02a",
+                "workflow_director_plugin_version": "0.3.0-beta.2",
                 "taxonomy_snapshot_reference": "01-节点快照/taxonomy.json",
                 "taxonomy_snapshot_sha256": sha256_file(taxonomy),
                 "terminal_node_count": 40,
@@ -670,6 +826,14 @@ class GeneralizedSemanticRetrievalR4Tests(unittest.TestCase):
         contract = payload["semantic_research_contract"]
         contract["research_contract_id"] = contract_id
         contract["contract_version"] = "2.1.0-content-first.prep.1"
+        contract.update(
+            {
+                "created_at": "2026-08-24T00:00:00Z",
+                "owner_authorization_reference": "USER-R4-PREP",
+                "skill_git_commit": "dbd67b0cc283c4d88d9b78b3d49fa6f5aeb2f02a",
+                "workflow_director_plugin_version": "0.3.0-beta.2",
+            }
+        )
         prompt = preparation_root / "00-合同准备" / "prompt.md"
         schema = preparation_root / "00-合同准备" / "schema.json"
         config = preparation_root / "00-合同准备" / "config.json"
@@ -750,6 +914,7 @@ class GeneralizedSemanticRetrievalR4Tests(unittest.TestCase):
                 LOCK, "--contract", str(draft), "--terminology-bridge", str(term_pack),
                 "--terminology-bridge-reference", "../01-术语桥/terminology-bridge.jsonl",
                 "--authorization-reference", "USER-R4-PREP", "--locked-at", "2026-08-25T00:00:00Z",
+                "--expected-skill-git-commit", "dbd67b0cc283c4d88d9b78b3d49fa6f5aeb2f02a",
                 "--output", str(locked),
             )
             self.assertNotEqual(wrong_reference.returncode, 0)
@@ -876,12 +1041,37 @@ class GeneralizedSemanticRetrievalR4Tests(unittest.TestCase):
         freeze_receipt=None,
         *,
         materialize_provenance=True,
+        bind_declared_inputs=True,
         fail_after_temp_write=False,
     ):
         if visible_case_set is None:
             visible_case_set = final_contract.with_name(final_contract.stem + "-visible-case-set.jsonl")
             freeze_receipt = final_contract.with_name(final_contract.stem + "-visible-case-freeze-receipt.json")
             self.freeze_r4_visible(load_jsonl(case_set), visible_case_set, freeze_receipt)
+        contract_local_root = locked.parent / "preparation"
+        truth_rows = bind_r4_truth_rows(locked, load_jsonl(truth_set))
+        write_jsonl(truth_set, truth_rows)
+        materialize_r4_truth_sources(truth_rows, contract_local_root)
+        if bind_declared_inputs:
+            local_case_set = contract_local_root / "02-校准案例/formal-case-set.jsonl"
+            local_visible = contract_local_root / "02-校准案例/visible-case-set.jsonl"
+            local_receipt = contract_local_root / "02-校准案例/visible-case-freeze-receipt.json"
+            local_truth = contract_local_root / "03-来源真值/source-truth.jsonl"
+            for destination, source in (
+                (local_case_set, case_set),
+                (local_visible, visible_case_set),
+                (local_receipt, freeze_receipt),
+                (local_truth, truth_set),
+            ):
+                if source is None:
+                    continue
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                destination.write_bytes(source.read_bytes())
+            case_set = local_case_set
+            visible_case_set = local_visible
+            if freeze_receipt is not None:
+                freeze_receipt = local_receipt
+            truth_set = local_truth
         receipt_args = []
         if freeze_receipt is not None:
             receipt_args = [
@@ -915,9 +1105,9 @@ class GeneralizedSemanticRetrievalR4Tests(unittest.TestCase):
             "--control-case-id",
             "R4-CASE-002",
             "--frozen-at",
-            "2026-08-25T00:00:00Z",
+            "2026-08-25T00:00:02Z",
             "--contract-local-root",
-            str(locked.parent / "preparation"),
+            str(contract_local_root),
             "--output",
             str(final_contract),
         ]
@@ -1443,6 +1633,8 @@ class GeneralizedSemanticRetrievalR4Tests(unittest.TestCase):
                 str(draft),
                 "--authorization-reference",
                 "USER-R4-PREP",
+                "--expected-skill-git-commit",
+                "dbd67b0cc283c4d88d9b78b3d49fa6f5aeb2f02a",
                 "--locked-at",
                 "2026-08-25T00:00:00Z",
                 "--output",
@@ -2011,6 +2203,14 @@ class GeneralizedSemanticRetrievalR4Tests(unittest.TestCase):
             )
             local_truth = workspace / "03-来源真值" / "source-truth.jsonl"
             local_truth.write_bytes(truth_set.read_bytes())
+            shutil.copytree(
+                preparation_root / "03-来源真值" / "raw",
+                workspace / "03-来源真值" / "raw",
+            )
+            shutil.copytree(
+                preparation_root / "03-来源真值" / "receipts",
+                workspace / "03-来源真值" / "receipts",
+            )
             (workspace / "00-合同" / "workspace-manifest.json").write_text(
                 json.dumps({"contract_sha256": sha256_file(contract_path)}), encoding="utf-8"
             )
@@ -2202,13 +2402,13 @@ class GeneralizedSemanticRetrievalR4Tests(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("PREPARATION_", result.stderr)
 
-    def test_same_name_plugins_expose_beta3_generalized_contract(self):
+    def test_same_name_plugins_expose_beta4_generalized_contract(self):
         map_manifest = json.loads((MAP_PLUGIN / ".codex-plugin/plugin.json").read_text())
         director_manifest = json.loads(
             (DIRECTOR_PLUGIN / ".codex-plugin/plugin.json").read_text()
         )
         self.assertEqual(map_manifest["name"], "industry-application-map-builder")
-        self.assertEqual(map_manifest["version"], "0.4.0-beta.3")
+        self.assertEqual(map_manifest["version"], "0.4.0-beta.4")
         self.assertEqual(director_manifest["name"], "foreign-trade-workflow-director")
         self.assertEqual(director_manifest["version"], "0.3.0-beta.2")
         for contract_template in CONTRACT_TEMPLATES:

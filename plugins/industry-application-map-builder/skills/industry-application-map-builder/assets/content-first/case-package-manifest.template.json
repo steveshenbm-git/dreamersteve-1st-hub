@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0-beta4",
+  "content_first_case_package_manifest": {
+    "manifest_id": null,
+    "research_contract_id": null,
+    "map_builder_plugin_version": "0.4.0-beta.4",
+    "case_package_contract_version": "1.0-beta4",
+    "preparation_contract_version": null,
+    "locked_input_sha256": null,
+    "final_contract_version": null,
+    "final_contract_sha256": null,
+    "formal_case_count": 40,
+    "known_positive_count": 14,
+    "selection_origin_counts": {
+      "retained_r3_unexecuted": 30,
+      "new_unseen_positive": 10
+    },
+    "formal_case_ids": [],
+    "control_case_ids": [],
+    "stability_repeat_case_ids": [],
+    "package_authorization_reference": null,
+    "frozen_at": null,
+    "model_execution_authorized": false,
+    "full_screening_authorized": false,
+    "downstream_release_state": "RESEARCH_ONLY_BLOCKED",
+    "artifacts": []
+  }
+}

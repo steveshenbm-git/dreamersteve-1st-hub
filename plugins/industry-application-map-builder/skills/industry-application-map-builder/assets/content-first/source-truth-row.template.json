@@ -1,0 +1,61 @@
+{
+  "record_type": "source_truth",
+  "truth_contract_version": "2.0-r4-complete",
+  "research_contract_id": null,
+  "preparation_contract_version": null,
+  "locked_input_sha256": null,
+  "case_id": null,
+  "known_positive": false,
+  "evidence_bases": {
+    "taxonomy_membership_basis": {
+      "source_kind": "official_taxonomy_projection",
+      "source_reference": null,
+      "source_sha256": null,
+      "capture_receipt_reference": null,
+      "capture_receipt_sha256": null,
+      "original_location": null,
+      "claim": null,
+      "upstream_snapshot_reference": null,
+      "upstream_snapshot_sha256": null,
+      "upstream_node_id": null,
+      "upstream_json_pointer": null,
+      "projection_algorithm": "canonical_json_node_projection_v1",
+      "projection_sha256": null
+    },
+    "output_or_subprocess_basis": {
+      "source_kind": "receiver_captured_raw",
+      "source_reference": null,
+      "source_sha256": null,
+      "capture_receipt_reference": null,
+      "capture_receipt_sha256": null,
+      "original_location": null,
+      "claim": null,
+      "upstream_snapshot_reference": null,
+      "upstream_snapshot_sha256": null,
+      "upstream_node_id": null,
+      "upstream_json_pointer": null,
+      "projection_algorithm": null,
+      "projection_sha256": null
+    },
+    "mechanism_or_use_point_basis": {
+      "source_kind": "receiver_captured_raw",
+      "source_reference": null,
+      "source_sha256": null,
+      "capture_receipt_reference": null,
+      "capture_receipt_sha256": null,
+      "original_location": null,
+      "claim": null,
+      "upstream_snapshot_reference": null,
+      "upstream_snapshot_sha256": null,
+      "upstream_node_id": null,
+      "upstream_json_pointer": null,
+      "projection_algorithm": null,
+      "projection_sha256": null
+    }
+  },
+  "conditions": [],
+  "limitations": [],
+  "unknowns": [],
+  "exclusion_boundary": null,
+  "truth_sha256": null
+}

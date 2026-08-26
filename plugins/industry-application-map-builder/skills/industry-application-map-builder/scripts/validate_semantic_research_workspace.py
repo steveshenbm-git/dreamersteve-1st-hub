@@ -14,6 +14,14 @@ from pathlib import PurePosixPath
 from validate_terminology_bridge import load_rows as load_terminology_rows
 from validate_terminology_bridge import validate_rows as validate_terminology_rows
 from content_first_visible_case_schema import frozen_visible_case_errors, visible_case_projection
+from r4_case_package_contract import (
+    BETA4_CASE_PACKAGE_CONTRACT_VERSION,
+    BETA4_PLUGIN_VERSION,
+    aware_datetime,
+    taxonomy_identifier_key,
+    taxonomy_level_number,
+    validate_complete_truth_rows,
+)
 
 
 CONTRACT_REQUIRED = {
@@ -55,6 +63,10 @@ CONTRACT_REQUIRED = {
     "application_base_write_authorization",
 }
 CONTENT_FIRST_REQUIRED = {
+    "created_at",
+    "owner_authorization_reference",
+    "skill_git_commit",
+    "workflow_director_plugin_version",
     "execution_mode",
     "terminology_architecture",
     "calibration_case_policy",
@@ -70,6 +82,8 @@ CONTENT_FIRST_REQUIRED = {
     "full_screening_authorization",
     "full_screening_authorization_reference",
     "prohibited_actions",
+    "map_builder_plugin_version",
+    "case_package_contract_version",
 }
 R4_BASELINE_METHOD = "baseline_full_depth_v1"
 R4_CANDIDATE_METHOD = "screen_then_expand_v2"
@@ -846,10 +860,10 @@ def validate_content_first_case_provenance(
             taxonomy_payload = json.loads(taxonomy_bytes)
             terminal_nodes = taxonomy_payload.get("terminal_nodes")
             terminal_node_by_id = {
-                normalized_identifier_key(row.get("taxonomy_node_id")): row
-                for row in terminal_nodes
+                taxonomy_identifier_key(row.get("taxonomy_node_id")): (index, row)
+                for index, row in enumerate(terminal_nodes)
                 if isinstance(row, dict)
-                and normalized_identifier_key(row.get("taxonomy_node_id")) is not None
+                and taxonomy_identifier_key(row.get("taxonomy_node_id")) is not None
                 and nonempty_text(row.get("code"))
                 and nonempty_text(row.get("name_zh"))
             } if isinstance(terminal_nodes, list) else {}
@@ -981,12 +995,12 @@ def validate_content_first_case_provenance(
                 receipt_ids.add(receipt_key)
             selected_at = parse_aware_datetime(record.get("selected_at"))
             case_node = case.get("taxonomy_node") if isinstance(case.get("taxonomy_node"), dict) else {}
-            source_node_key = normalized_identifier_key(record.get("source_node_id"))
+            source_node_key = taxonomy_identifier_key(record.get("source_node_id"))
             if source_node_key is None or source_node_key in new_source_node_ids:
                 problems.append("NEW_SELECTION_SOURCE_NODE_REUSE")
             else:
                 new_source_node_ids.add(source_node_key)
-            case_node_key = normalized_identifier_key(case_node.get("taxonomy_node_id"))
+            case_node_key = taxonomy_identifier_key(case_node.get("taxonomy_node_id"))
             if (
                 record.get("research_contract_id") != contract.get("research_contract_id")
                 or record.get("case_id") != case.get("case_id")
@@ -994,7 +1008,8 @@ def validate_content_first_case_provenance(
                 or source_node_key not in terminal_node_ids
             ):
                 problems.append("NEW_SELECTION_SOURCE_NODE_INVALID")
-            official_node = terminal_node_by_id.get(source_node_key)
+            official_entry = terminal_node_by_id.get(source_node_key)
+            official_node = official_entry[1] if isinstance(official_entry, tuple) else None
             if isinstance(official_node, dict) and any(
                 key in official_node and official_node.get(key) != case_node.get(key)
                 for key in ("code", "name_zh")
@@ -1025,6 +1040,30 @@ def validate_content_first_case_provenance(
         problems.append("R3_RETAINED_MEMBERSHIP_MISMATCH")
     if len(new_source_node_ids) != 10:
         problems.append("NEW_SELECTION_SOURCE_NODE_REUSE")
+    for case in cases:
+        case_node = case.get("taxonomy_node") if isinstance(case.get("taxonomy_node"), dict) else {}
+        node_key = taxonomy_identifier_key(case_node.get("taxonomy_node_id"))
+        official_entry = terminal_node_by_id.get(node_key)
+        if not isinstance(official_entry, tuple):
+            problems.append("FORMAL_CASE_OFFICIAL_NODE_INVALID")
+            continue
+        node_index, official_node = official_entry
+        official_level = taxonomy_level_number(official_node.get("level"))
+        if (
+            case_node.get("code") != official_node.get("code")
+            or case_node.get("name_zh") != official_node.get("name_zh")
+            or (
+                official_level is not None
+                and case_node.get("level") != official_level
+            )
+        ):
+            problems.append("FORMAL_CASE_OFFICIAL_NODE_INVALID")
+        expected_reference = f"{taxonomy_reference}#/terminal_nodes/{node_index}"
+        if (
+            case_node.get("official_source_reference") != expected_reference
+            or case_node.get("official_source_sha256") != taxonomy_sha256
+        ):
+            problems.append("FORMAL_CASE_OFFICIAL_SOURCE_INVALID")
     return list(dict.fromkeys(problems))
 
 
@@ -1038,6 +1077,7 @@ def validate_content_first_case_truth_rows(
     *,
     contract: object | None = None,
     contract_local_root: Path | None = None,
+    frozen_at: object = None,
 ) -> list[str]:
     problems: list[str] = []
     if not isinstance(calibration_policy, dict):
@@ -1151,6 +1191,22 @@ def validate_content_first_case_truth_rows(
             if type(truth.get("known_positive")) is not bool or truth["known_positive"] is not case["known_positive"]:
                 problems.append("SOURCE_TRUTH_DISPOSITION_MISMATCH")
                 break
+    if (
+        isinstance(contract, dict)
+        and contract.get("map_builder_plugin_version") == BETA4_PLUGIN_VERSION
+        and contract.get("case_package_contract_version")
+        == BETA4_CASE_PACKAGE_CONTRACT_VERSION
+        and contract_local_root is not None
+    ):
+        problems.extend(
+            validate_complete_truth_rows(
+                truth_rows,
+                contract,
+                contract_local_root,
+                case_by_id=case_by_id,
+                frozen_at=frozen_at or contract.get("frozen_at"),
+            )
+        )
     return problems
 
 
@@ -1163,6 +1219,28 @@ def content_first_contract_errors(
         problems.append("content_first_missing:" + ",".join(missing))
     if contract.get("execution_mode") != "content_first":
         problems.append("execution_mode:not_content_first")
+    if contract.get("map_builder_plugin_version") != BETA4_PLUGIN_VERSION:
+        problems.append("MAP_BUILDER_PLUGIN_VERSION_INVALID")
+    if aware_datetime(contract.get("created_at")) is None:
+        problems.append("CONTRACT_CREATED_AT_INVALID")
+    if not nonempty_text(contract.get("owner_authorization_reference")):
+        problems.append("OWNER_AUTHORIZATION_REFERENCE_INVALID")
+    if not (
+        isinstance(contract.get("skill_git_commit"), str)
+        and re.fullmatch(r"[0-9a-f]{40}", contract["skill_git_commit"])
+    ):
+        problems.append("SKILL_GIT_COMMIT_INVALID")
+    if contract.get("workflow_director_plugin_version") != "0.3.0-beta.2":
+        problems.append("WORKFLOW_DIRECTOR_PLUGIN_VERSION_INVALID")
+    locked_at = aware_datetime((contract.get("case_preparation_gate") or {}).get("locked_at"))
+    created_at = aware_datetime(contract.get("created_at"))
+    if locked_at is not None and created_at is not None and created_at >= locked_at:
+        problems.append("CONTRACT_CREATED_AT_INVALID")
+    if (
+        contract.get("case_package_contract_version")
+        != BETA4_CASE_PACKAGE_CONTRACT_VERSION
+    ):
+        problems.append("CASE_PACKAGE_CONTRACT_VERSION_INVALID")
     if (
         contract.get("baseline_method_contract") != R4_BASELINE_METHOD
         or contract.get("candidate_method_contract") != R4_CANDIDATE_METHOD

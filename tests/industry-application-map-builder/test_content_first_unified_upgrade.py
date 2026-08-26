@@ -25,7 +25,7 @@ class UnifiedContentFirstUpgradeTests(unittest.TestCase):
         )
 
         self.assertEqual(map_manifest["name"], "industry-application-map-builder")
-        self.assertEqual(map_manifest["version"], "0.4.0-beta.3")
+        self.assertEqual(map_manifest["version"], "0.4.0-beta.4")
         self.assertEqual(workflow_manifest["name"], "foreign-trade-workflow-director")
         self.assertEqual(workflow_manifest["version"], "0.3.0-beta.2")
 

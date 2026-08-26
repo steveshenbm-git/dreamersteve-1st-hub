@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "source_capture_receipt": {
+    "receipt_id": null,
+    "capture_contract_version": "1.0-receiver-owned",
+    "receiver_owner": "content_source_receiver",
+    "capture_method": null,
+    "upstream_response_reference": null,
+    "upstream_response_sha256": null,
+    "research_contract_id": null,
+    "case_id": null,
+    "basis_role": null,
+    "source_reference": null,
+    "source_sha256": null,
+    "content_type": null,
+    "byte_length": null,
+    "final_url": null,
+    "captured_at": null
+  }
+}

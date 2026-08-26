@@ -17,6 +17,12 @@ from validate_semantic_research_workspace import (
     validate_r3_source_manifest,
 )
 from validate_terminology_bridge import load_rows, validate_rows
+from r4_case_package_contract import (
+    BETA4_CASE_PACKAGE_CONTRACT_VERSION,
+    BETA4_PLUGIN_VERSION,
+    aware_datetime,
+    publish_create_only_atomic,
+)
 
 
 def fail(code: str, detail: str) -> int:
@@ -44,7 +50,9 @@ def main() -> int:
     parser.add_argument("--r3-source-manifest", type=Path)
     parser.add_argument("--r3-source-manifest-reference")
     parser.add_argument("--authorization-reference", required=True)
+    parser.add_argument("--expected-skill-git-commit")
     parser.add_argument("--locked-at", required=True)
+    parser.add_argument("--test-fail-after-temp-write", action="store_true")
     parser.add_argument("--output", required=True, type=Path)
     args = parser.parse_args()
 
@@ -56,6 +64,8 @@ def main() -> int:
         return fail("OUTPUT_EXISTS", str(output))
     if not nonempty_text(args.authorization_reference) or not nonempty_text(args.locked_at):
         return fail("AUTHORIZATION_INVALID", "authorization reference and locked_at are required")
+    if aware_datetime(args.locked_at) is None:
+        return fail("LOCKED_AT_INVALID", "locked_at must be timezone-aware ISO-8601")
     try:
         payload = json.loads(source.read_text(encoding="utf-8"))
         contract = payload["semantic_research_contract"]
@@ -69,6 +79,65 @@ def main() -> int:
         return fail("EXECUTION_MODE_INVALID", str(contract.get("execution_mode")))
     content_first = contract.get("execution_mode") == "content_first"
     if content_first:
+        created_at = aware_datetime(contract.get("created_at"))
+        locked_at = aware_datetime(args.locked_at)
+        if created_at is None or locked_at is None or created_at >= locked_at:
+            return fail(
+                "CONTRACT_CREATED_AT_INVALID",
+                "created_at must be timezone-aware and strictly earlier than locked_at",
+            )
+        if (
+            not nonempty_text(contract.get("owner_authorization_reference"))
+            or contract.get("owner_authorization_reference")
+            != args.authorization_reference
+        ):
+            return fail(
+                "OWNER_AUTHORIZATION_REFERENCE_INVALID",
+                "contract owner authorization must match the lock authorization",
+            )
+        skill_git_commit = contract.get("skill_git_commit")
+        if (
+            not isinstance(skill_git_commit, str)
+            or len(skill_git_commit) != 40
+            or any(character not in "0123456789abcdef" for character in skill_git_commit)
+        ):
+            return fail("SKILL_GIT_COMMIT_INVALID", repr(skill_git_commit))
+        expected_skill_git_commit = args.expected_skill_git_commit
+        if (
+            not isinstance(expected_skill_git_commit, str)
+            or len(expected_skill_git_commit) != 40
+            or any(
+                character not in "0123456789abcdef"
+                for character in expected_skill_git_commit
+            )
+        ):
+            return fail(
+                "EXPECTED_SKILL_GIT_COMMIT_REQUIRED",
+                repr(expected_skill_git_commit),
+            )
+        if skill_git_commit != expected_skill_git_commit:
+            return fail(
+                "SKILL_GIT_COMMIT_MISMATCH",
+                f"contract={skill_git_commit} expected={expected_skill_git_commit}",
+            )
+        if contract.get("workflow_director_plugin_version") != "0.3.0-beta.2":
+            return fail(
+                "WORKFLOW_DIRECTOR_PLUGIN_VERSION_INVALID",
+                repr(contract.get("workflow_director_plugin_version")),
+            )
+        if contract.get("map_builder_plugin_version") != BETA4_PLUGIN_VERSION:
+            return fail(
+                "MAP_BUILDER_PLUGIN_VERSION_INVALID",
+                repr(contract.get("map_builder_plugin_version")),
+            )
+        if (
+            contract.get("case_package_contract_version")
+            != BETA4_CASE_PACKAGE_CONTRACT_VERSION
+        ):
+            return fail(
+                "CASE_PACKAGE_CONTRACT_VERSION_INVALID",
+                repr(contract.get("case_package_contract_version")),
+            )
         if content_first_default_deny_errors(contract):
             return fail("CONTENT_FIRST_DEFAULT_DENY_REQUIRED", "execution and downstream authorization must remain default-deny")
         if args.terminology_bridge is None or not nonempty_text(args.terminology_bridge_reference):
@@ -188,8 +257,13 @@ def main() -> int:
         if reference_problems:
             return fail("FROZEN_REFERENCE_INVALID", ";".join(reference_problems))
 
-    output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_bytes(canonical_bytes(payload))
+    publish_error = publish_create_only_atomic(
+        output,
+        canonical_bytes(payload),
+        fail_after_temp_write=args.test_fail_after_temp_write,
+    )
+    if publish_error:
+        return fail(publish_error, str(output))
     print(
         json.dumps(
             {

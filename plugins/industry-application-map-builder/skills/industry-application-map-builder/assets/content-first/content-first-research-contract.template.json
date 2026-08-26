@@ -4,6 +4,12 @@
     "research_contract_id": null,
     "contract_version": null,
     "contract_state": "draft",
+    "created_at": null,
+    "owner_authorization_reference": null,
+    "skill_git_commit": null,
+    "map_builder_plugin_version": "0.4.0-beta.4",
+    "workflow_director_plugin_version": null,
+    "case_package_contract_version": "1.0-beta4",
     "execution_mode": "content_first",
     "execution_authorized": false,
     "paired_execution_contract": {

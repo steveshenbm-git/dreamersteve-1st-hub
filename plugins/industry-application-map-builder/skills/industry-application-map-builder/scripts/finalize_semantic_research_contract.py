@@ -19,6 +19,13 @@ from content_first_visible_case_schema import (
     valid_case_id as shared_valid_case_id,
     visible_case_projection,
 )
+from r4_case_package_contract import (
+    BETA4_CASE_PACKAGE_CONTRACT_VERSION,
+    BETA4_PLUGIN_VERSION,
+    aware_datetime,
+    declared_input_path_error,
+    valid_prep_to_final_version,
+)
 
 from validate_semantic_research_workspace import (
     case_preparation_contract_completeness_errors,
@@ -69,6 +76,31 @@ def normalized_laundering_values(value: object) -> set[str]:
     return set()
 
 
+def sealed_truth_view(truth: dict) -> dict:
+    """Exclude only taxonomy facts already present in the visible case projection."""
+    sealed = {
+        key: value for key, value in truth.items() if key not in {"record_type", "case_id"}
+    }
+    bases = sealed.get("evidence_bases")
+    if not isinstance(bases, dict):
+        return sealed
+    copied_bases = dict(bases)
+    taxonomy = copied_bases.get("taxonomy_membership_basis")
+    if isinstance(taxonomy, dict):
+        copied_taxonomy = dict(taxonomy)
+        for key in (
+            "upstream_snapshot_reference",
+            "upstream_snapshot_sha256",
+            "upstream_node_id",
+            "upstream_json_pointer",
+            "original_location",
+        ):
+            copied_taxonomy.pop(key, None)
+        copied_bases["taxonomy_membership_basis"] = copied_taxonomy
+    sealed["evidence_bases"] = copied_bases
+    return sealed
+
+
 def validate_visible_case_set(
     visible_rows: list[dict], formal_rows: list[dict], truth_rows: list[dict], research_contract_id: object,
 ) -> list[str]:
@@ -96,7 +128,7 @@ def validate_visible_case_set(
             if key not in {"record_type", "research_contract_id", "case_id", "taxonomy_node", "product_neutral_research_theme", "risk_flags"}
         }))
     for truth in truth_rows:
-        forbidden_values.update(collect_text_values({key: value for key, value in truth.items() if key not in {"record_type", "case_id"}}))
+        forbidden_values.update(collect_text_values(sealed_truth_view(truth)))
     sealed_normalized: set[str] = set()
     for formal in formal_cases:
         sealed_normalized.update(normalized_laundering_values({
@@ -104,7 +136,7 @@ def validate_visible_case_set(
             if key not in {"record_type", "research_contract_id", "case_id", "taxonomy_node", "product_neutral_research_theme", "risk_flags"}
         }))
     for truth in truth_rows:
-        sealed_normalized.update(normalized_laundering_values({key: value for key, value in truth.items() if key not in {"record_type", "case_id"}}))
+        sealed_normalized.update(normalized_laundering_values(sealed_truth_view(truth)))
     sealed_normalized = {value for value in sealed_normalized if len(value) >= 6}
     for visible in cases:
         strings = collect_text_values(visible_case_projection(visible)) - {unicodedata.normalize("NFKC", str(visible.get("case_id", ""))).casefold()}
@@ -344,6 +376,19 @@ def main() -> int:
     sealed_references: set[object] = set()
     sealed_hashes: set[object] = set()
     if content_first:
+        if contract.get("map_builder_plugin_version") != BETA4_PLUGIN_VERSION:
+            return fail(
+                "MAP_BUILDER_PLUGIN_VERSION_INVALID",
+                repr(contract.get("map_builder_plugin_version")),
+            )
+        if (
+            contract.get("case_package_contract_version")
+            != BETA4_CASE_PACKAGE_CONTRACT_VERSION
+        ):
+            return fail(
+                "CASE_PACKAGE_CONTRACT_VERSION_INVALID",
+                repr(contract.get("case_package_contract_version")),
+            )
         if contract_local_root is None or not contract_local_root.is_dir():
             return fail("CONTRACT_LOCAL_ROOT_REQUIRED", "content_first finalization requires an explicit local frozen-input root")
         if args.source_truth_package is None or not nonempty_text(args.source_truth_reference):
@@ -361,6 +406,21 @@ def main() -> int:
         truth_path = args.source_truth_package.resolve()
         if not truth_path.is_file():
             return fail("SOURCE_TRUTH_PACKAGE_MISSING", str(truth_path))
+        declared_inputs = (
+            (case_set_path, args.case_set_reference),
+            (visible_case_set_path, args.visible_case_set_reference),
+            (visible_freeze_receipt_path, args.visible_case_freeze_receipt_reference),
+            (truth_path, args.source_truth_reference),
+        )
+        if any(
+            declared_input_path_error(contract_local_root, actual, reference)
+            for actual, reference in declared_inputs
+            if actual is not None
+        ):
+            return fail(
+                "DECLARED_INPUT_PATH_MISMATCH",
+                "actual case, visible, receipt, and truth files must equal their contract-local references",
+            )
         try:
             visible_bytes = visible_case_set_path.read_bytes()
             visible_rows = load_jsonl(visible_case_set_path)
@@ -379,10 +439,26 @@ def main() -> int:
             return fail(receipt_error, str(visible_freeze_receipt_path))
 
     preparation_version = contract["contract_version"]
-    if args.final_contract_version == preparation_version:
+    if content_first and not valid_prep_to_final_version(
+        preparation_version, args.final_contract_version
+    ):
+        return fail(
+            "FINAL_CONTRACT_VERSION_INVALID",
+            "final contract version must be the exact prep-to-final transition",
+        )
+    if not content_first and args.final_contract_version == preparation_version:
         return fail(
             "FINAL_CONTRACT_VERSION_NOT_NEW",
             "final contract version must differ from the locked preparation contract version",
+        )
+    locked_at = aware_datetime(
+        (contract.get("case_preparation_gate") or {}).get("locked_at")
+    )
+    frozen_at = aware_datetime(args.frozen_at)
+    if locked_at is None or frozen_at is None or frozen_at <= locked_at:
+        return fail(
+            "FROZEN_AT_INVALID",
+            "frozen_at must be timezone-aware and strictly later than locked_at",
         )
     try:
         case_set_bytes = case_set_path.read_bytes()
@@ -441,6 +517,7 @@ def main() -> int:
             (contract.get("retrieval_efficiency_gates") or {}).get("stability_repeat_case_count"),
             contract=contract,
             contract_local_root=contract_local_root,
+            frozen_at=args.frozen_at,
         )
         if content_problems:
             return fail("FORMAL_CONTENT_SET_INVALID", ";".join(content_problems))

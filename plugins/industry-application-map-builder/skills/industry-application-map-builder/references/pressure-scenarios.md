@@ -99,3 +99,13 @@
 | R4-P78 | CLI threshold override：用命令行放宽20%、10%或0打开增量 | FAIL | 移除R4覆盖参数，只从冻结最终合同读取阈值。 |
 | R4-P79 | summary self-report：信任臂汇总中的正例ID、工作量、安全结果或哈希 | FAIL | 打开真实80任务链并从接收方记录重算。 |
 | R4-P80 | repeat ID-only copy或legacy downgrade：只换repeat ID复用原文件，或删R4 marker/臂字段选旧分支 | FAIL | 重建六个独立预授权、上下文与证据链；R4损坏则恢复/重生，仅显式`1.0-legacy`可走旧路。 |
+| R4-P81 | 真实 `GB/T-.../...` 节点ID被通用路径ID规则拒绝 | FAIL | 将taxonomy ID分离为专用标识符校验，并对实陈节点快照跑全量唯一性检查。 |
+| R4-P82 | 命令读取外部案例/真值，却在合同中声称不存在的本地路径 | FAIL | 实际文件必须等于 contract-local canonical reference，重新冻结。 |
+| R4-P83 | 摘要JSON、模型转述或URL字符串冒充来源原件 | FAIL | 接收方重新保存原始字节、真实哈希和闭集收据；不可得时保持UNVERIFIED。 |
+| R4-P84 | 锁定或准备包发布中断后留下可被继续使用的半成品 | FAIL | 在同文件系统临时目录完成全链验证，只在成功后原子改名；失败清理并从未发布状态重试。 |
+| R4-P85 | 产出/子工艺或机理/作用点的原始来源角色改报为官方分类投影 | FAIL | 恢复为 `receiver_captured_raw`，重新绑定接收方原始字节和收据。 |
+| R4-P86 | 自制字节声称为官方 taxonomy projection，但未绑定快照、节点、pointer、算法和结果哈希 | FAIL | 从当前冻结 taxonomy 节点按 `canonical_json_node_projection_v1`重算并重建收据。 |
+| R4-P87 | 来源捕获时间早于准备锁定或晚于最终冻结 | FAIL | 由接收方在合同时间窗口内重新捕获，保持 `locked_at < captured_at <= frozen_at`。 |
+| R4-P88 | 源目录中的 symlink/hardlink/相同字节在复制后才检查，因 inode 被拆分而绕过 | FAIL | 复制前和复制后各做物理身份与哈希审计。 |
+| R4-P89 | 发布前检查目标不存在，但并发进程在改名前创建目标 | FAIL | 在父目录锁中重检并执行不可覆盖发布；任何已存在目标均拒绝。 |
+| R4-P90 | content-first 合同缺 `created_at`、owner authorization、skill Git commit 或配套 director 版本，但仍被锁定 | FAIL | 补全真实创建时间、用户授权引用、当前技能提交和 `0.3.0-beta.2` director 版本，用新合同重锁。 |
