@@ -18,11 +18,12 @@ from validate_semantic_research_workspace import (
 )
 from validate_terminology_bridge import load_rows, validate_rows
 from r4_case_package_contract import (
-    BETA4_CASE_PACKAGE_CONTRACT_VERSION,
-    BETA4_PLUGIN_VERSION,
+    CASE_PACKAGE_CONTRACT_VERSION,
+    MAP_BUILDER_PLUGIN_VERSION,
     aware_datetime,
     publish_create_only_atomic,
 )
+from r4_adjudicated_truth_contract import DIRECTOR_PLUGIN_VERSION
 
 
 def fail(code: str, detail: str) -> int:
@@ -120,19 +121,19 @@ def main() -> int:
                 "SKILL_GIT_COMMIT_MISMATCH",
                 f"contract={skill_git_commit} expected={expected_skill_git_commit}",
             )
-        if contract.get("workflow_director_plugin_version") != "0.3.0-beta.2":
+        if contract.get("workflow_director_plugin_version") != DIRECTOR_PLUGIN_VERSION:
             return fail(
                 "WORKFLOW_DIRECTOR_PLUGIN_VERSION_INVALID",
                 repr(contract.get("workflow_director_plugin_version")),
             )
-        if contract.get("map_builder_plugin_version") != BETA4_PLUGIN_VERSION:
+        if contract.get("map_builder_plugin_version") != MAP_BUILDER_PLUGIN_VERSION:
             return fail(
                 "MAP_BUILDER_PLUGIN_VERSION_INVALID",
                 repr(contract.get("map_builder_plugin_version")),
             )
         if (
             contract.get("case_package_contract_version")
-            != BETA4_CASE_PACKAGE_CONTRACT_VERSION
+            != CASE_PACKAGE_CONTRACT_VERSION
         ):
             return fail(
                 "CASE_PACKAGE_CONTRACT_VERSION_INVALID",

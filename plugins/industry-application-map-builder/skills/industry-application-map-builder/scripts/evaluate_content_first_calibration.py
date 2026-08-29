@@ -12,9 +12,13 @@ import tempfile
 from typing import Any
 
 from content_first_r4_scorecard_schema import validate_r4_scorecard
+from r4_adjudicated_truth_contract import (
+    BETA5_TRUTH_SCORECARD_CONTRACT_VERSION,
+    derive_truth_summary,
+)
 
 
-R4_MARKER = "2.0-r4"
+R4_MARKER = BETA5_TRUTH_SCORECARD_CONTRACT_VERSION
 LEGACY_MARKER = "1.0-legacy"
 R4_ARMS = ("baseline_full_depth_v1", "screen_then_expand_v2")
 LEGACY_ARMS = ("baseline_full_depth", "candidate_screen_then_expand")
@@ -364,14 +368,15 @@ def load_frozen_inputs(
     for row in truth_rows:
         if not isinstance(row, dict) or not nonempty(row.get("case_id")) or row["case_id"] in truth_by_case:
             raise Incomplete("source-truth case binding is malformed")
-        if type(row.get("known_positive")) is not bool:
-            raise Incomplete("source-truth known-positive disposition is malformed")
         truth_by_case[row["case_id"]] = row
     if set(truth_by_case) != set(formal_ids):
         raise Incomplete("source-truth does not cover the formal case set")
-    positives = {case_id for case_id, row in truth_by_case.items() if row["known_positive"]}
-    if len(positives) != 14:
-        raise Incomplete("frozen source truth must contain exactly 14 positives")
+    truth_summary = derive_truth_summary(truth_rows)
+    if contract.get("adjudicated_truth_summary") != truth_summary:
+        raise Incomplete("adjudicated truth summary does not match frozen source truth")
+    positives = set(truth_summary["accepted_positive_case_ids"])
+    if not positives:
+        raise Incomplete("accepted-positive denominator must not be empty")
 
     manifest_payload = load_json(manifest_path)
     manifest = (
@@ -876,10 +881,14 @@ def validate_arm(
     rows = arm.get("case_evidence")
     if not isinstance(rows, list) or len(rows) != 40:
         raise Incomplete("R4 arm summary must contain exactly 40 cases")
-    positive_summary = arm.get("known_positive_case_ids")
-    entered_summary = arm.get("known_positive_entered_expansion_case_ids")
-    if not string_list(positive_summary, count=14) or set(positive_summary) != positives:
-        raise Incomplete("summary known-positive IDs do not match frozen source truth")
+    positive_summary = arm.get("accepted_positive_case_ids")
+    entered_summary = arm.get("accepted_positive_entered_expansion_case_ids")
+    if (
+        not string_list(positive_summary)
+        or len(positive_summary) != len(positives)
+        or set(positive_summary) != positives
+    ):
+        raise Incomplete("summary accepted-positive IDs do not match frozen source truth")
     if not string_list(entered_summary):
         raise Incomplete("candidate expansion IDs are malformed")
     row_by_case: dict[str, dict[str, Any]] = {}
@@ -1378,11 +1387,11 @@ def main() -> int:
                 raise Incomplete("critical safety gate is unverified")
             # Gate 2: frozen truth and actual receiver-owned expansion dispositions.
             if (
-                set(candidate["known_positive_entered_expansion_case_ids"])
+                set(candidate["accepted_positive_entered_expansion_case_ids"])
                 != positives
                 or not positives.issubset(candidate_expanded_case_ids)
             ):
-                raise Failed("known-positive content recall is below 100 percent")
+                raise Failed("accepted-positive content recall is below 100 percent")
             # Gate 3: every Task 6 critical disposition must be closed before stability.
             flattened = [
                 disposition
@@ -1455,12 +1464,12 @@ def main() -> int:
         efficiency = empty_efficiency()
 
     report = {
-        "schema_version": "2.0-r4" if marker_a == R4_MARKER else "1.0",
+        "schema_version": R4_MARKER if marker_a == R4_MARKER else "1.0",
         "evaluation_result": result,
         "content_method_state": f"CONTENT_CALIBRATION_{result}",
         "gate_order": [
             "safety",
-            "known_positive_recall",
+            "accepted_positive_recall",
             "receiver_evidence_completeness",
             "stability",
             "efficiency",

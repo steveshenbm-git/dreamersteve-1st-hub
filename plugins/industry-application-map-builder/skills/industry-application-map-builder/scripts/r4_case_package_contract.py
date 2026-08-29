@@ -9,10 +9,14 @@ import re
 import tempfile
 import unicodedata
 
+from r4_adjudicated_truth_contract import (
+    BETA5_CASE_PACKAGE_CONTRACT_VERSION as CASE_PACKAGE_CONTRACT_VERSION,
+    BETA5_MAP_BUILDER_PLUGIN_VERSION as MAP_BUILDER_PLUGIN_VERSION,
+    BETA5_TRUTH_CONTRACT_VERSION as TRUTH_CONTRACT_VERSION,
+    TRUTH_ROW_FIELDS,
+    validate_adjudicated_truth_rows,
+)
 
-BETA4_PLUGIN_VERSION = "0.4.0-beta.4"
-BETA4_CASE_PACKAGE_CONTRACT_VERSION = "1.0-beta4"
-TRUTH_CONTRACT_VERSION = "2.0-r4-complete"
 TRUTH_BASIS_ROLES = (
     "taxonomy_membership_basis",
     "output_or_subprocess_basis",
@@ -291,23 +295,21 @@ def validate_complete_truth_rows(
     )
     freeze_time = aware_datetime(frozen_at or contract.get("frozen_at"))
     seen_receipt_ids: set[str] = set()
+    errors.extend(
+        validate_adjudicated_truth_rows(
+            truth_rows,
+            expected_case_ids=list((case_by_id or {}).keys()),
+            expected_contract_id=expected_contract_id,
+            expected_preparation_contract_version=(
+                (contract.get("case_preparation_gate") or {}).get(
+                    "preparation_contract_version"
+                )
+            ),
+            expected_locked_input_sha256=locked_hash,
+        )
+    )
     for row in truth_rows:
-        required = {
-            "record_type",
-            "truth_contract_version",
-            "research_contract_id",
-            "preparation_contract_version",
-            "locked_input_sha256",
-            "case_id",
-            "known_positive",
-            "evidence_bases",
-            "conditions",
-            "limitations",
-            "unknowns",
-            "exclusion_boundary",
-            "truth_sha256",
-        }
-        if not isinstance(row, dict) or set(row) != required:
+        if not isinstance(row, dict) or set(row) != TRUTH_ROW_FIELDS:
             errors.append("SOURCE_TRUTH_SCHEMA_INVALID")
             continue
         if (
@@ -319,7 +321,6 @@ def validate_complete_truth_rows(
                 "preparation_contract_version"
             )
             or row.get("locked_input_sha256") != locked_hash
-            or not isinstance(row.get("known_positive"), bool)
             or not isinstance(row.get("conditions"), list)
             or not isinstance(row.get("limitations"), list)
             or not isinstance(row.get("unknowns"), list)

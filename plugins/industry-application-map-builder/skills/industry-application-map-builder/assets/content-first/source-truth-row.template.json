@@ -1,11 +1,18 @@
 {
   "record_type": "source_truth",
-  "truth_contract_version": "2.0-r4-complete",
+  "truth_contract_version": "2.1-r4-adjudicated",
   "research_contract_id": null,
   "preparation_contract_version": null,
   "locked_input_sha256": null,
   "case_id": null,
-  "known_positive": false,
+  "truth_disposition": "unresolved",
+  "evidence_state": "unknown",
+  "evidence_quality": "insufficient",
+  "adjudication_state": "draft",
+  "adjudication_version": null,
+  "counterevidence": [],
+  "reopen_reason": null,
+  "supersedes_truth_sha256": null,
   "evidence_bases": {
     "taxonomy_membership_basis": {
       "source_kind": "official_taxonomy_projection",

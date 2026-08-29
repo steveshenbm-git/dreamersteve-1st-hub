@@ -35,6 +35,7 @@ assert _fixture_spec is not None and _fixture_spec.loader is not None
 fixture = importlib.util.module_from_spec(_fixture_spec)
 _fixture_spec.loader.exec_module(fixture)
 
+sys.path.insert(0, str(SKILL_ROOT / "scripts"))
 _contract_spec = importlib.util.spec_from_file_location(
     "r4_case_package_contract",
     SKILL_ROOT / "scripts/r4_case_package_contract.py",
@@ -43,7 +44,6 @@ assert _contract_spec is not None and _contract_spec.loader is not None
 contract_helpers = importlib.util.module_from_spec(_contract_spec)
 _contract_spec.loader.exec_module(contract_helpers)
 
-sys.path.insert(0, str(SKILL_ROOT / "scripts"))
 _package_spec = importlib.util.spec_from_file_location(
     "freeze_content_first_case_package",
     FREEZE_PACKAGE,
@@ -53,7 +53,7 @@ package_helpers = importlib.util.module_from_spec(_package_spec)
 _package_spec.loader.exec_module(package_helpers)
 
 
-class R4Beta4CasePackageTests(unittest.TestCase):
+class R4Beta5CasePackageTests(unittest.TestCase):
     def setUp(self):
         self.fx = fixture.GeneralizedSemanticRetrievalR4Tests(methodName="runTest")
 
@@ -61,14 +61,14 @@ class R4Beta4CasePackageTests(unittest.TestCase):
         draft, term_pack = self.fx.r4_preparation(root)
         payload = json.loads(draft.read_text(encoding="utf-8"))
         payload["semantic_research_contract"]["map_builder_plugin_version"] = (
-            "0.4.0-beta.4"
+            "0.4.0-beta.5"
         )
         payload["semantic_research_contract"].update(
             {
                 "created_at": "2026-08-24T00:00:00Z",
                 "owner_authorization_reference": "USER-R4-PREP",
                 "skill_git_commit": "dbd67b0cc283c4d88d9b78b3d49fa6f5aeb2f02a",
-                "workflow_director_plugin_version": "0.3.0-beta.2",
+                "workflow_director_plugin_version": "0.3.0-beta.3",
             }
         )
         draft.write_text(json.dumps(payload), encoding="utf-8")
@@ -187,15 +187,15 @@ class R4Beta4CasePackageTests(unittest.TestCase):
             arguments.append("--test-create-output-before-publish")
         return fixture.run(FREEZE_PACKAGE, *arguments)
 
-    def test_beta4_surface_and_contract_marker_are_current(self):
+    def test_beta5_surface_and_contract_marker_are_current(self):
         manifest = json.loads(PLUGIN_MANIFEST.read_text(encoding="utf-8"))
         template = json.loads(CONTRACT_TEMPLATE.read_text(encoding="utf-8"))[
             "semantic_research_contract"
         ]
 
-        self.assertEqual(manifest["version"], "0.4.0-beta.4")
-        self.assertEqual(template["map_builder_plugin_version"], "0.4.0-beta.4")
-        self.assertEqual(template["case_package_contract_version"], "1.0-beta4")
+        self.assertEqual(manifest["version"], "0.4.0-beta.5")
+        self.assertEqual(template["map_builder_plugin_version"], "0.4.0-beta.5")
+        self.assertEqual(template["case_package_contract_version"], "1.0-beta5")
         for field in (
             "created_at",
             "owner_authorization_reference",
@@ -214,7 +214,7 @@ class R4Beta4CasePackageTests(unittest.TestCase):
             "mechanism_or_use_point_basis = receiver_captured_raw",
             "复制前和复制后",
             "父目录锁",
-            "workflow_director_plugin_version = 0.3.0-beta.2",
+            "workflow_director_plugin_version = 0.3.0-beta.3",
             "skill_git_commit",
             "owner_authorization_reference",
         ):
@@ -500,7 +500,7 @@ class R4Beta4CasePackageTests(unittest.TestCase):
             fixture.write_jsonl(case_set, rows)
             truth_rows = fixture.r4_truth_rows(rows)
             for row in truth_rows:
-                row["truth_contract_version"] = "2.0-r4-complete"
+                row["truth_contract_version"] = "2.1-r4-adjudicated"
                 row["research_contract_id"] = "RC2-TEST-001"
                 row["conditions"] = []
                 row["limitations"] = []
@@ -862,10 +862,21 @@ class R4Beta4CasePackageTests(unittest.TestCase):
                 "content_first_case_package_manifest"
             ]
             self.assertEqual(manifest["formal_case_count"], 40)
-            self.assertEqual(manifest["known_positive_count"], 14)
+            self.assertEqual(
+                manifest["adjudicated_truth_summary"]["accepted_positive_count"],
+                15,
+            )
+            self.assertEqual(
+                len(
+                    manifest["adjudicated_truth_summary"][
+                        "accepted_positive_case_ids_sha256"
+                    ]
+                ),
+                64,
+            )
             self.assertEqual(
                 manifest["selection_origin_counts"],
-                {"retained_r3_unexecuted": 30, "new_unseen_positive": 10},
+                {"retained_r3_unexecuted": 30, "new_unseen": 10},
             )
             self.assertEqual(manifest["control_case_ids"], ["R4-CASE-001", "R4-CASE-002"])
             self.assertFalse(manifest["model_execution_authorized"])

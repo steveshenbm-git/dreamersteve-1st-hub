@@ -12,12 +12,13 @@ import sys
 import tempfile
 from typing import Any
 
+from r4_adjudicated_truth_contract import BETA5_TRUTH_SCORECARD_CONTRACT_VERSION
 
-R4_MARKER = "2.0-r4"
+R4_MARKER = BETA5_TRUTH_SCORECARD_CONTRACT_VERSION
 R4_ARMS = ("baseline_full_depth_v1", "screen_then_expand_v2")
 GATE_ORDER = [
     "safety",
-    "known_positive_recall",
+    "accepted_positive_recall",
     "receiver_evidence_completeness",
     "stability",
     "efficiency",

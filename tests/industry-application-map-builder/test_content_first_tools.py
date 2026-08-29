@@ -92,7 +92,7 @@ class ContentFirstToolTests(unittest.TestCase):
                 "content_first_policy": {
                     "contract_version": "1.0",
                     "truth_scorecard_contract_version": (
-                        "2.0-r4" if r4_methods else "1.0-legacy"
+                        "2.1-r4" if r4_methods else "1.0-legacy"
                     ),
                     "raw_response_must_be_unchanged": True,
                     "platform_audit_required_for_content_pass": False,
@@ -161,7 +161,7 @@ class ContentFirstToolTests(unittest.TestCase):
                 "full_screening_authorization": False,
                 "full_screening_authorization_reference": None,
                 "content_first_policy": {
-                    "truth_scorecard_contract_version": "2.0-r4",
+                    "truth_scorecard_contract_version": "2.1-r4",
                     "platform_audit_required_for_content_pass": False,
                     "content_method_state": "CONTENT_CALIBRATION_INCOMPLETE",
                     "content_full_screening_state": "NOT_AUTHORIZED",
@@ -173,12 +173,12 @@ class ContentFirstToolTests(unittest.TestCase):
         contract_hash = hashlib.sha256(contract_path.read_bytes()).hexdigest()
         report_path = workspace / "07-报告" / "r4-evaluation.json"
         report = {
-            "schema_version": "2.0-r4",
+            "schema_version": "2.1-r4",
             "evaluation_result": "PASS",
             "content_method_state": "CONTENT_CALIBRATION_PASS",
             "gate_order": [
                 "safety",
-                "known_positive_recall",
+                "accepted_positive_recall",
                 "receiver_evidence_completeness",
                 "stability",
                 "efficiency",
@@ -447,13 +447,17 @@ class ContentFirstToolTests(unittest.TestCase):
             "expected_semantic_axes": {
                 "screening_result": "hypothesis_formed",
                 "semantic_work_state": "evidence_expansion_required",
-                "evidence_state": "hypothesis",
+                "expected_output_evidence_state": "hypothesis",
             },
+            "truth_disposition": "positive_confirmed",
+            "evidence_state": "supported",
+            "evidence_quality": "direct_complete",
+            "adjudication_state": "accepted",
+            "adjudication_version": "R4-TRUTH-ADJ-001",
             "conditions": ["Only within the stated activity boundary."],
             "limitations": ["No company or product fit is established."],
             "unknowns": ["Operating details remain unknown."],
             "truth_boundary": "Product-neutral research only; no downstream conclusion.",
-            "counts_toward_known_positive_recall": True,
             "truth_sha256": None,
         }
         truth_body["truth_sha256"] = canonical_sha256(
@@ -503,7 +507,7 @@ class ContentFirstToolTests(unittest.TestCase):
             "source_truth_comparison_sha256": envelope_body[
                 "source_truth_comparison_sha256"
             ],
-            "scoring_rubric_version": "2.0-r4",
+            "scoring_rubric_version": "2.1-r4",
             "scoring_items": {
                 name: {
                     "responsibility": responsibility,
@@ -716,9 +720,9 @@ class ContentFirstToolTests(unittest.TestCase):
                 }
             )
         return {
-            "schema_version": "2.0-r4",
+            "schema_version": "2.1-r4",
             "semantic_content_calibration_arm": {
-                "calibration_contract_marker": "2.0-r4",
+                "calibration_contract_marker": "2.1-r4",
                 "research_contract_id": "CONTENT-RC2-001",
                 "contract_version": "2.1.0-content-first.final.1",
                 "taxonomy_snapshot_sha256": "a" * 64,
@@ -728,8 +732,8 @@ class ContentFirstToolTests(unittest.TestCase):
                 "method_arm": method_arm,
                 "run_complete": True,
                 "case_evidence": rows,
-                "known_positive_case_ids": case_ids[:14],
-                "known_positive_entered_expansion_case_ids": case_ids[:14],
+                "accepted_positive_case_ids": case_ids[:14],
+                "accepted_positive_entered_expansion_case_ids": case_ids[:14],
                 "query_count": queries,
                 "source_open_count": opens,
                 "deep_expansion_count": deep,
@@ -845,7 +849,12 @@ class ContentFirstToolTests(unittest.TestCase):
             {
                 "record_type": "source_truth",
                 "case_id": case_id,
-                "known_positive": index <= 14,
+                "truth_disposition": (
+                    "positive_confirmed" if index <= 14 else "negative_confirmed"
+                ),
+                "evidence_state": "supported",
+                "evidence_quality": "direct_complete",
+                "adjudication_state": "accepted",
             }
             for index, case_id in enumerate(case_ids, 1)
         ]
@@ -871,7 +880,18 @@ class ContentFirstToolTests(unittest.TestCase):
                 "baseline_method_contract": "baseline_full_depth_v1",
                 "candidate_method_contract": "screen_then_expand_v2",
                 "content_first_policy": {
-                    "truth_scorecard_contract_version": "2.0-r4"
+                    "truth_scorecard_contract_version": "2.1-r4"
+                },
+                "adjudicated_truth_summary": {
+                    "accepted_positive_case_ids": case_ids[:14],
+                    "accepted_positive_case_ids_sha256": canonical_sha256(case_ids[:14]),
+                    "accepted_positive_count": 14,
+                    "accepted_negative_case_ids": case_ids[14:],
+                    "accepted_negative_case_ids_sha256": canonical_sha256(case_ids[14:]),
+                    "accepted_negative_count": 26,
+                    "unresolved_case_ids": [],
+                    "unresolved_case_ids_sha256": canonical_sha256([]),
+                    "unresolved_count": 0,
                 },
                 "retrieval_efficiency_gates": {
                     "minimum_deep_expansion_reduction": 0.2,
@@ -1074,13 +1094,21 @@ class ContentFirstToolTests(unittest.TestCase):
                 "expected_semantic_axes": {
                     "screening_result": "hypothesis_formed",
                     "semantic_work_state": "evidence_expanded",
-                    "evidence_state": "supported",
+                    "expected_output_evidence_state": "supported",
                 },
+                "truth_disposition": (
+                    "positive_confirmed"
+                    if case_id in case_ids[:14]
+                    else "negative_confirmed"
+                ),
+                "evidence_state": "supported",
+                "evidence_quality": "direct_complete",
+                "adjudication_state": "accepted",
+                "adjudication_version": "R4-TRUTH-ADJ-001",
                 "conditions": ["fixture condition"],
                 "limitations": ["fixture limitation"],
                 "unknowns": ["fixture unknown"],
                 "truth_boundary": "fixture boundary",
-                "counts_toward_known_positive_recall": case_id in case_ids[:14],
                 "truth_sha256": None,
             }
             truth_case["truth_sha256"] = canonical_sha256(
@@ -1177,7 +1205,7 @@ class ContentFirstToolTests(unittest.TestCase):
                 "visible_input_sha256": visible_hash,
                 "source_truth_comparison_reference": truth_case_ref,
                 "source_truth_comparison_sha256": truth_case_hash,
-                "scoring_rubric_version": "2.0-r4",
+                "scoring_rubric_version": "2.1-r4",
                 "scoring_items": score_items,
                 "equivalent_source_dimensions": equivalent_dimensions,
                 "equivalent_source_result": "PASS",
@@ -1347,9 +1375,9 @@ class ContentFirstToolTests(unittest.TestCase):
                     }
                 )
             arms[arm] = {
-                "schema_version": "2.0-r4",
+                "schema_version": "2.1-r4",
                 "semantic_content_calibration_arm": {
-                    "calibration_contract_marker": "2.0-r4",
+                    "calibration_contract_marker": "2.1-r4",
                     "research_contract_id": contract_body["research_contract_id"],
                     "contract_version": contract_body["contract_version"],
                     "taxonomy_snapshot_sha256": contract_body["taxonomy_snapshot_sha256"],
@@ -1370,8 +1398,8 @@ class ContentFirstToolTests(unittest.TestCase):
                     "method_arm": arm,
                     "run_complete": True,
                     "case_evidence": rows,
-                    "known_positive_case_ids": case_ids[:14],
-                    "known_positive_entered_expansion_case_ids": case_ids[:14],
+                    "accepted_positive_case_ids": case_ids[:14],
+                    "accepted_positive_entered_expansion_case_ids": case_ids[:14],
                     "query_count": sum(query_parts),
                     "source_open_count": sum(open_parts),
                     "deep_expansion_count": sum(deep_parts),
@@ -2722,7 +2750,7 @@ class ContentFirstToolTests(unittest.TestCase):
                 elif mutation == "unknown_marker":
                     body["content_first_policy"][
                         "truth_scorecard_contract_version"
-                    ] = "2.0-r4-unknown"
+                    ] = "2.1-r4-unknown"
                 else:
                     body["contract_version"] = "2.1.0-content-first.final.1"
                     body["content_first_policy"][
@@ -2836,7 +2864,7 @@ class ContentFirstToolTests(unittest.TestCase):
     def test_r4_arm_template_declares_auditable_resource_and_stability_fields(self):
         payload = json.loads(ARM_TEMPLATE.read_text(encoding="utf-8"))
         arm = payload["semantic_content_calibration_arm"]
-        self.assertEqual(arm["calibration_contract_marker"], "2.0-r4")
+        self.assertEqual(arm["calibration_contract_marker"], "2.1-r4")
         self.assertEqual(arm["method_arm"], "screen_then_expand_v2")
         self.assertIn("paired_task_manifest_reference_and_hash", arm)
         self.assertIn("query_count", arm)
@@ -2865,7 +2893,7 @@ class ContentFirstToolTests(unittest.TestCase):
             self.assertEqual(report["content_method_state"], "CONTENT_CALIBRATION_PASS")
             self.assertEqual(report["gate_order"], [
                 "safety",
-                "known_positive_recall",
+                "accepted_positive_recall",
                 "receiver_evidence_completeness",
                 "stability",
                 "efficiency",
@@ -3007,12 +3035,12 @@ class ContentFirstToolTests(unittest.TestCase):
                 baseline_body = baseline["semantic_content_calibration_arm"]
                 candidate_body = candidate["semantic_content_calibration_arm"]
                 if mutation == "thirteen":
-                    baseline_body["known_positive_case_ids"] = baseline_body["known_positive_case_ids"][:13]
+                    baseline_body["accepted_positive_case_ids"] = baseline_body["accepted_positive_case_ids"][:13]
                 elif mutation == "candidate_different":
-                    candidate_body["known_positive_case_ids"][-1] = "CASE-015"
+                    candidate_body["accepted_positive_case_ids"][-1] = "CASE-015"
                 else:
-                    candidate_body["known_positive_entered_expansion_case_ids"] = candidate_body[
-                        "known_positive_entered_expansion_case_ids"
+                    candidate_body["accepted_positive_entered_expansion_case_ids"] = candidate_body[
+                        "accepted_positive_entered_expansion_case_ids"
                     ][:-1]
 
                 result, output = self.evaluate_r4(parent, baseline, candidate, "report.json", *trusted_args)
@@ -3092,9 +3120,9 @@ class ContentFirstToolTests(unittest.TestCase):
                 "fixture safety failure"
             ]
             candidate["semantic_content_calibration_arm"][
-                "known_positive_entered_expansion_case_ids"
+                "accepted_positive_entered_expansion_case_ids"
             ] = candidate["semantic_content_calibration_arm"][
-                "known_positive_entered_expansion_case_ids"
+                "accepted_positive_entered_expansion_case_ids"
             ][:-1]
 
             result, output = self.evaluate_r4(
@@ -3161,9 +3189,9 @@ class ContentFirstToolTests(unittest.TestCase):
             baseline, candidate, trusted_args, _ = self.real_r4_evaluation_fixture(parent)
             arbitrary = [f"CASE-{index:03d}" for index in range(15, 29)]
             for payload in (baseline, candidate):
-                payload["semantic_content_calibration_arm"]["known_positive_case_ids"] = arbitrary
+                payload["semantic_content_calibration_arm"]["accepted_positive_case_ids"] = arbitrary
             candidate["semantic_content_calibration_arm"][
-                "known_positive_entered_expansion_case_ids"
+                "accepted_positive_entered_expansion_case_ids"
             ] = arbitrary
             result, _ = self.evaluate_r4(parent, baseline, candidate, "report.json", *trusted_args)
 
@@ -3197,7 +3225,7 @@ class ContentFirstToolTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             parent = Path(tmp)
             baseline, candidate, trusted_args, _ = self.real_r4_evaluation_fixture(parent)
-            candidate["semantic_content_calibration_arm"]["known_positive_case_ids"] = [
+            candidate["semantic_content_calibration_arm"]["accepted_positive_case_ids"] = [
                 {"not": "a string"},
                 *[f"CASE-{index:03d}" for index in range(2, 15)],
             ]
@@ -3649,7 +3677,7 @@ class ContentFirstToolTests(unittest.TestCase):
                     write_json(
                         paths["report"],
                         {
-                            "schema_version": "2.0-r4",
+                            "schema_version": "2.1-r4",
                             "content_method_state": "CONTENT_CALIBRATION_PASS",
                             "safety_failures": [],
                         },
@@ -3982,7 +4010,7 @@ class ContentFirstToolTests(unittest.TestCase):
                 if mutation == "deleted":
                     paths["report"].unlink()
                 elif mutation == "replaced":
-                    write_json(paths["report"], {"schema_version": "2.0-r4"})
+                    write_json(paths["report"], {"schema_version": "2.1-r4"})
                     report_hash = hashlib.sha256(paths["report"].read_bytes()).hexdigest()
                 elif mutation == "wrong_expected_hash":
                     report_hash = "f" * 64

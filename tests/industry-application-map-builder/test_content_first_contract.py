@@ -46,7 +46,11 @@ class ContentFirstUnifiedContractTests(unittest.TestCase):
             "limitations",
             "unknowns",
             "truth_boundary",
-            "counts_toward_known_positive_recall",
+            "truth_disposition",
+            "evidence_state",
+            "evidence_quality",
+            "adjudication_state",
+            "adjudication_version",
         ):
             self.assertIn(required, truth)
         self.assertNotIn("scoring_items", truth)
@@ -75,7 +79,7 @@ class ContentFirstUnifiedContractTests(unittest.TestCase):
                 ]
                 self.assertEqual(
                     contract["content_first_policy"]["truth_scorecard_contract_version"],
-                    "2.0-r4",
+                    "2.1-r4",
                 )
 
     def test_existing_plugins_have_next_versions(self):
@@ -91,11 +95,11 @@ class ContentFirstUnifiedContractTests(unittest.TestCase):
         self.assertEqual(
             map_manifest["name"], "industry-application-map-builder"
         )
-        self.assertEqual(map_manifest["version"], "0.4.0-beta.4")
+        self.assertEqual(map_manifest["version"], "0.4.0-beta.5")
         self.assertEqual(
             workflow_manifest["name"], "foreign-trade-workflow-director"
         )
-        self.assertEqual(workflow_manifest["version"], "0.3.0-beta.2")
+        self.assertEqual(workflow_manifest["version"], "0.3.0-beta.3")
 
     def test_content_first_contract_keeps_raw_content_and_separates_platform_audit(self):
         map_skill = (MAP_SKILL / "SKILL.md").read_text(encoding="utf-8")

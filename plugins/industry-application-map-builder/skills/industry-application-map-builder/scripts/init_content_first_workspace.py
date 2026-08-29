@@ -7,6 +7,7 @@ from pathlib import Path
 import sys
 from typing import Any
 
+from r4_adjudicated_truth_contract import BETA5_TRUTH_SCORECARD_CONTRACT_VERSION
 
 def fail(code: str, detail: str) -> int:
     print(json.dumps({"status": "FAIL", "code": code, "detail": detail}, ensure_ascii=False), file=sys.stderr)
@@ -39,13 +40,14 @@ def valid_contract(contract: Any) -> bool:
         and nonempty(contract.get("source_truth_package_sha256"))
         and isinstance(policy, dict)
         and policy.get("truth_scorecard_contract_version")
-        in {"2.0-r4", "1.0-legacy"}
+        in {BETA5_TRUTH_SCORECARD_CONTRACT_VERSION, "1.0-legacy"}
         and policy.get("raw_response_must_be_unchanged") is True
         and policy.get("platform_audit_required_for_content_pass") is False
         and policy.get("downstream_release_state") == "RESEARCH_ONLY_BLOCKED"
         and (
             (
-                policy.get("truth_scorecard_contract_version") == "2.0-r4"
+                policy.get("truth_scorecard_contract_version")
+                == BETA5_TRUTH_SCORECARD_CONTRACT_VERSION
                 and contract.get("baseline_method_contract")
                 == "baseline_full_depth_v1"
                 and contract.get("candidate_method_contract")
@@ -94,7 +96,7 @@ def main() -> int:
             "03-内容原始回答/baseline_full_depth_v1",
             "03-内容原始回答/screen_then_expand_v2",
         )
-        if marker == "2.0-r4"
+        if marker == BETA5_TRUTH_SCORECARD_CONTRACT_VERSION
         else (
             "03-内容原始回答/baseline_full_depth",
             "03-内容原始回答/candidate_screen_then_expand",

@@ -1,19 +1,29 @@
 {
-  "schema_version": "1.0-beta4",
+  "schema_version": "1.0-beta5",
   "content_first_case_package_manifest": {
     "manifest_id": null,
     "research_contract_id": null,
-    "map_builder_plugin_version": "0.4.0-beta.4",
-    "case_package_contract_version": "1.0-beta4",
+    "map_builder_plugin_version": "0.4.0-beta.5",
+    "case_package_contract_version": "1.0-beta5",
     "preparation_contract_version": null,
     "locked_input_sha256": null,
     "final_contract_version": null,
     "final_contract_sha256": null,
     "formal_case_count": 40,
-    "known_positive_count": 14,
+    "adjudicated_truth_summary": {
+      "accepted_positive_case_ids": [],
+      "accepted_positive_case_ids_sha256": null,
+      "accepted_positive_count": null,
+      "accepted_negative_case_ids": [],
+      "accepted_negative_case_ids_sha256": null,
+      "accepted_negative_count": null,
+      "unresolved_case_ids": [],
+      "unresolved_case_ids_sha256": null,
+      "unresolved_count": null
+    },
     "selection_origin_counts": {
       "retained_r3_unexecuted": 30,
-      "new_unseen_positive": 10
+      "new_unseen": 10
     },
     "formal_case_ids": [],
     "control_case_ids": [],

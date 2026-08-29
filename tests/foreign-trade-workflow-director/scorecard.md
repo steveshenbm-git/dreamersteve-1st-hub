@@ -28,7 +28,7 @@
 | 用户界面边界 | 用户不填写机器证据附页，只处理研究主题、预算、阶段授权和业务决定 |
 | R4术语合同 | `terminology_bridge_reference` / `terminology_bridge_sha256` / `terminology_bridge_state` 均与冻结合同匹配；缺失或错配只路由 `content_first_contract_prepare` |
 | 开发回归隔离 | 10个开发案例始终为 `development_regression_only`；未完成/未核实留在 development-only 复核，只有FAIL触发方法修复和重锁，且都不计入正式效果 |
-| 正式保留集 | 真实 `formal_holdout_case_set_sha256`、30个 `retained_r3_unexecuted` + 10个 `new_unseen_positive` 与闭集 provenance 均通过 |
+| 正式保留集与真值 | 真实 `formal_holdout_case_set_sha256`、30个 `retained_r3_unexecuted` + 10个 `new_unseen` 与闭集 provenance 均通过；选样不携带答案，接受正例/反例/未决集合及哈希由独立裁决推导，真值重开会使旧评分失效 |
 | 正式内容链 | 80个成对任务有真实 `paired_task_manifest_sha256`，6个预声明稳定性重复有真实 `stability_task_manifest_sha256`，来源真值、评分卡与receiver证据也均有独立哈希与PASS状态 |
 | 模式防降级 | 明确 `content_first` 的 R4 合同不能因删字段降级为 `strict_audit`；只有历史缺省合同使用兼容语义 |
 | 内容与平台审计分离 | `platform_audit_state` 不替代内容真值/评分/receiver证据，也不抹消已完整保存的可评分内容 |

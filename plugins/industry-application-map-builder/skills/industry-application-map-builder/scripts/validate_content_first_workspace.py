@@ -17,8 +17,15 @@ from content_source_observation_schema import (
     valid_model_observation,
 )
 from content_first_r4_scorecard_schema import (
+    R4_MARKER,
     R4_SCORECARD_FIELDS,
+    TRUTH_FIELDS,
     validate_r4_scorecard,
+)
+from r4_adjudicated_truth_contract import (
+    EVIDENCE_QUALITIES,
+    EVIDENCE_STATES as ADJUDICATION_EVIDENCE_STATES,
+    TRUTH_DISPOSITIONS,
 )
 
 
@@ -34,22 +41,6 @@ LEGACY_SCORE_ITEMS = {
     "source_truth_alignment",
     "safety_boundary",
     "unknown_disclosure",
-}
-TRUTH_FIELDS = {
-    "truth_id",
-    "research_contract_id",
-    "contract_version",
-    "case_id",
-    "taxonomy_membership_basis",
-    "output_or_subprocess_basis",
-    "mechanism_basis",
-    "expected_semantic_axes",
-    "conditions",
-    "limitations",
-    "unknowns",
-    "truth_boundary",
-    "counts_toward_known_positive_recall",
-    "truth_sha256",
 }
 LEGACY_SCORECARD_FIELDS = R4_SCORECARD_FIELDS - {
     "equivalent_source_dimensions",
@@ -322,7 +313,7 @@ def main() -> int:
     ):
         allowed_arms = LEGACY_ARMS
         r4_scoring_required = False
-    elif scorecard_contract_version == "2.0-r4" and (
+    elif scorecard_contract_version == R4_MARKER and (
         declared_baseline_arm == "baseline_full_depth_v1"
         and declared_candidate_arm == "screen_then_expand_v2"
     ):
@@ -331,7 +322,7 @@ def main() -> int:
     else:
         allowed_arms = set()
         r4_scoring_required = scorecard_contract_version != "1.0-legacy"
-        if scorecard_contract_version not in {"1.0-legacy", "2.0-r4"}:
+        if scorecard_contract_version not in {"1.0-legacy", R4_MARKER}:
             add(
                 errors,
                 "TRUTH_SCORECARD_CONTRACT_VERSION_INVALID",
@@ -708,15 +699,25 @@ def main() -> int:
                 if not (
                     isinstance(expected_axes, dict)
                     and set(expected_axes)
-                    == {"screening_result", "semantic_work_state", "evidence_state"}
+                    == {
+                        "screening_result",
+                        "semantic_work_state",
+                        "expected_output_evidence_state",
+                    }
                     and expected_axes.get("screening_result") in SCREENING_RESULTS
                     and expected_axes.get("semantic_work_state") in SEMANTIC_WORK_STATES
-                    and expected_axes.get("evidence_state") in EVIDENCE_STATES
+                    and expected_axes.get("expected_output_evidence_state")
+                    in EVIDENCE_STATES
+                    and truth.get("truth_disposition") in TRUTH_DISPOSITIONS
+                    and truth.get("evidence_state")
+                    in ADJUDICATION_EVIDENCE_STATES
+                    and truth.get("evidence_quality") in EVIDENCE_QUALITIES
+                    and truth.get("adjudication_state") == "accepted"
+                    and nonempty(truth.get("adjudication_version"))
                     and valid_text_list(truth.get("conditions"))
                     and valid_text_list(truth.get("limitations"))
                     and valid_text_list(truth.get("unknowns"))
                     and nonempty(truth.get("truth_boundary"))
-                    and type(truth.get("counts_toward_known_positive_recall")) is bool
                     and truth.get("truth_sha256")
                     == canonical_sha256({**truth, "truth_sha256": None})
                 ):

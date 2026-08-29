@@ -6,8 +6,9 @@ from pathlib import Path, PurePosixPath
 import re
 from typing import Any
 
+from r4_adjudicated_truth_contract import BETA5_TRUTH_SCORECARD_CONTRACT_VERSION
 
-R4_MARKER = "2.0-r4"
+R4_MARKER = BETA5_TRUTH_SCORECARD_CONTRACT_VERSION
 PLATFORM_AUDIT_STATES = {"PASS", "FAIL", "UNVERIFIED", "NOT_COLLECTED"}
 R4_SCORE_ITEMS = {
     "taxonomy_and_scope_grounding": ("taxonomy_truth_reviewer", True),
@@ -53,11 +54,15 @@ TRUTH_FIELDS = {
     "output_or_subprocess_basis",
     "mechanism_basis",
     "expected_semantic_axes",
+    "truth_disposition",
+    "evidence_state",
+    "evidence_quality",
+    "adjudication_state",
+    "adjudication_version",
     "conditions",
     "limitations",
     "unknowns",
     "truth_boundary",
-    "counts_toward_known_positive_recall",
     "truth_sha256",
 }
 
@@ -239,7 +244,7 @@ def validate_r4_scorecard(
         or truth.get("research_contract_id") != expected_contract_id
         or truth.get("contract_version") != expected_contract_version
         or truth.get("case_id") != envelope.get("subject", {}).get("id")
-        or type(truth.get("counts_toward_known_positive_recall")) is not bool
+        or truth.get("adjudication_state") != "accepted"
         or truth.get("truth_sha256")
         != canonical_sha256({**truth, "truth_sha256": None})
     ):

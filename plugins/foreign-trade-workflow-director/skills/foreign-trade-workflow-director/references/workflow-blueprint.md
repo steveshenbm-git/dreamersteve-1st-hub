@@ -2,7 +2,7 @@
 
 `blueprint_id: foreign-trade-complete-workflow`
 
-`blueprint_version: 0.3.0-beta.2`
+`blueprint_version: 0.3.0-beta.3`
 
 ## 判定原则
 
@@ -10,6 +10,7 @@
 - 缺少证据记为 `UNVERIFIED`，明确不合格记为 `FAIL`；过期单独记在 `freshness = stale`，不能用旧 PASS 放行。
 - 后期工作簿、候选公司、草稿或实发记录不能反向证明前期阶段完整。
 - 每次只把一项当前任务交给阶段所有者，返回包验收前停止。
+- 任何跨任务指挥前先执行 `inspector_preflight`：读取当前会话 `memory.md` 中现行检察者规则。普通缺陷记录后继续，小幅方向修正留下依据后继续；真值、盲测、哈希/合同、来源时序、拒绝覆盖或授权边界受损时必须暂停。
 
 ## 权威阶段图
 
@@ -81,7 +82,7 @@ content_first_contract_prepare
 → semantic_stage_review
 ```
 
-术语桥引用、真实 SHA-256 或冻结状态缺失/错配时只路由 `content_first_contract_prepare`。10个开发回归必须标记 `development_regression_only` 并单独记录 `development_regression_state`；`not_started / in_progress / UNVERIFIED → content_first_calibration_review (development-only)`，只执行或复核开发集；`FAIL → content_first_contract_prepare`，修复方法并重锁。任何开发结果都不得计入正式效果。正式保留集必须是 30 + 10：30个 `retained_r3_unexecuted` 加10个 `new_unseen_positive`，并以 `formal_holdout_provenance_state` 和真实 `formal_holdout_case_set_sha256` 验收；不完整时只路由 `semantic_calibration_case_prepare`。正式80任务链必须绑定真实 `paired_task_manifest_sha256`，预声明的6个稳定性重复必须绑定真实 `stability_task_manifest_sha256`；任务清单、来源真值、评分卡、receiver证据或稳定性任一缺失时，只路由 `content_first_calibration_review`。
+术语桥引用、真实 SHA-256 或冻结状态缺失/错配时只路由 `content_first_contract_prepare`。10个开发回归必须标记 `development_regression_only` 并单独记录 `development_regression_state`；`not_started / in_progress / UNVERIFIED → content_first_calibration_review (development-only)`，只执行或复核开发集；`FAIL → content_first_contract_prepare`，修复方法并重锁。任何开发结果都不得计入正式效果。正式保留集必须是中性的 30 + 10：30个 `retained_r3_unexecuted` 加10个 `new_unseen`，并以 `formal_holdout_provenance_state` 和真实 `formal_holdout_case_set_sha256` 验收；抽样来源和覆盖类别不得定义真值。正例、反例和未决例只从 `truth_contract_version = 2.1-r4-adjudicated` 的 accepted 裁决记录推导，冻结 `accepted_positive_case_ids_sha256`、`accepted_negative_case_ids_sha256`、`unresolved_case_ids_sha256` 及对应数量；正例分母动态取实际接受集合，但10个 `new_unseen` 必须全部为接受正例。真值 reopened 或 superseded 时，旧任务、评分和校准结果全部失效并退回 `semantic_calibration_case_prepare`。正式80任务链必须绑定真实 `paired_task_manifest_sha256`，预声明的6个稳定性重复必须绑定真实 `stability_task_manifest_sha256`；任务清单、来源真值、评分卡、receiver证据或稳定性任一缺失时，只路由 `content_first_calibration_review`。
 
 `CONTENT_CALIBRATION_PASS` 只能证明内容门已通过；它不是 legacy strict_audit 的 `EFFECTIVE`，也不能让 `industry_semantic_expansion` 变为 `PASS`。静态结构测试或 `platform_audit_state = PASS` 都不能生成内容 PASS；平台审计缺失也不得删除字节完整且可评分的内容。全量默认 `NOT_AUTHORIZED`；授权引用、Task 8 gate绑定、独立receipt引用与真实SHA-256、冻结末端范围SHA-256任一缺失或错配 → content_first_full_screening_gate (NOT_AUTHORIZED)。只有这些证据全部非空且互相匹配、Task 8 gate验证其绑定当前最终合同/校准报告/末端范围且零安全失败，才允许 `AUTHORIZED_NOT_STARTED`；布尔值或状态自报无效。全量、证据展开和反向审计完成后仍保持 `RESEARCH_ONLY_BLOCKED`：不得写共享应用底座、公司匹配、路线包、候选客户或对外沟通。
 
@@ -149,9 +150,24 @@ company_workflow_state:
     terminology_bridge_state
     development_regression_only
     development_regression_state
+    case_package_contract_version
+    truth_contract_version
+    truth_scorecard_contract_version
     formal_holdout_case_set_sha256
     retained_r3_unexecuted_case_count
-    new_unseen_positive_case_count
+    new_unseen_case_count
+    truth_adjudication_state
+    accepted_positive_case_ids_sha256
+    accepted_positive_count
+    accepted_negative_case_ids_sha256
+    accepted_negative_count
+    unresolved_case_ids_sha256
+    unresolved_count
+    truth_revision_invalidates_prior_scoring
+    inspector_preflight_required
+    inspector_memory_reference
+    inspector_preflight_state
+    deferred_findings_reference
     formal_holdout_provenance_state
     paired_task_manifest_reference
     paired_task_manifest_sha256

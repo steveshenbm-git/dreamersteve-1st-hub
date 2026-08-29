@@ -14,6 +14,7 @@ from check_content_first_full_screening_gate import (
     Invalid as FullScreenChainInvalid,
     validate_report as validate_r4_evaluator_report,
 )
+from r4_adjudicated_truth_contract import BETA5_TRUTH_SCORECARD_CONTRACT_VERSION
 
 
 SCREENING_RESULTS = {"hypothesis_formed", "ambiguous", "no_hypothesis_formed"}
@@ -24,7 +25,7 @@ WORK_STATES = {
     "audit_reopened",
 }
 EVIDENCE_STATES = {"supported", "hypothesis", "unknown", "conflicted"}
-R4_MARKER = "2.0-r4"
+R4_MARKER = BETA5_TRUTH_SCORECARD_CONTRACT_VERSION
 LEGACY_MARKER = "1.0-legacy"
 R4_GATE_FIELDS = {
     "schema_version",

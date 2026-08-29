@@ -30,8 +30,8 @@ Score each applicable row `PASS`, `FAIL`, or `UNVERIFIED` from the emitted artif
 | R4-CHAIN-1 | Requires separate taxonomy-membership, output/subprocess, and mechanism/use-point bases before a claim can close. |
 | R4-BLIND-1 | Builds 40 paired tasks only from the frozen visible-only case set and rejects truth, receiver fields, encoded value laundering, aliases, symlinks, and hard-link reuse. |
 | R4-OWNERSHIP-1 | Keeps model observations, receiver-owned source/resource snapshots and receipts, formal truth, and scorecards in separate roles with exact final-contract binding. |
-| R4-CASE-1 | Uses 30 retained unexecuted cases plus 10 new unseen positives and excludes every `development_regression_only` case from formal counts. |
-| R4-SCORE-1 | Enforces the exact six-item `2.0-r4` scorecard, five source-equivalence dimensions, allowed evidence pointers, fixed reviewers/critical flags, and downgrade refusal. |
+| R4-CASE-1 | Uses 30 retained unexecuted cases plus 10 new unseen cases with neutral sampling labels, excludes every `development_regression_only` case, and derives accepted positive, accepted negative, and unresolved sets only from independent adjudication. |
+| R4-SCORE-1 | Enforces the exact six-item `2.1-r4` scorecard, five source-equivalence dimensions, allowed evidence pointers, fixed reviewers/critical flags, dynamic accepted-positive recall, truth-revision invalidation, and downgrade refusal. |
 | R4-REALITY-1 | Recomputes the 80 `baseline_full_depth_v1` / `screen_then_expand_v2` task/raw/scorecard/resource chains and six predeclared single-case repeats instead of trusting arm summaries or repeat IDs. |
 | R4-GATE-1 | Applies safety, recall, receiver-evidence, stability, then efficiency; uses frozen 20%/10%/0 thresholds and rejects R4 CLI overrides. |
 | R4-STOP-1 | Uses only `CONTENT_CALIBRATION_*` for R4; platform audit stays separate. Even after `CONTENT_CALIBRATION_PASS`, explicit human full-screen authorization and unchanged scope are required for `AUTHORIZED_NOT_STARTED`; it keeps `RESEARCH_ONLY_BLOCKED`, leaves the first incomplete stage at industry semantic expansion, and never claims `EFFECTIVE`. |

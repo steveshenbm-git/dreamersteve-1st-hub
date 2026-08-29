@@ -14,9 +14,21 @@ from pathlib import PurePosixPath
 from validate_terminology_bridge import load_rows as load_terminology_rows
 from validate_terminology_bridge import validate_rows as validate_terminology_rows
 from content_first_visible_case_schema import frozen_visible_case_errors, visible_case_projection
+from r4_adjudicated_truth_contract import (
+    BETA5_CASE_PACKAGE_CONTRACT_VERSION as CASE_PACKAGE_CONTRACT_VERSION,
+    BETA5_MAP_BUILDER_PLUGIN_VERSION as MAP_BUILDER_PLUGIN_VERSION,
+    BETA5_TRUTH_SCORECARD_CONTRACT_VERSION as TRUTH_SCORECARD_CONTRACT_VERSION,
+    DIRECTOR_PLUGIN_VERSION,
+    MINIMUM_NEW_UNSEEN_ACCEPTED_POSITIVES,
+    SAMPLING_CATEGORY_COUNTS,
+    SELECTION_ORIGIN_COUNTS,
+    derive_truth_summary,
+    validate_adjudicated_truth_rows,
+    validate_beta5_case_rows,
+    validate_positive_holdout_floor,
+    validate_truth_summary_integrity,
+)
 from r4_case_package_contract import (
-    BETA4_CASE_PACKAGE_CONTRACT_VERSION,
-    BETA4_PLUGIN_VERSION,
     aware_datetime,
     taxonomy_identifier_key,
     taxonomy_level_number,
@@ -74,6 +86,7 @@ CONTENT_FIRST_REQUIRED = {
     "content_first_policy",
     "source_truth_package_reference",
     "source_truth_package_sha256",
+    "adjudicated_truth_summary",
     "visible_case_set_reference_and_hash",
     "visible_case_freeze_receipt_reference_and_hash",
     "execution_authorized",
@@ -95,35 +108,8 @@ CONTENT_FIRST_CONCEPT_ROLES = {
     "use_point",
     "exclusion",
 }
-CONTENT_FIRST_CATEGORY_COUNTS = {
-    "direct_supported_positive": 8,
-    "hidden_positive": 6,
-    "misleading_name_similarity": 6,
-    "source_sparse_or_inaccessible": 5,
-    "ambiguous_or_incomplete_conditions": 5,
-    "circular_or_mixed_company_source": 4,
-    "empty_generalization": 3,
-    "contamination_drift_or_structure_error": 3,
-}
-CONTENT_FIRST_SELECTION_ORIGIN_COUNTS = {
-    "retained_r3_unexecuted": 30,
-    "new_unseen_positive": 10,
-}
-CONTENT_FIRST_SELECTION_ORIGIN_CATEGORY_COUNTS = {
-    "retained_r3_unexecuted": {
-        "hidden_positive": 4,
-        "misleading_name_similarity": 6,
-        "source_sparse_or_inaccessible": 5,
-        "ambiguous_or_incomplete_conditions": 5,
-        "circular_or_mixed_company_source": 4,
-        "empty_generalization": 3,
-        "contamination_drift_or_structure_error": 3,
-    },
-    "new_unseen_positive": {
-        "direct_supported_positive": 8,
-        "hidden_positive": 2,
-    },
-}
+CONTENT_FIRST_CATEGORY_COUNTS = SAMPLING_CATEGORY_COUNTS
+CONTENT_FIRST_SELECTION_ORIGIN_COUNTS = SELECTION_ORIGIN_COUNTS
 RETAINED_PROVENANCE_KEYS = {
     "development_regression_only",
     "selection_origin",
@@ -381,6 +367,7 @@ def case_preparation_input_projection(contract: dict) -> dict:
         projection["visible_case_freeze_receipt_reference_and_hash"] = {"reference": None, "sha256": None}
         projection["source_truth_package_reference"] = None
         projection["source_truth_package_sha256"] = None
+        projection["adjudicated_truth_summary"] = None
     batch = projection.get("batch_rule")
     if isinstance(batch, dict):
         batch["batch_size"] = None
@@ -414,6 +401,7 @@ def case_preparation_outputs_are_empty(contract: dict) -> bool:
                 and isinstance(visible_freeze_receipt, dict)
                 and visible_freeze_receipt.get("reference") is None
                 and visible_freeze_receipt.get("sha256") is None
+                and contract.get("adjudicated_truth_summary") is None
             )
         )
         and isinstance(batch, dict)
@@ -825,7 +813,6 @@ def validate_content_first_case_provenance(
         return ["CALIBRATION_CASE_POLICY_INVALID"]
     problems: list[str] = []
     origin_counts: dict[str, int] = {}
-    origin_categories: dict[str, dict[str, int]] = {}
     asset_references: set[str] = set()
     asset_hashes: set[str] = set()
     asset_identities: set[tuple[int, int]] = set()
@@ -900,10 +887,7 @@ def validate_content_first_case_provenance(
         if origin not in CONTENT_FIRST_SELECTION_ORIGIN_COUNTS:
             problems.append("CASE_PROVENANCE_INVALID")
             continue
-        category = case.get("primary_category")
         origin_counts[origin] = origin_counts.get(origin, 0) + 1
-        category_counts = origin_categories.setdefault(origin, {})
-        category_counts[category] = category_counts.get(category, 0) + 1
         if origin == "retained_r3_unexecuted":
             if set(provenance) != RETAINED_PROVENANCE_KEYS:
                 problems.append("CASE_PROVENANCE_INVALID")
@@ -933,8 +917,6 @@ def validate_content_first_case_provenance(
             if set(provenance) != NEW_PROVENANCE_KEYS:
                 problems.append("CASE_PROVENANCE_INVALID")
                 continue
-            if case.get("known_positive") is not True:
-                problems.append("NEW_UNSEEN_POSITIVE_REQUIRED")
             reference = provenance.get("selection_receipt_reference")
             expected_hash = provenance.get("selection_receipt_sha256")
             payload_key = "new_unseen_selection_receipt"
@@ -1031,10 +1013,7 @@ def validate_content_first_case_provenance(
             ):
                 problems.append("NEW_SELECTION_LOCK_BINDING_INVALID")
 
-    if (
-        origin_counts != CONTENT_FIRST_SELECTION_ORIGIN_COUNTS
-        or origin_categories != CONTENT_FIRST_SELECTION_ORIGIN_CATEGORY_COUNTS
-    ):
+    if origin_counts != CONTENT_FIRST_SELECTION_ORIGIN_COUNTS:
         problems.append("SELECTION_ORIGIN_COMPOSITION_INVALID")
     if retained_manifest_ids != eligible_manifest_ids:
         problems.append("R3_RETAINED_MEMBERSHIP_MISMATCH")
@@ -1119,13 +1098,16 @@ def validate_content_first_case_truth_rows(
         or len({unicodedata.normalize("NFKC", case_id).casefold() for case_id in formal_case_ids if isinstance(case_id, str)}) != 40
     ):
         problems.append("FORMAL_CASE_IDS_INVALID")
-    expected_counts = calibration_policy.get("required_category_counts")
+    expected_counts = calibration_policy.get("required_sampling_category_counts")
     actual_counts: dict[object, int] = {}
     for case in cases:
-        category = case.get("primary_category")
+        category = case.get("sampling_category")
         actual_counts[category] = actual_counts.get(category, 0) + 1
-    if header.get("category_counts") != expected_counts or actual_counts != expected_counts:
-        problems.append("CATEGORY_COUNT_DRIFT")
+    if (
+        header.get("sampling_category_counts") != expected_counts
+        or actual_counts != expected_counts
+    ):
+        problems.append("SAMPLING_CATEGORY_COUNT_DRIFT")
     excluded_case_ids = calibration_policy.get("development_case_ids_excluded_from_formal")
     if not isinstance(excluded_case_ids, list):
         problems.append("DEVELOPMENT_CASE_EXCLUSION_POLICY_INVALID")
@@ -1136,28 +1118,12 @@ def validate_content_first_case_truth_rows(
             problems.append("DEVELOPMENT_CASE_EXCLUSION_POLICY_INVALID")
         elif set(excluded_keys).intersection(case_keys):
             problems.append("DEVELOPMENT_CASE_ID_IN_FORMAL_SET")
-    positive_categories = {"direct_supported_positive", "hidden_positive"}
-    for case in cases:
-        provenance = case.get("provenance")
-        if not isinstance(provenance, dict) or "development_regression_only" not in provenance:
-            problems.append("CASE_PROVENANCE_INVALID")
-            break
-        if provenance.get("development_regression_only") is True:
-            problems.append("DEVELOPMENT_CASE_IN_FORMAL_SET")
-            break
-        if provenance.get("development_regression_only") is not False:
-            problems.append("CASE_PROVENANCE_INVALID")
-            break
-        if type(case.get("known_positive")) is not bool or case["known_positive"] != (case.get("primary_category") in positive_categories):
-            problems.append("CASE_KNOWN_POSITIVE_INVALID")
-            break
+    problems.extend(validate_beta5_case_rows(cases))
     problems.extend(
         validate_content_first_case_provenance(
             cases, contract, contract_local_root
         )
     )
-    if sum(case.get("known_positive") is True for case in cases) != 14:
-        problems.append("KNOWN_POSITIVE_COUNT_DRIFT")
     repeats = header.get("stability_repeat_case_ids")
     if (
         not isinstance(repeats, list)
@@ -1186,16 +1152,25 @@ def validate_content_first_case_truth_rows(
     ):
         problems.append("SOURCE_TRUTH_CASE_IDS_INVALID")
     else:
-        for truth in truth_rows:
-            case = case_by_id[truth["case_id"]]
-            if type(truth.get("known_positive")) is not bool or truth["known_positive"] is not case["known_positive"]:
-                problems.append("SOURCE_TRUTH_DISPOSITION_MISMATCH")
-                break
+        gate = contract.get("case_preparation_gate") if isinstance(contract, dict) else {}
+        problems.extend(
+            validate_adjudicated_truth_rows(
+                truth_rows,
+                expected_case_ids=case_ids,
+                expected_contract_id=research_contract_id,
+                expected_preparation_contract_version=gate.get(
+                    "preparation_contract_version"
+                ),
+                expected_locked_input_sha256=gate.get("locked_input_sha256"),
+            )
+        )
+        truth_summary = derive_truth_summary(truth_rows)
+        problems.extend(validate_positive_holdout_floor(cases, truth_summary))
     if (
         isinstance(contract, dict)
-        and contract.get("map_builder_plugin_version") == BETA4_PLUGIN_VERSION
+        and contract.get("map_builder_plugin_version") == MAP_BUILDER_PLUGIN_VERSION
         and contract.get("case_package_contract_version")
-        == BETA4_CASE_PACKAGE_CONTRACT_VERSION
+        == CASE_PACKAGE_CONTRACT_VERSION
         and contract_local_root is not None
     ):
         problems.extend(
@@ -1219,7 +1194,7 @@ def content_first_contract_errors(
         problems.append("content_first_missing:" + ",".join(missing))
     if contract.get("execution_mode") != "content_first":
         problems.append("execution_mode:not_content_first")
-    if contract.get("map_builder_plugin_version") != BETA4_PLUGIN_VERSION:
+    if contract.get("map_builder_plugin_version") != MAP_BUILDER_PLUGIN_VERSION:
         problems.append("MAP_BUILDER_PLUGIN_VERSION_INVALID")
     if aware_datetime(contract.get("created_at")) is None:
         problems.append("CONTRACT_CREATED_AT_INVALID")
@@ -1230,7 +1205,7 @@ def content_first_contract_errors(
         and re.fullmatch(r"[0-9a-f]{40}", contract["skill_git_commit"])
     ):
         problems.append("SKILL_GIT_COMMIT_INVALID")
-    if contract.get("workflow_director_plugin_version") != "0.3.0-beta.2":
+    if contract.get("workflow_director_plugin_version") != DIRECTOR_PLUGIN_VERSION:
         problems.append("WORKFLOW_DIRECTOR_PLUGIN_VERSION_INVALID")
     locked_at = aware_datetime((contract.get("case_preparation_gate") or {}).get("locked_at"))
     created_at = aware_datetime(contract.get("created_at"))
@@ -1238,7 +1213,7 @@ def content_first_contract_errors(
         problems.append("CONTRACT_CREATED_AT_INVALID")
     if (
         contract.get("case_package_contract_version")
-        != BETA4_CASE_PACKAGE_CONTRACT_VERSION
+        != CASE_PACKAGE_CONTRACT_VERSION
     ):
         problems.append("CASE_PACKAGE_CONTRACT_VERSION_INVALID")
     if (
@@ -1277,13 +1252,28 @@ def content_first_contract_errors(
     else:
         if policy.get("formal_case_count") != 40:
             problems.append("calibration_case_policy.formal_case_count:invalid")
-        if policy.get("known_positive_count") != 14:
-            problems.append("calibration_case_policy.known_positive_count:invalid")
-        counts = policy.get("required_category_counts")
+        if (
+            policy.get("minimum_new_unseen_accepted_positive_count")
+            != MINIMUM_NEW_UNSEEN_ACCEPTED_POSITIVES
+        ):
+            problems.append(
+                "calibration_case_policy.minimum_new_unseen_accepted_positive_count:invalid"
+            )
+        if policy.get("positive_denominator_source") != "accepted_adjudicated_truth_rows":
+            problems.append(
+                "calibration_case_policy.positive_denominator_source:invalid"
+            )
+        if policy.get("unresolved_counts_as_negative") is not False:
+            problems.append(
+                "calibration_case_policy.unresolved_counts_as_negative:not_false"
+            )
+        counts = policy.get("required_sampling_category_counts")
         if counts != CONTENT_FIRST_CATEGORY_COUNTS or sum(
             counts.values() if isinstance(counts, dict) else []
         ) != 40:
-            problems.append("calibration_case_policy.required_category_counts:invalid")
+            problems.append(
+                "calibration_case_policy.required_sampling_category_counts:invalid"
+            )
         excluded_ids = policy.get("development_case_ids_excluded_from_formal")
         excluded_keys = (
             [normalized_identifier_key(value) for value in excluded_ids]
@@ -1297,13 +1287,6 @@ def content_first_contract_errors(
             problems.append("calibration_case_policy.development_case_ids_excluded_from_formal:invalid")
         if policy.get("selection_origin_counts") != CONTENT_FIRST_SELECTION_ORIGIN_COUNTS:
             problems.append("calibration_case_policy.selection_origin_counts:invalid")
-        if (
-            policy.get("selection_origin_category_counts")
-            != CONTENT_FIRST_SELECTION_ORIGIN_CATEGORY_COUNTS
-        ):
-            problems.append(
-                "calibration_case_policy.selection_origin_category_counts:invalid"
-            )
 
     gates = contract.get("retrieval_efficiency_gates")
     if not isinstance(gates, dict) or gates.get("stability_repeat_case_count") != 6:
@@ -1311,7 +1294,10 @@ def content_first_contract_errors(
     content_policy = contract.get("content_first_policy")
     if not isinstance(content_policy, dict):
         problems.append("content_first_policy:invalid")
-    elif content_policy.get("truth_scorecard_contract_version") != "2.0-r4":
+    elif (
+        content_policy.get("truth_scorecard_contract_version")
+        != TRUTH_SCORECARD_CONTRACT_VERSION
+    ):
         problems.append("content_first_policy.truth_scorecard_contract_version:invalid")
 
     problems.extend(strict_paired_execution_contract_errors(contract.get("paired_execution_contract")))
@@ -1330,6 +1316,9 @@ def content_first_contract_errors(
     if final_outputs_required:
         if not nonempty_text(truth_reference) or not real_lowercase_sha256(truth_sha256):
             problems.append("source_truth_package:invalid")
+        summary = contract.get("adjudicated_truth_summary")
+        if validate_truth_summary_integrity(summary):
+            problems.append("adjudicated_truth_summary:invalid")
         visible_case_set = contract.get("visible_case_set_reference_and_hash")
         if not isinstance(visible_case_set, dict) or not nonempty_text(visible_case_set.get("reference")) or not real_lowercase_sha256(visible_case_set.get("sha256")):
             problems.append("visible_case_set_reference_and_hash:invalid")

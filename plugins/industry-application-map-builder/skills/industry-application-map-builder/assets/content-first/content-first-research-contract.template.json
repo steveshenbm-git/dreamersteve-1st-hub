@@ -7,9 +7,9 @@
     "created_at": null,
     "owner_authorization_reference": null,
     "skill_git_commit": null,
-    "map_builder_plugin_version": "0.4.0-beta.4",
+    "map_builder_plugin_version": "0.4.0-beta.5",
     "workflow_director_plugin_version": null,
-    "case_package_contract_version": "1.0-beta4",
+    "case_package_contract_version": "1.0-beta5",
     "execution_mode": "content_first",
     "execution_authorized": false,
     "paired_execution_contract": {
@@ -52,36 +52,23 @@
     "baseline_method_contract": "baseline_full_depth_v1",
     "calibration_case_policy": {
       "formal_case_count": 40,
-      "known_positive_count": 14,
+      "minimum_new_unseen_accepted_positive_count": 10,
+      "positive_denominator_source": "accepted_adjudicated_truth_rows",
+      "unresolved_counts_as_negative": false,
       "development_case_ids_excluded_from_formal": [],
-      "required_category_counts": {
-        "direct_supported_positive": 8,
-        "hidden_positive": 6,
-        "misleading_name_similarity": 6,
-        "source_sparse_or_inaccessible": 5,
-        "ambiguous_or_incomplete_conditions": 5,
-        "circular_or_mixed_company_source": 4,
-        "empty_generalization": 3,
-        "contamination_drift_or_structure_error": 3
+      "required_sampling_category_counts": {
+        "direct_evidence_candidate": 8,
+        "terminology_mismatch_candidate": 6,
+        "misleading_name_control": 6,
+        "source_scarce": 5,
+        "incomplete_conditions": 5,
+        "source_independence_risk": 4,
+        "vacuous_hypothesis_control": 3,
+        "contamination_or_structure_control": 3
       },
       "selection_origin_counts": {
         "retained_r3_unexecuted": 30,
-        "new_unseen_positive": 10
-      },
-      "selection_origin_category_counts": {
-        "retained_r3_unexecuted": {
-          "hidden_positive": 4,
-          "misleading_name_similarity": 6,
-          "source_sparse_or_inaccessible": 5,
-          "ambiguous_or_incomplete_conditions": 5,
-          "circular_or_mixed_company_source": 4,
-          "empty_generalization": 3,
-          "contamination_drift_or_structure_error": 3
-        },
-        "new_unseen_positive": {
-          "direct_supported_positive": 8,
-          "hidden_positive": 2
-        }
+        "new_unseen": 10
       }
     },
     "retrieval_efficiency_gates": {
@@ -101,13 +88,14 @@
     "visible_case_freeze_receipt_reference_and_hash": {"reference": null, "sha256": null},
     "source_truth_package_reference": null,
     "source_truth_package_sha256": null,
+    "adjudicated_truth_summary": null,
     "full_screening_authorization": false,
     "full_screening_authorization_reference": null,
     "application_base_write_authorization": false,
     "allowed_writes": [],
     "content_first_policy": {
       "contract_version": "1.0",
-      "truth_scorecard_contract_version": "2.0-r4",
+      "truth_scorecard_contract_version": "2.1-r4",
       "raw_response_must_be_unchanged": true,
       "platform_audit_required_for_content_pass": false,
       "content_method_state": "CONTENT_CALIBRATION_INCOMPLETE",

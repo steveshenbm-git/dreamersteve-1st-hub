@@ -35,13 +35,17 @@
     "expected_semantic_axes": {
       "screening_result": null,
       "semantic_work_state": null,
-      "evidence_state": null
+      "expected_output_evidence_state": null
     },
+    "truth_disposition": "unresolved",
+    "evidence_state": "unknown",
+    "evidence_quality": "insufficient",
+    "adjudication_state": "draft",
+    "adjudication_version": null,
     "conditions": [],
     "limitations": [],
     "unknowns": [],
     "truth_boundary": null,
-    "counts_toward_known_positive_recall": false,
     "truth_sha256": null
   }
 }

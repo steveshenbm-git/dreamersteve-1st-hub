@@ -42,10 +42,17 @@ FORBIDDEN_TRUTH_KEYS = {
     "expected_semantic_work_state",
     "expected_evidence_state_before_B",
     "known_positive",
+    "truth_disposition",
+    "evidence_quality",
+    "adjudication_state",
+    "adjudication_version",
+    "reopen_reason",
+    "supersedes_truth_sha256",
     "selection_reason",
     "source_refs",
     "truth_boundary",
     "primary_category",
+    "sampling_category",
 }
 FORBIDDEN_VISIBLE_MARKERS = FORBIDDEN_TRUTH_KEYS | {
     "receiver_snapshot_sha256",
@@ -693,12 +700,17 @@ def build_package(args: argparse.Namespace) -> int:
                     task_path is None
                     or not task_path.is_file()
                     or file_sha256(task_path) != entry["task_file_sha256"]
-                    or exact_task_errors(
-                        json.loads(task_path.read_text(encoding="utf-8")),
-                        contract, visible_by_case[pair["case_id"]], arm, observations,
-                    )
                 ):
                     return fail("TASK_MANIFEST_HASH_MISMATCH", entry["path"])
+                task_errors = exact_task_errors(
+                    json.loads(task_path.read_text(encoding="utf-8")),
+                    contract,
+                    visible_by_case[pair["case_id"]],
+                    arm,
+                    observations,
+                )
+                if task_errors:
+                    return fail(task_errors[0], entry["path"])
         if file_sha256(contract_path) != args.expected_final_contract_sha256 or file_sha256(visible_case_set_path) != contract["visible_case_set_reference_and_hash"]["sha256"]:
             return fail("SOURCE_INPUT_DRIFT", "contract or visible case set changed during build")
         reread_hashes, reference_error = verify_contract_local_references(contract, contract_root)

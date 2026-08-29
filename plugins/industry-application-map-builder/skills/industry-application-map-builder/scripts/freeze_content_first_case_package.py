@@ -16,10 +16,14 @@ import tempfile
 import unicodedata
 
 from r4_case_package_contract import (
-    BETA4_CASE_PACKAGE_CONTRACT_VERSION,
-    BETA4_PLUGIN_VERSION,
+    CASE_PACKAGE_CONTRACT_VERSION,
+    MAP_BUILDER_PLUGIN_VERSION,
     canonical_bytes,
     canonical_local_reference,
+)
+from r4_adjudicated_truth_contract import (
+    SELECTION_ORIGIN_COUNTS,
+    derive_truth_summary,
 )
 
 
@@ -36,7 +40,7 @@ MANIFEST_KEYS = {
     "final_contract_version",
     "final_contract_sha256",
     "formal_case_count",
-    "known_positive_count",
+    "adjudicated_truth_summary",
     "selection_origin_counts",
     "formal_case_ids",
     "control_case_ids",
@@ -217,14 +221,14 @@ def verify_package(package: Path, expected_manifest_sha256: str) -> int:
         return fail("CASE_PACKAGE_INVALID", str(exc))
     if (
         set(payload) != {"schema_version", "content_first_case_package_manifest"}
-        or payload.get("schema_version") != "1.0-beta4"
+        or payload.get("schema_version") != "1.0-beta5"
         or not isinstance(manifest, dict)
         or set(manifest) != MANIFEST_KEYS
-        or manifest.get("map_builder_plugin_version") != BETA4_PLUGIN_VERSION
+        or manifest.get("map_builder_plugin_version") != MAP_BUILDER_PLUGIN_VERSION
         or manifest.get("case_package_contract_version")
-        != BETA4_CASE_PACKAGE_CONTRACT_VERSION
+        != CASE_PACKAGE_CONTRACT_VERSION
         or not isinstance(manifest.get("artifacts"), list)
-        or receipt_payload.get("schema_version") != "1.0-beta4"
+        or receipt_payload.get("schema_version") != "1.0-beta5"
         or set(receipt_payload)
         != {"schema_version", "content_first_case_package_freeze_receipt"}
         or not isinstance(receipt, dict)
@@ -254,9 +258,9 @@ def verify_package(package: Path, expected_manifest_sha256: str) -> int:
     except (ValueError, KeyError, TypeError, json.JSONDecodeError) as exc:
         return fail("CASE_PACKAGE_INVALID", str(exc))
     if (
-        contract.get("map_builder_plugin_version") != BETA4_PLUGIN_VERSION
+        contract.get("map_builder_plugin_version") != MAP_BUILDER_PLUGIN_VERSION
         or contract.get("case_package_contract_version")
-        != BETA4_CASE_PACKAGE_CONTRACT_VERSION
+        != CASE_PACKAGE_CONTRACT_VERSION
         or contract.get("contract_state") != "frozen"
         or manifest.get("final_contract_sha256") != sha256_file(final_contract_path)
         or manifest.get("research_contract_id") != contract.get("research_contract_id")
@@ -284,6 +288,13 @@ def verify_package(package: Path, expected_manifest_sha256: str) -> int:
         cases = [
             row for row in formal_rows if row.get("record_type") == "calibration_case"
         ]
+        truth_reference = contract["source_truth_package_reference"]
+        truth_path = package / PurePosixPath(truth_reference)
+        truth_rows = [
+            json.loads(line)
+            for line in truth_path.read_text(encoding="utf-8").splitlines()
+            if line
+        ]
     except (OSError, ValueError, KeyError, TypeError, StopIteration) as exc:
         return fail("CASE_PACKAGE_MANIFEST_FACT_MISMATCH", str(exc))
     recomputed_origins = {
@@ -291,15 +302,15 @@ def verify_package(package: Path, expected_manifest_sha256: str) -> int:
             (row.get("provenance") or {}).get("selection_origin") == origin
             for row in cases
         )
-        for origin in ("retained_r3_unexecuted", "new_unseen_positive")
+        for origin in SELECTION_ORIGIN_COUNTS
     }
+    recomputed_truth_summary = derive_truth_summary(truth_rows)
     gate = contract.get("case_preparation_gate") or {}
     if (
         canonical_local_reference(formal_reference) is None
         or formal_hash != case_binding.get("sha256")
         or manifest.get("formal_case_count") != len(cases)
-        or manifest.get("known_positive_count")
-        != sum(row.get("known_positive") is True for row in cases)
+        or manifest.get("adjudicated_truth_summary") != recomputed_truth_summary
         or manifest.get("selection_origin_counts") != recomputed_origins
         or manifest.get("formal_case_ids") != header.get("formal_case_ids")
         or manifest.get("control_case_ids")
@@ -453,12 +464,12 @@ def build(args: argparse.Namespace) -> int:
         )
         artifacts = package_artifacts(stage, reject_duplicate_content=True)
         manifest = {
-            "schema_version": "1.0-beta4",
+            "schema_version": "1.0-beta5",
             "content_first_case_package_manifest": {
                 "manifest_id": f"{contract['research_contract_id']}-CASE-PACKAGE",
                 "research_contract_id": contract["research_contract_id"],
-                "map_builder_plugin_version": BETA4_PLUGIN_VERSION,
-                "case_package_contract_version": BETA4_CASE_PACKAGE_CONTRACT_VERSION,
+                "map_builder_plugin_version": MAP_BUILDER_PLUGIN_VERSION,
+                "case_package_contract_version": CASE_PACKAGE_CONTRACT_VERSION,
                 "preparation_contract_version": contract["case_preparation_gate"][
                     "preparation_contract_version"
                 ],
@@ -468,15 +479,24 @@ def build(args: argparse.Namespace) -> int:
                 "final_contract_version": contract["contract_version"],
                 "final_contract_sha256": sha256_file(final_contract),
                 "formal_case_count": len(cases),
-                "known_positive_count": sum(
-                    row.get("known_positive") is True for row in cases
+                "adjudicated_truth_summary": derive_truth_summary(
+                    [
+                        json.loads(line)
+                        for line in (
+                            stage
+                            / PurePosixPath(contract["source_truth_package_reference"])
+                        )
+                        .read_text(encoding="utf-8")
+                        .splitlines()
+                        if line
+                    ]
                 ),
                 "selection_origin_counts": {
                     origin: sum(
                         (row.get("provenance") or {}).get("selection_origin") == origin
                         for row in cases
                     )
-                    for origin in ("retained_r3_unexecuted", "new_unseen_positive")
+                    for origin in SELECTION_ORIGIN_COUNTS
                 },
                 "formal_case_ids": header["formal_case_ids"],
                 "control_case_ids": list(args.control_case_id),
@@ -493,7 +513,7 @@ def build(args: argparse.Namespace) -> int:
         manifest_path.write_bytes(canonical_bytes(manifest))
         manifest_sha = sha256_file(manifest_path)
         receipt = {
-            "schema_version": "1.0-beta4",
+            "schema_version": "1.0-beta5",
             "content_first_case_package_freeze_receipt": {
                 "receipt_id": f"{contract['research_contract_id']}-CASE-PACKAGE-FREEZE",
                 "research_contract_id": contract["research_contract_id"],

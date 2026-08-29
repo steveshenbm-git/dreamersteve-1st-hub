@@ -21,6 +21,9 @@ Use `strict_audit` when it is explicitly selected or a legacy beta.3 contract ha
 
 1. [workflow-blueprint.md](references/workflow-blueprint.md)
 2. [workflow-and-packet-contracts.md](references/workflow-and-packet-contracts.md)
+3. 当前任务的会话 `memory.md`，并优先读取其中现行的 `inspector_preflight` / 检察者身份与处置规则；没有可核对的会话记忆时记为 `UNVERIFIED`，不得假装已恢复。
+
+检察者预检必须先于任何跨任务指挥或 `specialist_handoff`。不影响当前流程方向和证据有效性的缺陷先写入 `deferred_findings_reference` 后继续；需要小幅调整当前动作才能继续的，记录调整及依据后继续；只有会破坏真值、盲测隔离、哈希/合同绑定、来源时序、拒绝覆盖或授权边界的严重缺陷才暂停并转修复。检察者不得以“先跑通”为由绕过这些硬门。
 
 六页 `salesperson_workbench` 继续作为下游业务前台，但不是判断全流程是否完整的事实来源。
 
@@ -73,7 +76,10 @@ Use `strict_audit` when it is explicitly selected or a legacy beta.3 contract ha
 - `active_semantic_work_unit`；
 - `terminology_bridge_reference` / `terminology_bridge_sha256` / `terminology_bridge_state`；
 - `development_regression_state` 和 `development_regression_only`；
+- `case_package_contract_version = 1.0-beta5`、`truth_contract_version = 2.1-r4-adjudicated` 和 `truth_scorecard_contract_version = 2.1-r4`；
 - `formal_holdout_case_set_sha256`、30 + 10 选择来源计数与 `formal_holdout_provenance_state`；
+- `truth_adjudication_state`、`accepted_positive_case_ids_sha256` / `accepted_positive_count`、`accepted_negative_case_ids_sha256` / `accepted_negative_count`、`unresolved_case_ids_sha256` / `unresolved_count`；
+- `truth_revision_invalidates_prior_scoring`、`inspector_memory_reference`、`inspector_preflight_state` 和 `deferred_findings_reference`；
 - `paired_task_manifest_reference` / `paired_task_manifest_sha256` / `formal_paired_task_chain_state`、`source_truth_package_sha256`、`scorecard_package_sha256` 和 `receiver_evidence_manifest_sha256`；
 - `stability_task_manifest_reference` / `stability_task_manifest_sha256` / `stability_repeat_state`；
 - `content_method_state`、`content_full_screening_state`、`content_full_screening_authorization_reference`、`content_full_screening_authorization_receipt_reference`、`content_full_screening_authorization_receipt_sha256` 和 `content_terminal_scope_sha256`；
@@ -96,7 +102,8 @@ first_incomplete_stage: industry_semantic_expansion
 术语引用/真实 SHA-256/冻结状态缺失或不匹配 → content_first_contract_prepare
 development_regression_state 为 not_started / in_progress / UNVERIFIED → content_first_calibration_review (development-only)
 development_regression_state 为 FAIL → content_first_contract_prepare（修复方法并重锁；开发结果仍为 development_regression_only）
-30个 retained_r3_unexecuted + 10个 new_unseen_positive 不完整、比例漂移、来源链不是 PASS 或无真实案例集哈希 → semantic_calibration_case_prepare
+30个 retained_r3_unexecuted + 10个 new_unseen 不完整、比例漂移、来源链不是 PASS 或无真实案例集哈希 → semantic_calibration_case_prepare
+独立真值裁决未 accepted，正例/反例/未决编号集合及哈希不完整，10个 new_unseen 未全部形成接受的正例，或真值已 reopened / superseded → semantic_calibration_case_prepare；旧任务、评分和校准状态同时 invalidated
 80个正式成对任务链的真实 `paired_task_manifest_sha256`、来源真值、评分卡或receiver证据任一缺失 → content_first_calibration_review
 6个冻结稳定性重复的真实 `stability_task_manifest_sha256` 缺失或状态不是 PASS → content_first_calibration_review
 CONTENT_CALIBRATION_FAIL 或 CONTENT_CALIBRATION_INCOMPLETE → content_first_calibration_review
@@ -125,7 +132,7 @@ strict_audit的 semantic_method_validation_state 不是 EFFECTIVE → semantic_m
 阶段尚未验收 → semantic_stage_review
 ```
 
-`content_first_contract_prepare` 是 R4 内容优先合同准备的唯一名称；`semantic_contract_prepare` 只用于上述 `strict_audit` 兼容路径。两者都只验收产品中性主题、节点快照、模型/提示词、检索、证据、预算、抽样、术语桥和隔离写入边界，并产生 `locked_input_sha256`；不得要求尚未生成的案例集哈希或控制案例，也不得称为模型运行合同。`semantic_calibration_case_prepare` 只有在该锁有效时才能准备 30 + 10 正式候选与闭集 provenance，完成后必须用实际案例集哈希和真实控制案例生成新版本最终冻结合同。任何A/B/C任务都继续要求最终 `contract_state = frozen`。
+`content_first_contract_prepare` 是 R4 内容优先合同准备的唯一名称；`semantic_contract_prepare` 只用于上述 `strict_audit` 兼容路径。两者都只验收产品中性主题、节点快照、模型/提示词、检索、证据、预算、抽样、术语桥和隔离写入边界，并产生 `locked_input_sha256`；不得要求尚未生成的案例集哈希或控制案例，也不得称为模型运行合同。`semantic_calibration_case_prepare` 只有在该锁有效时才能准备 30 + 10 正式候选与闭集 provenance：`selection_origin` 只能是中性的 `retained_r3_unexecuted` 或 `new_unseen`，抽样覆盖类别不得携带正负真值。正例、反例与未决例只由接受的独立裁决记录推导；正式冻结合同和清单必须绑定这些编号集合、数量及哈希。真值被重开或替代时旧评分自动失效。完成后必须用实际案例集哈希和真实控制案例生成新版本最终冻结合同。任何A/B/C任务都继续要求最终 `contract_state = frozen`。
 
 每次只生成一个 `specialist_handoff_packet` 和一项下一动作。步骤返回 `FAIL` 或 `UNVERIFIED` 时只路由该步的修复，不越过它。strict_audit 的40例 `EFFECTIVE` 与 content_first 的 `CONTENT_CALIBRATION_PASS` 都不能把 `industry_semantic_expansion` 记为 PASS。
 

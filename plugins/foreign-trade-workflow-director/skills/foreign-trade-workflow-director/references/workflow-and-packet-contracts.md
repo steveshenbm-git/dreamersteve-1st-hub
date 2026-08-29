@@ -214,9 +214,19 @@ content_first_semantic_return:
   development_regression_state: not_started | in_progress | PASS | FAIL | UNVERIFIED | invalidated
   formal_holdout_selection_origin_counts:
     retained_r3_unexecuted: 30
-    new_unseen_positive: 10
+    new_unseen: 10
   formal_holdout_provenance_state: not_prepared | PASS | FAIL | UNVERIFIED | invalidated
   formal_holdout_case_set_sha256
+  truth_contract_version: 2.1-r4-adjudicated
+  truth_scorecard_contract_version: 2.1-r4
+  truth_adjudication_state: not_started | in_progress | accepted | reopened | superseded | invalidated
+  accepted_positive_case_ids_sha256
+  accepted_positive_count
+  accepted_negative_case_ids_sha256
+  accepted_negative_count
+  unresolved_case_ids_sha256
+  unresolved_count
+  truth_revision_invalidates_prior_scoring: true
   paired_task_manifest_reference
   paired_task_manifest_sha256
   formal_paired_task_chain_state: not_started | in_progress | PASS | FAIL | UNVERIFIED | invalidated
@@ -240,7 +250,7 @@ content_first_semantic_return:
   downstream_release_state: RESEARCH_ONLY_BLOCKED
 ```
 
-术语桥引用、真实 SHA-256 或冻结状态缺失/错配时，返回 `content_first_contract_prepare`。`development_regression_state` 为 not_started / in_progress / UNVERIFIED 时，返回 `content_first_calibration_review (development-only)` 执行或复核开发集；只有 `FAIL → content_first_contract_prepare`，修复方法并重锁。所有开发结果仍为 `development_regression_only`，不计入正式评分。30 + 10 比例、闭集 provenance 或真实案例集哈希缺失时，返回 `semantic_calibration_case_prepare`。80个正式任务链必须绑定 `paired_task_manifest_reference` 和真实 `paired_task_manifest_sha256`；6个稳定性重复必须绑定 `stability_task_manifest_reference` 和真实 `stability_task_manifest_sha256`。这些清单、来源真值、评分卡或receiver证据任一不完整时，返回 `content_first_calibration_review`。
+术语桥引用、真实 SHA-256 或冻结状态缺失/错配时，返回 `content_first_contract_prepare`。`development_regression_state` 为 not_started / in_progress / UNVERIFIED 时，返回 `content_first_calibration_review (development-only)` 执行或复核开发集；只有 `FAIL → content_first_contract_prepare`，修复方法并重锁。所有开发结果仍为 `development_regression_only`，不计入正式评分。30 + 10 中性来源比例、闭集 provenance、真实案例集哈希、独立真值裁决、接受正例/反例/未决集合及哈希任一缺失时，返回 `semantic_calibration_case_prepare`。10个 `new_unseen` 必须全部由直接证据独立裁决为接受正例；这是一道冻结门，不是选样答案。真值 reopened 或 superseded 时，旧任务、评分、臂汇总和校准结论全部 invalidated。80个正式任务链必须绑定 `paired_task_manifest_reference` 和真实 `paired_task_manifest_sha256`；6个稳定性重复必须绑定 `stability_task_manifest_reference` 和真实 `stability_task_manifest_sha256`。这些清单、来源真值、评分卡或receiver证据任一不完整时，返回 `content_first_calibration_review`。
 
 缺失原始回答、来源真值、评分卡或未知项时，接收结果只能为 `UNVERIFIED`。平台审计缺失单独记录为 `platform_audit_state`，不得删除字节完整的可评分回答，也不得把平台 PASS 换成内容 PASS。授权引用、Task 8 gate绑定、独立receipt引用与真实SHA-256、冻结末端范围SHA-256任一缺失或错配 → content_first_full_screening_gate (NOT_AUTHORIZED)。`full_screening_authorization` 布尔值或 `content_full_screening_state` 自报不构成授权；只有Task 8 gate验证receipt绑定当前最终合同、校准报告与末端范围后，才允许 `AUTHORIZED_NOT_STARTED`。
 

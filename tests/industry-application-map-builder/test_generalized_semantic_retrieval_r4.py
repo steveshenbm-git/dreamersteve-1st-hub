@@ -66,36 +66,23 @@ EXPECTED_TERMINOLOGY_ARCHITECTURE = {
 
 EXPECTED_CALIBRATION_CASE_POLICY = {
     "formal_case_count": 40,
-    "known_positive_count": 14,
+    "minimum_new_unseen_accepted_positive_count": 10,
+    "positive_denominator_source": "accepted_adjudicated_truth_rows",
+    "unresolved_counts_as_negative": False,
     "development_case_ids_excluded_from_formal": [],
-    "required_category_counts": {
-        "direct_supported_positive": 8,
-        "hidden_positive": 6,
-        "misleading_name_similarity": 6,
-        "source_sparse_or_inaccessible": 5,
-        "ambiguous_or_incomplete_conditions": 5,
-        "circular_or_mixed_company_source": 4,
-        "empty_generalization": 3,
-        "contamination_drift_or_structure_error": 3,
+    "required_sampling_category_counts": {
+        "direct_evidence_candidate": 8,
+        "terminology_mismatch_candidate": 6,
+        "misleading_name_control": 6,
+        "source_scarce": 5,
+        "incomplete_conditions": 5,
+        "source_independence_risk": 4,
+        "vacuous_hypothesis_control": 3,
+        "contamination_or_structure_control": 3,
     },
     "selection_origin_counts": {
         "retained_r3_unexecuted": 30,
-        "new_unseen_positive": 10,
-    },
-    "selection_origin_category_counts": {
-        "retained_r3_unexecuted": {
-            "hidden_positive": 4,
-            "misleading_name_similarity": 6,
-            "source_sparse_or_inaccessible": 5,
-            "ambiguous_or_incomplete_conditions": 5,
-            "circular_or_mixed_company_source": 4,
-            "empty_generalization": 3,
-            "contamination_drift_or_structure_error": 3,
-        },
-        "new_unseen_positive": {
-            "direct_supported_positive": 8,
-            "hidden_positive": 2,
-        },
+        "new_unseen": 10,
     },
 }
 
@@ -215,14 +202,14 @@ def neutral_term(contract_id="RC2-TEST-001"):
 
 def r4_case_rows(contract_id="RC2-TEST-001"):
     category_counts = {
-        "direct_supported_positive": 8,
-        "hidden_positive": 6,
-        "misleading_name_similarity": 6,
-        "source_sparse_or_inaccessible": 5,
-        "ambiguous_or_incomplete_conditions": 5,
-        "circular_or_mixed_company_source": 4,
-        "empty_generalization": 3,
-        "contamination_drift_or_structure_error": 3,
+        "direct_evidence_candidate": 8,
+        "terminology_mismatch_candidate": 6,
+        "misleading_name_control": 6,
+        "source_scarce": 5,
+        "incomplete_conditions": 5,
+        "source_independence_risk": 4,
+        "vacuous_hypothesis_control": 3,
+        "contamination_or_structure_control": 3,
     }
     categories = [
         category for category, count in category_counts.items() for _ in range(count)
@@ -234,8 +221,7 @@ def r4_case_rows(contract_id="RC2-TEST-001"):
                 "record_type": "calibration_case",
                 "case_id": f"R4-CASE-{index:03d}",
                 "research_contract_id": contract_id,
-                "primary_category": category,
-                "known_positive": index <= 14,
+                "sampling_category": category,
                 "provenance": {"development_regression_only": False},
                 "taxonomy_node": {
                     "taxonomy_node_id": f"NODE-{index:03d}",
@@ -255,11 +241,6 @@ def r4_case_rows(contract_id="RC2-TEST-001"):
                 },
                 "product_neutral_research_theme": "product-neutral-research-theme",
                 "risk_flags": ["broad_node"] if index == 31 else [],
-                "truth_label": "never-visible",
-                "expected_screening_result": "never-visible",
-                "selection_reason": "never-visible",
-                "receiver_snapshot_sha256": "never-visible",
-                "other_arm_output": "never-visible",
             }
         )
     return [
@@ -271,7 +252,7 @@ def r4_case_rows(contract_id="RC2-TEST-001"):
             "case_count": 40,
             "actual_case_record_count": 40,
             "formal_case_ids": [case["case_id"] for case in cases],
-            "category_counts": category_counts,
+            "sampling_category_counts": category_counts,
             "stability_repeat_case_ids": [case["case_id"] for case in cases[:6]],
         },
         *cases,
@@ -341,12 +322,23 @@ def r4_truth_rows(case_rows):
             }
         truth = {
             "record_type": "source_truth",
-            "truth_contract_version": "2.0-r4-complete",
+            "truth_contract_version": "2.1-r4-adjudicated",
             "research_contract_id": contract_id,
             "preparation_contract_version": "2.1.0-content-first.prep.1",
             "locked_input_sha256": None,
             "case_id": case_id,
-            "known_positive": row["known_positive"],
+            "truth_disposition": (
+                "positive_confirmed"
+                if int(case_id.rsplit("-", 1)[1]) <= 15
+                else "negative_confirmed"
+            ),
+            "evidence_state": "supported",
+            "evidence_quality": "direct_complete",
+            "adjudication_state": "accepted",
+            "adjudication_version": "R4-TRUTH-ADJ-001",
+            "counterevidence": [],
+            "reopen_reason": None,
+            "supersedes_truth_sha256": None,
             "evidence_bases": bases,
             "conditions": [],
             "limitations": [],
@@ -427,7 +419,7 @@ def materialize_r4_case_provenance(locked_contract, case_rows, contract_local_ro
     new_root = contract_local_root / "02-校准案例" / "provenance" / "new"
     retained_root.mkdir(parents=True, exist_ok=True)
     new_root.mkdir(parents=True, exist_ok=True)
-    hidden_seen = 0
+    new_seen = 0
     manifest_reference = contract["r3_case_source_manifest_reference_and_hash"]["reference"]
     manifest = json.loads((contract_local_root / manifest_reference).read_text(encoding="utf-8"))[
         "r3_case_source_manifest"
@@ -454,13 +446,9 @@ def materialize_r4_case_provenance(locked_contract, case_rows, contract_local_ro
             f"{taxonomy_reference}#/terminal_nodes/{taxonomy_index[node['taxonomy_node_id']]}"
         )
         node["official_source_sha256"] = taxonomy_sha256
-        category = row["primary_category"]
-        if category == "hidden_positive":
-            hidden_seen += 1
-        is_new = category == "direct_supported_positive" or (
-            category == "hidden_positive" and hidden_seen <= 2
-        )
+        is_new = new_seen < 10
         if is_new:
+            new_seen += 1
             path = new_root / f"{row['case_id']}.selection-receipt.json"
             reference = path.relative_to(contract_local_root).as_posix()
             receipt = {
@@ -497,7 +485,7 @@ def materialize_r4_case_provenance(locked_contract, case_rows, contract_local_ro
             )
             row["provenance"] = {
                 "development_regression_only": False,
-                "selection_origin": "new_unseen_positive",
+                "selection_origin": "new_unseen",
                 "selection_receipt_reference": reference,
                 "selection_receipt_sha256": sha256_file(path),
             }
@@ -582,7 +570,7 @@ class GeneralizedSemanticRetrievalR4Tests(unittest.TestCase):
         arm = json.loads(CALIBRATION_ARM_TEMPLATE.read_text(encoding="utf-8"))[
             "semantic_content_calibration_arm"
         ]
-        self.assertEqual(arm["calibration_contract_marker"], "2.0-r4")
+        self.assertEqual(arm["calibration_contract_marker"], "2.1-r4")
         self.assertEqual(arm["method_arm"], "screen_then_expand_v2")
         self.assertEqual(
             set(arm["case_evidence"][0]["critical_dispositions"]),
@@ -650,7 +638,7 @@ class GeneralizedSemanticRetrievalR4Tests(unittest.TestCase):
                 "created_at": "2026-08-24T00:00:00Z",
                 "owner_authorization_reference": "USER-R4-PREP",
                 "skill_git_commit": "dbd67b0cc283c4d88d9b78b3d49fa6f5aeb2f02a",
-                "workflow_director_plugin_version": "0.3.0-beta.2",
+                "workflow_director_plugin_version": "0.3.0-beta.3",
             }
         )
         return payload
@@ -723,7 +711,7 @@ class GeneralizedSemanticRetrievalR4Tests(unittest.TestCase):
                 "created_at": "2026-08-24T00:00:00Z",
                 "owner_authorization_reference": "USER-R4-PREP",
                 "skill_git_commit": "dbd67b0cc283c4d88d9b78b3d49fa6f5aeb2f02a",
-                "workflow_director_plugin_version": "0.3.0-beta.2",
+                "workflow_director_plugin_version": "0.3.0-beta.3",
                 "taxonomy_snapshot_reference": "01-节点快照/taxonomy.json",
                 "taxonomy_snapshot_sha256": sha256_file(taxonomy),
                 "terminal_node_count": 40,
@@ -831,7 +819,7 @@ class GeneralizedSemanticRetrievalR4Tests(unittest.TestCase):
                 "created_at": "2026-08-24T00:00:00Z",
                 "owner_authorization_reference": "USER-R4-PREP",
                 "skill_git_commit": "dbd67b0cc283c4d88d9b78b3d49fa6f5aeb2f02a",
-                "workflow_director_plugin_version": "0.3.0-beta.2",
+                "workflow_director_plugin_version": "0.3.0-beta.3",
             }
         )
         prompt = preparation_root / "00-合同准备" / "prompt.md"
@@ -1767,7 +1755,7 @@ class GeneralizedSemanticRetrievalR4Tests(unittest.TestCase):
             new_cases = [
                 row for row in rows
                 if row.get("record_type") == "calibration_case"
-                and row["provenance"]["selection_origin"] == "new_unseen_positive"
+                and row["provenance"]["selection_origin"] == "new_unseen"
             ]
             first, second = new_cases[:2]
             second["taxonomy_node"] = json.loads(json.dumps(first["taxonomy_node"]))
@@ -1811,7 +1799,7 @@ class GeneralizedSemanticRetrievalR4Tests(unittest.TestCase):
             self.assertFalse(output.exists())
             self.assertEqual(list(root.glob(".final.json.tmp-*")), [])
 
-    def test_finalizer_rejects_new_unseen_case_that_is_not_a_known_positive(self):
+    def test_finalizer_rejects_when_new_unseen_accepted_positive_floor_is_not_met(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             draft, term_pack = self.r4_preparation(root)
@@ -1819,20 +1807,17 @@ class GeneralizedSemanticRetrievalR4Tests(unittest.TestCase):
             case_set, truth_set = root / "cases.jsonl", root / "truth.jsonl"
             self.assertEqual(self.lock_r4(draft, term_pack, locked).returncode, 0)
             rows = self.bound_r4_case_rows(locked)
-            cases = [row for row in rows if row.get("record_type") == "calibration_case"]
-            new_case, retained_case = cases[0], cases[14]
-            new_case["primary_category"], retained_case["primary_category"] = (
-                retained_case["primary_category"],
-                new_case["primary_category"],
-            )
-            new_case["known_positive"], retained_case["known_positive"] = False, True
             write_jsonl(case_set, rows)
-            write_jsonl(truth_set, r4_truth_rows(rows))
+            truths = r4_truth_rows(rows)
+            truths[9]["truth_disposition"] = "negative_confirmed"
+            write_jsonl(truth_set, truths)
 
             result = self.finalize_r4(locked, case_set, truth_set, root / "final.json")
 
             self.assertNotEqual(result.returncode, 0)
-            self.assertIn("NEW_UNSEEN_POSITIVE_REQUIRED", result.stderr)
+            self.assertIn(
+                "MINIMUM_NEW_UNSEEN_ACCEPTED_POSITIVES_NOT_MET", result.stderr
+            )
 
     def test_finalizer_rechecks_retained_r3_unexecuted_snapshot_and_hash(self):
         scenarios = (
@@ -1965,7 +1950,7 @@ class GeneralizedSemanticRetrievalR4Tests(unittest.TestCase):
                 new_cases = [
                     row for row in rows
                     if row.get("record_type") == "calibration_case"
-                    and row["provenance"]["selection_origin"] == "new_unseen_positive"
+                    and row["provenance"]["selection_origin"] == "new_unseen"
                 ]
                 new_case = new_cases[0]
                 provenance = new_case["provenance"]
@@ -2049,11 +2034,11 @@ class GeneralizedSemanticRetrievalR4Tests(unittest.TestCase):
             rows = r4_case_rows()
             write_jsonl(case_set, rows)
             truth = r4_truth_rows(rows)
-            truth[0]["known_positive"] = False
+            truth[0]["evidence_state"] = "hypothesis"
             write_jsonl(truth_set, truth)
             mismatch = self.finalize_r4(locked, case_set, truth_set, root / "final-mismatch.json")
             self.assertNotEqual(mismatch.returncode, 0)
-            self.assertIn("SOURCE_TRUTH_DISPOSITION_MISMATCH", mismatch.stderr)
+            self.assertIn("TRUTH_EVIDENCE_COMBINATION_INVALID", mismatch.stderr)
 
     def test_finalizer_rejects_policy_excluded_id_and_write_scope_drift(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -2079,7 +2064,7 @@ class GeneralizedSemanticRetrievalR4Tests(unittest.TestCase):
             self.assertNotEqual(unsafe_write.returncode, 0)
             self.assertIn("CONTENT_FIRST_DEFAULT_DENY_REQUIRED", unsafe_write.stderr)
 
-    def test_finalizer_rejects_category_count_drift(self):
+    def test_finalizer_rejects_sampling_category_count_drift(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             draft, term_pack = self.r4_preparation(root)
@@ -2089,14 +2074,14 @@ class GeneralizedSemanticRetrievalR4Tests(unittest.TestCase):
             locked_result = self.lock_r4(draft, term_pack, locked)
             self.assertEqual(locked_result.returncode, 0, locked_result.stderr)
             rows = r4_case_rows()
-            rows[1]["primary_category"] = "hidden_positive"
+            rows[1]["sampling_category"] = "terminology_mismatch_candidate"
             write_jsonl(case_set, rows)
             write_jsonl(truth_set, r4_truth_rows(rows))
 
             result = self.finalize_r4(locked, case_set, truth_set, final_contract)
 
             self.assertNotEqual(result.returncode, 0)
-            self.assertIn("CATEGORY_COUNT_DRIFT", result.stderr)
+            self.assertIn("SAMPLING_CATEGORY_COUNT_DRIFT", result.stderr)
 
     def test_finalizer_rejects_truth_row_count_drift(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -2358,7 +2343,7 @@ class GeneralizedSemanticRetrievalR4Tests(unittest.TestCase):
         self.assertEqual(contract["baseline_method_contract"], "baseline_full_depth_v1")
         self.assertEqual(
             contract["content_first_policy"]["truth_scorecard_contract_version"],
-            "2.0-r4",
+            "2.1-r4",
         )
 
     def test_r4_preparation_lock_rejects_missing_truth_scorecard_marker(self):
@@ -2402,15 +2387,15 @@ class GeneralizedSemanticRetrievalR4Tests(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("PREPARATION_", result.stderr)
 
-    def test_same_name_plugins_expose_beta4_generalized_contract(self):
+    def test_same_name_plugins_expose_beta5_adjudicated_contract(self):
         map_manifest = json.loads((MAP_PLUGIN / ".codex-plugin/plugin.json").read_text())
         director_manifest = json.loads(
             (DIRECTOR_PLUGIN / ".codex-plugin/plugin.json").read_text()
         )
         self.assertEqual(map_manifest["name"], "industry-application-map-builder")
-        self.assertEqual(map_manifest["version"], "0.4.0-beta.4")
+        self.assertEqual(map_manifest["version"], "0.4.0-beta.5")
         self.assertEqual(director_manifest["name"], "foreign-trade-workflow-director")
-        self.assertEqual(director_manifest["version"], "0.3.0-beta.2")
+        self.assertEqual(director_manifest["version"], "0.3.0-beta.3")
         for contract_template in CONTRACT_TEMPLATES:
             with self.subTest(contract_template=contract_template.name):
                 contract = json.loads(contract_template.read_text())["semantic_research_contract"]

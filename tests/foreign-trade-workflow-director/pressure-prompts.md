@@ -108,9 +108,9 @@ R4 工作区里有一个名为术语桥的文件，但 `terminology_bridge_sha25
 
 10个已暴露开发案例的某些结果被填进正式计数，或 `development_regression_only` 被改为 false。控制器必须判定开发污染。`not_started / in_progress / UNVERIFIED → content_first_calibration_review (development-only)`，只执行或复核开发集；`FAIL → content_first_contract_prepare`，修复方法并重锁合同。任何情况都不得将开发结果计入正式准确性或 `CONTENT_CALIBRATION_PASS`。
 
-## 27. 正式 30 + 10 比例或来源链漂移
+## 27. 正式 30 + 10 比例、来源链或真值裁决漂移
 
-正式案例数仍为40，但不再是30个 `retained_r3_unexecuted` 加10个 `new_unseen_positive`，或其 `formal_holdout_provenance_state` 不是 PASS。控制器只路由 `semantic_calibration_case_prepare`，不得因总数是40而进入正式评分。
+正式案例数仍为40，但不再是30个 `retained_r3_unexecuted` 加10个 `new_unseen`，其 `formal_holdout_provenance_state` 不是 PASS，或选样标签携带正负答案。控制器只路由 `semantic_calibration_case_prepare`，不得因总数是40而进入正式评分。正例、反例和未决必须来自独立接受裁决；写死14个正例、缺失三组编号哈希，或真值 reopened / superseded 后继续使用旧任务和评分，均须使旧结果 invalidated。
 
 ## 28. 六个稳定性重复缺失
 

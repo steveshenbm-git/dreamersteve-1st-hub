@@ -54,10 +54,10 @@ class WorkflowDirectorContractTests(unittest.TestCase):
         marketplace = json.loads(read(ROOT / ".agents" / "plugins" / "marketplace.json"))
 
         self.assertEqual(manifest["name"], "foreign-trade-workflow-director")
-        self.assertEqual(manifest["version"], "0.3.0-beta.2")
+        self.assertEqual(manifest["version"], "0.3.0-beta.3")
         self.assertRegex(
             manifest["version"],
-            r"^0\.3\.0-beta\.2$",
+            r"^0\.3\.0-beta\.3$",
         )
         self.assertTrue(
             any(
@@ -148,8 +148,8 @@ class WorkflowDirectorContractTests(unittest.TestCase):
         )
 
         self.assertIn("company_id: null", state)
-        self.assertIn("blueprint_version: 0.3.0-beta.2", state)
-        self.assertIn("blueprint_version: 0.3.0-beta.2", replication)
+        self.assertIn("blueprint_version: 0.3.0-beta.3", state)
+        self.assertIn("blueprint_version: 0.3.0-beta.3", replication)
         self.assertIn("semantic_evaluation_mode: content_first", state)
         self.assertIn("strict_audit", state)
         self.assertIn("RESEARCH_ONLY_BLOCKED", state)
@@ -208,13 +208,30 @@ class WorkflowDirectorContractTests(unittest.TestCase):
             "development_regression_only",
             "development_regression_state",
             "allowed_development_regression_states",
+            "case_package_contract_version",
+            "truth_contract_version",
+            "truth_scorecard_contract_version",
             "formal_holdout_case_count",
             "retained_r3_unexecuted_case_count",
-            "new_unseen_positive_case_count",
+            "new_unseen_case_count",
             "formal_holdout_selection_origin_counts",
             "formal_holdout_provenance_state",
             "allowed_formal_holdout_provenance_states",
             "formal_holdout_case_set_sha256",
+            "truth_adjudication_state",
+            "allowed_truth_adjudication_states",
+            "accepted_positive_case_ids_sha256",
+            "accepted_positive_count",
+            "accepted_negative_case_ids_sha256",
+            "accepted_negative_count",
+            "unresolved_case_ids_sha256",
+            "unresolved_count",
+            "truth_revision_invalidates_prior_scoring",
+            "inspector_preflight_required",
+            "inspector_memory_reference",
+            "inspector_preflight_state",
+            "allowed_inspector_preflight_states",
+            "deferred_findings_reference",
             "formal_paired_task_expected_count",
             "paired_task_manifest_reference",
             "paired_task_manifest_sha256",
@@ -257,11 +274,20 @@ class WorkflowDirectorContractTests(unittest.TestCase):
         self.assertEqual(semantic["development_regression_state"], "not_started")
         self.assertEqual(semantic["formal_holdout_case_count"], 40)
         self.assertEqual(semantic["retained_r3_unexecuted_case_count"], 30)
-        self.assertEqual(semantic["new_unseen_positive_case_count"], 10)
+        self.assertEqual(semantic["new_unseen_case_count"], 10)
         self.assertEqual(
             semantic["formal_holdout_selection_origin_counts"],
-            {"retained_r3_unexecuted": 30, "new_unseen_positive": 10},
+            {"retained_r3_unexecuted": 30, "new_unseen": 10},
         )
+        self.assertEqual(semantic["case_package_contract_version"], "1.0-beta5")
+        self.assertEqual(semantic["truth_contract_version"], "2.1-r4-adjudicated")
+        self.assertEqual(semantic["truth_scorecard_contract_version"], "2.1-r4")
+        self.assertEqual(semantic["truth_adjudication_state"], "not_prepared")
+        self.assertIsNone(semantic["accepted_positive_case_ids_sha256"])
+        self.assertIsNone(semantic["accepted_positive_count"])
+        self.assertTrue(semantic["truth_revision_invalidates_prior_scoring"])
+        self.assertTrue(semantic["inspector_preflight_required"])
+        self.assertEqual(semantic["inspector_preflight_state"], "not_checked")
         self.assertIsNone(semantic["formal_holdout_case_set_sha256"])
         self.assertEqual(semantic["formal_paired_task_expected_count"], 80)
         self.assertIsNone(semantic["paired_task_manifest_reference"])
@@ -289,11 +315,23 @@ class WorkflowDirectorContractTests(unittest.TestCase):
                 "terminology_bridge_state",
                 "development_regression_state",
                 "development_regression_only",
+                "case_package_contract_version",
+                "truth_contract_version",
+                "truth_scorecard_contract_version",
                 "formal_holdout_case_set_sha256",
                 "formal_holdout_case_count",
                 "retained_r3_unexecuted_case_count",
-                "new_unseen_positive_case_count",
+                "new_unseen_case_count",
                 "formal_holdout_provenance_state",
+                "truth_adjudication_state",
+                "accepted_positive_case_ids_sha256",
+                "accepted_positive_count",
+                "accepted_negative_case_ids_sha256",
+                "accepted_negative_count",
+                "unresolved_case_ids_sha256",
+                "unresolved_count",
+                "truth_revision_invalidates_prior_scoring",
+                "inspector_preflight_required",
                 "formal_paired_task_expected_count",
                 "paired_task_manifest_reference",
                 "paired_task_manifest_sha256",
@@ -318,7 +356,12 @@ class WorkflowDirectorContractTests(unittest.TestCase):
         self.assertTrue(dependencies["development_regression_only"])
         self.assertEqual(dependencies["formal_holdout_case_count"], 40)
         self.assertEqual(dependencies["retained_r3_unexecuted_case_count"], 30)
-        self.assertEqual(dependencies["new_unseen_positive_case_count"], 10)
+        self.assertEqual(dependencies["new_unseen_case_count"], 10)
+        self.assertEqual(dependencies["case_package_contract_version"], "1.0-beta5")
+        self.assertEqual(dependencies["truth_contract_version"], "2.1-r4-adjudicated")
+        self.assertEqual(dependencies["truth_scorecard_contract_version"], "2.1-r4")
+        self.assertTrue(dependencies["truth_revision_invalidates_prior_scoring"])
+        self.assertTrue(dependencies["inspector_preflight_required"])
         self.assertEqual(dependencies["formal_paired_task_expected_count"], 80)
         self.assertIsNone(dependencies["paired_task_manifest_reference"])
         self.assertIsNone(dependencies["paired_task_manifest_sha256"])
@@ -443,7 +486,12 @@ class WorkflowDirectorContractTests(unittest.TestCase):
             "development_regression_state",
             "formal_holdout_case_set_sha256",
             "retained_r3_unexecuted",
-            "new_unseen_positive",
+            "new_unseen",
+            "accepted_positive_case_ids_sha256",
+            "accepted_negative_case_ids_sha256",
+            "unresolved_case_ids_sha256",
+            "truth_revision_invalidates_prior_scoring",
+            "inspector_preflight",
             "formal_holdout_provenance_state",
             "paired_task_manifest_sha256",
             "formal_paired_task_chain_state",

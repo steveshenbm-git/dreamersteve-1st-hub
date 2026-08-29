@@ -12,7 +12,7 @@
     "visible_input_sha256": null,
     "source_truth_comparison_reference": null,
     "source_truth_comparison_sha256": null,
-    "scoring_rubric_version": "2.0-r4",
+    "scoring_rubric_version": "2.1-r4",
     "scoring_items": {
       "taxonomy_and_scope_grounding": {
         "responsibility": "taxonomy_truth_reviewer",

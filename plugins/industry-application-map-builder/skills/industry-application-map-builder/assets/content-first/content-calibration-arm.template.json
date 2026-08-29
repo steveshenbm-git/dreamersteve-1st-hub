@@ -1,7 +1,7 @@
 {
-  "schema_version": "2.0-r4",
+  "schema_version": "2.1-r4",
   "semantic_content_calibration_arm": {
-    "calibration_contract_marker": "2.0-r4",
+    "calibration_contract_marker": "2.1-r4",
     "research_contract_id": null,
     "contract_version": null,
     "taxonomy_snapshot_sha256": null,
@@ -39,8 +39,8 @@
         }
       }
     ],
-    "known_positive_case_ids": [],
-    "known_positive_entered_expansion_case_ids": [],
+    "accepted_positive_case_ids": [],
+    "accepted_positive_entered_expansion_case_ids": [],
     "query_count": null,
     "source_open_count": null,
     "deep_expansion_count": null,

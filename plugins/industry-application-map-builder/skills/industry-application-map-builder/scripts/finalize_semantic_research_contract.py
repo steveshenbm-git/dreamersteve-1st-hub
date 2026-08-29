@@ -20,12 +20,13 @@ from content_first_visible_case_schema import (
     visible_case_projection,
 )
 from r4_case_package_contract import (
-    BETA4_CASE_PACKAGE_CONTRACT_VERSION,
-    BETA4_PLUGIN_VERSION,
+    CASE_PACKAGE_CONTRACT_VERSION,
+    MAP_BUILDER_PLUGIN_VERSION,
     aware_datetime,
     declared_input_path_error,
     valid_prep_to_final_version,
 )
+from r4_adjudicated_truth_contract import derive_truth_summary
 
 from validate_semantic_research_workspace import (
     case_preparation_contract_completeness_errors,
@@ -376,14 +377,14 @@ def main() -> int:
     sealed_references: set[object] = set()
     sealed_hashes: set[object] = set()
     if content_first:
-        if contract.get("map_builder_plugin_version") != BETA4_PLUGIN_VERSION:
+        if contract.get("map_builder_plugin_version") != MAP_BUILDER_PLUGIN_VERSION:
             return fail(
                 "MAP_BUILDER_PLUGIN_VERSION_INVALID",
                 repr(contract.get("map_builder_plugin_version")),
             )
         if (
             contract.get("case_package_contract_version")
-            != BETA4_CASE_PACKAGE_CONTRACT_VERSION
+            != CASE_PACKAGE_CONTRACT_VERSION
         ):
             return fail(
                 "CASE_PACKAGE_CONTRACT_VERSION_INVALID",
@@ -548,6 +549,7 @@ def main() -> int:
     if truth_path is not None:
         contract["source_truth_package_reference"] = args.source_truth_reference
         contract["source_truth_package_sha256"] = hashlib.sha256(truth_bytes).hexdigest()
+        contract["adjudicated_truth_summary"] = derive_truth_summary(truth_rows)
     contract["batch_rule"]["batch_size"] = args.batch_size
     contract["control_case_rule"]["case_ids"] = list(args.control_case_id)
     final_problems = frozen_contract_completeness_errors(contract)
