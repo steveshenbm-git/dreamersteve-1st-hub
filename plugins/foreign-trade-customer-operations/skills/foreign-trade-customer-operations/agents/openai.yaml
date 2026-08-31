@@ -1,4 +1,4 @@
 interface:
   display_name: "外贸客户经营与沟通"
   short_description: "准备首封开发、未回复跟进、客户回复和客户经营材料"
-  default_prompt: "使用 $foreign-trade-customer-operations 基于客户开发交接包或完整邮件线程，判断当前沟通路由并准备一份可审核材料；不要发送，也不要改写业务员决定。"
+  default_prompt: "使用 $foreign-trade-customer-operations 基于客户开发交接包或完整邮件线程，判断当前沟通路由并准备一份可审核材料。跨技能交接必须先通过 handoff_envelope_v1 的公司、路由、载荷哈希、重复ID和空写入范围校验；不要发送，也不要改写业务员决定。"

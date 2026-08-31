@@ -1,7 +1,7 @@
 {
   "name": "foreign-trade-workflow-director",
-  "version": "0.3.0-beta.3",
-  "description": "审计、搭建、续作和复刻完整外贸流程；新RC2按beta.5独立真值裁决和动态分母门控，并在每次跨任务指挥前执行检察者记忆预检。",
+  "version": "0.3.0-beta.4",
+  "description": "审计、搭建、续作和复刻完整外贸流程；使用完整R4语义合同、动态分母和只读哈希交接门，并在跨任务指挥前执行检察者预检。",
   "author": {
     "name": "steveshenbm-git"
   },

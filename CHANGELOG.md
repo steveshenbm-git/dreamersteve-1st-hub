@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased - 2026-08-31
+
+- Prepared the compatible source candidate set: `industry-application-map-builder 0.4.0-beta.6`, `foreign-trade-customer-development 0.2.0-beta.2`, `foreign-trade-customer-operations 0.2.0-beta.2`, and `foreign-trade-workflow-director 0.3.0-beta.4`; kept `company-product-knowledge-builder 0.1.0` unchanged.
+- Added one read-only, hash-bound `handoff_envelope_v1` validator with exact company, target, route, payload-byte, duplicate-ID, path and empty-write-scope checks.
+- Aligned the industry semantic return schema with the workflow director and bound customer-development handoffs to customer operations without duplicate handoff IDs.
+- Added separate optimization-validation contracts for industry research, customer development, and customer operations so integration readiness cannot be mistaken for business effectiveness.
+- Completed source preparation only. Installation, publication, freezing, live workflow validation, and external sending remain separately authorized stages.
+
 ## Unreleased - 2026-08-24
 
 - Advanced `industry-application-map-builder` to `0.3.0-beta.3` and `foreign-trade-workflow-director` to `0.2.0-beta.3` for the RC2 contract-cycle repair.

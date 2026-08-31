@@ -16,7 +16,7 @@ from validate_terminology_bridge import validate_rows as validate_terminology_ro
 from content_first_visible_case_schema import frozen_visible_case_errors, visible_case_projection
 from r4_adjudicated_truth_contract import (
     BETA5_CASE_PACKAGE_CONTRACT_VERSION as CASE_PACKAGE_CONTRACT_VERSION,
-    BETA5_MAP_BUILDER_PLUGIN_VERSION as MAP_BUILDER_PLUGIN_VERSION,
+    MAP_BUILDER_PLUGIN_VERSION,
     BETA5_TRUTH_SCORECARD_CONTRACT_VERSION as TRUTH_SCORECARD_CONTRACT_VERSION,
     DIRECTOR_PLUGIN_VERSION,
     MINIMUM_NEW_UNSEEN_ACCEPTED_POSITIVES,

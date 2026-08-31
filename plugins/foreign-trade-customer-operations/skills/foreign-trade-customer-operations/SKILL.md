@@ -7,7 +7,7 @@ description: Use when a foreign-trade salesperson needs a first cold-outreach dr
 
 ## Core role
 
-Own all external-communication preparation from the first cold email onward. It receives an evidence-bound `outreach_handoff_packet` from customer development, a `specialist_handoff_packet` from `foreign-trade-workflow-director`, or a complete customer thread and existing record. The salesperson owns customer selection, priority, commercial judgment, final wording, channel, sending, restricted-contact approval, and every status decision. When routed through the coordinator, return a traceable projection for its `salesperson_workbench`; do not directly overwrite the business front.
+Own all external-communication preparation from the first cold email onward. For cross-skill work it receives a machine-validated `handoff_envelope_v1` bound to an evidence-bound `outreach_handoff_packet` or `customer_operations_handoff`; a `specialist_handoff_packet` cannot replace that payload. A complete customer thread and existing record may remain a direct user-supplied entry. The salesperson owns customer selection, priority, commercial judgment, final wording, channel, sending, restricted-contact approval, and every status decision. When routed through the coordinator, return a traceable projection for its `salesperson_workbench`; do not directly overwrite the business front.
 
 ## Route
 
@@ -29,10 +29,12 @@ Choose exactly one route:
 3. Read `references/reply-communication.md` and `references/reply-evidence-and-contract.md` for every `reply_communication` task.
 4. Read `references/special-handling.md` for an explicit quality incident, contract dispute, payment abnormality, comparable serious issue, or a rejected draft without a clear revision direction.
 5. Read `references/workbook-and-automation.md` before record writes, formal archiving, or any scheduled-draft work.
+6. Read [optimization-validation.md](references/optimization-validation.md) before retaining or installing an optimized skill version.
 
 ## Hard boundaries
 
 - Use only approved facts, preserved customer evidence, and the stated handoff packet. Separate facts, customer claims, unknowns, and AI inference.
+- Before a cross-skill route, validate the envelope company, target, payload byte hash, duplicate ID and empty write scope with the workflow director's read-only validator. Any failure stops before drafting; the payload never supplies a second `handoff_id`.
 - Do not research new prospects, score customers, choose development priority, revise the recommended product, or expand contact permissions.
 - Do not send or contact anyone. A draft, approval, plan, actual send, and actual reply are different states.
 - Do not write `actual_sent_at`, actual content, or response facts from a workbench approval. The coordinator may record the salesperson's draft decision; only separately supplied actual evidence can create send or reply facts.
