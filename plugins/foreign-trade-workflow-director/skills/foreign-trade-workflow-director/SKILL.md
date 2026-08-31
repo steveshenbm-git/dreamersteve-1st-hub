@@ -1,6 +1,6 @@
 ---
 name: foreign-trade-workflow-director
-description: Use when a company needs to audit, build, resume, or reproduce the complete foreign-trade workflow across product knowledge, content-first or strict-audit industry semantics, company-industry matching, route decisions, candidate development, and customer operations.
+description: Use when a company needs to audit, build, resume, or reproduce the complete foreign-trade workflow, or when cross-skill inspector governance must track defects, authorization boundaries, and validation progress across workflow tasks and skill versions.
 ---
 
 # 外贸全流程控制与复刻
@@ -24,6 +24,18 @@ Use `strict_audit` when it is explicitly selected or a legacy beta.3 contract ha
 3. 当前任务的会话 `memory.md`，并优先读取其中现行的 `inspector_preflight` / 检察者身份与处置规则；没有可核对的会话记忆时记为 `UNVERIFIED`，不得假装已恢复。
 
 检察者预检必须先于任何跨任务指挥或 `specialist_handoff`。不影响当前流程方向和证据有效性的缺陷先写入 `deferred_findings_reference` 后继续；需要小幅调整当前动作才能继续的，记录调整及依据后继续；只有会破坏真值、盲测隔离、哈希/合同绑定、来源时序、拒绝覆盖或授权边界的严重缺陷才暂停并转修复。检察者不得以“先跑通”为由绕过这些硬门。
+
+## 跨技能检察治理
+
+跨任务指挥、`framework_resume`、`specialist_handoff`、修复后恢复或建议提交/推送/安装前，读取 [inspector-governance-contract.md](references/inspector-governance-contract.md)。如果当前公司或框架已有 `governance-registry.yaml`，同时读取该快照与相关任务台账；公司登记引用父框架登记时核对父哈希。登记不存在或关键证据不可读时保持 `UNVERIFIED`，只读检查不得自动初始化目录。
+
+只根据与当前动作范围相交的问题给出一个处置和一项下一动作：`continue`、`continue_with_correction`、`rehearsal_only` 或 `stop`。专业事实和真值仍由专业技能拥有；控制器只核对返回包、版本、哈希、范围和验证层，不能替专业技能改结论，也不能把检察者身份当成写入、Git、安装、模型或业务授权。
+
+治理写入先向用户说明一项逻辑事件及所需 `governance_registry_write` 授权。获授权后才可调用 `scripts/workflow-governance.py`；用户不填写 JSONL、编号、序号或哈希。源码、确定性测试、发布、安装、前向验证、跨公司验证和真实效果分别登记，任何一层 PASS 不自动提升下一层。
+
+## 历史治理迁移
+
+仅在用户明确要求迁移历史治理记录时，才读取 [legacy-governance-migration-contract.md](references/legacy-governance-migration-contract.md) 并使用只读 `scripts/validate-legacy-governance-migration.py`。正常审计和续作不加载迁移字段。候选版本只支持限定来源的盘点、映射、干跑、激活前检查和激活后验证；不自动激活，不改写或搬移历史原件。
 
 六页 `salesperson_workbench` 继续作为下游业务前台，但不是判断全流程是否完整的事实来源。
 

@@ -1,0 +1,18 @@
+{
+  "template_record": true,
+  "schema_version": "1.0.0-draft.1",
+  "migration_batch_id": null,
+  "phase": null,
+  "result": "UNVERIFIED",
+  "manifest_sha256": null,
+  "mapping_sha256": null,
+  "target_registry_sha256": null,
+  "counts": {},
+  "missing_source_ids": [],
+  "undeclared_paths": [],
+  "conflicts": [],
+  "activation_authorized": false,
+  "authorization_reference": null,
+  "one_next_action": null,
+  "remaining_unverified": []
+}

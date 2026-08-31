@@ -1,7 +1,7 @@
 {
   "name": "foreign-trade-workflow-director",
-  "version": "0.3.0-beta.3",
-  "description": "审计、搭建、续作和复刻完整外贸流程；新RC2按beta.5独立真值裁决和动态分母门控，并在每次跨任务指挥前执行检察者记忆预检。",
+  "version": "0.4.0-beta.1",
+  "description": "审计、搭建、续作和复刻完整外贸流程；在业务阶段不变的前提下执行跨技能检察预检、分层验证和可追溯治理记录。",
   "author": {
     "name": "steveshenbm-git"
   },
@@ -12,6 +12,7 @@
     "replication",
     "sales-workbench",
     "workflow",
+    "inspector-governance",
     "semantic-calibration",
     "model-handoff",
     "customer-development",
@@ -21,7 +22,7 @@
   "interface": {
     "displayName": "外贸全流程控制器",
     "shortDescription": "控制独立真值裁决、检察者预检与全量下游停止门。",
-    "longDescription": "可版本化的外贸全流程控制层：核对运行环境与公司隔离，按固定依赖图识别最早未完成项。新RC2读取同名行业技能beta.5的中性30+10抽样、独立裁决真值和动态正例集合；真值重开时作废旧评分。跨任务指挥前先读取当前会话记忆中的检察者规则，只有严重影响真值、盲测、哈希、合同、来源时序、覆盖或授权的缺陷才暂停，其他缺陷记录后继续。内容40例通过只可请求显式全量授权，始终阻断共享底座写入、公司适配、路线和客户流程。",
+    "longDescription": "可版本化的外贸全流程控制层：核对运行环境与公司隔离，按固定依赖图识别最早未完成项。跨任务指挥前读取会话记忆、公司或框架治理登记及相关任务台账，按影响范围选择继续、纠偏后继续、仅演练或停止，并把源码、测试、发布、安装、前向验证和真实效果分层记录。专业事实仍由专业技能判断，治理身份不扩张授权；内容40例通过只可请求显式全量授权，共享底座写入、公司适配、路线和客户流程仍受原停止门约束。",
     "developerName": "steveshenbm-git",
     "category": "Productivity",
     "capabilities": [

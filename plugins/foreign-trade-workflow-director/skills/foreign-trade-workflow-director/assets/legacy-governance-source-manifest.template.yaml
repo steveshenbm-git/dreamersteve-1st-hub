@@ -1,0 +1,25 @@
+{
+  "template_record": true,
+  "schema_version": "1.0.0-draft.1",
+  "migration_batch_id": null,
+  "migration_contract_id": "FTWG-LEGACY-GOVERNANCE-MIGRATION",
+  "migration_contract_version": "1.0.0-draft.1",
+  "phase_state": "UNVERIFIED",
+  "discovery_roots": [],
+  "include_patterns": [],
+  "exclude_roots": [],
+  "exclude_patterns": [],
+  "follow_symlinks": false,
+  "declared_sources": [],
+  "expected_counts": {
+    "discovered": null,
+    "included": null,
+    "excluded": null,
+    "duplicate": null,
+    "failed": null
+  },
+  "target_governance_root": null,
+  "target_registry_sha256": null,
+  "inventory_frozen_at": null,
+  "activation_authorization": null
+}
