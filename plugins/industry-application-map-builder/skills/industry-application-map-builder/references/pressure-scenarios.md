@@ -108,7 +108,7 @@
 | R4-P87 | 来源捕获时间早于准备锁定或晚于最终冻结 | FAIL | 由接收方在合同时间窗口内重新捕获，保持 `locked_at < captured_at <= frozen_at`。 |
 | R4-P88 | 源目录中的 symlink/hardlink/相同字节在复制后才检查，因 inode 被拆分而绕过 | FAIL | 复制前和复制后各做物理身份与哈希审计。 |
 | R4-P89 | 发布前检查目标不存在，但并发进程在改名前创建目标 | FAIL | 在父目录锁中重检并执行不可覆盖发布；任何已存在目标均拒绝。 |
-| R4-P90 | content-first 合同缺 `created_at`、owner authorization、skill Git commit 或配套 director 版本，但仍被锁定 | FAIL | 补全真实创建时间、用户授权引用、当前技能提交和 `0.3.0-beta.3` director 版本，用新合同重锁。 |
+| R4-P90 | content-first 合同缺 `created_at`、owner authorization、skill Git commit 或配套 director 版本，但仍被锁定 | FAIL | 补全真实创建时间、用户授权引用、当前技能提交和 `0.4.0-beta.1` director 版本，用新合同重锁。 |
 | R4-P91 | truth-bearing sampling labels：选样时使用 `known_positive`、`new_unseen_positive` 或等价标签定义答案 | FAIL | 改用中性来源与覆盖类别；正例、反例和未决只从独立接受裁决推导。 |
 | R4-P92 | fixed positive denominator：评分或合同写死14个正例，未从当前真值包重算编号、数量和哈希 | FAIL | 从接受的独立裁决动态重建三组真值集合并重做任务、评分与校准。 |
 | R4-P93 | truth reopened after scoring：真值被 reopened/superseded 后仍沿用旧任务、评分卡、臂汇总或校准PASS | FAIL | 将旧产物标为 invalidated；接受新真值并重新冻结、生成任务和评分。 |

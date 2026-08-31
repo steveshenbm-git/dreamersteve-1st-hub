@@ -3,7 +3,7 @@
   "content_first_case_package_manifest": {
     "manifest_id": null,
     "research_contract_id": null,
-    "map_builder_plugin_version": "0.4.0-beta.5",
+    "map_builder_plugin_version": "0.4.0-beta.6",
     "case_package_contract_version": "1.0-beta5",
     "preparation_contract_version": null,
     "locked_input_sha256": null,

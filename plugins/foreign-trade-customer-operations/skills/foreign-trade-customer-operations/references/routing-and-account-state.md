@@ -2,13 +2,15 @@
 
 ## 协调器入口与返回
 
-`foreign-trade-workflow-director` 可提交 `specialist_handoff_packet`，但它不能代替本技能需要的 `outreach_handoff_packet`、完整线程、实际发送历史或风险事实。协调器包必须带 `handoff_id`、`company_id`、业务问题、`source_record_id`、`source_packet_reference`、`evidence_reference`、允许写入范围和禁止动作；缺少专业输入时仍返回原所有者补齐，不得由协调器叙述替代证据。
+`foreign-trade-workflow-director` 可提交 `specialist_handoff_packet`，但它不能代替本技能需要的 `outreach_handoff_packet`、完整线程、实际发送历史或风险事实。协调器包必须与机器生成的 `handoff_envelope_v1` 和专业业务包指向同一 `company_id`、目标、载荷引用及哈希；缺少专业输入时仍返回原所有者补齐，不得由协调器叙述替代证据。
+
+进入任何专业路由前，使用流程控制器的只读 `validate_handoff_envelope.py` 核对：`contract_version = 1.0`、当前公司、预期目标技能/路由、规范相对载荷引用、原始字节SHA-256、业务包内 `company_id`、接收登记中的重复 `handoff_id` 和 `allowed_writes = []`。哈希变化、跨公司、错目标、重复编号、目录逃逸或非空未授权写入范围均返回 `FAIL`；不得读取后继续起草。验证器不追加接收登记，实际接收登记与任何工作簿写入仍需相应授权。
 
 返回协调器的 `specialist_return_packet` 只允许投影到 `salesperson_workbench` 的客户跟进、沟通草稿或异常风险页。结果必须分开保存草稿状态、业务员审核、实际发送、实际回复和风险门。不得把 `业务员批准` 解释为实际发送，也不得因下一步日期到期自动写成触达事实。
 
 ## `outreach_handoff_packet` 接受条件
 
-`cold_outreach` 只接受业务员已选定客户并明确要求准备触达的交接包。包中必须可读到客户身份、至少一条直接适配证据、已批准产品引用、允许和禁止表述、联系人权限、`outreach_scope`、风险状态和本次业务员请求。
+`cold_outreach` 只接受已通过信封校验、业务员已选定客户并明确要求准备触达的交接包。包中必须可读到与信封一致的 `company_id`、客户身份、至少一条直接适配证据、已批准产品引用、允许和禁止表述、联系人权限、`outreach_scope`、风险状态和本次业务员请求。
 
 - `outreach_scope = limited`：只依据初查证据准备有限首封；不得补做完整背调或改变推品。
 - `outreach_scope = complete`：可使用完整背调已批准内容；仍不得把未确认问题写成事实。
@@ -20,6 +22,7 @@
 
 ```text
 customer_operations_handoff:
+  company_id: <当前隔离公司编号>
   customer_id: <稳定编号或待创建>
   trigger_channel: <触发渠道>
   trigger_touch_id: <对应实发触达编号或缺口>
@@ -32,6 +35,8 @@ customer_operations_handoff:
   target_skill: foreign-trade-customer-operations
   salesperson_request: <本次明确要求或待确认>
 ```
+
+该业务包只在 `handoff_envelope_v1.target_route = reply_communication` 且公司、目标、载荷哈希、重复检查和空写入范围全部通过时接受。业务包不重复填写 `handoff_id`；后续获授权的移交记录只能复制已验收信封编号。
 
 当前入站内容已足以建立回复任务时，立即进入 `reply_communication`；发件人身份、邮件头或对应实发历史未核验，只影响证据状态，不得延迟交接或继续生成冷开发草稿。缺少会实质改变回复立场的字段时，只输出 `reply_return_packet`，列出缺失字段、影响和一项最小补充请求；不得启动客户搜索、补做背调或把疑似回复记为已核验实际回复。
 

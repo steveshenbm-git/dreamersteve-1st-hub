@@ -57,9 +57,16 @@ Use the published `ft-customer-dev` branch as the marketplace source. Do not ins
 
 ```bash
 codex plugin marketplace add steveshenbm-git/dreamersteve-1st-hub --ref ft-customer-dev
+codex plugin add company-product-knowledge-builder@foreign-trade-team
 codex plugin add industry-application-map-builder@foreign-trade-team
+codex plugin add foreign-trade-customer-development@foreign-trade-team
+codex plugin add foreign-trade-customer-operations@foreign-trade-team
 codex plugin add foreign-trade-workflow-director@foreign-trade-team
 ```
+
+The compatible candidate set is `company-product-knowledge-builder 0.1.0`, `industry-application-map-builder 0.4.0-beta.6`, `foreign-trade-customer-development 0.2.0-beta.2`, `foreign-trade-customer-operations 0.2.0-beta.2`, and `foreign-trade-workflow-director 0.4.0-beta.1`. Do not install the candidate industry plugin over an active `0.4.0-beta.5` R4 run; close that frozen test cycle on its existing source and artifacts first. Marketplace discovery, plugin installation, and target-environment workflow audit remain separate checks.
+
+Before installation, stop if any required plugin name is already installed from another marketplace. Choose one source and authorize a separate migration; do not keep two active providers for the same skill name or delete an older provider as part of discovery.
 
 Start a new Codex thread and use:
 

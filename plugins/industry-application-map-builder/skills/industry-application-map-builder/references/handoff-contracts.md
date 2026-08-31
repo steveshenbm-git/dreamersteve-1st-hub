@@ -80,7 +80,28 @@ semantic_specialist_return_packet:
   contract_version
   source_route
   result_state: PASS | FAIL | UNVERIFIED
-  method_validation_state: INCONCLUSIVE | EFFECTIVE | NOT_EFFECTIVE
+  semantic_method_validation_state: null | INCONCLUSIVE | EFFECTIVE | NOT_EFFECTIVE (strict_audit only; content_first = null)
+  terminology_bridge_reference
+  terminology_bridge_sha256
+  terminology_bridge_state
+  development_regression_state
+  formal_holdout_case_set_sha256
+  formal_holdout_provenance_state
+  paired_task_manifest_reference
+  paired_task_manifest_sha256
+  formal_paired_task_chain_state
+  source_truth_package_sha256
+  scorecard_package_sha256
+  receiver_evidence_manifest_sha256
+  stability_task_manifest_reference
+  stability_task_manifest_sha256
+  stability_repeat_state
+  content_method_state: CONTENT_CALIBRATION_INCOMPLETE | CONTENT_CALIBRATION_PASS | CONTENT_CALIBRATION_FAIL
+  content_full_screening_state: NOT_AUTHORIZED | AUTHORIZED_NOT_STARTED | IN_PROGRESS | COVERAGE_INCOMPLETE | READY_FOR_REVERSE_AUDIT | BLOCKED
+  content_full_screening_authorization_reference
+  content_full_screening_authorization_receipt_reference
+  content_full_screening_authorization_receipt_sha256
+  content_terminal_scope_sha256
   active_semantic_work_unit
   artifact_references_and_hashes
   coverage_summary
@@ -92,4 +113,4 @@ semantic_specialist_return_packet:
   prohibited_downstream_actions
 ```
 
-40例返回只更新方法状态，不把阶段5记为PASS。全量筛查、正式底座写入、公司匹配和客户搜索分别需要自己的门。协调器只投影当前为什么停、唯一下一动作和需要用户批准什么，不把模型包、查询记录或机器证据附页交给业务员维护。
+`content_first` 必须令 `semantic_method_validation_state = null`，使用 `CONTENT_CALIBRATION_*` 和完整R4哈希/授权绑定，并保持 `prohibited_downstream_actions` 中的 `RESEARCH_ONLY_BLOCKED`。只有明确的历史 `strict_audit` 合同可以填写 `INCONCLUSIVE / EFFECTIVE / NOT_EFFECTIVE`。40例返回只更新对应模式的方法状态，不把阶段5记为PASS。全量筛查、正式底座写入、公司匹配和客户搜索分别需要自己的门。协调器只投影当前为什么停、唯一下一动作和需要用户批准什么，不把模型包、查询记录或机器证据附页交给业务员维护。

@@ -24,7 +24,7 @@ sys.path.insert(0, str(SCRIPT_ROOT))
 
 from r4_adjudicated_truth_contract import (  # noqa: E402
     BETA5_CASE_PACKAGE_CONTRACT_VERSION,
-    BETA5_MAP_BUILDER_PLUGIN_VERSION,
+    MAP_BUILDER_PLUGIN_VERSION,
     BETA5_TRUTH_CONTRACT_VERSION,
     BETA5_TRUTH_SCORECARD_CONTRACT_VERSION,
     DIRECTOR_PLUGIN_VERSION,
@@ -123,8 +123,8 @@ class R4AdjudicatedTruthContractBeta5Tests(unittest.TestCase):
                 self.assertIn(dynamic_truth_binding, reference)
 
     def test_versions_and_neutral_sampling_contract_are_exact(self):
-        self.assertEqual(BETA5_MAP_BUILDER_PLUGIN_VERSION, "0.4.0-beta.5")
-        self.assertEqual(DIRECTOR_PLUGIN_VERSION, "0.3.0-beta.3")
+        self.assertEqual(MAP_BUILDER_PLUGIN_VERSION, "0.4.0-beta.6")
+        self.assertEqual(DIRECTOR_PLUGIN_VERSION, "0.4.0-beta.1")
         self.assertEqual(BETA5_CASE_PACKAGE_CONTRACT_VERSION, "1.0-beta5")
         self.assertEqual(BETA5_TRUTH_CONTRACT_VERSION, "2.1-r4-adjudicated")
         self.assertEqual(BETA5_TRUTH_SCORECARD_CONTRACT_VERSION, "2.1-r4")

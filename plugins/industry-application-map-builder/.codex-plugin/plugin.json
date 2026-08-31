@@ -1,7 +1,7 @@
 {
   "name": "industry-application-map-builder",
-  "version": "0.4.0-beta.5",
-  "description": "维护官方行业骨架；同名0.4.0-beta.5技能用产品中性的抽样标签、独立裁决真值和动态正例分母执行R4内容校准，并保留真实来源、原子冻结与下游停止门。",
+  "version": "0.4.0-beta.6",
+  "description": "维护官方行业骨架；同名0.4.0-beta.6技能用产品中性的抽样标签、独立裁决真值和动态正例分母执行R4内容校准，并用完整语义返回合同衔接流程控制器。",
   "author": {
     "name": "steveshenbm-git"
   },
@@ -19,8 +19,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "行业应用地图构建",
-    "shortDescription": "0.4.0-beta.5独立真值裁决与动态分母的R4校准。",
-    "longDescription": "用于维护带版本的官方行业骨架。新RC2在同名0.4.0-beta.5技能内使用通用R4内容合同：抽样来源与覆盖类别不再携带正负真值，正式正例、反例与未决例只从接受的独立裁决记录推导并冻结编号集合与哈希；真值重开会使旧评分失效。三条证据链仍须绑定接收方保存的原始字节和收据，失败不留半冻结产物。本版本不声称已运行、方法有效或已授权全量/下游。",
+    "shortDescription": "0.4.0-beta.6完整语义交接与动态分母的R4校准。",
+    "longDescription": "用于维护带版本的官方行业骨架。新RC2在同名0.4.0-beta.6技能内使用通用R4内容合同：抽样来源与覆盖类别不携带正负真值，正式正例、反例与未决例只从接受的独立裁决记录推导并冻结编号集合与哈希；真值重开会使旧评分失效。向流程控制器返回完整内容优先字段和哈希绑定，不把内容结果改称严格审计EFFECTIVE。本版本不声称已运行、方法有效或已授权全量/下游。",
     "developerName": "steveshenbm-git",
     "category": "Productivity",
     "capabilities": [

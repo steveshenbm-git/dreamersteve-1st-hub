@@ -13,15 +13,21 @@ SKILL_ROOT = PLUGIN_ROOT / "skills" / "foreign-trade-workflow-director"
 
 
 class InspectorGovernanceComplexityBudgetTests(unittest.TestCase):
-    def test_candidate_identity_and_two_runtime_entrypoints(self):
+    def test_candidate_identity_and_two_governance_runtime_entrypoints(self):
         manifest = json.loads(
             (PLUGIN_ROOT / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8")
         )
         self.assertEqual(manifest["version"], "0.4.0-beta.1")
-        scripts = sorted((SKILL_ROOT / "scripts").glob("*.py"))
-        expected = {"validate-legacy-governance-migration.py", "workflow-governance.py"}
-        self.assertLessEqual(len(scripts), 2)
-        self.assertTrue({path.name for path in scripts}.issubset(expected))
+        scripts = {path.name for path in (SKILL_ROOT / "scripts").glob("*.py")}
+        governance_entrypoints = {
+            "validate-legacy-governance-migration.py",
+            "workflow-governance.py",
+        }
+        self.assertEqual(scripts & governance_entrypoints, governance_entrypoints)
+        self.assertEqual(
+            scripts - governance_entrypoints,
+            {"validate_handoff_envelope.py"},
+        )
 
     def test_runtime_scripts_use_standard_library_and_no_service_stack(self):
         allowed_roots = {

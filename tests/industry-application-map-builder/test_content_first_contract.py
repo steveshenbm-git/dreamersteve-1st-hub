@@ -95,11 +95,11 @@ class ContentFirstUnifiedContractTests(unittest.TestCase):
         self.assertEqual(
             map_manifest["name"], "industry-application-map-builder"
         )
-        self.assertEqual(map_manifest["version"], "0.4.0-beta.5")
+        self.assertEqual(map_manifest["version"], "0.4.0-beta.6")
         self.assertEqual(
             workflow_manifest["name"], "foreign-trade-workflow-director"
         )
-        self.assertEqual(workflow_manifest["version"], "0.3.0-beta.3")
+        self.assertEqual(workflow_manifest["version"], "0.4.0-beta.1")
 
     def test_content_first_contract_keeps_raw_content_and_separates_platform_audit(self):
         map_skill = (MAP_SKILL / "SKILL.md").read_text(encoding="utf-8")

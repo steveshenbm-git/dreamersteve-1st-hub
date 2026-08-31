@@ -156,6 +156,37 @@ operator_task_card:
 
 任务卡不能只写“继续完善”“同步数据”等抽象动作，也不能要求执行人自己推断前置条件。机器交接包与任务卡必须指向同一 `stage_id` 和同一停止点。
 
+每个跨技能业务包先由机器生成一个独立、只读的绑定信封。业务员不填写这些字段，信封也不代替下面的专业业务包：
+
+```text
+handoff_envelope_v1:
+  contract_version: "1.0"
+  handoff_id
+  company_id
+  target_skill
+  target_route
+  payload_reference
+  payload_sha256
+  allowed_writes: []
+```
+
+`payload_reference` 必须是从信封所在目录出发的规范相对路径，`payload_sha256` 绑定业务包原始字节。接收技能在读取业务内容前，必须核对公司、目标技能、目标路由、业务包哈希、业务包内 `company_id`、接收方已有 `handoff_id` 和允许写入范围。绝对路径、目录逃逸、符号链接、哈希变化、跨公司、错目标、重复编号或非空的未授权写入范围均返回 `FAIL`，不得继续执行专业路由。
+
+当前校验器只支持两个精确组合：`foreign-trade-customer-operations / cold_outreach / outreach_handoff_packet` 和 `foreign-trade-customer-operations / reply_communication / customer_operations_handoff`。目标技能、路由与顶层业务包名必须同时匹配；未登记组合不得仅因调用方传入相同字符串而通过。校验器对载荷原始字节只读取一次，同一份字节同时用于 SHA-256 和 JSON 解析，并拒绝任何层级的重复 JSON 键。
+
+使用只读验证器：
+
+```bash
+python3 scripts/validate_handoff_envelope.py \
+  --envelope /absolute/handoff-envelope.json \
+  --expected-company-id ACME-001 \
+  --expected-target-skill foreign-trade-customer-operations \
+  --expected-target-route cold_outreach \
+  --accepted-handoff-registry /absolute/accepted-handoffs.json
+```
+
+接收登记的最小只读结构为 `{"accepted_handoff_ids": []}`。验证器不修改登记、不写业务包、不写工作簿；只有在后续写入另获授权并完成实际接收后，接收方才可把同一个 `handoff_id` 追加到自己的登记。一个信封只绑定一个业务包；不得把通用协调器叙述与另一份业务包拼接使用。
+
 ```text
 specialist_handoff_packet:
   handoff_id

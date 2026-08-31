@@ -9,14 +9,14 @@ description: Use when work involves an official industry taxonomy, generalized c
 
 Use one semantic evaluation mode per research contract. For a newly prepared RC2 research contract, set `execution_mode = content_first`; this is the current default route. Use `strict_audit` only when the user explicitly selects it, or when a legacy beta.3 contract has no mode field. A legacy no-mode contract remains strict-audit compatible and retains every beta.3 identity, transport, receipt, and admissibility gate unchanged.
 
-Within `content_first`, source version `0.4.0-beta.5` uses the `content_first_r4` marker plus `case_package_contract_version = 1.0-beta5`, `truth_contract_version = 2.1-r4-adjudicated`, and `truth_scorecard_contract_version = 2.1-r4`. It remains the same `industry-application-map-builder` skill; do not create or route to a candidate skill. Never downgrade an R4 artifact because a marker, version or arm field is missing: that is a refusal, not legacy detection. Beta.3 and beta.4 R4 artifacts are historical read-only inputs and cannot be continued by a beta.5 lock, finalizer, task builder, or scorer.
+Within `content_first`, source version `0.4.0-beta.6` uses the `content_first_r4` marker plus `case_package_contract_version = 1.0-beta5`, `truth_contract_version = 2.1-r4-adjudicated`, and `truth_scorecard_contract_version = 2.1-r4`. It remains the same `industry-application-map-builder` skill; do not create or route to a candidate skill. Never downgrade an R4 artifact because a marker, version or arm field is missing: that is a refusal, not legacy detection. Beta.3, beta.4 and beta.5 R4 artifacts are historical read-only inputs for beta.6 and cannot be continued by a beta.6 lock, finalizer, task builder, or scorer.
 
 | Mode | Content decision evidence | Status vocabulary | Boundary |
 | --- | --- | --- | --- |
 | `content_first` | Complete raw answer, visible input/hash, source/truth comparison, itemized scorecard, and unknown items; platform audit is separate | `CONTENT_CONTRACT_FROZEN`, `CONTENT_CALIBRATION_*`, content full-scope states | Research-only; never emit strict `EFFECTIVE` or release downstream work. |
 | `strict_audit` | The existing beta.3 evidence and admissibility contract | `INCONCLUSIVE / EFFECTIVE / NOT_EFFECTIVE` | Preserve the existing route and tools unchanged. |
 
-Never infer `content_first` from missing platform metadata. Read [content-first-mode-contract.md](references/content-first-mode-contract.md) and [compatibility-matrix.md](references/compatibility-matrix.md) before a content-first route. Use `assets/content-first/` only for a new content-first contract; never retrofit its fields into a frozen beta.3 contract.
+Never infer `content_first` from missing platform metadata. Read [content-first-mode-contract.md](references/content-first-mode-contract.md), [compatibility-matrix.md](references/compatibility-matrix.md), and [optimization-validation.md](references/optimization-validation.md) before evaluating or retaining an optimized content-first version. Use `assets/content-first/` only for a new content-first contract; never retrofit its fields into a frozen beta.3 contract.
 
 ## Generalized R4 retrieval contract
 

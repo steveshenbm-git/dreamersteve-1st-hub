@@ -24,8 +24,8 @@ Choose exactly one `task_route` before researching:
 | `candidate_review` | One or more accepted raw batches need independent evidence review | Qualified, excluded, and `UNVERIFIED` companies separately; stop for salesperson screening |
 | `direction_review` | The salesperson asks to review saved scan results for one direction | `direction_feedback_packet`; do not change the direction status |
 | `full_due_diligence` | `salesperson_classification = 潜力客户` **and** salesperson explicitly starts it | Full evidence-bound research and one `project_recommendation` or an insufficiency conclusion |
-| `outreach_handoff` | Salesperson selected the company and explicitly asks to prepare communication | `outreach_handoff_packet` for `foreign-trade-customer-operations`; no email body |
-| `reply_handoff` | A received or suspected customer reply appears while this skill is active | Stop development work and hand the saved context to `foreign-trade-customer-operations` |
+| `outreach_handoff` | Salesperson selected the company and explicitly asks to prepare communication | Bound `handoff_envelope_v1` plus `outreach_handoff_packet` for `foreign-trade-customer-operations`; no email body |
+| `reply_handoff` | A received or suspected customer reply appears while this skill is active | Stop development work and hand a bound envelope plus the saved context to `foreign-trade-customer-operations` |
 
 `direction_discovery` is a compatibility alias for `direction_compilation`; it is not an alternate product-led discovery route. Both names use the same producer-registry preflight, route-review record, readiness view, and salesperson decision gate.
 
@@ -39,6 +39,7 @@ This skill does not independently infer an industry from product facts. It verif
 2. Read `references/evidence-contacts-and-risk.md` before conclusions or contact work.
 3. Read `references/opportunity-and-outreach.md` before a project recommendation or outreach handoff.
 4. Read `references/workbook-and-handoff.md` before a record update or handoff.
+5. Read [optimization-validation.md](references/optimization-validation.md) before retaining or installing an optimized skill version.
 
 ## Hard boundaries
 
@@ -68,6 +69,6 @@ This skill does not independently infer an industry from product facts. It verif
 - `candidate_review` returns `PASS`, `FAIL`, and `UNVERIFIED` companies separately, with evidence, counterevidence, scope gaps, and source batch IDs, then stops for salesperson screening. The compatibility `candidate_scan` must disclose which one of these phases it actually performed.
 - `direction_review` returns saved supporting outcomes, refuting outcomes, uncovered scope, and one salesperson decision request: `保留`, `调整`, `暂缓`, or `淘汰`; it never rewrites `direction_status` by itself.
 - `full_due_diligence` may provide one final `project_recommendation` or a concrete evidence-insufficiency conclusion; it never writes a communication draft.
-- `outreach_handoff_packet` contains only evidence-bound communication inputs: customer identity, approved product references, allowed and prohibited claims, contact evidence and permission, outreach scope, actual-send facts if any, risk status, gaps, and the salesperson's explicit request.
+- `outreach_handoff_packet` contains only evidence-bound communication inputs: `company_id`, customer identity, approved product references, allowed and prohibited claims, contact evidence and permission, outreach scope, actual-send facts if any, risk status, gaps, and the salesperson's explicit request. The machine-owned `handoff_envelope_v1` holds the only `handoff_id`, exact payload reference/hash, target and empty write scope; this skill does not place an independent `handoff_id` inside the payload.
 - Every output is Chinese analysis, identifies what remains the salesperson's decision, and reports a truthful `workbook_status` of `未写入`, `待授权`, or `已重开验证`.
 - If invoked through `foreign-trade-workflow-director`, also return `specialist_return_packet` plus a minimal `salesperson_workbench` projection. The coordinator may record the salesperson decision after authorization; this skill does not directly overwrite the six-page business front.

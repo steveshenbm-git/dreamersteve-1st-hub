@@ -61,14 +61,14 @@ class R4Beta5CasePackageTests(unittest.TestCase):
         draft, term_pack = self.fx.r4_preparation(root)
         payload = json.loads(draft.read_text(encoding="utf-8"))
         payload["semantic_research_contract"]["map_builder_plugin_version"] = (
-            "0.4.0-beta.5"
+            "0.4.0-beta.6"
         )
         payload["semantic_research_contract"].update(
             {
                 "created_at": "2026-08-24T00:00:00Z",
                 "owner_authorization_reference": "USER-R4-PREP",
                 "skill_git_commit": "dbd67b0cc283c4d88d9b78b3d49fa6f5aeb2f02a",
-                "workflow_director_plugin_version": "0.3.0-beta.3",
+                "workflow_director_plugin_version": "0.4.0-beta.1",
             }
         )
         draft.write_text(json.dumps(payload), encoding="utf-8")
@@ -193,8 +193,8 @@ class R4Beta5CasePackageTests(unittest.TestCase):
             "semantic_research_contract"
         ]
 
-        self.assertEqual(manifest["version"], "0.4.0-beta.5")
-        self.assertEqual(template["map_builder_plugin_version"], "0.4.0-beta.5")
+        self.assertEqual(manifest["version"], "0.4.0-beta.6")
+        self.assertEqual(template["map_builder_plugin_version"], "0.4.0-beta.6")
         self.assertEqual(template["case_package_contract_version"], "1.0-beta5")
         for field in (
             "created_at",
@@ -214,7 +214,7 @@ class R4Beta5CasePackageTests(unittest.TestCase):
             "mechanism_or_use_point_basis = receiver_captured_raw",
             "复制前和复制后",
             "父目录锁",
-            "workflow_director_plugin_version = 0.3.0-beta.3",
+            "workflow_director_plugin_version = 0.4.0-beta.1",
             "skill_git_commit",
             "owner_authorization_reference",
         ):

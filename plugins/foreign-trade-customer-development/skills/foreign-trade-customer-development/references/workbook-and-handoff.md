@@ -132,10 +132,11 @@ salesperson_route_decision: 选择编译, 继续核实, 暂缓, 淘汰
 
 target_skill 固定为 foreign-trade-customer-operations。客户经营与沟通技能处理首封、未回复跟进和收到回复后的沟通；业务员决定项目状态、长期经营或关闭。
 
-`customer_operations_handoff` 在实际写入时使用新 `handoff_id`；仅准备未写入的交接包时，将缺失编号标为待创建，不得伪造。发送给接收技能的字段名必须与下列合同一致，不得只给一段综合叙述：
+`customer_operations_handoff` 必须由机器生成的 `handoff_envelope_v1` 绑定。唯一 `handoff_id` 只属于信封；仅准备未写入的业务包时不得另造编号。后续若业务员授权写入“移交记录”，必须原样复制已验收信封的 `handoff_id`，不得产生第二个身份。发送给接收技能的字段名必须与下列合同一致，不得只给一段综合叙述：
 
 ```text
 customer_operations_handoff:
+  company_id: <当前隔离公司编号>
   customer_id: <稳定编号或待创建>
   trigger_channel: <触发渠道>
   trigger_touch_id: <对应实发触达编号或缺口>
@@ -148,6 +149,8 @@ customer_operations_handoff:
   target_skill: foreign-trade-customer-operations
   salesperson_request: <本次明确要求或待确认>
 ```
+
+信封固定使用同一 `company_id`、`target_skill = foreign-trade-customer-operations`、`target_route = reply_communication`、业务包相对引用/原始字节SHA-256和 `allowed_writes = []`。接收方拒绝哈希变化、跨公司、错目标、重复 `handoff_id` 或非空未授权写入范围；拒绝不会把疑似回复改写为已核验实际回复。
 
 交接是对当前入站内容的回复处理入口，不授权客户经营与沟通技能决定客户价值、优先级、发送、受限联系方式或最终状态。
 

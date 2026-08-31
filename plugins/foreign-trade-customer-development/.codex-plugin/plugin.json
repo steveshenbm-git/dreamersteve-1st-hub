@@ -1,6 +1,6 @@
 {
   "name": "foreign-trade-customer-development",
-  "version": "0.2.0-beta.1",
+  "version": "0.2.0-beta.2",
   "description": "用于路线候选池评审、业务员选定路线的开发方向编译、证据约束的候选企业研究、尽职调查，以及外联前客户开发交接；不代替业务员做商业决策或发送沟通内容。",
   "author": {
     "name": "steveshenbm-git"

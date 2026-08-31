@@ -26,6 +26,7 @@
 
 ```text
 outreach_handoff_packet:
+  company_id: <当前隔离公司编号>
   customer_id: <稳定编号或待创建>
   company_identity: <主体、品牌、网站、地区及证据>
   source_direction_id: <可选；没有则明确为空>
@@ -39,6 +40,8 @@ outreach_handoff_packet:
   open_questions: <不得自行补全的问题>
   salesperson_request: <本次明确要求>
 ```
+
+该业务包必须由机器生成的 `handoff_envelope_v1` 绑定后再交给接收技能。信封持有唯一 `handoff_id`、同一 `company_id`、`target_skill = foreign-trade-customer-operations`、`target_route = cold_outreach`、业务包相对引用/原始字节SHA-256和 `allowed_writes = []`。业务包本身不重复填写 `handoff_id`，也不通过信封获得发送、工作簿写入或扩大联系人权限。
 
 `limited` 只允许客户经营与沟通技能依据已有初查和已批准事实准备有限首封；不得借此补做完整背调、增加产品结论或扩大联系权限。`complete` 代表完整背调双门槛已通过，但同样不授权发送。
 

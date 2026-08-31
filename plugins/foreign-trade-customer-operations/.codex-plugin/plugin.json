@@ -1,6 +1,6 @@
 {
   "name": "foreign-trade-customer-operations",
-  "version": "0.2.0-beta.1",
+  "version": "0.2.0-beta.2",
   "description": "Codex skill plugin for salesperson-controlled cold outreach, unanswered follow-up, customer reply communication, and local customer-operation records.",
   "author": {
     "name": "steveshenbm-git"

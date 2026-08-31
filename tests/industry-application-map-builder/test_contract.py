@@ -46,7 +46,7 @@ class IndustryApplicationMapContractTests(unittest.TestCase):
         )
 
         self.assertEqual(manifest["name"], "industry-application-map-builder")
-        self.assertEqual(manifest["version"], "0.4.0-beta.5")
+        self.assertEqual(manifest["version"], "0.4.0-beta.6")
         self.assertEqual(manifest["interface"]["displayName"], "行业应用地图构建")
         self.assertTrue(
             any(
@@ -353,7 +353,7 @@ class IndustryApplicationMapContractTests(unittest.TestCase):
                 "zero source-open increase",
             ),
             "skills/industry-application-map-builder/references/compatibility-matrix.md": (
-                "0.4.0-beta.5",
+                "0.4.0-beta.6",
                 "legacy downgrade",
                 "1.0-legacy",
             ),

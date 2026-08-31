@@ -638,7 +638,7 @@ class GeneralizedSemanticRetrievalR4Tests(unittest.TestCase):
                 "created_at": "2026-08-24T00:00:00Z",
                 "owner_authorization_reference": "USER-R4-PREP",
                 "skill_git_commit": "dbd67b0cc283c4d88d9b78b3d49fa6f5aeb2f02a",
-                "workflow_director_plugin_version": "0.3.0-beta.3",
+                "workflow_director_plugin_version": "0.4.0-beta.1",
             }
         )
         return payload
@@ -711,7 +711,7 @@ class GeneralizedSemanticRetrievalR4Tests(unittest.TestCase):
                 "created_at": "2026-08-24T00:00:00Z",
                 "owner_authorization_reference": "USER-R4-PREP",
                 "skill_git_commit": "dbd67b0cc283c4d88d9b78b3d49fa6f5aeb2f02a",
-                "workflow_director_plugin_version": "0.3.0-beta.3",
+                "workflow_director_plugin_version": "0.4.0-beta.1",
                 "taxonomy_snapshot_reference": "01-节点快照/taxonomy.json",
                 "taxonomy_snapshot_sha256": sha256_file(taxonomy),
                 "terminal_node_count": 40,
@@ -819,7 +819,7 @@ class GeneralizedSemanticRetrievalR4Tests(unittest.TestCase):
                 "created_at": "2026-08-24T00:00:00Z",
                 "owner_authorization_reference": "USER-R4-PREP",
                 "skill_git_commit": "dbd67b0cc283c4d88d9b78b3d49fa6f5aeb2f02a",
-                "workflow_director_plugin_version": "0.3.0-beta.3",
+                "workflow_director_plugin_version": "0.4.0-beta.1",
             }
         )
         prompt = preparation_root / "00-合同准备" / "prompt.md"
@@ -2393,9 +2393,9 @@ class GeneralizedSemanticRetrievalR4Tests(unittest.TestCase):
             (DIRECTOR_PLUGIN / ".codex-plugin/plugin.json").read_text()
         )
         self.assertEqual(map_manifest["name"], "industry-application-map-builder")
-        self.assertEqual(map_manifest["version"], "0.4.0-beta.5")
+        self.assertEqual(map_manifest["version"], "0.4.0-beta.6")
         self.assertEqual(director_manifest["name"], "foreign-trade-workflow-director")
-        self.assertEqual(director_manifest["version"], "0.3.0-beta.3")
+        self.assertEqual(director_manifest["version"], "0.4.0-beta.1")
         for contract_template in CONTRACT_TEMPLATES:
             with self.subTest(contract_template=contract_template.name):
                 contract = json.loads(contract_template.read_text())["semantic_research_contract"]
