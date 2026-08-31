@@ -14,7 +14,7 @@
 
 ### content_first R4正式案例政策
 
-R4不重找另一组40例。从已冻结候选中保留 `30 unexecuted` 且未被开发调试使用的案例，再加入 `10 new unseen positives`，构成新的正式40例。任何标记 `development_regression_only = true` 的案例都只用于开发回归，不得计入正式40例、已知正例或稳定性统计。此政策必须冻结案例ID、选择来源、开发排除集和真实字节哈希；不以聊天记忆或文件名判定。
+R4不重找另一组40例。从已冻结候选中保留30个 `retained_r3_unexecuted`（合同兼容标识为 `30 unexecuted`）且未被开发调试使用的案例，再加入10个 `new_unseen` 案例，构成新的正式40例。这两个 `selection_origin` 只说明案例来源，不定义真值。任何标记 `development_regression_only = true` 的案例都只用于开发回归，不得计入正式40例、接受正例集合或稳定性统计。此政策必须冻结案例ID、选择来源、开发排除集和真实字节哈希；不以聊天记忆或文件名判定。10个 `new_unseen` 必须在最终冻结前全部通过直接证据独立裁决为接受正例；这是冻结质量门，不是选样时预先写入的答案。
 
 正式任务包是 `40 pairs`：`baseline_full_depth_v1` 和 `screen_then_expand_v2` 各有40个独立任务，共享同一冻结可见输入，不共享上下文、输出文件或对方臂结果。另冻结 `6 predeclared high-risk single-case repeats`：候选臂的6个高风险案例各重复1次，不是6组40例，也不是复制ID或汇总。
 
@@ -24,20 +24,20 @@ R4不重找另一组40例。从已冻结候选中保留 `30 unexecuted` 且未�
 
 案例集冻结后，用其实际案例集哈希、40个唯一案例ID、真实控制案例和批次大小生成新合同版本的最终 `frozen` 合同。准备合同与最终合同的不可变输入投影必须匹配 `locked_input_sha256`；若主题、快照、提示词、来源、预算或抽样规则漂移，停止并重新锁定。只有最终冻结合同可以进入模型运行。
 
-40例冻结构成为：
+40例冻结抽样覆盖使用以下产品中性研究难点；`sampling_category` 只定义要覆盖的检索或安全压力，不定义正例、反例或未决结论：
 
-| 主类型 | 数量 |
-|---|---:|
-| 直接来源支持的明确正例 | 8 |
-| 术语不同但实际相关的正例 | 6 |
-| 名称相似但实际不相关的误导例 | 6 |
-| 资料稀少或来源不可访问 | 5 |
-| 模糊或条件不完整 | 5 |
-| 循环转载或混合公司来源 | 4 |
-| 空洞泛化假设 | 3 |
-| 跨公司污染、批次漂移或结构错误 | 3 |
+| sampling_category | 数量 | 覆盖目的 |
+|---|---:|---|
+| `direct_evidence_candidate` | 8 | 检查直接来源候选的捕获与核查，不预设其结论。 |
+| `terminology_mismatch_candidate` | 6 | 检查术语差异下的发现能力，不预设实际相关性。 |
+| `misleading_name_control` | 6 | 检查名称误导风险，不以名称指定答案。 |
+| `source_scarce` | 5 | 检查资料稀少或来源不可访问时的未知处理。 |
+| `incomplete_conditions` | 5 | 检查条件、限制或边界不完整时的保守处理。 |
+| `source_independence_risk` | 4 | 检查循环转载或来源独立性不足。 |
+| `vacuous_hypothesis_control` | 3 | 检查空洞泛化假设和命题膨胀。 |
+| `contamination_or_structure_control` | 3 | 检查跨公司污染、批次漂移或结构错误。 |
 
-只有保留直接来源、原始位置、条件、限制、快照和哈希的案例可以进入已知真值。证据不足的 `open_case` 可观察行为但不计入已知正例召回率。
+正式真值只从 `truth_contract_version = 2.1-r4-adjudicated` 的独立裁决记录生成。只有满足当前真值合同的 accepted 记录才能进入 `accepted_positive_case_ids` 或接受反例集合；其余案例进入未决集合并阻止旧评分沿用。冻结包必须保存三个编号集合、数量及哈希。证据不足的 `open_case` 可观察行为，但不进入接受正例召回分母。
 
 同一新版技能定义两个R4同级方法臂：
 
@@ -50,7 +50,7 @@ R4不重找另一组40例。从已冻结候选中保留 `30 unexecuted` 且未�
 
 ### content_first R4
 
-R4门顺序固定为安全、14个已知正例100%进入展开、接收方证据完整、6个单案例稳定重复、效率。前门未通过时，后门不评估，效率数值为null。冻结阈值为深度展开至少减少 `20 percent`、查询数最多增加 `10 percent`、`zero source-open increase`。R4 CLI不得放宽这些阈值。
+R4门顺序固定为安全、当前接受正例集合100%进入展开、接收方证据完整、6个单案例稳定重复、效率。`accepted_positive_case_ids`、`accepted_positive_count` 和 `accepted_positive_case_ids_sha256` 必须从当前 accepted 独立真值重算并与两臂一致；`accepted_positive_count` 是动态召回分母，不得写死为14。真值被 reopened 或 superseded 时，旧任务、评分和校准结论全部失效。前门未通过时，后门不评估，效率数值为null。冻结阈值为深度展开至少减少 `20 percent`、查询数最多增加 `10 percent`、`zero source-open increase`。R4 CLI不得放宽这些阈值。
 
 R4结果只能为 `PASS / FAIL / INCOMPLETE` 与对应 `CONTENT_CALIBRATION_*`。`CONTENT_CALIBRATION_PASS` 只表示这一内容合同的冻结门已满足；它不等于 `EFFECTIVE`，不证明真实产业效果，不授权full screening。全量、共享底座、公司匹配、路线和客户继续 `RESEARCH_ONLY_BLOCKED`。
 

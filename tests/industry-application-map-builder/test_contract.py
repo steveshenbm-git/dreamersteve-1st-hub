@@ -341,8 +341,11 @@ class IndustryApplicationMapContractTests(unittest.TestCase):
             ),
             "skills/industry-application-map-builder/references/industry-semantic-calibration-and-audit.md": (
                 "30 unexecuted",
-                "10 new unseen positives",
+                "new_unseen",
                 "development_regression_only",
+                "truth_contract_version = 2.1-r4-adjudicated",
+                "accepted_positive_count",
+                "动态召回分母",
                 "40 pairs",
                 "6 predeclared high-risk single-case repeats",
                 "20 percent",

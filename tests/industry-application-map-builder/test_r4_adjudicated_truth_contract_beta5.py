@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import sys
 import unittest
 from pathlib import Path
@@ -14,6 +15,10 @@ REPOSITORY_ROOT = Path(
 SCRIPT_ROOT = (
     REPOSITORY_ROOT
     / "plugins/industry-application-map-builder/skills/industry-application-map-builder/scripts"
+)
+CALIBRATION_REFERENCE = (
+    REPOSITORY_ROOT
+    / "plugins/industry-application-map-builder/skills/industry-application-map-builder/references/industry-semantic-calibration-and-audit.md"
 )
 sys.path.insert(0, str(SCRIPT_ROOT))
 
@@ -89,6 +94,34 @@ def truth_rows(positive_count: int = 15) -> list[dict]:
 
 
 class R4AdjudicatedTruthContractBeta5Tests(unittest.TestCase):
+    def test_calibration_reference_uses_neutral_sampling_and_dynamic_truth_denominator(self):
+        reference = CALIBRATION_REFERENCE.read_text(encoding="utf-8")
+        sampling_rows = {
+            category: int(count)
+            for category, count in re.findall(
+                r"^\| `([^`]+)` \| (\d+) \|", reference, flags=re.MULTILINE
+            )
+        }
+
+        self.assertEqual(sampling_rows, SAMPLING_CATEGORY_COUNTS)
+        for truth_bearing_fragment in (
+            "new unseen positives",
+            "直接来源支持的明确正例",
+            "术语不同但实际相关的正例",
+            "14个已知正例100%进入展开",
+        ):
+            with self.subTest(fragment=truth_bearing_fragment):
+                self.assertNotIn(truth_bearing_fragment, reference)
+        for dynamic_truth_binding in (
+            "truth_contract_version = 2.1-r4-adjudicated",
+            "accepted_positive_case_ids",
+            "accepted_positive_count",
+            "accepted_positive_case_ids_sha256",
+            "动态召回分母",
+        ):
+            with self.subTest(binding=dynamic_truth_binding):
+                self.assertIn(dynamic_truth_binding, reference)
+
     def test_versions_and_neutral_sampling_contract_are_exact(self):
         self.assertEqual(BETA5_MAP_BUILDER_PLUGIN_VERSION, "0.4.0-beta.5")
         self.assertEqual(DIRECTOR_PLUGIN_VERSION, "0.3.0-beta.3")
