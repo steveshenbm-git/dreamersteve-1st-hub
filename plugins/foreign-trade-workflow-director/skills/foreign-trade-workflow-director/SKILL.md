@@ -21,7 +21,8 @@ Use `strict_audit` when it is explicitly selected or a legacy beta.3 contract ha
 
 1. [workflow-blueprint.md](references/workflow-blueprint.md)
 2. [workflow-and-packet-contracts.md](references/workflow-and-packet-contracts.md)
-3. 当前任务的会话 `memory.md`，并优先读取其中现行的 `inspector_preflight` / 检察者身份与处置规则；没有可核对的会话记忆时记为 `UNVERIFIED`，不得假装已恢复。
+3. 进入 `candidate_development` 或 `customer_operations` 时读取 [customer-flow-transition-contract.md](references/customer-flow-transition-contract.md)。
+4. 当前任务的会话 `memory.md`，并优先读取其中现行的 `inspector_preflight` / 检察者身份与处置规则；没有可核对的会话记忆时记为 `UNVERIFIED`，不得假装已恢复。
 
 检察者预检必须先于任何跨任务指挥或 `specialist_handoff`。不影响当前流程方向和证据有效性的缺陷先写入 `deferred_findings_reference` 后继续；需要小幅调整当前动作才能继续的，记录调整及依据后继续；只有会破坏真值、盲测隔离、哈希/合同绑定、来源时序、拒绝覆盖或授权边界的严重缺陷才暂停并转修复。检察者不得以“先跑通”为由绕过这些硬门。
 
@@ -71,13 +72,15 @@ Use `strict_audit` when it is explicitly selected or a legacy beta.3 contract ha
 ## 启动与续作算法
 
 1. 先区分只读检查、结构写入、业务写入、安装/传输和外部动作；一种授权不能代替另一种。
-2. 执行 `framework_audit`：核对蓝图版本、四个必需专业技能、模板、路径、权限、公司隔离和实际登记产物。缺少依赖或无法证明版本兼容时停在 `environment_audit`。
+2. 执行 `framework_audit`：核对蓝图版本、五个必需专业技能、模板、路径、权限、公司隔离和实际登记产物。缺少依赖或无法证明版本兼容时停在 `environment_audit`。
 3. 确认唯一稳定的 `company_id` 与隔离的公司根目录。发现跨公司标识、路径或产物时记为 `FAIL` 并停止。
 4. 按权威阶段顺序逐项读取直接证据。每阶段分别记录 `gate_result: PASS | FAIL | UNVERIFIED` 和 `freshness: current | stale | unknown`。
 5. 第一项非 `PASS + current` 的阶段就是 `first_incomplete_stage`。只给出由该阶段所有者执行的一项当前动作。
 6. 前七段全部通过后，读取明确的 `active_work_unit`；后续状态分别绑定 `route_instance`、`direction_instance` 或 `customer_thread`。没有明确工作单元时先让业务员选择，不自动挑选。
 7. 专业返回必须核对公司、工作单元、来源、版本/哈希、声明范围、结果状态和禁止动作。仅凭文件名、存在一个工作簿或已有候选公司，不得判定阶段完成。
 8. 当前阶段通过后更新对应公司基础或业务实例，再重新从第一阶段计算；不依赖聊天记忆直接跳到后期。
+
+进入客户线程后，大阶段仍记为 `customer_operations`，但每次跨技能动作必须由 `customer-flow-transition-registry.v1.json` 的一个精确转换驱动。控制器先调用 `validate_customer_flow_transition.py` 核对信封、前序接收凭证、绑定哈希、人工决定和允许下一动作；缺少任一硬链接都停止在来源状态。客户开发不得直达客户沟通，客户运营不得生成对外正文，客户沟通不得接收原始线程或代替运营做客户状态与商业判断。
 
 用于全行业筛查时，全部登记末端节点必须具有同一冻结合同下的可审计浅筛记录；所有触发节点完成证据处置，反向审计通过且无安全失败后，才可把阶段记为PASS。小范围pilot或40例只能验证方法，不能代替全量门。
 
@@ -159,7 +162,8 @@ strict_audit的 semantic_method_validation_state 不是 EFFECTIVE → semantic_m
 - `company-product-knowledge-builder`：公司身份边界、来源接收、产品事实库和受控产品事实包；不得自行推断行业路线。
 - `industry-application-map-builder`：官方行业骨架、RC2方法合同与校准、产品中立浅筛/证据/反向审计、公司能力匹配、覆盖复核和路线池交接；它不搜索具体客户。
 - `foreign-trade-customer-development`：路线编译与验证、候选采集任务、原始批次接收、独立候选复核、完整背调和沟通前交接。
-- `foreign-trade-customer-operations`：首封、未回复跟进、完整线程回复、严重问题和既有客户经营材料；不得发送。
+- `foreign-trade-customer-operations`：客户线程验收、实际互动接收、客户状态、下一动作、商业边界和 `communication_brief_packet`；不生成任何对外正文。
+- `foreign-trade-customer-communication`：只基于已验收运营简报生成首封、未回复跟进、回复、账户沟通或敏感沟通候选；不得决定客户状态、商业条件、批准或发送。
 - 获批准的采集执行器：只执行 `candidate_collection_task` 并追加 `raw_candidate_batch`；不判断客户合格，不写业务工作簿。
 
 专业技能拥有各自事实、证据和结论。本技能拥有阶段图、环境审计、初始化、交接门禁、状态登记、复刻清单和业务摘要。若专业技能缺少蓝图要求的路由或返回合同，标为 `UNVERIFIED`，不能由控制器临时编造专业结论。
@@ -191,7 +195,7 @@ strict_audit的 semantic_method_validation_state 不是 EFFECTIVE → semantic_m
 - 回复或疑似回复 → 风险暂停 → 停止/拒绝/持续退信 → 输入过期 → 到期跟进 → 普通待办。
 - 共享输入、公司地图或路线包版本/哈希过期时，返回对应所有者重新验证；不得手工改成通过。
 - 源编辑、40例、全量筛查、正式底座写入、公司匹配、Git提交和插件安装均为独立授权；一个批准不得扩张到另一个阶段。
-- 不搜索具体客户，不补造事实，不改专业技能结论，不覆盖业务员字段，不发送，不创建自动发送配置。
+- 不搜索具体客户，不补造事实，不改专业技能结论，不覆盖业务员字段，不得发送，不创建自动发送配置。
 
 ## 写入合同
 

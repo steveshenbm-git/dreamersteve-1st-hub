@@ -130,7 +130,9 @@ salesperson_route_decision: 选择编译, 继续核实, 暂缓, 淘汰
 
 ## 客户经营与沟通移交
 
-target_skill 固定为 foreign-trade-customer-operations。客户经营与沟通技能处理首封、未回复跟进和收到回复后的沟通；业务员决定项目状态、长期经营或关闭。
+target_skill 固定为 foreign-trade-customer-operations。客户运营先验收线程、判断状态和下一动作；只有运营简报通过后，客户沟通技能才准备候选正文。业务员决定项目状态、长期经营、最终文案、发送或关闭。
+
+回复或疑似回复交接使用新的 `development_snapshot_v1`，其中 `state = INBOUND_OR_SUSPECTED_REPLY_CAPTURED`，并把入站原件作为 `inbound_message_evidence` 角色绑定。不得复用此前 `DEVELOPMENT_READY` 快照或手改其状态。
 
 `customer_operations_handoff` 必须由机器生成的 `handoff_envelope_v1` 绑定。唯一 `handoff_id` 只属于信封；仅准备未写入的业务包时不得另造编号。后续若业务员授权写入“移交记录”，必须原样复制已验收信封的 `handoff_id`，不得产生第二个身份。发送给接收技能的字段名必须与下列合同一致，不得只给一段综合叙述：
 
@@ -148,14 +150,15 @@ customer_operations_handoff:
   risk_gate_status: <当前风险状态与依据>
   target_skill: foreign-trade-customer-operations
   salesperson_request: <本次明确要求或待确认>
+  customer_flow_link_v1: <绑定开发快照与入站消息证据>
 ```
 
-信封固定使用同一 `company_id`、`target_skill = foreign-trade-customer-operations`、`target_route = reply_communication`、业务包相对引用/原始字节SHA-256和 `allowed_writes = []`。接收方拒绝哈希变化、跨公司、错目标、重复 `handoff_id` 或非空未授权写入范围；拒绝不会把疑似回复改写为已核验实际回复。
+信封固定使用同一 `company_id`、`target_skill = foreign-trade-customer-operations`、`target_route = interaction_intake`、业务包相对引用/原始字节SHA-256和 `allowed_writes = []`。`customer_flow_link_v1.transition_id = development_reply_to_operations_intake` 并绑定入站消息证据。接收方拒绝任何哈希变化、跨公司/客户、错目标、错前序状态、重复 `handoff_id` 或非空未授权写入范围；拒绝不会把疑似回复改写为已核验实际回复。
 
 交接是对当前入站内容的回复处理入口，不授权客户经营与沟通技能决定客户价值、优先级、发送、受限联系方式或最终状态。
 
 ## 现有接口兼容
 
-交接包至少包含 company_identity、website_and_region、business_type、main_products、fit_hypotheses、contact_identity_and_possible_role、development_angles、source_url_or_local_reference、observed_at 和 evidence_state。额外字段不得改变邮件助手的职责。
+旧调用方补充的交接字段可作为运营输入，但不得改变当前权威字段、转换登记和技能职责。兼容输入至少保留 company_identity、website_and_region、business_type、main_products、fit_hypotheses、contact_identity_and_possible_role、development_angles、source_url_or_local_reference、observed_at 和 evidence_state；它不能绕过客户运营直达客户沟通或邮件兼容入口。
 
 上述字段必须基于已保存证据；多来源时保留各自的 `source_url_or_local_reference`、`observed_at` 和 `evidence_state`。`development_angles` 只包含最终推荐或明确的证据不足结论，不包含三个完整内部推演。

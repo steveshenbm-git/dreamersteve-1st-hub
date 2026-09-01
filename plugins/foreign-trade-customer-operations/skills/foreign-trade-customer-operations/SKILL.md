@@ -1,49 +1,50 @@
 ---
 name: foreign-trade-customer-operations
-description: Use when a foreign-trade salesperson needs a first cold-outreach draft, unanswered follow-up, complete-thread reply, quality/contract/payment communication, or a customer-operation recommendation based on existing local customer and development records.
+description: Use when a foreign-trade salesperson needs a customer thread activated or updated, one evidence-bound account-operation decision, a serious-case business strategy, or an operations-owned communication brief.
 ---
 
 # Foreign Trade Customer Operations
 
 ## Core role
 
-Own all external-communication preparation from the first cold email onward. For cross-skill work it receives a machine-validated `handoff_envelope_v1` bound to an evidence-bound `outreach_handoff_packet` or `customer_operations_handoff`; a `specialist_handoff_packet` cannot replace that payload. A complete customer thread and existing record may remain a direct user-supplied entry. The salesperson owns customer selection, priority, commercial judgment, final wording, channel, sending, restricted-contact approval, and every status decision. When routed through the coordinator, return a traceable projection for its `salesperson_workbench`; do not directly overwrite the business front.
+Own the customer thread and the business decision that must precede external wording. Receive machine-bound development handoffs or actual-interaction evidence, establish the current thread state, choose one next operation, handle serious-case strategy, and issue a `communication_brief_packet` only after the required human request is present.
+
+Customer communication owns candidate wording. This skill 不生成任何对外正文. The salesperson owns customer selection, value, priority, product and commercial decisions, final wording, channel, sending, restricted-contact permission, and every actual status decision.
 
 ## Route
 
 Choose exactly one route:
 
-| Route | Use when | Output |
+| Route | Entry condition | Output and stop point |
 |---|---|---|
-| `cold_outreach` | A valid `outreach_handoff_packet` and explicit salesperson request exist | One reviewable first-touch draft or a concrete insufficiency packet |
-| `unanswered_follow_up` | Actual-send history shows no reply and a follow-up is due or explicitly requested | One draft, one channel recommendation, and a truthful date basis |
-| `reply_communication` | Received or suspected reply, complete thread, or explicit serious issue | One reply recommendation and bilingual draft; special handling when applicable |
-| `account_operation` | Existing customer needs a non-draft next-step, project, or relationship recommendation | Evidence-bound operation packet and salesperson decisions required |
+| `outreach_activation` | A valid development `outreach_handoff_packet` enters the customer stage | Accepted customer-thread snapshot plus one operations decision or a bounded return |
+| `interaction_intake` | A bound development reply handoff or actual send/inbound evidence exists | Updated thread, cold-sequence stop when applicable, and one operations decision |
+| `account_operation` | A current customer thread needs one non-sensitive next action | `operations_decision_packet` and any required salesperson decision |
+| `serious_case_operation` | Quality, contract, payment, liability, compensation, warranty, or comparable risk needs a business position | Risk review and one approved strategy or an explicit missing-decision packet |
 
-收到或疑似收到回复时，use `reply_communication` even if a cold-follow-up date is due. 停止新的冷开发触达草稿. If the development packet is missing a material fact, return one bounded request to `foreign-trade-customer-development`; do not research the prospect, alter product fit, or invent a claim.
+Received or suspected inbound content always enters `interaction_intake`, pauses the cold sequence, and takes priority over due follow-up. Missing development facts return to `foreign-trade-customer-development`; missing wording is never repaired here by drafting.
 
 ## Required references
 
-1. Read `references/routing-and-account-state.md` for every task.
-2. Read `references/cold-outreach-and-follow-up.md` for `cold_outreach` or `unanswered_follow_up`.
-3. Read `references/reply-communication.md` and `references/reply-evidence-and-contract.md` for every `reply_communication` task.
-4. Read `references/special-handling.md` for an explicit quality incident, contract dispute, payment abnormality, comparable serious issue, or a rejected draft without a clear revision direction.
-5. Read `references/workbook-and-automation.md` before record writes, formal archiving, or any scheduled-draft work.
-6. Read [optimization-validation.md](references/optimization-validation.md) before retaining or installing an optimized skill version.
+1. Read [routing-and-account-state.md](references/routing-and-account-state.md) for every task.
+2. Read [communication-brief-production.md](references/communication-brief-production.md) before requesting any external wording.
+3. Read [serious-case-operation.md](references/serious-case-operation.md) for `serious_case_operation`.
+4. Read [workbook-and-automation.md](references/workbook-and-automation.md) before state projection, actual-interaction intake, due review, or any write proposal.
+5. Read [optimization-validation.md](references/optimization-validation.md) before retaining, installing, or recommending a revised version.
 
 ## Hard boundaries
 
-- Use only approved facts, preserved customer evidence, and the stated handoff packet. Separate facts, customer claims, unknowns, and AI inference.
-- Before a cross-skill route, validate the envelope company, target, payload byte hash, duplicate ID and empty write scope with the workflow director's read-only validator. Any failure stops before drafting; the payload never supplies a second `handoff_id`.
-- Do not research new prospects, score customers, choose development priority, revise the recommended product, or expand contact permissions.
-- Do not send or contact anyone. A draft, approval, plan, actual send, and actual reply are different states.
-- Do not write `actual_sent_at`, actual content, or response facts from a workbench approval. The coordinator may record the salesperson's draft decision; only separately supplied actual evidence can create send or reply facts.
-- A cold draft may be written only as `content_status = 草稿`; `actual_sent_at`, `actual_content_or_local_reference`, and `response_at` remain empty until supplied as actual facts.
-- Risk pause, rejection, stop request, sustained delivery failure, or any reply stops new cold-follow-up drafts.
-- Automated runs may prepare drafts only under a separately approved named-workbook standing authorization. They never activate a send action or overwrite salesperson-owned fields.
+- Before every cross-skill intake or communication-brief handoff, run `validate_customer_flow_transition.py`. Envelope-only validation is insufficient for customer flow.
+- Do not accept a raw thread as a drafting input. Direct user-supplied actual messages first enter the workflow director's registered actual-interaction intake and then this skill.
+- Use approved facts and preserved evidence; separate confirmed facts, customer claims, unknowns, and inference.
+- Do not research new prospects, score customers, choose development priority, change product fit, expand contact permissions, or create a communication candidate.
+- A business decision may choose a purpose, requested action, commercial position, risk boundary, channel basis, and date basis. It does not choose final wording or authorize sending.
+- A candidate, approval, planned send, actual send, and actual reply remain distinct. Only bound actual evidence can create `actual_sent_at`, actual content, or response facts.
+- A received or suspected reply pauses the cold sequence even when identity or headers remain unverified.
+- `daily_due_draft_review` is eligibility evidence for `account_operation`; it cannot directly invoke communication or write a draft.
 
 ## Output
 
-Every output is Chinese analysis, contains one clear recommendation or an insufficiency conclusion, a foreign-language draft with Chinese translation when drafting in a foreign language, evidence references, gaps, and the remaining salesperson decisions. Record writes report only `未写入`, `待授权`, or `已重开验证`.
+Every output is Chinese analysis and contains one current thread state, one operations recommendation or insufficiency conclusion, evidence and gaps, and the exact salesperson decision still required. When external wording is needed and all gates pass, return a bound `communication_brief_packet` to `foreign-trade-customer-communication`; never include the external body.
 
-If invoked through `foreign-trade-workflow-director`, also return a `specialist_return_packet` whose proposed workbench projection targets only `03-客户跟进`, `04-沟通草稿`, or `05-异常与风险`. It must preserve `customer_id`, `touch_id` or draft ID, source packet and evidence references, actual-send basis, risk status, and the exact salesperson decision required.
+If invoked through `foreign-trade-workflow-director`, also return a `specialist_return_packet`. Its `salesperson_workbench` projection may update customer follow-up or risk state from verified evidence, or present a communication-brief request, but it cannot create a candidate, approval, or actual-send state.

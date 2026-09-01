@@ -16,6 +16,7 @@ DIRECTOR_ROOT = ROOT / "plugins" / "foreign-trade-workflow-director"
 INDUSTRY_ROOT = ROOT / "plugins" / "industry-application-map-builder"
 DEVELOPMENT_ROOT = ROOT / "plugins" / "foreign-trade-customer-development"
 OPERATIONS_ROOT = ROOT / "plugins" / "foreign-trade-customer-operations"
+COMMUNICATION_ROOT = ROOT / "plugins" / "foreign-trade-customer-communication"
 VALIDATOR = (
     DIRECTOR_ROOT
     / "skills"
@@ -27,9 +28,10 @@ VALIDATOR = (
 EXPECTED_PLUGIN_VERSIONS = {
     "company-product-knowledge-builder": "0.1.0",
     "industry-application-map-builder": "0.4.0-beta.6",
-    "foreign-trade-customer-development": "0.2.0-beta.2",
-    "foreign-trade-customer-operations": "0.2.0-beta.2",
-    "foreign-trade-workflow-director": "0.4.0-beta.2",
+    "foreign-trade-customer-development": "0.3.0-beta.1",
+    "foreign-trade-customer-operations": "0.3.0-beta.1",
+    "foreign-trade-customer-communication": "0.1.0-beta.1",
+    "foreign-trade-workflow-director": "0.5.0-beta.1",
 }
 
 
@@ -137,6 +139,8 @@ class MarketplaceAndSchemaTests(unittest.TestCase):
         self.assertIn("company_id", outreach_fields)
         self.assertIn("company_id", development_reply_fields)
         self.assertEqual(development_reply_fields, operations_reply_fields)
+        self.assertIn("customer_flow_link_v1", outreach_fields)
+        self.assertIn("customer_flow_link_v1", development_reply_fields)
         self.assertNotIn("handoff_id", outreach_fields)
         self.assertNotIn("handoff_id", development_reply_fields)
 
@@ -154,8 +158,13 @@ class MarketplaceAndSchemaTests(unittest.TestCase):
             ),
             OPERATIONS_ROOT: (
                 "0 invented claims",
-                "0 false actual state",
-                "reply_communication",
+                "0 external message bodies produced by operations",
+                "100% rejection of broken predecessor links",
+            ),
+            COMMUNICATION_ROOT: (
+                "0 direct development-to-communication or raw-thread-to-communication acceptance",
+                "0 false actual-send or reply state",
+                "100% rejection of missing predecessor",
             ),
         }
 
@@ -180,6 +189,55 @@ class HandoffEnvelopeValidatorTests(unittest.TestCase):
     def setUp(self):
         self.temp_dir = tempfile.TemporaryDirectory()
         self.root = Path(self.temp_dir.name)
+        self.source_path = self.root / "development-source.json"
+        self.source_path.write_text(
+            json.dumps(
+                {
+                    "development_snapshot_v1": {
+                        "company_id": "COMP-001",
+                        "customer_id": "CUST-001",
+                        "state": "DEVELOPMENT_READY",
+                    }
+                },
+                indent=2,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        self.selection_path = self.root / "selection-receipt.json"
+        self.selection_path.write_text(
+            json.dumps(
+                {
+                    "customer_selection_receipt_v1": {
+                        "company_id": "COMP-001",
+                        "customer_id": "CUST-001",
+                        "selection_state": "CONFIRMED",
+                    }
+                },
+                indent=2,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        self.decision_path = self.root / "outreach-decision.json"
+        self.decision_path.write_text(
+            json.dumps(
+                {
+                    "human_decision_receipt_v1": {
+                        "contract_version": "1.0",
+                        "decision_id": "DECISION-001",
+                        "company_id": "COMP-001",
+                        "customer_id": "CUST-001",
+                        "decision_type": "outreach_request",
+                        "decision_state": "CONFIRMED",
+                        "recorded_at": "2026-09-01T10:00:00+08:00",
+                    }
+                },
+                indent=2,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
         self.payload_path = self.root / "outreach-payload.json"
         self.payload_path.write_text(
             json.dumps(
@@ -188,6 +246,35 @@ class HandoffEnvelopeValidatorTests(unittest.TestCase):
                         "company_id": "COMP-001",
                         "customer_id": "CUST-001",
                         "salesperson_request": "prepare cold outreach",
+                        "customer_flow_link_v1": {
+                            "contract_version": "1.0",
+                            "transition_id": "development_outreach_to_operations_activation",
+                            "company_id": "COMP-001",
+                            "customer_id": "CUST-001",
+                            "source_skill": "foreign-trade-customer-development",
+                            "source_route": "outreach_handoff",
+                            "source_state": "DEVELOPMENT_READY",
+                            "target_state": "THREAD_ACCEPTED",
+                            "source_packet_reference": self.source_path.name,
+                            "source_packet_sha256": hashlib.sha256(self.source_path.read_bytes()).hexdigest(),
+                            "source_acceptance_receipt_reference": None,
+                            "source_acceptance_receipt_sha256": None,
+                            "required_bindings": [
+                                {
+                                    "role": "customer_selection_receipt",
+                                    "reference": self.selection_path.name,
+                                    "sha256": hashlib.sha256(self.selection_path.read_bytes()).hexdigest(),
+                                }
+                            ],
+                            "human_decision_receipt_reference": self.decision_path.name,
+                            "human_decision_receipt_sha256": hashlib.sha256(self.decision_path.read_bytes()).hexdigest(),
+                            "target_skill": "foreign-trade-customer-operations",
+                            "target_route": "outreach_activation",
+                            "allowed_next_actions": [
+                                "establish_customer_thread",
+                                "return_missing_development_fact",
+                            ],
+                        },
                     }
                 },
                 ensure_ascii=False,
@@ -216,7 +303,7 @@ class HandoffEnvelopeValidatorTests(unittest.TestCase):
             "handoff_id": "HANDOFF-001",
             "company_id": "COMP-001",
             "target_skill": "foreign-trade-customer-operations",
-            "target_route": "cold_outreach",
+            "target_route": "outreach_activation",
             "payload_reference": self.payload_path.name,
             "payload_sha256": self.payload_sha256(),
             "allowed_writes": [],
@@ -230,7 +317,7 @@ class HandoffEnvelopeValidatorTests(unittest.TestCase):
     def run_validator(
         self,
         *,
-        expected_route: str = "cold_outreach",
+        expected_route: str = "outreach_activation",
     ) -> subprocess.CompletedProcess[str]:
         self.assertTrue(VALIDATOR.is_file(), f"missing validator: {VALIDATOR}")
         return subprocess.run(
@@ -258,7 +345,7 @@ class HandoffEnvelopeValidatorTests(unittest.TestCase):
         expected_result: str,
         expected_reason: str | None = None,
         *,
-        expected_route: str = "cold_outreach",
+        expected_route: str = "outreach_activation",
     ):
         result = self.run_validator(expected_route=expected_route)
         output = json.loads(result.stdout)
@@ -304,7 +391,7 @@ class HandoffEnvelopeValidatorTests(unittest.TestCase):
             "\"company_id\":\"COMP-OTHER\","
             "\"company_id\":\"COMP-001\","
             "\"target_skill\":\"foreign-trade-customer-operations\","
-            "\"target_route\":\"cold_outreach\","
+            "\"target_route\":\"outreach_activation\","
             f"\"payload_reference\":\"{self.payload_path.name}\","
             f"\"payload_sha256\":\"{self.payload_sha256()}\","
             "\"allowed_writes\":[]}}\n",
@@ -313,15 +400,15 @@ class HandoffEnvelopeValidatorTests(unittest.TestCase):
         self.assert_result("FAIL", "JSON_DUPLICATE_KEY")
 
     def test_wrong_target_is_rejected(self):
-        self.write_envelope(target_route="reply_communication")
+        self.write_envelope(target_route="interaction_intake")
         self.assert_result("FAIL", "TARGET_ROUTE_MISMATCH")
 
     def test_unregistered_target_contract_is_rejected(self):
-        self.write_envelope(target_route="account_operation")
+        self.write_envelope(target_route="cold_outreach")
         self.assert_result(
             "FAIL",
             "TARGET_CONTRACT_UNSUPPORTED",
-            expected_route="account_operation",
+            expected_route="cold_outreach",
         )
 
     def test_duplicate_handoff_is_rejected(self):

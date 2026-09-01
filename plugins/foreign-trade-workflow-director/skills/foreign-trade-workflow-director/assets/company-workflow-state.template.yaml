@@ -2,7 +2,7 @@ company_workflow_state:
   company_id: null
   company_root: null
   blueprint_id: foreign-trade-complete-workflow
-  blueprint_version: 0.4.0-beta.2
+  blueprint_version: 0.5.0-beta.1
   workflow_governance_registry_reference: null
   workflow_governance_registry_sha256: null
   latest_inspector_preflight_reference: null
@@ -45,6 +45,11 @@ company_workflow_state:
       blockers: []
   pending_handoff: null
   pending_human_decision: null
+  active_customer_thread: null
+  customer_flow_state: null
+  pending_customer_flow_transition_id: null
+  latest_customer_flow_acceptance_receipt_reference: null
+  latest_customer_flow_acceptance_receipt_sha256: null
   semantic_method:
     semantic_evaluation_mode: content_first
     allowed_semantic_evaluation_modes:

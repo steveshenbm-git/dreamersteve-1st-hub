@@ -1,0 +1,318 @@
+{
+  "contract_name": "customer_flow_transition_registry",
+  "contract_version": "1.0",
+  "binding_contracts": {
+    "customer_selection_receipt": "customer_selection_receipt_v1",
+    "inbound_message_evidence": "inbound_message_evidence_v1",
+    "actual_interaction_evidence": "actual_interaction_evidence_v1",
+    "customer_thread_snapshot": "customer_thread_snapshot_v1",
+    "actual_send_evidence": "actual_send_evidence_v1",
+    "risk_review_packet": "risk_review_packet"
+  },
+  "transitions": {
+    "development_outreach_to_operations_activation": {
+      "source_skill": "foreign-trade-customer-development",
+      "source_route": "outreach_handoff",
+      "source_state": "DEVELOPMENT_READY",
+      "source_packet_root": "development_snapshot_v1",
+      "source_state_field": "state",
+      "target_skill": "foreign-trade-customer-operations",
+      "target_route": "outreach_activation",
+      "target_state": "THREAD_ACCEPTED",
+      "payload_root": "outreach_handoff_packet",
+      "required_binding_roles": [
+        "customer_selection_receipt"
+      ],
+      "source_acceptance_receipt_required": false,
+      "human_decision_receipt_required": true,
+      "human_decision_types": [
+        "outreach_request"
+      ],
+      "allowed_next_actions": [
+        "establish_customer_thread",
+        "return_missing_development_fact"
+      ]
+    },
+    "development_reply_to_operations_intake": {
+      "source_skill": "foreign-trade-customer-development",
+      "source_route": "reply_handoff",
+      "source_state": "INBOUND_OR_SUSPECTED_REPLY_CAPTURED",
+      "source_packet_root": "development_snapshot_v1",
+      "source_state_field": "state",
+      "target_skill": "foreign-trade-customer-operations",
+      "target_route": "interaction_intake",
+      "target_state": "INTERACTION_ACCEPTED",
+      "payload_root": "customer_operations_handoff",
+      "required_binding_roles": [
+        "inbound_message_evidence"
+      ],
+      "source_acceptance_receipt_required": false,
+      "human_decision_receipt_required": false,
+      "human_decision_types": [],
+      "allowed_next_actions": [
+        "pause_cold_sequence",
+        "assess_customer_interaction"
+      ]
+    },
+    "director_actual_interaction_to_operations_intake": {
+      "source_skill": "foreign-trade-workflow-director",
+      "source_route": "actual_interaction_intake",
+      "source_state": "ACTUAL_INTERACTION_EVIDENCE_CAPTURED",
+      "source_packet_root": "actual_interaction_capture_v1",
+      "source_state_field": "state",
+      "target_skill": "foreign-trade-customer-operations",
+      "target_route": "interaction_intake",
+      "target_state": "INTERACTION_ACCEPTED",
+      "payload_root": "interaction_evidence_packet",
+      "required_binding_roles": [
+        "actual_interaction_evidence"
+      ],
+      "source_acceptance_receipt_required": false,
+      "human_decision_receipt_required": false,
+      "human_decision_types": [],
+      "allowed_next_actions": [
+        "record_actual_interaction",
+        "assess_customer_interaction"
+      ]
+    },
+    "operations_outreach_to_communication_cold": {
+      "source_skill": "foreign-trade-customer-operations",
+      "source_route": "outreach_activation",
+      "source_state": "OPERATION_DECISION_READY",
+      "source_packet_root": "operations_decision_packet",
+      "source_state_field": "decision_state",
+      "target_skill": "foreign-trade-customer-communication",
+      "target_route": "cold_outreach",
+      "target_state": "COMMUNICATION_BRIEF_ACCEPTED",
+      "payload_root": "communication_brief_packet",
+      "required_binding_roles": [
+        "customer_thread_snapshot"
+      ],
+      "source_acceptance_receipt_required": true,
+      "human_decision_receipt_required": true,
+      "human_decision_types": [
+        "draft_request"
+      ],
+      "allowed_next_actions": [
+        "prepare_communication_candidate",
+        "return_invalid_brief"
+      ]
+    },
+    "operations_account_to_communication_follow_up": {
+      "source_skill": "foreign-trade-customer-operations",
+      "source_route": "account_operation",
+      "source_state": "OPERATION_DECISION_READY",
+      "source_packet_root": "operations_decision_packet",
+      "source_state_field": "decision_state",
+      "target_skill": "foreign-trade-customer-communication",
+      "target_route": "unanswered_follow_up",
+      "target_state": "COMMUNICATION_BRIEF_ACCEPTED",
+      "payload_root": "communication_brief_packet",
+      "required_binding_roles": [
+        "customer_thread_snapshot",
+        "actual_send_evidence"
+      ],
+      "source_acceptance_receipt_required": true,
+      "human_decision_receipt_required": true,
+      "human_decision_types": [
+        "draft_request"
+      ],
+      "allowed_next_actions": [
+        "prepare_communication_candidate",
+        "return_invalid_brief"
+      ]
+    },
+    "operations_interaction_to_communication_reply": {
+      "source_skill": "foreign-trade-customer-operations",
+      "source_route": "interaction_intake",
+      "source_state": "OPERATION_DECISION_READY",
+      "source_packet_root": "operations_decision_packet",
+      "source_state_field": "decision_state",
+      "target_skill": "foreign-trade-customer-communication",
+      "target_route": "reply_communication",
+      "target_state": "COMMUNICATION_BRIEF_ACCEPTED",
+      "payload_root": "communication_brief_packet",
+      "required_binding_roles": [
+        "customer_thread_snapshot",
+        "inbound_message_evidence"
+      ],
+      "source_acceptance_receipt_required": true,
+      "human_decision_receipt_required": true,
+      "human_decision_types": [
+        "draft_request"
+      ],
+      "allowed_next_actions": [
+        "prepare_communication_candidate",
+        "return_invalid_brief"
+      ]
+    },
+    "operations_account_to_communication_account": {
+      "source_skill": "foreign-trade-customer-operations",
+      "source_route": "account_operation",
+      "source_state": "OPERATION_DECISION_READY",
+      "source_packet_root": "operations_decision_packet",
+      "source_state_field": "decision_state",
+      "target_skill": "foreign-trade-customer-communication",
+      "target_route": "account_communication",
+      "target_state": "COMMUNICATION_BRIEF_ACCEPTED",
+      "payload_root": "communication_brief_packet",
+      "required_binding_roles": [
+        "customer_thread_snapshot"
+      ],
+      "source_acceptance_receipt_required": true,
+      "human_decision_receipt_required": true,
+      "human_decision_types": [
+        "draft_request"
+      ],
+      "allowed_next_actions": [
+        "prepare_communication_candidate",
+        "return_invalid_brief"
+      ]
+    },
+    "operations_serious_to_communication_sensitive": {
+      "source_skill": "foreign-trade-customer-operations",
+      "source_route": "serious_case_operation",
+      "source_state": "OPERATION_DECISION_READY",
+      "source_packet_root": "operations_decision_packet",
+      "source_state_field": "decision_state",
+      "target_skill": "foreign-trade-customer-communication",
+      "target_route": "sensitive_communication",
+      "target_state": "COMMUNICATION_BRIEF_ACCEPTED",
+      "payload_root": "communication_brief_packet",
+      "required_binding_roles": [
+        "customer_thread_snapshot",
+        "risk_review_packet"
+      ],
+      "source_acceptance_receipt_required": true,
+      "human_decision_receipt_required": true,
+      "human_decision_types": [
+        "sensitive_draft_request"
+      ],
+      "allowed_next_actions": [
+        "prepare_communication_candidate",
+        "return_invalid_brief"
+      ]
+    },
+    "communication_cold_to_director_review": {
+      "source_skill": "foreign-trade-customer-communication",
+      "source_route": "cold_outreach",
+      "source_state": "COMMUNICATION_CANDIDATE_READY",
+      "source_packet_root": "communication_candidate_packet",
+      "source_state_field": "flow_state",
+      "target_skill": "foreign-trade-workflow-director",
+      "target_route": "communication_candidate_review",
+      "target_state": "CANDIDATE_REVIEW_PENDING",
+      "payload_root": "communication_candidate_packet",
+      "required_binding_roles": [],
+      "source_acceptance_receipt_required": true,
+      "human_decision_receipt_required": false,
+      "human_decision_types": [],
+      "allowed_next_actions": [
+        "record_draft_decision",
+        "return_for_revision",
+        "reject_candidate"
+      ]
+    },
+    "communication_follow_up_to_director_review": {
+      "source_skill": "foreign-trade-customer-communication",
+      "source_route": "unanswered_follow_up",
+      "source_state": "COMMUNICATION_CANDIDATE_READY",
+      "source_packet_root": "communication_candidate_packet",
+      "source_state_field": "flow_state",
+      "target_skill": "foreign-trade-workflow-director",
+      "target_route": "communication_candidate_review",
+      "target_state": "CANDIDATE_REVIEW_PENDING",
+      "payload_root": "communication_candidate_packet",
+      "required_binding_roles": [],
+      "source_acceptance_receipt_required": true,
+      "human_decision_receipt_required": false,
+      "human_decision_types": [],
+      "allowed_next_actions": [
+        "record_draft_decision",
+        "return_for_revision",
+        "reject_candidate"
+      ]
+    },
+    "communication_reply_to_director_review": {
+      "source_skill": "foreign-trade-customer-communication",
+      "source_route": "reply_communication",
+      "source_state": "COMMUNICATION_CANDIDATE_READY",
+      "source_packet_root": "communication_candidate_packet",
+      "source_state_field": "flow_state",
+      "target_skill": "foreign-trade-workflow-director",
+      "target_route": "communication_candidate_review",
+      "target_state": "CANDIDATE_REVIEW_PENDING",
+      "payload_root": "communication_candidate_packet",
+      "required_binding_roles": [],
+      "source_acceptance_receipt_required": true,
+      "human_decision_receipt_required": false,
+      "human_decision_types": [],
+      "allowed_next_actions": [
+        "record_draft_decision",
+        "return_for_revision",
+        "reject_candidate"
+      ]
+    },
+    "communication_account_to_director_review": {
+      "source_skill": "foreign-trade-customer-communication",
+      "source_route": "account_communication",
+      "source_state": "COMMUNICATION_CANDIDATE_READY",
+      "source_packet_root": "communication_candidate_packet",
+      "source_state_field": "flow_state",
+      "target_skill": "foreign-trade-workflow-director",
+      "target_route": "communication_candidate_review",
+      "target_state": "CANDIDATE_REVIEW_PENDING",
+      "payload_root": "communication_candidate_packet",
+      "required_binding_roles": [],
+      "source_acceptance_receipt_required": true,
+      "human_decision_receipt_required": false,
+      "human_decision_types": [],
+      "allowed_next_actions": [
+        "record_draft_decision",
+        "return_for_revision",
+        "reject_candidate"
+      ]
+    },
+    "communication_sensitive_to_director_review": {
+      "source_skill": "foreign-trade-customer-communication",
+      "source_route": "sensitive_communication",
+      "source_state": "COMMUNICATION_CANDIDATE_READY",
+      "source_packet_root": "communication_candidate_packet",
+      "source_state_field": "flow_state",
+      "target_skill": "foreign-trade-workflow-director",
+      "target_route": "communication_candidate_review",
+      "target_state": "CANDIDATE_REVIEW_PENDING",
+      "payload_root": "communication_candidate_packet",
+      "required_binding_roles": [],
+      "source_acceptance_receipt_required": true,
+      "human_decision_receipt_required": false,
+      "human_decision_types": [],
+      "allowed_next_actions": [
+        "record_draft_decision",
+        "return_for_revision",
+        "reject_candidate"
+      ]
+    },
+    "director_revision_to_communication_bounded_revision": {
+      "source_skill": "foreign-trade-workflow-director",
+      "source_route": "draft_revision_decision",
+      "source_state": "REVISION_REQUEST_CONFIRMED",
+      "source_packet_root": "revision_decision_packet",
+      "source_state_field": "decision_state",
+      "target_skill": "foreign-trade-customer-communication",
+      "target_route": "bounded_revision",
+      "target_state": "REVISION_BRIEF_ACCEPTED",
+      "payload_root": "revision_brief_packet",
+      "required_binding_roles": [],
+      "source_acceptance_receipt_required": true,
+      "human_decision_receipt_required": true,
+      "human_decision_types": [
+        "revision_request"
+      ],
+      "allowed_next_actions": [
+        "revise_existing_candidate",
+        "return_scope_change_to_operations"
+      ]
+    }
+  }
+}

@@ -24,8 +24,8 @@ Choose exactly one `task_route` before researching:
 | `candidate_review` | One or more accepted raw batches need independent evidence review | Qualified, excluded, and `UNVERIFIED` companies separately; stop for salesperson screening |
 | `direction_review` | The salesperson asks to review saved scan results for one direction | `direction_feedback_packet`; do not change the direction status |
 | `full_due_diligence` | `salesperson_classification = 潜力客户` **and** salesperson explicitly starts it | Full evidence-bound research and one `project_recommendation` or an insufficiency conclusion |
-| `outreach_handoff` | Salesperson selected the company and explicitly asks to prepare communication | Bound `handoff_envelope_v1` plus `outreach_handoff_packet` for `foreign-trade-customer-operations`; no email body |
-| `reply_handoff` | A received or suspected customer reply appears while this skill is active | Stop development work and hand a bound envelope plus the saved context to `foreign-trade-customer-operations` |
+| `outreach_handoff` | Salesperson selected the company and explicitly asks to prepare communication | Bound `outreach_handoff_packet` for `foreign-trade-customer-operations`, `target_route = outreach_activation`; no email body |
+| `reply_handoff` | A received or suspected customer reply appears while this skill is active | Stop development work and hand the saved context to `foreign-trade-customer-operations`, `target_route = interaction_intake` |
 
 `direction_discovery` is a compatibility alias for `direction_compilation`; it is not an alternate product-led discovery route. Both names use the same producer-registry preflight, route-review record, readiness view, and salesperson decision gate.
 
@@ -54,7 +54,8 @@ This skill does not independently infer an industry from product facts. It verif
 - `candidate_batch_intake` checks task identity, current hashes, declared scope, batch shape, source presence, and duplicate observations only. It must not decide qualification. `candidate_review` is a separate evidence judgment by this skill and must not inherit the collector's labels as facts.
 - Candidate outcomes may support a direction review, but the AI must not convert counts, positive examples, or missing public evidence into a direction-status decision.
 - `project_recommendation` means what to recommend to one researched company. It is distinct from `development_direction`, which defines what kind of company to search for.
-- Do not prepare an external email, follow-up message, channel message, cadence, or send action. Those belong to `foreign-trade-customer-operations` after `outreach_handoff`.
+- Do not prepare an external email, follow-up message, channel message, cadence, or send action. Customer operations first owns thread activation and the business decision; `foreign-trade-customer-communication` may draft only from its later bound operations brief.
+- 不得直接交给 `foreign-trade-customer-communication`. Every customer handoff must carry `customer_flow_link_v1` and pass the workflow director's `validate_customer_flow_transition.py` at the receiving route.
 - Stop normal recommendations at the risk gate. Do not overwrite salesperson-owned classification, notes, decision, approval, or date fields.
 - On any reply or suspected reply, stop development outreach work and hand off; never treat an unverified inbound message as a verified reply or success.
 
@@ -69,6 +70,6 @@ This skill does not independently infer an industry from product facts. It verif
 - `candidate_review` returns `PASS`, `FAIL`, and `UNVERIFIED` companies separately, with evidence, counterevidence, scope gaps, and source batch IDs, then stops for salesperson screening. The compatibility `candidate_scan` must disclose which one of these phases it actually performed.
 - `direction_review` returns saved supporting outcomes, refuting outcomes, uncovered scope, and one salesperson decision request: `保留`, `调整`, `暂缓`, or `淘汰`; it never rewrites `direction_status` by itself.
 - `full_due_diligence` may provide one final `project_recommendation` or a concrete evidence-insufficiency conclusion; it never writes a communication draft.
-- `outreach_handoff_packet` contains only evidence-bound communication inputs: `company_id`, customer identity, approved product references, allowed and prohibited claims, contact evidence and permission, outreach scope, actual-send facts if any, risk status, gaps, and the salesperson's explicit request. The machine-owned `handoff_envelope_v1` holds the only `handoff_id`, exact payload reference/hash, target and empty write scope; this skill does not place an independent `handoff_id` inside the payload.
+- `outreach_handoff_packet` contains only evidence-bound operations inputs: `company_id`, customer identity, approved product references, allowed and prohibited claims, contact evidence and permission, outreach scope, actual-send facts if any, risk status, gaps, the salesperson's explicit request, and `customer_flow_link_v1`. The machine-owned `handoff_envelope_v1` holds the only `handoff_id`, exact payload reference/hash, target and empty write scope; this skill does not place an independent `handoff_id` inside the payload.
 - Every output is Chinese analysis, identifies what remains the salesperson's decision, and reports a truthful `workbook_status` of `未写入`, `待授权`, or `已重开验证`.
 - If invoked through `foreign-trade-workflow-director`, also return `specialist_return_packet` plus a minimal `salesperson_workbench` projection. The coordinator may record the salesperson decision after authorization; this skill does not directly overwrite the six-page business front.

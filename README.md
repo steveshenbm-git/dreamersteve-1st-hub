@@ -9,12 +9,13 @@ The package currently includes:
 - `jiangyue-website-workflow-director` routes Jiangyue website work across planning, image production, and knowledge curation.
 - `jiangyue-knowledge-curator` maintains reusable Jiangyue website knowledge and approved-material references.
 - `jiangyue-skill-director` governs Jiangyue skill design, repair, and release checks.
-- `foreign-trade-email-assistant` remains an optional compatibility plugin for standalone complete-email-thread analysis. Do not run it alongside `foreign-trade-customer-operations` for the same reply.
+- `foreign-trade-email-assistant` is an optional compatibility router. Complete threads return to the controlled workflow; only a fully bound revision of an existing candidate may route directly to communication.
 - `company-product-knowledge-builder` builds a company-isolated, source-traceable product-fact library and exports a controlled product-fact packet without inventing industry routes.
 - `industry-application-map-builder` freezes and calibrates product-neutral industry-semantic research, runs full-scope shallow screening, selective evidence expansion, blind review, and finite-population reverse auditing, then creates company-specific route candidates only after the method, evidence, and write gates pass.
 - `foreign-trade-customer-development` compiles a salesperson-selected, validated route into a development direction, validates it before scanning, returns all qualified candidate companies in the declared scope, and prepares an evidence-bound communication handoff without drafting or sending messages.
-- `foreign-trade-customer-operations` is the primary communication plugin for selected prospects and existing customers: first cold outreach, unanswered follow-up, replies, and customer-operation materials.
-- `foreign-trade-workflow-director` is the portable full-workflow Beta controller: it audits, initializes, resumes, and prepares replication of the chain from company product knowledge through industry-semantic calibration, controlled production, route decisions, customer development, and customer operations. It uses self-contained manual external-model handoffs when no approved connector exists, keeps raw model returns separate from receiver-owned receipts, and does not invent model runtime metadata or pretend to call unavailable models. Its six-sheet workbench remains the downstream salesperson interface.
+- `foreign-trade-customer-operations` owns customer-thread intake, actual-interaction state, the next business action, serious-case strategy, and a bounded communication brief. It does not write external copy.
+- `foreign-trade-customer-communication` turns an accepted operations brief into a cold-outreach, follow-up, reply, account, sensitive, or bounded-revision candidate. A candidate is never approval or an actual send.
+- `foreign-trade-workflow-director` is the portable full-workflow Beta controller: it audits, initializes, resumes, and prepares replication of the chain from company product knowledge through customer development, customer operations, and customer communication. Inside the existing `customer_operations` business stage, it enforces registered transitions, predecessor acceptance receipts, byte hashes, and human decisions so skills cannot skip one another.
 
 The user remains the final reviewer for page strategy, claims, visual approval, business judgment, email wording, and sending.
 
@@ -47,6 +48,10 @@ plugins/foreign-trade-customer-operations/.codex-plugin/plugin.json
 plugins/foreign-trade-customer-operations/skills/foreign-trade-customer-operations/SKILL.md
 plugins/foreign-trade-customer-operations/skills/foreign-trade-customer-operations/agents/openai.yaml
 plugins/foreign-trade-customer-operations/skills/foreign-trade-customer-operations/references/
+plugins/foreign-trade-customer-communication/.codex-plugin/plugin.json
+plugins/foreign-trade-customer-communication/skills/foreign-trade-customer-communication/SKILL.md
+plugins/foreign-trade-customer-communication/skills/foreign-trade-customer-communication/agents/openai.yaml
+plugins/foreign-trade-customer-communication/skills/foreign-trade-customer-communication/references/
 plugins/foreign-trade-workflow-director/.codex-plugin/plugin.json
 plugins/foreign-trade-workflow-director/skills/foreign-trade-workflow-director/
 ```
@@ -61,10 +66,11 @@ codex plugin add company-product-knowledge-builder@foreign-trade-team
 codex plugin add industry-application-map-builder@foreign-trade-team
 codex plugin add foreign-trade-customer-development@foreign-trade-team
 codex plugin add foreign-trade-customer-operations@foreign-trade-team
+codex plugin add foreign-trade-customer-communication@foreign-trade-team
 codex plugin add foreign-trade-workflow-director@foreign-trade-team
 ```
 
-The compatible candidate set is `company-product-knowledge-builder 0.1.0`, `industry-application-map-builder 0.4.0-beta.6`, `foreign-trade-customer-development 0.2.0-beta.2`, `foreign-trade-customer-operations 0.2.0-beta.2`, and `foreign-trade-workflow-director 0.4.0-beta.2`. The director beta.2 paired-behavior evaluation remains `NOT EFFECTIVE`: its predeclared historical deficiencies closed, but `FTWG-EVAL-10` still combines evidence preservation and correction in one `one_next_action`. Treat that as a retained known limitation, not as a fixed or accepted behavior. Do not install the candidate industry plugin over an active `0.4.0-beta.5` R4 run; close that frozen test cycle on its existing source and artifacts first. Marketplace discovery, plugin installation, and target-environment workflow audit remain separate checks.
+The source candidate set is `company-product-knowledge-builder 0.1.0`, `industry-application-map-builder 0.4.0-beta.6`, `foreign-trade-customer-development 0.3.0-beta.1`, `foreign-trade-customer-operations 0.3.0-beta.1`, `foreign-trade-customer-communication 0.1.0-beta.1`, and `foreign-trade-workflow-director 0.5.0-beta.1`. The earlier director beta.2 paired-behavior result does not validate this revised candidate; forward behavior remains `UNVERIFIED` until a separately frozen comparison is run. Do not install the candidate industry plugin over an active `0.4.0-beta.5` R4 run; close that frozen test cycle on its existing source and artifacts first. Source validation, marketplace publication, plugin installation, target-environment workflow audit, forward behavior, and real business effect remain separate checks.
 
 Before installation, stop if any required plugin name is already installed from another marketplace. Choose one source and authorize a separate migration; do not keep two active providers for the same skill name or delete an older provider as part of discovery.
 
@@ -85,7 +91,7 @@ Use $foreign-trade-workflow-director to audit or initialize the complete foreign
 
 ## Foreign Trade Customer Development Workflow
 
-The specialist chain is `company-product-knowledge-builder → industry-application-map-builder → foreign-trade-customer-development → foreign-trade-customer-operations`. `foreign-trade-workflow-director` controls the stage graph, environment audit, company initialization, handoffs, STOP gates, and replication manifest over that chain; it does not replace specialist evidence judgments.
+The specialist chain is `company-product-knowledge-builder → industry-application-map-builder → foreign-trade-customer-development → foreign-trade-customer-operations → foreign-trade-customer-communication`. `foreign-trade-workflow-director` controls the stage graph, environment audit, company initialization, registered handoffs, STOP gates, candidate review, and replication manifest over that chain; it does not replace specialist evidence judgments.
 
 1. Build or update the selected company's product library and export a controlled `product_development_fact_packet`.
 2. Build and freeze the versioned official terminal-node taxonomy. Before formal production, freeze a product-neutral research contract and model profile; compare the full-depth baseline with the RC2 candidate on the same 40 cases. A calibration result of `INCONCLUSIVE` or any safety violation blocks progression.
@@ -95,18 +101,18 @@ The specialist chain is `company-product-knowledge-builder → industry-applicat
 6. Let the salesperson select one route candidate; compile it through `direction_discovery`, validate the rule, and obtain the salesperson's `已确认可扫描` decision before scanning that direction.
 7. For a confirmed direction, export a `candidate_collection_task`, accept append-only `raw_candidate_batch` results from an approved replaceable executor, and run independent `candidate_review`; for a separately supplied named prospect, keep the compatible `candidate_scan` initial-check entry. Return all qualified candidates in the declared scope and stop for salesperson selection.
 8. Run full due diligence only after potential-customer classification and explicit start are both recorded.
-9. When the salesperson asks to start communication, output an `outreach_handoff_packet`; do not draft or send a message in customer development.
-10. Use `foreign-trade-customer-operations` for first outreach, no-reply follow-up, replies, and customer-operation work. Write only to a user-designated local workbook.
-11. Project only the necessary route, candidate, follow-up, draft, and risk summaries into the six-sheet salesperson workbench. Keep machine evidence workbooks and raw collection batches in the backend.
-12. For a new company or another account, reuse only the versioned blueprint, contracts, empty templates, dependency list, and authorized product-neutral references. Re-audit the receiving environment; do not copy company facts or treat installation as proof of successful replication.
+9. When the salesperson asks to start communication, customer development outputs a bound `outreach_handoff_packet` to operations; it cannot draft or route directly to communication.
+10. Customer operations accepts the development or actual-interaction evidence, establishes the current thread, chooses one business action, and—only after the required human request—issues a bound `communication_brief_packet` without an external body.
+11. Customer communication accepts only that validated brief, produces a review candidate, and returns it to the director. The salesperson owns revision, rejection, approval, channel, and sending; any actual event re-enters operations as evidence.
+12. Project only necessary route, customer-state, candidate, follow-up, draft-decision, and risk summaries into the six-sheet salesperson workbench. Keep machine evidence and raw collection batches in the backend.
+13. For a new company or another account, reuse only the versioned blueprint, contracts, empty templates, dependency list, and authorized product-neutral references. Re-audit the receiving environment; do not copy company facts or treat installation as proof of successful replication.
 
-## Standalone Compatibility Email Workflow
+## Compatibility Email Entry
 
-1. Supply the complete customer email thread, readable attachments, and any approved local facts needed for the reply.
-2. Use `foreign-trade-email-assistant` only when you intentionally choose the standalone compatibility workflow; otherwise use `foreign-trade-customer-operations`.
-3. Give revision instructions in natural language when the first draft is not acceptable.
-4. Keep importance, business decisions, final wording, and sending authority with the salesperson.
-5. Keep company knowledge, customer records, mailbox data, test cases, and actual correspondence outside this public plugin repository.
+1. A complete thread or new message supplied through `foreign-trade-email-assistant` returns to the director's registered actual-interaction intake, then to customer operations.
+2. Only an existing accepted candidate with its reference, hash, acceptance receipt, and confirmed revision request may use the compatibility `bounded_revision` route.
+3. Business-scope changes return to customer operations; final wording, approval, channel, and sending remain with the salesperson.
+4. Keep company knowledge, customer records, mailbox data, test cases, and actual correspondence outside this public plugin repository.
 
 ## Public Repository Safety
 

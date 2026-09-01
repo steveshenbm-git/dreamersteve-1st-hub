@@ -1,0 +1,33 @@
+{
+  "name": "foreign-trade-customer-communication",
+  "version": "0.1.0-beta.1",
+  "description": "根据已验收的客户运营沟通简报准备首封、跟进、回复和敏感事项候选稿；不决定客户经营策略、商业条件或发送。",
+  "author": {
+    "name": "steveshenbm-git"
+  },
+  "repository": "https://github.com/steveshenbm-git/dreamersteve-1st-hub",
+  "keywords": [
+    "foreign-trade",
+    "customer-communication",
+    "cold-outreach",
+    "follow-up",
+    "bilingual"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "外贸客户沟通",
+    "shortDescription": "依据已验收运营简报准备可审核沟通候选稿。",
+    "longDescription": "只处理已经客户运营判断并通过硬链接验收的沟通执行：首封、未回复跟进、客户回复、账户经营沟通、敏感事项和受控修订。它只返回候选稿和中文译文，不选客户、不改产品或商业决定、不写实发状态也不发送。",
+    "developerName": "steveshenbm-git",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "brandColor": "#147DFF",
+    "defaultPrompt": [
+      "使用已验收的运营沟通简报，准备一份仅供业务员审核的客户沟通候选稿。",
+      "根据业务员的修改意见对已有候选稿做受控修订，不改变商业立场。"
+    ]
+  }
+}

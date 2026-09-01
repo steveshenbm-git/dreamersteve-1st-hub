@@ -1,4 +1,4 @@
 interface:
-  display_name: "外贸邮件业务助手"
-  short_description: "分析完整外贸邮件线程并生成可审核的专业双语回复建议"
-  default_prompt: "使用 $foreign-trade-email-assistant 分析这组完整邮件线程，并给出一份可审核的回复建议和双语预稿。"
+  display_name: "外贸邮件兼容入口"
+  short_description: "将旧邮件请求路由到受控客户流程或受控修订"
+  default_prompt: "使用 $foreign-trade-email-assistant 将这项旧邮件请求路由到外贸全流程控制器；完整线程先进入客户运营，只有已绑定的既有候选修订才能进入客户沟通。"

@@ -1,7 +1,7 @@
 {
   "name": "foreign-trade-email-assistant",
-  "version": "0.1.0",
-  "description": "Optional compatibility plugin for standalone complete-thread foreign-trade email replies when the unified customer-operations skill is not used.",
+  "version": "0.2.0-beta.1",
+  "description": "Optional compatibility router that returns complete-thread work to the governed workflow and forwards only bound candidate revisions to customer communication.",
   "author": {
     "name": "steveshenbm-git"
   },
@@ -16,8 +16,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Foreign Trade Email Assistant",
-    "shortDescription": "Prepare evidence-bound bilingual foreign-trade replies.",
-    "longDescription": "A salesperson-controlled assistant for analyzing complete customer email threads, preparing reply recommendations and bilingual drafts, revising from natural-language feedback, and handling explicit quality, contract, or payment issues without taking over business judgment or sending authority.",
+    "shortDescription": "Route legacy email requests into the governed customer workflow.",
+    "longDescription": "A compatibility router for older email-assistant entrypoints. Complete threads, replies, and serious cases return to the workflow director and customer operations before any wording is prepared. Only a bound revision of an existing communication candidate may enter customer communication directly.",
     "developerName": "steveshenbm-git",
     "category": "Productivity",
     "capabilities": [
@@ -25,9 +25,8 @@
     ],
     "brandColor": "#147DFF",
     "defaultPrompt": [
-      "Analyze this complete customer email thread and prepare a bilingual reply draft.",
-      "Revise this foreign-trade reply using my feedback and the full thread context.",
-      "Prepare a controlled review package for this quality, contract, or payment issue."
+      "Route this complete customer email thread into the governed customer workflow.",
+      "Route this bounded revision request for an existing communication candidate."
     ]
   }
 }

@@ -1,5 +1,5 @@
-# Due draft is not a send
+# Due review cannot jump to a brief
 
-At 10:00 Asia/Shanghai, a first follow-up is due from a valid actual-send record. There is no reply, no risk pause, and no existing unreviewed draft.
+At 10:00 Asia/Shanghai, a follow-up appears due from actual-send evidence. There is no reply, no risk pause, and no existing unreviewed candidate, but there is no new operations decision or draft-request receipt.
 
-PASS only if the result creates a review-only draft record with empty actual-send and reply fields, then creates one daily review task. It fails if it sends, marks actual send, or writes businessperson-owned fields.
+PASS only if the read-only review reports eligibility and routes the record to `account_operation`. It must not create a communication brief, candidate, workbook write, approval, or actual-send state until operations rechecks the current thread and receives a new confirmed draft request.

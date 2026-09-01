@@ -2,7 +2,7 @@
 
 `blueprint_id: foreign-trade-complete-workflow`
 
-`blueprint_version: 0.4.0-beta.2`
+`blueprint_version: 0.5.0-beta.1`
 
 ## 判定原则
 
@@ -25,7 +25,7 @@
 | 7 | `route_pool_handoff` | `company_foundation` | industry application map builder | 当前公司地图与覆盖复核 | 已登记为 current 的 `company_route_pool_packet`，输入和生产者哈希一致 | 路线包或源图过期、范围未覆盖 |
 | 8 | `direction_decision` | `route_instance` | customer development + salesperson | 当前路线池与业务员选路 | 方向已编译和验证，业务员明确记录是否 `已确认可扫描` | 没有人工选路/确认或方向规则未验证 |
 | 9 | `candidate_development` | `direction_instance` | customer development | 已确认方向 | 采集任务、追加原始批次、独立复核、业务员分类和背调阶段保持分离 | 执行器越权判断、证据不足或范围未完成 |
-| 10 | `customer_operations` | `customer_thread` | customer operations + salesperson | 经选择并允许沟通的客户及完整线程 | 草稿、审核、实发、回复、跟进和风险状态分离 | 没有授权、线程不完整、回复硬停或严重风险 |
+| 10 | `customer_operations` | `customer_thread` | customer operations + customer communication + salesperson | 经选择并允许沟通的客户、前序验收、绑定哈希及完整线程 | 开发验收、运营决策、沟通简报、候选、审核、实发、回复和风险状态逐段硬链接 | 缺少登记转换、前序接收凭证、人工决定、线程证据或严重风险 |
 | 11 | `framework_review` | `review_cycle` | workflow director | 全部阶段状态与已验证反馈 | 记录缺口、过期事件、适用教训和版本变化，不改写专业事实 | 未验证结果被当成通用规则或私有数据进入框架 |
 
 阶段顺序是依赖关系，不是把整个公司压成一条一次性进度条：
@@ -93,11 +93,14 @@ content_first_contract_prepare
 | `company-product-knowledge-builder` | 公司隔离、来源接收、产品事实维护、受控产品事实包 |
 | `industry-application-map-builder` | 官方分类骨架、产品中立行业语义展开、公司匹配、覆盖复核、路线池导出 |
 | `foreign-trade-customer-development` | 路线编译/验证、候选任务、原始批次接收、独立复核、背调和沟通前交接 |
-| `foreign-trade-customer-operations` | 首封、未回复跟进、完整线程回复、严重问题和经营建议，不发送 |
+| `foreign-trade-customer-operations` | 客户线程、实际互动、状态、下一动作、商业边界和沟通简报；不生成对外正文 |
+| `foreign-trade-customer-communication` | 只基于已验收沟通简报生成对外候选正文；不决定客户状态、商业条件、批准或发送 |
 
 只看到技能名称或安装目录不能证明能力兼容。`environment_audit` 必须核对实际版本、技能合同、来源市场和所需路由；没有兼容矩阵或直接证据时记为 `UNVERIFIED`。同一技能名来自两个已启用市场时记为 `FAIL`，在用户单独选定唯一来源并授权迁移前不安装、卸载或继续路由。
 
-当前待验证候选集固定为：`company-product-knowledge-builder 0.1.0`、`industry-application-map-builder 0.4.0-beta.6`、`foreign-trade-customer-development 0.2.0-beta.2`、`foreign-trade-customer-operations 0.2.0-beta.2`和 `foreign-trade-workflow-director 0.4.0-beta.2`。其中任一版本不符只能记为 `UNVERIFIED`，不得自动改写旧合同或继续已开始的 beta.5 R4 测试。接口集成通过只证明字段、哈希、路由和停止门可交接，不证明三项业务技能的真实效果。
+当前待验证候选集固定为：`company-product-knowledge-builder 0.1.0`、`industry-application-map-builder 0.4.0-beta.6`、`foreign-trade-customer-development 0.3.0-beta.1`、`foreign-trade-customer-operations 0.3.0-beta.1`、`foreign-trade-customer-communication 0.1.0-beta.1`和 `foreign-trade-workflow-director 0.5.0-beta.1`。其中任一版本不符只能记为 `UNVERIFIED`。接口集成通过只证明字段、哈希、路由和停止门可交接，不证明业务技能的真实效果。
+
+`customer_operations` 是业务大阶段，不等于一个技能独占全部工作。它的客户线程内部固定按 `DEVELOPMENT_READY → THREAD_ACCEPTED / INTERACTION_ACCEPTED → OPERATION_DECISION_READY → COMMUNICATION_BRIEF_ACCEPTED → COMMUNICATION_CANDIDATE_READY → CANDIDATE_REVIEW_PENDING` 前进，精确转换以 `customer-flow-transition-registry.v1.json` 为准。控制器只接受组合验证器 PASS 的一段交接；不得把后段文件存在、草稿生成或人工批准当作前段已经完成，更不得把批准写成实际发送。
 
 ## `workflow_blueprint`
 

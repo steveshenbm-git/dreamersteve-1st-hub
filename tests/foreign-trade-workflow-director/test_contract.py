@@ -54,10 +54,10 @@ class WorkflowDirectorContractTests(unittest.TestCase):
         marketplace = json.loads(read(ROOT / ".agents" / "plugins" / "marketplace.json"))
 
         self.assertEqual(manifest["name"], "foreign-trade-workflow-director")
-        self.assertEqual(manifest["version"], "0.4.0-beta.2")
+        self.assertEqual(manifest["version"], "0.5.0-beta.1")
         self.assertRegex(
             manifest["version"],
-            r"^0\.4\.0-beta\.2$",
+            r"^0\.5\.0-beta\.1$",
         )
         self.assertTrue(
             any(
@@ -94,6 +94,7 @@ class WorkflowDirectorContractTests(unittest.TestCase):
             "最早未完成",
             "foreign-trade-customer-development",
             "foreign-trade-customer-operations",
+            "foreign-trade-customer-communication",
             "industry-application-map-builder",
             "salesperson_workbench",
             "不搜索具体客户",
@@ -148,8 +149,8 @@ class WorkflowDirectorContractTests(unittest.TestCase):
         )
 
         self.assertIn("company_id: null", state)
-        self.assertIn("blueprint_version: 0.4.0-beta.2", state)
-        self.assertIn("blueprint_version: 0.4.0-beta.2", replication)
+        self.assertIn("blueprint_version: 0.5.0-beta.1", state)
+        self.assertIn("blueprint_version: 0.5.0-beta.1", replication)
         self.assertIn("semantic_evaluation_mode: content_first", state)
         self.assertIn("strict_audit", state)
         self.assertIn("RESEARCH_ONLY_BLOCKED", state)
@@ -184,6 +185,7 @@ class WorkflowDirectorContractTests(unittest.TestCase):
             "industry-application-map-builder",
             "foreign-trade-customer-development",
             "foreign-trade-customer-operations",
+            "foreign-trade-customer-communication",
             "excluded_company_data_classes",
             "target_environment_write_authorization: false",
         ):
@@ -416,6 +418,8 @@ class WorkflowDirectorContractTests(unittest.TestCase):
             / "plugins/foreign-trade-customer-development/skills/foreign-trade-customer-development/SKILL.md",
             "operations": ROOT
             / "plugins/foreign-trade-customer-operations/skills/foreign-trade-customer-operations/SKILL.md",
+            "communication": ROOT
+            / "plugins/foreign-trade-customer-communication/skills/foreign-trade-customer-communication/SKILL.md",
         }
         texts = {name: read(path) for name, path in paths.items()}
 

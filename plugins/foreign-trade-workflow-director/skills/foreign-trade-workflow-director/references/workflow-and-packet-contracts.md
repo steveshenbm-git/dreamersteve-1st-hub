@@ -172,20 +172,20 @@ handoff_envelope_v1:
 
 `payload_reference` 必须是从信封所在目录出发的规范相对路径，`payload_sha256` 绑定业务包原始字节。接收技能在读取业务内容前，必须核对公司、目标技能、目标路由、业务包哈希、业务包内 `company_id`、接收方已有 `handoff_id` 和允许写入范围。绝对路径、目录逃逸、符号链接、哈希变化、跨公司、错目标、重复编号或非空的未授权写入范围均返回 `FAIL`，不得继续执行专业路由。
 
-当前校验器只支持两个精确组合：`foreign-trade-customer-operations / cold_outreach / outreach_handoff_packet` 和 `foreign-trade-customer-operations / reply_communication / customer_operations_handoff`。目标技能、路由与顶层业务包名必须同时匹配；未登记组合不得仅因调用方传入相同字符串而通过。校验器对载荷原始字节只读取一次，同一份字节同时用于 SHA-256 和 JSON 解析，并拒绝任何层级的重复 JSON 键。
+客户流程不再允许只验信封后继续。目标技能、路由、载荷根、来源技能、来源路由、前后状态、接收凭证、人工决定、绑定哈希和允许下一动作必须同时匹配 `customer-flow-transition-registry.v1.json` 的同一转换。未登记组合不得仅因调用方传入相同字符串而通过。组合验证器对每份载荷原始字节只读取一次，同一份字节同时用于 SHA-256 和 JSON 解析，并拒绝任何层级的重复 JSON 键。
 
 使用只读验证器：
 
 ```bash
-python3 scripts/validate_handoff_envelope.py \
+python3 scripts/validate_customer_flow_transition.py \
   --envelope /absolute/handoff-envelope.json \
   --expected-company-id ACME-001 \
   --expected-target-skill foreign-trade-customer-operations \
-  --expected-target-route cold_outreach \
+  --expected-target-route outreach_activation \
   --accepted-handoff-registry /absolute/accepted-handoffs.json
 ```
 
-接收登记的最小只读结构为 `{"accepted_handoff_ids": []}`。验证器不修改登记、不写业务包、不写工作簿；只有在后续写入另获授权并完成实际接收后，接收方才可把同一个 `handoff_id` 追加到自己的登记。一个信封只绑定一个业务包；不得把通用协调器叙述与另一份业务包拼接使用。
+`validate_handoff_envelope.py` 保留为兼容命令名，但必须委托同一组合验证器，不能成为绕开 `customer_flow_link_v1` 的入口。完整字段、状态链、生成器和失败条件见 [customer-flow-transition-contract.md](customer-flow-transition-contract.md)。接收登记的最小只读结构为 `{"accepted_handoff_ids": []}`。验证器不修改登记、不写业务包、不写工作簿；只有在后续写入另获授权并完成实际接收后，接收方才可把同一个 `handoff_id` 追加到自己的登记。一个信封只绑定一个业务包；不得把通用协调器叙述与另一份业务包拼接使用。
 
 ```text
 specialist_handoff_packet:
@@ -206,7 +206,7 @@ specialist_handoff_packet:
   requested_at
 ```
 
-`target_skill` 只允许 `company-product-knowledge-builder`、`industry-application-map-builder`、`foreign-trade-customer-development` 或 `foreign-trade-customer-operations`。包必须说明本次允许写什么；没有写入授权时 `allowed_writes = none`。
+`target_skill` 只允许 `company-product-knowledge-builder`、`industry-application-map-builder`、`foreign-trade-customer-development`、`foreign-trade-customer-operations`、`foreign-trade-customer-communication` 或 `foreign-trade-workflow-director`。涉及客户流程的目标技能和路由还必须是机器转换登记中的精确下一段。包必须说明本次允许写什么；没有写入授权时 `allowed_writes = none`。
 
 专业技能返回时使用：
 

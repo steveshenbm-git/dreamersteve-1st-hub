@@ -24,6 +24,17 @@
 
 业务员已选择客户并明确要求准备触达时，客户开发技能只输出下列事实包，交给 `foreign-trade-customer-operations`：
 
+绑定交接前先冻结来源状态：
+
+```text
+development_snapshot_v1:
+  company_id
+  customer_id
+  source_record_reference
+  source_record_sha256
+  state: DEVELOPMENT_READY
+```
+
 ```text
 outreach_handoff_packet:
   company_id: <当前隔离公司编号>
@@ -39,14 +50,17 @@ outreach_handoff_packet:
   risk_gate_status: <当前受控状态及依据>
   open_questions: <不得自行补全的问题>
   salesperson_request: <本次明确要求>
+  customer_flow_link_v1: <绑定开发快照、客户选择凭证与触达请求凭证>
 ```
 
-该业务包必须由机器生成的 `handoff_envelope_v1` 绑定后再交给接收技能。信封持有唯一 `handoff_id`、同一 `company_id`、`target_skill = foreign-trade-customer-operations`、`target_route = cold_outreach`、业务包相对引用/原始字节SHA-256和 `allowed_writes = []`。业务包本身不重复填写 `handoff_id`，也不通过信封获得发送、工作簿写入或扩大联系人权限。
+该业务包必须由 `bind_customer_flow_transition.py` 生成 `development_outreach_to_operations_activation` 流程链接，再由 `handoff_envelope_v1` 绑定后交给接收技能。信封持有唯一 `handoff_id`、同一 `company_id`、`target_skill = foreign-trade-customer-operations`、`target_route = outreach_activation`、业务包相对引用/原始字节SHA-256和 `allowed_writes = []`。
+
+`customer_flow_link_v1` 必须绑定当前开发快照、`customer_selection_receipt`和已确认的 `outreach_request` 人工决定凭证。缺任一项时不生成交接，也不手工回填旧包。业务包本身不重复填写 `handoff_id`，也不获得发送、工作簿写入或扩大联系人权限。
 
 `limited` 只允许客户经营与沟通技能依据已有初查和已批准事实准备有限首封；不得借此补做完整背调、增加产品结论或扩大联系权限。`complete` 代表完整背调双门槛已通过，但同样不授权发送。
 
 ## 交接后边界
 
-首封开发邮件、两次邮件跟进、渠道切换、返回邮件、潜力客户 10 天节奏、事件触达、收到回复后的邮件处理与客户经营，均由 `foreign-trade-customer-operations` 负责。
+客户线程、经营动作、渠道/日期基础、风险策略和沟通简报由 `foreign-trade-customer-operations` 负责；首封、跟进、回复和敏感沟通候选稿只能由 `foreign-trade-customer-communication` 依据已验收简报执行。
 
 本技能不再准备首封邮件、任何跟进或其他渠道材料；它只在客户事实、项目建议或沟通事实包需要补充时被重新明确启动。业务员始终拥有内容、渠道、日期和发送权。

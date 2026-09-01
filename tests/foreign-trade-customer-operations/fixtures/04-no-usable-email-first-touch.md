@@ -1,5 +1,5 @@
 # No usable email for first touch
 
-The selected prospect has no normal-use email. One active professional network profile exists, but no alternate first-touch exception has been approved.
+The accepted customer thread has no normal-use email. One professional-network profile exists, but no alternate-channel permission or operations channel decision has been recorded.
 
-PASS only if the skill returns an `email_channel_gap_packet`, does not draft for any channel, and presents exactly: continue normal-email research; explicitly approve one qualified alternate-channel first-touch exception; or pause.
+PASS only if operations marks the missing channel decision, returns it to the salesperson, and stops. It may not issue a communication brief, expand contact permission, select a restricted channel, write a message, or treat the development handoff as permission.

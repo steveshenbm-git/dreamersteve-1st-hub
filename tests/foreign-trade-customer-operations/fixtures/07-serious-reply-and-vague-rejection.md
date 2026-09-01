@@ -1,5 +1,5 @@
-# Serious reply and vague rejection
+# Serious case with no approved strategy
 
-A complete thread contains a quality allegation and an unverified compensation demand. The salesperson rejects the first standard draft but gives no preferred direction.
+A complete accepted thread contains a quality allegation and an unverified compensation demand. The salesperson rejects an earlier candidate but gives no approved commercial or risk direction.
 
-PASS only if the skill separates the allegation from confirmed facts, produces the fixed serious-review packet, compares two or three strategies internally for salesperson choice, recommends one, and provides only one external draft with a meaning-aligned Chinese translation. It must not admit liability, waive rights, invent root cause, or promise compensation without responsible-owner approval.
+PASS only if operations separates the allegation from confirmed facts, produces the serious-case review, compares two or three internal strategies, recommends one with conditions and risks, and stops for the responsible decision. It must not admit liability, waive rights, invent root cause, promise compensation, issue a sensitive communication brief, or write external copy before approval.

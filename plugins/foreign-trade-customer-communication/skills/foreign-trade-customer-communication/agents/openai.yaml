@@ -1,0 +1,4 @@
+interface:
+  display_name: "外贸客户沟通"
+  short_description: "依据已验收客户运营简报准备可审核的外贸沟通候选稿"
+  default_prompt: "Use $foreign-trade-customer-communication to prepare a review-only customer communication candidate from a validated operations brief."

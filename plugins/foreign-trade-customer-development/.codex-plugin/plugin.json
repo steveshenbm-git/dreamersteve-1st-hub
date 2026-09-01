@@ -1,6 +1,6 @@
 {
   "name": "foreign-trade-customer-development",
-  "version": "0.2.0-beta.2",
+  "version": "0.3.0-beta.1",
   "description": "用于路线候选池评审、业务员选定路线的开发方向编译、证据约束的候选企业研究、尽职调查，以及外联前客户开发交接；不代替业务员做商业决策或发送沟通内容。",
   "author": {
     "name": "steveshenbm-git"
@@ -17,7 +17,7 @@
   "interface": {
     "displayName": "外贸客户开发",
     "shortDescription": "评审已验证路线、编译开发方向并准备受控开发交接。",
-    "longDescription": "由业务员主导的客户开发助手：评审已登记路线池、编译开发方向，并将候选采集拆为任务导出、追加式原始批次接收和独立复核，再执行受控尽调及外联交接；可向外贸客户工作流返回业务摘要，但不代写或发送邮件，不代替业务员做最终商业判断。",
+    "longDescription": "由业务员主导的客户开发助手：评审已登记路线池、编译开发方向，并将候选采集拆为任务导出、追加式原始批次接收和独立复核，再执行受控尽调及外联交接。外联交接只能先进入客户运营建立线程和经营决定，不得直接进入客户沟通；本技能不代写、不发送，不代替业务员做最终商业判断。",
     "developerName": "steveshenbm-git",
     "category": "Productivity",
     "capabilities": [

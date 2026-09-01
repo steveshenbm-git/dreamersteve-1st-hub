@@ -17,7 +17,7 @@ class InspectorGovernanceComplexityBudgetTests(unittest.TestCase):
         manifest = json.loads(
             (PLUGIN_ROOT / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8")
         )
-        self.assertEqual(manifest["version"], "0.4.0-beta.2")
+        self.assertEqual(manifest["version"], "0.5.0-beta.1")
         scripts = {path.name for path in (SKILL_ROOT / "scripts").glob("*.py")}
         governance_entrypoints = {
             "validate-legacy-governance-migration.py",
@@ -26,13 +26,18 @@ class InspectorGovernanceComplexityBudgetTests(unittest.TestCase):
         self.assertEqual(scripts & governance_entrypoints, governance_entrypoints)
         self.assertEqual(
             scripts - governance_entrypoints,
-            {"validate_handoff_envelope.py"},
+            {
+                "validate_handoff_envelope.py",
+                "validate_customer_flow_transition.py",
+                "bind_customer_flow_transition.py",
+            },
         )
 
     def test_runtime_scripts_use_standard_library_and_no_service_stack(self):
         allowed_roots = {
             "__future__", "argparse", "copy", "datetime", "fnmatch", "hashlib", "json", "os",
             "pathlib", "re", "sys", "tempfile", "typing", "uuid",
+            "validate_customer_flow_transition",
         }
         forbidden_calls = {"socket", "serve_forever", "Popen", "urlopen", "requests"}
         for script in sorted((SKILL_ROOT / "scripts").glob("*.py")):

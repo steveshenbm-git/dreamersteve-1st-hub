@@ -14,7 +14,7 @@
     "parent_framework_registry_sha256": null,
     "inherited_finding_ids": [],
     "blueprint_id": "foreign-trade-complete-workflow",
-    "blueprint_version": "0.4.0-beta.2",
+    "blueprint_version": "0.5.0-beta.1",
     "single_editor_id": null,
     "findings_log": {"reference": "findings.jsonl", "event_count": 0, "terminal_event_sha256": null, "file_sha256": null},
     "improvement_log": {"reference": "improvement-events.jsonl", "event_count": 0, "terminal_event_sha256": null, "file_sha256": null},

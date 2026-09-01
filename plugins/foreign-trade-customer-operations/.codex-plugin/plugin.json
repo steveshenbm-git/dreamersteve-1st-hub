@@ -1,7 +1,7 @@
 {
   "name": "foreign-trade-customer-operations",
-  "version": "0.2.0-beta.2",
-  "description": "Codex skill plugin for salesperson-controlled cold outreach, unanswered follow-up, customer reply communication, and local customer-operation records.",
+  "version": "0.3.0-beta.1",
+  "description": "Codex skill plugin for customer-thread intake, account-operation decisions, serious-case strategy, communication briefs, and evidence-bound interaction state.",
   "author": {
     "name": "steveshenbm-git"
   },
@@ -9,16 +9,16 @@
   "keywords": [
     "foreign-trade",
     "customer-operations",
-    "cold-outreach",
-    "follow-up",
-    "bilingual",
+    "customer-thread",
+    "account-operation",
+    "communication-brief",
     "sales-workbook"
   ],
   "skills": "./skills/",
   "interface": {
-    "displayName": "Foreign Trade Customer Operations",
-    "shortDescription": "Prepare controlled cold outreach, follow-up, replies, and customer-operation materials.",
-    "longDescription": "A salesperson-controlled assistant for first outreach, unanswered follow-up, complete-thread replies, and customer-operation preparation. It can return traceable draft, follow-up, and risk projections to the salesperson workbench; it does not research prospects, choose customers, make commercial decisions, write actual-send facts without evidence, or send messages.",
+    "displayName": "外贸客户运营",
+    "shortDescription": "维护客户线程、经营决定、风险策略与沟通简报。",
+    "longDescription": "由业务员主导的客户运营助手：验收客户开发和实际互动证据，建立或更新客户线程，判断一项下一步经营动作，处理质量/合同/付款等风险策略，并在获得起草请求后生成可验收的沟通简报。它不写任何对外正文、不发送，也不把批准当成实发。",
     "developerName": "steveshenbm-git",
     "category": "Productivity",
     "capabilities": [
@@ -27,9 +27,9 @@
     ],
     "brandColor": "#147DFF",
     "defaultPrompt": [
-      "Use the customer-development handoff package to prepare a first cold-outreach draft for salesperson review.",
-      "Review this due follow-up and prepare a draft without sending it.",
-      "Analyze this complete customer reply thread and prepare a bilingual reply draft."
+      "验收客户开发交接包，建立客户线程并判断下一步经营动作。",
+      "分析已绑定的实际收发证据，更新客户线程并决定是否需要沟通简报。",
+      "为一项已确认的客户经营动作准备受控沟通简报，不写对外正文。"
     ]
   }
 }

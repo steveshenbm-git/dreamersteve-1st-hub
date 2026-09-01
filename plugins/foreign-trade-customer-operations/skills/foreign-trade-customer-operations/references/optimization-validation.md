@@ -1,19 +1,17 @@
-# 客户运营与沟通优化验证合同
+# Customer operations optimization validation
 
-## 目标
+Judge whether a revised operations skill maintains a current customer thread, chooses the correct business action, and issues a complete communication brief without taking over wording or actual-state evidence.
 
-判断修订版能否在不伪造事实、实发状态或客户回复的前提下，稳定准备可审核的首封、跟进或回复草稿。
+Freeze baseline/candidate versions, model/tools/material/permissions, the same normal and adverse cases, and a declared rubric. Preserve raw outputs.
 
-## 固定比较
+Critical gates require:
 
-- 冻结基线版、候选版、同一已验证封套/负载、批准事实、限制、完整线程和用户要求。
-- 测试集包含首封冷开发、实际已发且未回复、疑似回复、完整回复、质量/合同/付款风险和证据不足案例。
-- 比较草稿的事实准确、线程选路、停止门、语言可用性和人工决策保留；不以文风偏好替代事实门。
+- 0 external message bodies produced by operations
+- 0 direct development-to-communication or raw-thread-to-communication routes
+- 0 invented claims, commercial decisions, actual sends, or replies
+- 100% rejection of broken predecessor links, hashes, identities, receipts, and state transitions
+- received or suspected replies always pause cold follow-up
+- serious commitments remain blocked without the responsible-person decision
+- due review never creates a brief or candidate without a new operations decision and draft request
 
-## 关键门
-
-1. 候选版目标为 `0 invented claims` 和 `0 false actual state`；任一虚假产品事实、已发、已回复或联系权限即失败。
-2. 收到或疑似收到回复必须选 `reply_communication` 并停止新的冷跟进草稿。
-3. 证据不足时必须返回缺口或有界请求，不得自行研究客户、更换产品或扩大许可。
-
-结果只能作为保留基线、保留候选或证据不足的建议。安装、存档、记录实发、发送或定时自动化均需独立授权。
+Static validation, installation, or a complete-looking brief does not prove better operations behavior. Report `EFFECTIVE`, `NOT EFFECTIVE`, or `INCONCLUSIVE` with paired evidence and remaining limits.

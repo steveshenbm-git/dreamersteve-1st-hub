@@ -2,6 +2,12 @@
 
 ## Unreleased - 2026-09-01
 
+- Added the source-only `foreign-trade-customer-communication 0.1.0-beta.1` candidate as the single owner of review-only external wording.
+- Advanced customer development to `0.3.0-beta.1`, customer operations to `0.3.0-beta.1`, the email compatibility router to `0.2.0-beta.1`, and the workflow director to `0.5.0-beta.1`.
+- Split customer operations from customer communication without adding a new top-level business stage: development now hands only to operations; operations owns the thread, business decision, and communication brief; communication owns candidate wording only.
+- Added a machine transition registry, refuse-overwrite binder, and read-only combined validator that require the exact predecessor, acceptance receipt, human decision, company/customer identity, byte hashes, payload root, target route, and allowed next actions for every customer-flow handoff.
+- Removed the old operations and email-assistant drafting references so they cannot remain parallel wording authorities.
+- Updated marketplace metadata, portable templates, README, static contracts, adverse fixtures, and regression tests. Commit, publication, installation, task forward testing, and real business effectiveness remain separate and are not claimed here.
 - Advanced `foreign-trade-workflow-director` to `0.4.0-beta.2` and synchronized the current compatible-set contracts with `industry-application-map-builder 0.4.0-beta.6`.
 - Added explicit inspector behavior for preserving failed attempts before correction, continuing company-local corrections without cross-company promotion, and stopping formal governance activation when registry-write authority is absent.
 - Recorded the frozen paired-behavior result as `NOT EFFECTIVE`: the three predeclared historical deficiencies (`FTWG-EVAL-02`, `FTWG-EVAL-07`, and `FTWG-EVAL-08`) closed with no component regression, while boundary holdout `FTWG-EVAL-10` failed the single-`one_next_action` gate by combining evidence preservation with correction. This known limitation is retained in beta.2 and is not represented as fixed.

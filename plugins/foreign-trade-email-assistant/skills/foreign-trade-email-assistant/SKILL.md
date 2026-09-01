@@ -1,46 +1,26 @@
 ---
 name: foreign-trade-email-assistant
-description: Use when the user explicitly requests the standalone compatibility email workflow for complete-thread replies or draft revision instead of the unified foreign-trade-customer-operations skill.
+description: Use when an older workflow explicitly invokes the legacy foreign-trade email assistant for a complete thread or an existing-candidate revision.
 ---
 
 # Foreign Trade Email Assistant
 
-This is a standalone compatibility email workflow. When `foreign-trade-customer-operations` is available and the task belongs to an ongoing prospect or customer record, prefer that unified skill; do not run both skills on the same reply task.
+## Compatibility role
 
-## Core role
-
-Improve reply efficiency and quality while leaving importance, business judgment, final wording, and sending authority with the salesperson.
-
-## Intake
-
-1. Accept a complete thread through screenshots, copied text, PDF, `.eml`, and attachments.
-2. Accept optional approved company facts and confirmed customer/contact records.
-3. Accept the salesperson's natural-language goal without requiring a form.
-4. Read `references/evidence-and-sources.md` before drafting.
+This skill is a compatibility router, not an independent email-writing workflow. 不再独立起草完整线程回复.
 
 ## Route
 
-- Default to standard reply.
-- Revise from natural-language feedback while retaining the full context.
-- Read `references/special-handling.md` and enter special handling for an explicit quality incident, contract dispute, payment abnormality, or comparable serious issue.
-- Do not judge the email's importance or priority.
+- Complete customer thread, received or suspected reply, new cold outreach, follow-up, account message, or quality/contract/payment issue -> return to `foreign-trade-workflow-director`.
+- The workflow director captures the input as a registered transition and routes it to `foreign-trade-customer-operations` for thread state and business decision.
+- Customer operations may then issue a bound `communication_brief_packet` to `foreign-trade-customer-communication`.
+- A revision of an existing communication candidate may use `bounded_revision` only when the prior candidate reference/hash, acceptance receipt, and confirmed revision request are supplied.
 
-## Standard response
+## Hard boundaries
 
-Read and follow `references/reply-contract.md`. Produce one recommendation and one draft by default. Analysis is Chinese. The draft follows the customer's language. English and every other foreign-language draft require a Chinese translation.
+- Do not accept a raw thread as a communication brief.
+- Do not create an external draft, recommendation, customer state, communication brief, actual send, or reply fact.
+- Do not send or archive anything.
+- If a revision changes product, price, delivery, liability, compensation, warranty, contract position, customer priority, channel permission, or risk strategy, return it to customer operations.
 
-## Evidence
-
-Separate confirmed facts, customer claims, unknowns, and inference. Never invent controlled facts. Ask at most one critical clarification question when the missing fact blocks a reliable reply.
-
-## Salesperson authority
-
-The salesperson may accept, edit, or send directly. Do not force a pre-send check and do not send email.
-
-## Records
-
-When actual sent content is supplied, read `references/records-and-integration.md`. Only actual correspondence belongs in the formal archive. Keep test-company data isolated from Jiangyue data.
-
-## Future integrations
-
-The skill may read confirmed customer/contact data and the future prospect packet defined in `references/records-and-integration.md`. It must not create formal profiles, run prospect research, score leads, or write CRM records in V1.
+The old standalone drafting references are removed so this router cannot become a second source of wording authority. The workflow director, customer operations, and customer communication contracts govern current behavior.
