@@ -2,7 +2,7 @@
 
 ```yaml
 contract_id: FTWG-INSPECTOR-GOVERNANCE
-contract_version: 1.0.0-draft.2
+contract_version: 1.0.0-draft.3
 contract_state: candidate_not_active
 owner: foreign-trade-workflow-director
 ```
@@ -39,6 +39,12 @@ stop > rehearsal_only > continue_with_correction > continue
 | `stop` | 真值、盲测、哈希/合同、来源时序、历史只读、授权或闭包受损 | 停止受影响动作，保全证据 |
 
 输出必须只有一个最高处置和一个 `one_next_action`。停止只覆盖受影响范围；安全只读诊断仍可继续。
+
+### 三个可观察的处置边界
+
+- **纠偏顺序**：使用 `continue_with_correction` 时，先把失败证据写入不可覆盖的记录，并给出该记录引用；完成保留后才执行纠偏。不得用“边改边保留”替代这个先后顺序。
+- **公司局部纠偏**：直接证据只支持当前公司和当前任务，且当前动作可在边界内安全修正时，返回 `continue_with_correction`。纠正当前任务后可以继续当前范围，但不得提升为便携规则或第二家公司事实；跨公司推广仍保持阻断。
+- **演练与激活**：当用户请求的目标动作本身只是隔离演练，且缺口仅是正式接受条件时，返回 `rehearsal_only`。当目标动作本身是正式激活或正式治理写入，且缺少 `governance_registry_write` 时，对该目标动作返回 `stop`；只读诊断仍可继续，并作为唯一下一动作候选。不得因为存在安全演练路线而把正式激活的处置降为 `rehearsal_only`。
 
 ## 记录与验证层
 

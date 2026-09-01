@@ -31,6 +31,8 @@ Use `strict_audit` when it is explicitly selected or a legacy beta.3 contract ha
 
 只根据与当前动作范围相交的问题给出一个处置和一项下一动作：`continue`、`continue_with_correction`、`rehearsal_only` 或 `stop`。专业事实和真值仍由专业技能拥有；控制器只核对返回包、版本、哈希、范围和验证层，不能替专业技能改结论，也不能把检察者身份当成写入、Git、安装、模型或业务授权。
 
+处置按目标动作判断：可核对的小幅纠偏先冻结失败证据，再执行修正；只对当前公司成立的修正可在当前范围继续，但不得推广为便携规则或第二家公司事实。用户只请求隔离演练且仅缺正式接受条件时用 `rehearsal_only`；用户请求正式治理激活或写入但缺少 `governance_registry_write` 时，对该目标动作必须 `stop`，即使只读诊断仍可继续。
+
 治理写入先向用户说明一项逻辑事件及所需 `governance_registry_write` 授权。获授权后才可调用 `scripts/workflow-governance.py`；用户不填写 JSONL、编号、序号或哈希。源码、确定性测试、发布、安装、前向验证、跨公司验证和真实效果分别登记，任何一层 PASS 不自动提升下一层。
 
 ## 历史治理迁移

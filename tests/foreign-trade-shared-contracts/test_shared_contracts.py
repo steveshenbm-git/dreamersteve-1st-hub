@@ -29,7 +29,7 @@ EXPECTED_PLUGIN_VERSIONS = {
     "industry-application-map-builder": "0.4.0-beta.6",
     "foreign-trade-customer-development": "0.2.0-beta.2",
     "foreign-trade-customer-operations": "0.2.0-beta.2",
-    "foreign-trade-workflow-director": "0.4.0-beta.1",
+    "foreign-trade-workflow-director": "0.4.0-beta.2",
 }
 
 

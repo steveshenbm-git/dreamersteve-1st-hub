@@ -54,10 +54,10 @@ class WorkflowDirectorContractTests(unittest.TestCase):
         marketplace = json.loads(read(ROOT / ".agents" / "plugins" / "marketplace.json"))
 
         self.assertEqual(manifest["name"], "foreign-trade-workflow-director")
-        self.assertEqual(manifest["version"], "0.4.0-beta.1")
+        self.assertEqual(manifest["version"], "0.4.0-beta.2")
         self.assertRegex(
             manifest["version"],
-            r"^0\.4\.0-beta\.1$",
+            r"^0\.4\.0-beta\.2$",
         )
         self.assertTrue(
             any(
@@ -148,8 +148,8 @@ class WorkflowDirectorContractTests(unittest.TestCase):
         )
 
         self.assertIn("company_id: null", state)
-        self.assertIn("blueprint_version: 0.4.0-beta.1", state)
-        self.assertIn("blueprint_version: 0.4.0-beta.1", replication)
+        self.assertIn("blueprint_version: 0.4.0-beta.2", state)
+        self.assertIn("blueprint_version: 0.4.0-beta.2", replication)
         self.assertIn("semantic_evaluation_mode: content_first", state)
         self.assertIn("strict_audit", state)
         self.assertIn("RESEARCH_ONLY_BLOCKED", state)

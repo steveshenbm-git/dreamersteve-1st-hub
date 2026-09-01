@@ -1,6 +1,6 @@
 # Inspector Governance Ease-of-Use Rehearsal
 
-- Candidate: `foreign-trade-workflow-director 0.4.0-beta.1`
+- Candidate: `foreign-trade-workflow-director 0.4.0-beta.2`
 - Scope: disposable framework fixture only
 - Business stage changes: none
 - Migration activation: not performed

@@ -28,7 +28,7 @@ R4任务包只读取独立冻结的 `visible-only` 案例集；正式真值、�
 
 Beta.5 正式准备只接受 `case_package_contract_version = 1.0-beta5`。官方 taxonomy ID 是标识符，可含内部 `/`，但拒绝首尾或重复斜杠、`.`/`..` 段、反斜杠、空白或 Unicode 规范化别名；标识符永远不参与文件路径拼接。顶层案例、可见集、可见冻结收据和真值包的实际路径必须等于合同本地声明路径，不允许“外部真文件 + 不存在的本地引用”。
 
-正式 content-first 合同必须在锁定前填入带时区且早于 `locked_at` 的 `created_at`、与锁定授权一致的 `owner_authorization_reference`、当前技能源码的 40 位小写 `skill_git_commit`，以及 `workflow_director_plugin_version = 0.4.0-beta.1`。锁定器还必须从独立输入 `--expected-skill-git-commit` 取得可信提交号并与合同值精确比对；不得只检查字符串格式。缺失、空值、时间倒置或版本/提交不一致均不得锁定。
+正式 content-first 合同必须在锁定前填入带时区且早于 `locked_at` 的 `created_at`、与锁定授权一致的 `owner_authorization_reference`、当前技能源码的 40 位小写 `skill_git_commit`，以及 `workflow_director_plugin_version = 0.4.0-beta.2`。锁定器还必须从独立输入 `--expected-skill-git-commit` 取得可信提交号并与合同值精确比对；不得只检查字符串格式。缺失、空值、时间倒置或版本/提交不一致均不得锁定。
 
 每条正式真值都使用 `truth_contract_version = 2.1-r4-adjudicated`，绑定准备合同版本、`locked_input_sha256`、案例、三条 evidence basis、条件、限制、未知和排除边界，并按 `truth_sha256 = null` 时的 canonical JSON 计算自哈希。真值还必须记录独立裁决状态、裁决者、裁决时间、裁决依据与 `truth_disposition`；只有裁决为 accepted、结论为 positive、证据为 supported 且使用直接证据时，案例才进入接受正例集合。negative 进入接受反例集合，reopened、superseded 或尚未接受的案例进入未决集合并使旧评分失效。两个原始来源角色必须精确为 `output_or_subprocess_basis = receiver_captured_raw` 和 `mechanism_or_use_point_basis = receiver_captured_raw`，不允许改名为分类投影。摘要、转述、自报 URL 或模型回答不能冒充来源原件。
 

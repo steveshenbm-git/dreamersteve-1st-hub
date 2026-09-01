@@ -3,7 +3,7 @@
   "schema_version": "1.0.0-draft.1",
   "migration_batch_id": null,
   "migration_contract_id": "FTWG-LEGACY-GOVERNANCE-MIGRATION",
-  "migration_contract_version": "1.0.0-draft.1",
+  "migration_contract_version": "1.0.0-draft.2",
   "phase_state": "UNVERIFIED",
   "discovery_roots": [],
   "include_patterns": [],

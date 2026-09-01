@@ -32,7 +32,7 @@ class InspectorGovernanceContractTests(unittest.TestCase):
         manifest = json.loads(
             (PLUGIN_ROOT / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8")
         )
-        self.assertEqual(manifest["version"], "0.4.0-beta.1")
+        self.assertEqual(manifest["version"], "0.4.0-beta.2")
         self.assertIn("inspector-governance", manifest["keywords"])
         skill = (SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
         frontmatter = skill.split("---", 2)[1]
@@ -41,9 +41,9 @@ class InspectorGovernanceContractTests(unittest.TestCase):
         inspector = (SKILL_ROOT / "references" / "inspector-governance-contract.md").read_text(encoding="utf-8")
         migration = (SKILL_ROOT / "references" / "legacy-governance-migration-contract.md").read_text(encoding="utf-8")
         self.assertIn("FTWG-INSPECTOR-GOVERNANCE", inspector)
-        self.assertIn("1.0.0-draft.2", inspector)
+        self.assertIn("1.0.0-draft.3", inspector)
         self.assertIn("FTWG-LEGACY-GOVERNANCE-MIGRATION", migration)
-        self.assertIn("1.0.0-draft.1", migration)
+        self.assertIn("1.0.0-draft.2", migration)
         self.assertIn("no automatic activation", migration)
 
     def test_four_templates_are_empty_and_safe(self):
@@ -80,11 +80,11 @@ class InspectorGovernanceContractTests(unittest.TestCase):
     def test_existing_templates_bind_null_governance_references(self):
         state = load_yaml(SKILL_ROOT / "assets" / "company-workflow-state.template.yaml")["company_workflow_state"]
         replication = load_yaml(SKILL_ROOT / "assets" / "workflow-replication-manifest.template.yaml")["workflow_replication_manifest"]
-        self.assertEqual(state["blueprint_version"], "0.4.0-beta.1")
+        self.assertEqual(state["blueprint_version"], "0.4.0-beta.2")
         self.assertIsNone(state["workflow_governance_registry_reference"])
         self.assertIsNone(state["workflow_governance_registry_sha256"])
         self.assertIsNone(state["latest_inspector_preflight_reference"])
-        self.assertEqual(replication["blueprint_version"], "0.4.0-beta.1")
+        self.assertEqual(replication["blueprint_version"], "0.4.0-beta.2")
         self.assertIsNone(replication["workflow_governance_registry_reference"])
         self.assertIsNone(replication["workflow_governance_registry_sha256"])
 
@@ -96,6 +96,28 @@ class InspectorGovernanceContractTests(unittest.TestCase):
         self.assertIn("legacy-governance-migration-contract.md", skill)
         self.assertIn("一个处置和一项下一动作", skill)
         self.assertIn("专业事实和真值仍由专业技能拥有", skill)
+
+    def test_disposition_contract_sequences_correction_and_scopes_stop(self):
+        inspector = (SKILL_ROOT / "references" / "inspector-governance-contract.md").read_text(encoding="utf-8")
+        for required in (
+            "先把失败证据写入不可覆盖的记录",
+            "完成保留后才执行纠偏",
+            "当前公司和当前任务",
+            "不得提升为便携规则或第二家公司事实",
+            "目标动作本身是正式激活或正式治理写入",
+            "缺少 `governance_registry_write`",
+            "对该目标动作返回 `stop`",
+            "只读诊断仍可继续",
+            "用户请求的目标动作本身只是隔离演练",
+        ):
+            self.assertIn(required, inspector)
+
+    def test_legacy_activation_without_write_authorization_is_stop(self):
+        migration = (SKILL_ROOT / "references" / "legacy-governance-migration-contract.md").read_text(encoding="utf-8")
+        self.assertIn("正式激活", migration)
+        self.assertIn("缺少 `governance_registry_write`", migration)
+        self.assertIn("处置必须是 `stop`", migration)
+        self.assertIn("只读盘点、映射复核或诊断不因此被禁止", migration)
 
 
 if __name__ == "__main__":

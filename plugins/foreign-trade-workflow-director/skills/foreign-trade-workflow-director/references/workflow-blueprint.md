@@ -2,7 +2,7 @@
 
 `blueprint_id: foreign-trade-complete-workflow`
 
-`blueprint_version: 0.4.0-beta.1`
+`blueprint_version: 0.4.0-beta.2`
 
 ## 判定原则
 
@@ -97,7 +97,7 @@ content_first_contract_prepare
 
 只看到技能名称或安装目录不能证明能力兼容。`environment_audit` 必须核对实际版本、技能合同、来源市场和所需路由；没有兼容矩阵或直接证据时记为 `UNVERIFIED`。同一技能名来自两个已启用市场时记为 `FAIL`，在用户单独选定唯一来源并授权迁移前不安装、卸载或继续路由。
 
-当前待验证候选集固定为：`company-product-knowledge-builder 0.1.0`、`industry-application-map-builder 0.4.0-beta.6`、`foreign-trade-customer-development 0.2.0-beta.2`、`foreign-trade-customer-operations 0.2.0-beta.2`和 `foreign-trade-workflow-director 0.4.0-beta.1`。其中任一版本不符只能记为 `UNVERIFIED`，不得自动改写旧合同或继续已开始的 beta.5 R4 测试。接口集成通过只证明字段、哈希、路由和停止门可交接，不证明三项业务技能的真实效果。
+当前待验证候选集固定为：`company-product-knowledge-builder 0.1.0`、`industry-application-map-builder 0.4.0-beta.6`、`foreign-trade-customer-development 0.2.0-beta.2`、`foreign-trade-customer-operations 0.2.0-beta.2`和 `foreign-trade-workflow-director 0.4.0-beta.2`。其中任一版本不符只能记为 `UNVERIFIED`，不得自动改写旧合同或继续已开始的 beta.5 R4 测试。接口集成通过只证明字段、哈希、路由和停止门可交接，不证明三项业务技能的真实效果。
 
 ## `workflow_blueprint`
 

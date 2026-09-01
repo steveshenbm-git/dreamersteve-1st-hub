@@ -17,7 +17,7 @@ class InspectorGovernanceComplexityBudgetTests(unittest.TestCase):
         manifest = json.loads(
             (PLUGIN_ROOT / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8")
         )
-        self.assertEqual(manifest["version"], "0.4.0-beta.1")
+        self.assertEqual(manifest["version"], "0.4.0-beta.2")
         scripts = {path.name for path in (SKILL_ROOT / "scripts").glob("*.py")}
         governance_entrypoints = {
             "validate-legacy-governance-migration.py",

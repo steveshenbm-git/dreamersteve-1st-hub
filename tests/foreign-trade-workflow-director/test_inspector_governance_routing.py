@@ -15,7 +15,7 @@ class InspectorGovernanceRoutingTests(unittest.TestCase):
     def test_governance_is_horizontal_and_business_stage_order_is_unchanged(self):
         skill = (SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
         blueprint = (SKILL_ROOT / "references" / "workflow-blueprint.md").read_text(encoding="utf-8")
-        self.assertIn("blueprint_version: 0.4.0-beta.1", blueprint)
+        self.assertIn("blueprint_version: 0.4.0-beta.2", blueprint)
         expected = (
             "environment_audit → company_identity → product_knowledge → industry_taxonomy → "
             "industry_semantic_expansion → company_industry_match → route_pool_handoff → "

@@ -124,7 +124,7 @@ class R4AdjudicatedTruthContractBeta5Tests(unittest.TestCase):
 
     def test_versions_and_neutral_sampling_contract_are_exact(self):
         self.assertEqual(MAP_BUILDER_PLUGIN_VERSION, "0.4.0-beta.6")
-        self.assertEqual(DIRECTOR_PLUGIN_VERSION, "0.4.0-beta.1")
+        self.assertEqual(DIRECTOR_PLUGIN_VERSION, "0.4.0-beta.2")
         self.assertEqual(BETA5_CASE_PACKAGE_CONTRACT_VERSION, "1.0-beta5")
         self.assertEqual(BETA5_TRUTH_CONTRACT_VERSION, "2.1-r4-adjudicated")
         self.assertEqual(BETA5_TRUTH_SCORECARD_CONTRACT_VERSION, "2.1-r4")

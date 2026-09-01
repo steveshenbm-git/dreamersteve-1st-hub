@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased - 2026-09-01
+
+- Advanced `foreign-trade-workflow-director` to `0.4.0-beta.2` and synchronized the current compatible-set contracts with `industry-application-map-builder 0.4.0-beta.6`.
+- Added explicit inspector behavior for preserving failed attempts before correction, continuing company-local corrections without cross-company promotion, and stopping formal governance activation when registry-write authority is absent.
+- Recorded the frozen paired-behavior result as `NOT EFFECTIVE`: the three predeclared historical deficiencies (`FTWG-EVAL-02`, `FTWG-EVAL-07`, and `FTWG-EVAL-08`) closed with no component regression, while boundary holdout `FTWG-EVAL-10` failed the single-`one_next_action` gate by combining evidence preservation with correction. This known limitation is retained in beta.2 and is not represented as fixed.
+- Installation, task forward validation, cross-company validation, and real effectiveness remain separate verification layers.
+
 ## Unreleased - 2026-08-31
 
 - Prepared the compatible source candidate set: `industry-application-map-builder 0.4.0-beta.6`, `foreign-trade-customer-development 0.2.0-beta.2`, `foreign-trade-customer-operations 0.2.0-beta.2`, and `foreign-trade-workflow-director 0.4.0-beta.1`; kept `company-product-knowledge-builder 0.1.0` unchanged.

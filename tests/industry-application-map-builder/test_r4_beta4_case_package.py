@@ -68,7 +68,7 @@ class R4Beta5CasePackageTests(unittest.TestCase):
                 "created_at": "2026-08-24T00:00:00Z",
                 "owner_authorization_reference": "USER-R4-PREP",
                 "skill_git_commit": "dbd67b0cc283c4d88d9b78b3d49fa6f5aeb2f02a",
-                "workflow_director_plugin_version": "0.4.0-beta.1",
+                "workflow_director_plugin_version": "0.4.0-beta.2",
             }
         )
         draft.write_text(json.dumps(payload), encoding="utf-8")
@@ -214,7 +214,7 @@ class R4Beta5CasePackageTests(unittest.TestCase):
             "mechanism_or_use_point_basis = receiver_captured_raw",
             "复制前和复制后",
             "父目录锁",
-            "workflow_director_plugin_version = 0.4.0-beta.1",
+            "workflow_director_plugin_version = 0.4.0-beta.2",
             "skill_git_commit",
             "owner_authorization_reference",
         ):

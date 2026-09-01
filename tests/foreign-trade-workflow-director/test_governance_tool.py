@@ -54,7 +54,7 @@ def base_registry(root: Path, *, editor: str = "editor-a") -> dict:
         "schema_version": "1.0.0-draft.1",
         "registry_id": "FTWG-REG-framework-fixture",
         "contract_id": "FTWG-INSPECTOR-GOVERNANCE",
-        "contract_version": "1.0.0-draft.2",
+        "contract_version": "1.0.0-draft.3",
         "company_id": None,
         "framework_id": "framework-fixture",
         "governance_root": str(root.resolve()),
@@ -62,7 +62,7 @@ def base_registry(root: Path, *, editor: str = "editor-a") -> dict:
         "parent_framework_registry_sha256": None,
         "inherited_finding_ids": [],
         "blueprint_id": "foreign-trade-complete-workflow",
-        "blueprint_version": "0.4.0-beta.1",
+        "blueprint_version": "0.4.0-beta.2",
         "single_editor_id": editor,
         "findings_log": {
             "reference": "findings.jsonl",

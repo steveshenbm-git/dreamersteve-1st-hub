@@ -2,10 +2,10 @@
 
 ```yaml
 contract_id: FTWG-LEGACY-GOVERNANCE-MIGRATION
-contract_version: 1.0.0-draft.1
+contract_version: 1.0.0-draft.2
 contract_state: candidate_not_active
 parent_contract_id: FTWG-INSPECTOR-GOVERNANCE
-parent_contract_version: 1.0.0-draft.2
+parent_contract_version: 1.0.0-draft.3
 ```
 
 本合同只在用户明确要求迁移时读取。候选版本支持限定来源盘点、逐条映射、干跑、激活前检查和激活后验证；there is **no automatic activation**。它不授权扫描未声明目录、写正式治理登记、修改历史原件、Git、发布或安装。
@@ -55,6 +55,8 @@ inventory → mapping → dry-run → activation-preflight → post-activation
 - `post-activation`：只读核对激活回执、追加计数、前后哈希和重建结果。
 
 所有阶段只返回 `PASS / FAIL / UNVERIFIED`、计数、问题和一项下一动作。任何阶段都不得修改来源、批次或目标。
+
+如果用户请求的是正式激活，而缺少 `governance_registry_write` 授权，检察处置必须是 `stop`；已通过的干跑不能把它降为 `rehearsal_only`。停止只覆盖正式激活，只读盘点、映射复核或诊断不因此被禁止。
 
 ## 停止条件
 

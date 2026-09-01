@@ -1,6 +1,6 @@
 {
   "name": "foreign-trade-workflow-director",
-  "version": "0.4.0-beta.1",
+  "version": "0.4.0-beta.2",
   "description": "审计、搭建、续作和复刻完整外贸流程；在业务阶段不变的前提下执行跨技能检察预检、分层验证和可追溯治理记录。",
   "author": {
     "name": "steveshenbm-git"
