@@ -1,7 +1,7 @@
 workflow_replication_manifest:
   manifest_id: null
   blueprint_id: foreign-trade-complete-workflow
-  blueprint_version: 0.5.0-beta.1
+  blueprint_version: 0.5.0-beta.2
   workflow_governance_registry_reference: null
   workflow_governance_registry_sha256: null
   required_plugins_and_compatible_versions:

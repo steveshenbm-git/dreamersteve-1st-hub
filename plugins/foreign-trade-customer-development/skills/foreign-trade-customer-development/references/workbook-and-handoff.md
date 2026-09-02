@@ -32,9 +32,9 @@
 第 1 行是机器字段名，必须精确为：
 
 ```text
-路线评审: route_review_id, source_route_candidate_id, company_id, product_scope, route_packet_reference, route_packet_sha256, producer_registry_reference, map_route_status, research_readiness, readiness_snapshot_reference, knowledge_snapshot_hash, readiness_fact_ids, commercial_readiness_status, readiness_reviewed_at, stale_status, unresolved_business_conditions, salesperson_route_decision, decision_basis, decision_date
-开发方向: direction_id, source_route_review_id, source_route_candidate_id, approved_product_reference, product_boundary, observable_enterprise_rule, candidate_direct_evidence_rule, exclusion_boundary, external_validation_status, direction_status, declared_scope, unresolved_conditions, salesperson_decision, decision_date
-方向证据: direction_evidence_id, direction_id, source_type, source_title, source_url_or_local_reference, original_excerpt, zh_summary, published_at, observed_at, evidence_state, validation_effect, limitation_note
+路线评审: route_review_id, source_route_candidate_id, company_id, product_scope, route_packet_reference, route_packet_sha256, producer_registry_reference, map_route_status, research_readiness, readiness_snapshot_reference, knowledge_snapshot_hash, readiness_fact_ids, commercial_readiness_status, readiness_reviewed_at, stale_status, unresolved_business_conditions, salesperson_route_decision, decision_basis, decision_date, business_industry_id, business_route_closure_id, customer_discovery_readiness, technical_match_state, regulatory_qualification_state, allowed_downstream_actions, prohibited_claims
+开发方向: direction_id, source_route_review_id, source_route_candidate_id, approved_product_reference, product_boundary, observable_enterprise_rule, candidate_direct_evidence_rule, exclusion_boundary, external_validation_status, direction_status, declared_scope, unresolved_conditions, salesperson_decision, decision_date, business_industry_id, business_route_closure_id, discovery_mode, technical_qualification_state, regulatory_qualification_state, allowed_downstream_actions, prohibited_claims
+方向证据: direction_evidence_id, direction_id, source_type, source_title, source_url_or_local_reference, original_excerpt, zh_summary, published_at, observed_at, evidence_state, validation_effect, limitation_note, evidence_role, source_dependency_group
 客户总览: customer_id, company_name, legal_name, website, country, business_model, source_direction_id, screening_status, salesperson_classification, information_reliability, risk_gate, recommended_opportunity_id, primary_contact_id, last_research_date, last_touch_date, next_action, next_action_date, handoff_status, salesperson_notes
 公司研究: research_id, customer_id, research_level, section, finding_original, finding_zh_summary, evidence_id, evidence_state, source_published_at, observed_at, gap_or_conflict, salesperson_confirmed
 项目机会: opportunity_id, customer_id, customer_fact, application_or_purchase_scenario, approved_product_reference, fit_basis, validation_question, primary_contact_id, recommendation_state, salesperson_decision, decision_date
@@ -49,9 +49,9 @@
 第 2 行是业务可读的中文字段说明，必须与第 1 行逐列对应并精确为：
 
 ```text
-路线评审: 路线评审编号, 来源路线候选编号, 公司编号, 产品范围, 路线包引用, 路线包哈希, 生产者登记引用, 地图路线状态, 研究就绪状态, 承接视图引用, 知识快照哈希, 承接事实编号, 商业承接状态, 承接复核日期, 时效状态, 未解决业务条件, 业务员路线决定, 决定依据, 决定日期
-开发方向: 开发方向编号, 来源路线评审编号, 来源路线候选编号, 已批准产品引用, 产品边界, 可观察目标企业规则, 候选公司直接证据规则, 排除边界, 外部核实状态, 方向状态, 本次声明范围, 待核实条件, 业务员方向决定, 决定日期
-方向证据: 方向证据编号, 开发方向编号, 来源类型, 来源标题, 来源网址或本地引用, 原文摘录, 中文摘要, 来源发布日期, 观察记录时间, 证据状态, 对方向的验证作用, 局限说明
+路线评审: 路线评审编号, 来源路线候选编号, 公司编号, 产品范围, 路线包引用, 路线包哈希, 生产者登记引用, 地图路线状态, 研究就绪状态, 承接视图引用, 知识快照哈希, 承接事实编号, 商业承接状态, 承接复核日期, 时效状态, 未解决业务条件, 业务员路线决定, 决定依据, 决定日期, 业务确认行业编号, 业务路线闭合编号, 客户发现就绪状态, 技术匹配状态, 监管资格状态, 允许下游动作JSON, 禁止声明JSON
+开发方向: 开发方向编号, 来源路线评审编号, 来源路线候选编号, 已批准产品引用, 产品边界, 可观察目标企业规则, 候选公司直接证据规则, 排除边界, 外部核实状态, 方向状态, 本次声明范围, 待核实条件, 业务员方向决定, 决定日期, 业务确认行业编号, 业务路线闭合编号, 发现模式, 技术资格状态, 监管资格状态, 允许下游动作JSON, 禁止声明JSON
+方向证据: 方向证据编号, 开发方向编号, 来源类型, 来源标题, 来源网址或本地引用, 原文摘录, 中文摘要, 来源发布日期, 观察记录时间, 证据状态, 对方向的验证作用, 局限说明, 证据角色, 来源依赖组
 客户总览: 客户编号, 公司常用名称, 法定注册名称, 公司网站, 国家或地区, 商业模式, 来源开发方向编号, 筛选状态, 业务员客户分类, 信息可靠性, 风险门状态, 推荐机会编号, 主要联系人编号, 最近研究日期, 最近触达日期, 下一步行动, 下一步行动日期, 移交状态, 业务员备注
 公司研究: 研究记录编号, 客户编号, 研究层级, 研究章节, 原文研究发现, 研究发现中文摘要, 证据编号, 证据状态, 来源发布日期, 观察记录时间, 信息缺口或冲突, 业务员确认状态
 项目机会: 机会编号, 客户编号, 已确认客户事实, 应用或采购场景, 已批准产品引用, 匹配依据, 待验证问题, 主要联系人编号, 推荐状态, 业务员决定, 决定日期
@@ -83,6 +83,9 @@ research_readiness: 可编译方向, 需补路线证据, 待外部核实, 不可
 commercial_readiness_status: 可承接, 有条件, 未知, 已确认冲突
 stale_status: 当前, 临近复核, 已过期, 无法判断
 salesperson_route_decision: 选择编译, 继续核实, 暂缓, 淘汰
+customer_discovery_readiness: ready_for_direction_compilation, ready_for_limited_direction_validation, needs_application_evidence, blocked
+discovery_mode: full_direction_compilation, limited_direction_validation
+evidence_role: application_seed, direction_holdout, counterevidence
 ```
 
 以上受控字段都必须启用停止式错误拦截并允许空白：信息未知时可以留空，空白不违反数据验证；只要填入非空值，就必须来自对应受控列表。业务员输入列表外的非空值时，工作簿显示错误提示并拒绝写入。不得仅提供下拉候选但继续接受无效值，也不得用自造状态代替未知值。

@@ -7,11 +7,13 @@ company_route_pool_packet:
   export_id
   company_id
   product_scope
+  product_scopes
   input_snapshot
   producer_snapshot
   declared_scope
   route_candidates
   route_leads
+  route_closures
   deferred_routes
   excluded_routes
   coverage_summary
@@ -31,7 +33,7 @@ company_route_pool_packet:
 
 ## 导出门
 
-导出前必须验证：公司一致、输入哈希当前、事实ID属于事实包并解析为获准使用的E3自有事实、共享ID存在、来源不循环、技术匹配满足、应用证据支持、没有已知限制冲突。
+导出前必须验证：公司一致、输入哈希当前、事实ID属于该路线 `product_scope` 的事实包并解析为获准使用的E3自有事实、共享ID存在、来源不循环、应用证据支持且没有已知限制冲突。严格 `路线候选` 仍要求技术匹配满足；`business_validated_route_closure` 只能作为 `route_leads` 导出，并必须携带唯一PASS闭合、有限方向动作与完整禁止声明。
 
 导出目标必须位于 `04-公司地图/<company_id>/`，且不得覆盖已有文件。导出后必须校验登记中的包哈希、公司、`export_id`、生产者引用和输入快照；任一不一致都使交接失败。
 
@@ -39,7 +41,7 @@ company_route_pool_packet:
 
 ## 下游使用
 
-`foreign-trade-customer-development` 先校验路线包及其生产者登记，再向业务员呈现路线组合评审。业务员选定路线后，下游才能将其编译为 `development_direction_packet` 并执行 `direction_validation`。只有业务员记录 `direction_status = 已确认可扫描` 并声明国家、语言、应用细分、产品范围和来源范围后，才可启动按方向的 `candidate_scan`。
+`foreign-trade-customer-development` 先校验路线包及其生产者登记，再向业务员呈现路线组合评审。严格路线候选在业务员选定后进入完整方向编译。`ready_for_limited_direction_validation` 的路线线索只可编译并验证企业识别规则，不得推荐产品、声称适配/合规或采集客户。两条路都只有在业务员另行记录 `direction_status = 已确认可扫描` 并声明国家、语言、应用细分、产品范围和来源范围后，才可启动按方向的 `candidate_scan`。
 
 命名公司初查仍是独立入口；它不需要预建完整路线池，但不能据此把产品适配、行业路线或采购角色升级为事实。
 

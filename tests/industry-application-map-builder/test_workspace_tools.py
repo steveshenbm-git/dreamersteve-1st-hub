@@ -22,6 +22,7 @@ SKILL_ROOT = (
 INIT_SCRIPT = SKILL_ROOT / "scripts" / "init_industry_application_workspace.py"
 VALIDATE_SCRIPT = SKILL_ROOT / "scripts" / "validate_industry_application_workspace.py"
 EXPORT_SCRIPT = SKILL_ROOT / "scripts" / "export_company_route_pool.py"
+FREEZE_MANIFEST_SCRIPT = SKILL_ROOT / "scripts" / "freeze_company_product_packet_manifest.py"
 
 
 def run_script(script: Path, *args: str) -> subprocess.CompletedProcess[str]:
@@ -161,6 +162,70 @@ class WorkspaceToolTests(unittest.TestCase):
         return self.create_product_library_for(
             parent, "ACME-001", "Synthetic control material"
         )
+
+    def create_multi_product_library(self, parent: Path) -> tuple[Path, Path]:
+        library = parent / "ACME-001-multi-product-library"
+        facts_path = library / "02-事实库/facts.json"
+        write_json(library / "company.json", {"company_id": "ACME-001"})
+        write_json(
+            facts_path,
+            {
+                "schema_version": "1.0",
+                "company_id": "ACME-001",
+                "facts": [
+                    {
+                        "fact_id": "ACME-001-GLITTER-001",
+                        "company_id": "ACME-001",
+                        "subject_scope": "own_company",
+                        "statement_kind": "source_fact",
+                        "evidence_level": "E3",
+                        "review_status": "approved",
+                        "source_id": "ACME-001-S-GLITTER",
+                    },
+                    {
+                        "fact_id": "ACME-001-PEARL-001",
+                        "company_id": "ACME-001",
+                        "subject_scope": "own_company",
+                        "statement_kind": "source_fact",
+                        "evidence_level": "E3",
+                        "review_status": "approved",
+                        "source_id": "ACME-001-S-PEARL",
+                    },
+                ],
+            },
+        )
+        packet_args: list[str] = []
+        for scope, fact_id, filename in (
+            ("Glitter powder", "ACME-001-GLITTER-001", "glitter.json"),
+            ("Pearlescent pigment", "ACME-001-PEARL-001", "pearl.json"),
+        ):
+            packet = library / "04-开发交接" / filename
+            write_json(
+                packet,
+                {
+                    "schema_version": "1.1",
+                    "product_development_fact_packet": {
+                        "company_id": "ACME-001",
+                        "product_family": scope,
+                        "confirmed_functions": [fact_id],
+                        "required_conditions": [],
+                        "known_limits": [],
+                        "allowed_use": ["internal_industry_application_mapping"],
+                    },
+                },
+            )
+            packet_args.extend(["--product-packet", f"{scope}={packet}"])
+        manifest = library / "04-开发交接/company-product-packet-manifest.json"
+        result = run_script(
+            FREEZE_MANIFEST_SCRIPT,
+            "--company-id", "ACME-001",
+            "--company-library-root", str(library),
+            *packet_args,
+            "--output", str(manifest),
+            "--frozen-at", "2026-09-01T00:00:00Z",
+        )
+        self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
+        return library, manifest
 
     def initialize_company(
         self,
@@ -491,6 +556,137 @@ class WorkspaceToolTests(unittest.TestCase):
             self.assertEqual(export_registry["company_id"], "ACME-001")
             self.assertEqual(export_registry["exports"], [])
 
+    def test_multi_product_manifest_supports_limited_route_without_cross_scope_facts(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            parent = Path(tmp)
+            root = self.initialize_root(parent)
+            self.populate_shared_base(root)
+            library, manifest = self.create_multi_product_library(parent)
+            business_register = library / "04-开发交接/business-industry-register.json"
+            write_json(
+                business_register,
+                {
+                    "register_id": "BVI-REGISTER-001",
+                    "company_id": "ACME-001",
+                    "industries": [{"business_industry_id": "BVI-010", "name": "Nail polish"}],
+                },
+            )
+            result = run_script(
+                INIT_SCRIPT,
+                "--mode", "company",
+                "--map-root", str(root),
+                "--company-id", "ACME-001",
+                "--company-library-root", str(library),
+                "--product-packet-manifest", str(manifest),
+                "--business-industry-register", str(business_register),
+                "--declared-taxonomy-scope", "TEST-2026-1000",
+                "--declared-application-scope", "APP-001",
+                "--allowed-source-scope", "public",
+            )
+            self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
+            company_root = root / "04-公司地图/ACME-001"
+            company_map = company_root / "company-industry-application-map.xlsx"
+            append_record(
+                company_map,
+                "产品能力",
+                {
+                    "capability_id": "CAP-PEARL",
+                    "company_id": "ACME-001",
+                    "product_scope": "Pearlescent pigment",
+                    "product_fact_ids": '["ACME-001-PEARL-001"]',
+                    "product_source_ids": '["ACME-001-S-PEARL"]',
+                    "dimension": "function",
+                    "operator": "equals",
+                    "value": "synthetic control",
+                    "unit": "",
+                    "conditions": "qualification pending",
+                    "known_limits": "[]",
+                    "evidence_state": "supported",
+                },
+            )
+            append_record(
+                company_map,
+                "路线候选",
+                {
+                    "route_candidate_id": "ACME-001-R-PEARL",
+                    "company_id": "ACME-001",
+                    "product_scope": "Pearlescent pigment",
+                    "business_industry_id": "BVI-010",
+                    "business_route_closure_id": "CLOSE-001",
+                    "application_node_id": "APP-001",
+                    "taxonomy_node_ids": '["TEST-2026-1000"]',
+                    "output_product_ids": '["OUT-001"]',
+                    "use_point_or_process": "equipment_control/test step",
+                    "target_enterprise_activity": "produces synthetic output",
+                    "product_fact_ids": '["ACME-001-PEARL-001"]',
+                    "product_source_ids": '["ACME-001-S-PEARL"]',
+                    "application_evidence_ids": '["APP-E-001"]',
+                    "application_source_groups": '["APP-SOURCE-GROUP-1"]',
+                    "evidence_state": "supported",
+                    "technical_match_state": "unknown",
+                    "regulatory_qualification_state": "unknown",
+                    "known_limit_conflict": "false",
+                    "research_disposition": "business_validated_route_closure",
+                    "map_route_status": "路线线索",
+                    "customer_discovery_readiness": "ready_for_limited_direction_validation",
+                    "geography_hypotheses": "[]",
+                    "geography_evidence_ids": "[]",
+                    "unresolved_conditions": '["company product qualification pending"]',
+                    "derivation_trace": "BVI-010 + APP-001 + CAP-PEARL",
+                },
+            )
+            append_record(
+                company_map,
+                "路线闭合",
+                {
+                    "closure_id": "CLOSE-001",
+                    "route_candidate_id": "ACME-001-R-PEARL",
+                    "business_industry_id": "BVI-010",
+                    "business_scope_reference": str(business_register.resolve()),
+                    "business_scope_sha256": sha256(business_register),
+                    "application_closure_state": "supported",
+                    "application_evidence_ids": '["APP-E-001"]',
+                    "application_source_groups": '["APP-SOURCE-GROUP-1"]',
+                    "customer_discovery_readiness": "ready_for_limited_direction_validation",
+                    "regulatory_qualification_state": "unknown",
+                    "allowed_downstream_actions": '["compile_and_validate_direction"]',
+                    "prohibited_downstream_actions": '["recommend_product","claim_product_fit","claim_regulatory_compliance","scan_candidates"]',
+                    "review_result": "PASS",
+                    "reviewed_at": "2026-09-01",
+                    "authorization_reference": "user-approved business validated route closure",
+                },
+            )
+            append_record(
+                company_map,
+                "覆盖台账",
+                {
+                    "coverage_id": "COV-PEARL",
+                    "company_id": "ACME-001",
+                    "product_scope": "Pearlescent pigment",
+                    "coverage_object_type": "capability",
+                    "coverage_object_id": "CAP-PEARL",
+                    "coverage_state": "mapped",
+                    "disposition": "limited_direction_validation",
+                    "route_candidate_ids": '["ACME-001-R-PEARL"]',
+                    "gap": "technical and regulatory qualification pending",
+                    "reviewed_at": "2026-09-01",
+                },
+            )
+            validation = self.validate(root)
+            self.assertEqual(validation.returncode, 0, validation.stderr + validation.stdout)
+            output = company_root / "company-route-pool-packet.json"
+            export = run_script(EXPORT_SCRIPT, str(root), "--company-id", "ACME-001", "--output", str(output))
+            self.assertEqual(export.returncode, 0, export.stderr + export.stdout)
+            packet = json.loads(output.read_text(encoding="utf-8"))["company_route_pool_packet"]
+            self.assertEqual(packet["product_scopes"], ["Glitter powder", "Pearlescent pigment"])
+            self.assertEqual(packet["route_leads"][0]["customer_discovery_readiness"], "ready_for_limited_direction_validation")
+            self.assertEqual(packet["route_closures"][0]["closure_id"], "CLOSE-001")
+
+            change_first_record(company_map, "产品能力", "product_fact_ids", '["ACME-001-GLITTER-001"]')
+            invalid = self.validate(root)
+            self.assertNotEqual(invalid.returncode, 0)
+            self.assertIn("CAPABILITY_PRODUCT_FACT_WRONG_SCOPE", invalid.stdout)
+
     def test_valid_workspace_passes_and_exports_controlled_packet(self):
         with tempfile.TemporaryDirectory() as tmp:
             root, company_root = self.create_valid_workspace(Path(tmp))
@@ -526,7 +722,7 @@ class WorkspaceToolTests(unittest.TestCase):
             self.assertEqual(export_record["export_id"], packet["export_id"])
             self.assertEqual(export_record["packet_sha256"], sha256(output))
             self.assertEqual(export_record["state"], "current")
-            self.assertEqual(export_record["validator_version"], "1.1")
+            self.assertEqual(export_record["validator_version"], "1.2")
             self.assertEqual(
                 export_record["producer_snapshot"]["company_map_sha256"],
                 sha256(company_root / "company-industry-application-map.xlsx"),

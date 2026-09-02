@@ -46,7 +46,7 @@ class IndustryApplicationMapContractTests(unittest.TestCase):
         )
 
         self.assertEqual(manifest["name"], "industry-application-map-builder")
-        self.assertEqual(manifest["version"], "0.4.0-beta.6")
+        self.assertEqual(manifest["version"], "0.4.0-beta.7")
         self.assertEqual(manifest["interface"]["displayName"], "行业应用地图构建")
         self.assertTrue(
             any(
@@ -67,11 +67,14 @@ class IndustryApplicationMapContractTests(unittest.TestCase):
             "company_map_build",
             "company_map_review",
             "route_pool_handoff",
+            "business_validated_route_closure",
             "company_route_pool_packet",
             "不得搜索具体客户",
             "不得写入 `direction_status = 已确认可扫描`",
         ):
             self.assertIn(required, skill_text)
+        self.assertTrue((SKILL_ROOT / "references" / "business-validated-route-closure.md").is_file())
+        self.assertTrue((SKILL_ROOT / "assets" / "company-product-packet-manifest.template.json").is_file())
 
     def test_derivation_contract_exposes_real_chain_and_four_state_logic(self):
         schema = (SKILL_ROOT / "references" / "industry-application-schema.md").read_text(

@@ -27,11 +27,11 @@ VALIDATOR = (
 
 EXPECTED_PLUGIN_VERSIONS = {
     "company-product-knowledge-builder": "0.1.0",
-    "industry-application-map-builder": "0.4.0-beta.6",
-    "foreign-trade-customer-development": "0.3.0-beta.1",
+    "industry-application-map-builder": "0.4.0-beta.7",
+    "foreign-trade-customer-development": "0.3.0-beta.2",
     "foreign-trade-customer-operations": "0.3.0-beta.1",
     "foreign-trade-customer-communication": "0.1.0-beta.1",
-    "foreign-trade-workflow-director": "0.5.0-beta.1",
+    "foreign-trade-workflow-director": "0.5.0-beta.2",
 }
 
 

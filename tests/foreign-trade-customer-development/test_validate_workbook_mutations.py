@@ -86,9 +86,9 @@ def create_green_control(destination: Path) -> None:
         for sheet in workbook.worksheets
         for validation in sheet.data_validations.dataValidation
     ]
-    if len(validations) != 21:
+    if len(validations) != 24:
         raise AssertionError(
-            f"expected 21 controlled validations in source workbook, observed {len(validations)}"
+            f"expected 24 controlled validations in source workbook, observed {len(validations)}"
         )
     for validation in validations:
         validation.showErrorMessage = True
@@ -108,7 +108,7 @@ def main() -> int:
 
         green_control_path = temp_root / "green-control.xlsx"
         create_green_control(green_control_path)
-        assert_accepted(run_validator(green_control_path), "all 21 enforced validations")
+        assert_accepted(run_validator(green_control_path), "all 24 enforced validations")
 
         route_decision_green_path = temp_root / "route-decision-green-control.xlsx"
         copyfile(green_control_path, route_decision_green_path)

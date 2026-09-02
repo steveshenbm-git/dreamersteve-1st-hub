@@ -54,10 +54,10 @@ class WorkflowDirectorContractTests(unittest.TestCase):
         marketplace = json.loads(read(ROOT / ".agents" / "plugins" / "marketplace.json"))
 
         self.assertEqual(manifest["name"], "foreign-trade-workflow-director")
-        self.assertEqual(manifest["version"], "0.5.0-beta.1")
+        self.assertEqual(manifest["version"], "0.5.0-beta.2")
         self.assertRegex(
             manifest["version"],
-            r"^0\.5\.0-beta\.1$",
+            r"^0\.5\.0-beta\.2$",
         )
         self.assertTrue(
             any(
@@ -78,6 +78,7 @@ class WorkflowDirectorContractTests(unittest.TestCase):
             "company_framework_bootstrap",
             "framework_resume",
             "specialist_handoff",
+            "business_route_closure_review",
             "framework_replication_plan",
             "business_decision_record",
             "environment_audit",
@@ -149,8 +150,8 @@ class WorkflowDirectorContractTests(unittest.TestCase):
         )
 
         self.assertIn("company_id: null", state)
-        self.assertIn("blueprint_version: 0.5.0-beta.1", state)
-        self.assertIn("blueprint_version: 0.5.0-beta.1", replication)
+        self.assertIn("blueprint_version: 0.5.0-beta.2", state)
+        self.assertIn("blueprint_version: 0.5.0-beta.2", replication)
         self.assertIn("semantic_evaluation_mode: content_first", state)
         self.assertIn("strict_audit", state)
         self.assertIn("RESEARCH_ONLY_BLOCKED", state)
@@ -160,6 +161,7 @@ class WorkflowDirectorContractTests(unittest.TestCase):
         self.assertIn("latest_review_result: UNVERIFIED", state)
         self.assertIn("latest_admissibility_state: UNVERIFIED", state)
         self.assertIn("work_units: []", state)
+        self.assertIn("route_scoped_business_closures: []", state)
         self.assertIn("company_foundation:", state)
         for stage in (
             "environment_audit",
@@ -171,6 +173,12 @@ class WorkflowDirectorContractTests(unittest.TestCase):
             "route_pool_handoff",
         ):
             self.assertIn(f"stage_id: {stage}", state)
+        self.assertTrue(
+            (SKILL_ROOT / "references" / "business-validated-route-closure-contract.md").is_file()
+        )
+        self.assertTrue(
+            (SKILL_ROOT / "assets" / "business-route-closure-receipt.template.json").is_file()
+        )
         for recurring_stage in (
             "stage_id: direction_decision",
             "stage_id: candidate_development",

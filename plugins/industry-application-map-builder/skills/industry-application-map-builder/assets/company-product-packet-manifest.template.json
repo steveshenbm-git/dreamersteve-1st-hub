@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "company_product_packet_manifest": {
+    "manifest_id": null,
+    "company_id": null,
+    "company_library_root": null,
+    "facts_path": null,
+    "facts_sha256": null,
+    "product_scopes": [],
+    "packets": [],
+    "allowed_use": [
+      "internal_industry_application_mapping"
+    ],
+    "frozen_at": null
+  }
+}

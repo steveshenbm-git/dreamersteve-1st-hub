@@ -23,6 +23,8 @@ LIST_FIELDS = {
     "unresolved_conditions",
     "route_candidate_ids",
     "evidence_ids",
+    "allowed_downstream_actions",
+    "prohibited_downstream_actions",
 }
 
 
@@ -92,17 +94,19 @@ def main() -> int:
     routes = [normalize(row) for row in read_sheet_records(workbook, "路线候选")]
     dispositions = [normalize(row) for row in read_sheet_records(workbook, "排除暂缓")]
     coverage = [normalize(row) for row in read_sheet_records(workbook, "覆盖台账")]
+    closures = [normalize(row) for row in read_sheet_records(workbook, "路线闭合")]
     input_snapshot = read_sheet_records(workbook, "公司与输入")[0]
     producer_snapshot = {
         "company_map_path": str(workbook.resolve().relative_to(map_root)),
         "company_map_sha256": sha256(workbook),
     }
     packet = {
-        "schema_version": "1.0",
+        "schema_version": "1.1",
         "company_route_pool_packet": {
             "export_id": export_id,
             "company_id": args.company_id,
-            "product_scope": company["product_scope"],
+            "product_scope": company.get("product_scope", ""),
+            "product_scopes": company.get("product_scopes") or [company.get("product_scope", "")],
             "input_snapshot": input_snapshot,
             "producer_snapshot": producer_snapshot,
             "declared_scope": {
@@ -114,6 +118,7 @@ def main() -> int:
                 row for row in routes if row.get("map_route_status") in {"路线候选", "待外部核实"}
             ],
             "route_leads": [row for row in routes if row.get("map_route_status") == "路线线索"],
+            "route_closures": closures,
             "deferred_routes": [row for row in routes if row.get("map_route_status") == "暂缓"],
             "excluded_routes": [row for row in routes if row.get("map_route_status") == "排除"] + dispositions,
             "coverage_summary": coverage,
@@ -154,7 +159,7 @@ def main() -> int:
             "input_snapshot": input_snapshot,
             "producer_snapshot": producer_snapshot,
             "route_candidate_ids": route_ids,
-            "validator_version": "1.1",
+            "validator_version": "1.2",
             "validated_at": date.today().isoformat(),
             "state": "current",
             "invalidation_reason": None,

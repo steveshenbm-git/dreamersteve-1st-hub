@@ -1,4 +1,4 @@
 interface:
   display_name: "行业应用地图构建"
-  short_description: "0.4.0-beta.6完整语义交接与动态分母的R4校准"
-  default_prompt: "使用 $industry-application-map-builder 的同名0.4.0-beta.6技能：新RC2使用content_first R4；抽样来源与覆盖类别不得携带正负真值，正式正例、反例和未决例只从接受的独立裁决记录推导并冻结编号集合与哈希，真值重开必须使旧评分失效。向流程控制器返回完整语义合同；平台审计与内容PASS分开，不得声称EFFECTIVE、自动启动全量或释放下游。"
+  short_description: "多产品地图、业务路线闭合与R4内容校准"
+  default_prompt: "使用 $industry-application-map-builder 维护产品中性行业应用地图：多产品事实必须分范围冻结；对业务已确认行业，只在独立应用证据和路线闭合通过后释放有限方向验证，不改变全局R4状态，不声称产品适配或授权客户扫描。"

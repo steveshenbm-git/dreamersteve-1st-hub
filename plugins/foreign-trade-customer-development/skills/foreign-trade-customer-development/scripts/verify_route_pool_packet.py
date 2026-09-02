@@ -10,8 +10,7 @@ from pathlib import Path
 from typing import Any
 
 
-SNAPSHOT_FIELDS = (
-    ("product_packet_path", "product_packet_sha256"),
+BASE_SNAPSHOT_FIELDS = (
     ("facts_path", "facts_sha256"),
     ("shared_taxonomy_path", "taxonomy_sha256"),
     ("shared_application_base_path", "application_base_sha256"),
@@ -143,7 +142,7 @@ def verify(
         errors.append(
             diagnostic("ROUTE_EXPORT_NOT_CURRENT", str(record.get("state")), registry_path)
         )
-    if record.get("validator_version") != "1.1":
+    if record.get("validator_version") not in {"1.1", "1.2"}:
         errors.append(
             diagnostic(
                 "ROUTE_EXPORT_VALIDATOR_VERSION_UNSUPPORTED",
@@ -165,7 +164,25 @@ def verify(
         snapshot = snapshot if isinstance(snapshot, dict) else {}
     if snapshot.get("company_id") != company_id:
         errors.append(diagnostic("CROSS_COMPANY_INPUT_SNAPSHOT", company_id, packet_path))
-    for path_field, hash_field in SNAPSHOT_FIELDS:
+    product_input_mode = snapshot.get("product_input_mode") or "single_packet_legacy"
+    if product_input_mode == "single_packet_legacy":
+        snapshot_fields = (("product_packet_path", "product_packet_sha256"),) + BASE_SNAPSHOT_FIELDS
+    elif product_input_mode == "multi_packet_manifest_v1":
+        snapshot_fields = (
+            ("product_packet_manifest_path", "product_packet_manifest_sha256"),
+        ) + BASE_SNAPSHOT_FIELDS
+        product_scopes = packet.get("product_scopes")
+        if (
+            not isinstance(product_scopes, list)
+            or not product_scopes
+            or any(not isinstance(item, str) or not item for item in product_scopes)
+            or len(product_scopes) != len(set(product_scopes))
+        ):
+            errors.append(diagnostic("ROUTE_PACKET_PRODUCT_SCOPES_INVALID", export_id, packet_path))
+    else:
+        snapshot_fields = BASE_SNAPSHOT_FIELDS
+        errors.append(diagnostic("PRODUCT_INPUT_MODE_UNSUPPORTED", str(product_input_mode), packet_path))
+    for path_field, hash_field in snapshot_fields:
         source_value = snapshot.get(path_field)
         expected_hash = snapshot.get(hash_field)
         if not isinstance(source_value, str) or not source_value:
@@ -217,22 +234,80 @@ def verify(
             )
 
     selected_route = None
+    selected_route_mode = None
+    allowed_downstream_actions: list[str] = []
+    prohibited_claims: list[str] = []
     if route_candidate_id:
         route_candidates = packet.get("route_candidates")
         if not isinstance(route_candidates, list):
             route_candidates = []
-        matches = [
+        route_leads = packet.get("route_leads")
+        if not isinstance(route_leads, list):
+            route_leads = []
+        candidate_matches = [
             route
             for route in route_candidates
             if isinstance(route, dict)
             and route.get("route_candidate_id") == route_candidate_id
         ]
-        if len(matches) != 1 or matches[0].get("map_route_status") != "路线候选":
+        lead_matches = [
+            route
+            for route in route_leads
+            if isinstance(route, dict)
+            and route.get("route_candidate_id") == route_candidate_id
+        ]
+        if len(candidate_matches) == 1 and not lead_matches and candidate_matches[0].get("map_route_status") == "路线候选":
+            selected_route = candidate_matches[0]
+            selected_route_mode = "full_direction_compilation"
+            allowed_downstream_actions = ["compile_direction"]
+            prohibited_claims = ["scan_candidates_without_salesperson_decision"]
+        elif len(lead_matches) == 1 and not candidate_matches:
+            lead = lead_matches[0]
+            if lead.get("customer_discovery_readiness") != "ready_for_limited_direction_validation":
+                errors.append(diagnostic("SELECTED_ROUTE_NOT_ELIGIBLE", route_candidate_id, packet_path))
+            elif (
+                lead.get("technical_match_state") in {"violated", "conflicted"}
+                or lead.get("regulatory_qualification_state") in {"violated", "conflicted"}
+                or bool(lead.get("known_limit_conflict"))
+            ):
+                errors.append(diagnostic("LIMITED_ROUTE_QUALIFICATION_BLOCKED", route_candidate_id, packet_path))
+            elif lead.get("evidence_state") != "supported":
+                errors.append(diagnostic("LIMITED_ROUTE_APPLICATION_EVIDENCE_INSUFFICIENT", route_candidate_id, packet_path))
+            else:
+                closures = packet.get("route_closures")
+                if not isinstance(closures, list):
+                    closures = []
+                closure_matches = [
+                    item for item in closures
+                    if isinstance(item, dict)
+                    and item.get("closure_id") == lead.get("business_route_closure_id")
+                    and item.get("route_candidate_id") == route_candidate_id
+                ]
+                if len(closure_matches) != 1 or closure_matches[0].get("review_result") != "PASS":
+                    errors.append(diagnostic("LIMITED_ROUTE_CLOSURE_NOT_ACCEPTED", route_candidate_id, packet_path))
+                else:
+                    closure = closure_matches[0]
+                    actions = closure.get("allowed_downstream_actions")
+                    prohibitions = closure.get("prohibited_downstream_actions")
+                    if not isinstance(actions, list) or "compile_and_validate_direction" not in actions:
+                        errors.append(diagnostic("LIMITED_ROUTE_ACTION_NOT_ALLOWED", route_candidate_id, packet_path))
+                    elif not isinstance(prohibitions, list) or not {
+                        "recommend_product",
+                        "claim_product_fit",
+                        "claim_regulatory_compliance",
+                        "scan_candidates",
+                    }.issubset(set(prohibitions)):
+                        errors.append(diagnostic("LIMITED_ROUTE_PROHIBITIONS_INCOMPLETE", route_candidate_id, packet_path))
+                    else:
+                        selected_route = lead
+                        selected_route_mode = "limited_direction_validation"
+                        allowed_downstream_actions = list(actions)
+                        prohibited_claims = list(prohibitions)
+        else:
             errors.append(
                 diagnostic("SELECTED_ROUTE_NOT_ELIGIBLE", route_candidate_id, packet_path)
             )
-        else:
-            selected_route = matches[0]
+        if selected_route is not None:
             if selected_route.get("company_id") != company_id:
                 errors.append(
                     diagnostic("CROSS_COMPANY_SELECTED_ROUTE", route_candidate_id, packet_path)
@@ -259,6 +334,10 @@ def verify(
         "input_snapshot": snapshot,
         "producer_snapshot": producer_snapshot,
         "selected_route": selected_route,
+        "selected_route_mode": selected_route_mode,
+        "allowed_downstream_actions": allowed_downstream_actions,
+        "prohibited_claims": prohibited_claims,
+        "salesperson_scan_authorization": "blocked",
     }
 
 
@@ -267,13 +346,20 @@ def main() -> int:
     parser.add_argument("packet", type=Path)
     parser.add_argument("--map-root", type=Path, required=True)
     parser.add_argument("--company-id", required=True)
+    parser.add_argument("--route-id")
     parser.add_argument("--route-candidate-id")
     args = parser.parse_args()
+    if (
+        args.route_id
+        and args.route_candidate_id
+        and args.route_id != args.route_candidate_id
+    ):
+        parser.error("--route-id and --route-candidate-id must identify the same route")
     report = verify(
         args.packet,
         args.map_root,
         args.company_id,
-        args.route_candidate_id,
+        args.route_id or args.route_candidate_id,
     )
     print(json.dumps(report, ensure_ascii=False, indent=2))
     return 0 if report["status"] == "PASS" else 1

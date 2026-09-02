@@ -510,6 +510,12 @@ raw_candidate_batch:
 
 复核不得生成综合分、自动排名或自动方向决定。候选数量不证明方向有效；没有发现候选也不证明市场不存在。
 
+## 业务路线闭合回执
+
+对业务员已确认的命名行业，只接受通过 `scripts/validate_business_route_closure.py` 的 `business_route_closure_receipt_v1`。回执必须绑定当前路线包与方向验证包哈希，并同时保持 `global_semantic_stage_effect = none`、`salesperson_scan_authorization = blocked` 和唯一允许动作 `present_direction_for_salesperson_scan_decision`。
+
+这类回执是 `route_instance` 覆盖层，不得写成 `company_foundation` 阶段PASS，不得释放其他路线，不得视为产品适配、合规或客户扫描证据。精确字段与失败条件见 [business-validated-route-closure-contract.md](business-validated-route-closure-contract.md)。
+
 ## 共享输入过期
 
 下列任一状态都创建或更新 `05-异常与风险` 记录，并阻断受影响的路线选择、方向编译或候选采集：

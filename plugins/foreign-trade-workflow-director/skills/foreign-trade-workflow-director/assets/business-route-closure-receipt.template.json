@@ -1,0 +1,26 @@
+{
+  "business_route_closure_receipt_v1": {
+    "contract_version": "1.0",
+    "closure_receipt_id": null,
+    "company_id": null,
+    "route_id": null,
+    "business_industry_id": null,
+    "route_packet_reference": null,
+    "route_packet_sha256": null,
+    "direction_validation_reference": null,
+    "direction_validation_sha256": null,
+    "route_scoped_application_closure_state": "PASS",
+    "global_semantic_stage_effect": "none",
+    "customer_discovery_readiness": "ready_for_limited_direction_validation",
+    "salesperson_scan_authorization": "blocked",
+    "allowed_next_actions": [
+      "present_direction_for_salesperson_scan_decision"
+    ],
+    "prohibited_next_actions": [
+      "scan_candidates",
+      "claim_product_fit",
+      "claim_regulatory_compliance"
+    ],
+    "validated_at": null
+  }
+}

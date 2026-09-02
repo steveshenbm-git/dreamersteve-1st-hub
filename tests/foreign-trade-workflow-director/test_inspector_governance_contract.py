@@ -32,7 +32,7 @@ class InspectorGovernanceContractTests(unittest.TestCase):
         manifest = json.loads(
             (PLUGIN_ROOT / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8")
         )
-        self.assertEqual(manifest["version"], "0.5.0-beta.1")
+        self.assertEqual(manifest["version"], "0.5.0-beta.2")
         self.assertIn("inspector-governance", manifest["keywords"])
         skill = (SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
         frontmatter = skill.split("---", 2)[1]
@@ -80,11 +80,11 @@ class InspectorGovernanceContractTests(unittest.TestCase):
     def test_existing_templates_bind_null_governance_references(self):
         state = load_yaml(SKILL_ROOT / "assets" / "company-workflow-state.template.yaml")["company_workflow_state"]
         replication = load_yaml(SKILL_ROOT / "assets" / "workflow-replication-manifest.template.yaml")["workflow_replication_manifest"]
-        self.assertEqual(state["blueprint_version"], "0.5.0-beta.1")
+        self.assertEqual(state["blueprint_version"], "0.5.0-beta.2")
         self.assertIsNone(state["workflow_governance_registry_reference"])
         self.assertIsNone(state["workflow_governance_registry_sha256"])
         self.assertIsNone(state["latest_inspector_preflight_reference"])
-        self.assertEqual(replication["blueprint_version"], "0.5.0-beta.1")
+        self.assertEqual(replication["blueprint_version"], "0.5.0-beta.2")
         self.assertIsNone(replication["workflow_governance_registry_reference"])
         self.assertIsNone(replication["workflow_governance_registry_sha256"])
 

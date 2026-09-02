@@ -9,7 +9,7 @@ description: Use when a company needs to audit, build, resume, or reproduce the 
 
 For a newly prepared RC2 research contract, use `content_first` as the default semantic route. It requires a content envelope, unchanged raw-response hash, visible-input hash, source/truth comparison, itemized scorecard, unknown items, method arm, and separate `platform_audit_state`. Platform run IDs, platform time, or strong model identity are not content-PASS prerequisites and their absence cannot justify deleting a scoreable raw answer.
 
-Use `strict_audit` when it is explicitly selected or a legacy beta.3 contract has no mode field. Preserve its `INCONCLUSIVE / EFFECTIVE / NOT_EFFECTIVE` semantics and every identity, transport, receipt, and admissibility gate unchanged. `CONTENT_CALIBRATION_PASS` is not strict `EFFECTIVE`; it yields only a check for explicit full-scope authorization. `RESEARCH_ONLY_BLOCKED` always prohibits shared-base writes, company matching, route handoff, candidate work, customer work, and sending.
+Use `strict_audit` when it is explicitly selected or a legacy beta.3 contract has no mode field. Preserve its `INCONCLUSIVE / EFFECTIVE / NOT_EFFECTIVE` semantics and every identity, transport, receipt, and admissibility gate unchanged. `CONTENT_CALIBRATION_PASS` is not strict `EFFECTIVE`; it yields only a check for explicit full-scope authorization. `RESEARCH_ONLY_BLOCKED` always prohibits global semantic research from being promoted into shared-base writes, company-foundation PASS, unrestricted route release, candidate work, customer work, or sending. A separately validated business-route closure may expose one named route only for limited direction validation; it has `global_semantic_stage_effect = none` and does not change that global block.
 
 ## 核心角色
 
@@ -22,7 +22,8 @@ Use `strict_audit` when it is explicitly selected or a legacy beta.3 contract ha
 1. [workflow-blueprint.md](references/workflow-blueprint.md)
 2. [workflow-and-packet-contracts.md](references/workflow-and-packet-contracts.md)
 3. 进入 `candidate_development` 或 `customer_operations` 时读取 [customer-flow-transition-contract.md](references/customer-flow-transition-contract.md)。
-4. 当前任务的会话 `memory.md`，并优先读取其中现行的 `inspector_preflight` / 检察者身份与处置规则；没有可核对的会话记忆时记为 `UNVERIFIED`，不得假装已恢复。
+4. 进入 `business_route_closure_review` 时读取 [business-validated-route-closure-contract.md](references/business-validated-route-closure-contract.md)。
+5. 当前任务的会话 `memory.md`，并优先读取其中现行的 `inspector_preflight` / 检察者身份与处置规则；没有可核对的会话记忆时记为 `UNVERIFIED`，不得假装已恢复。
 
 检察者预检必须先于任何跨任务指挥或 `specialist_handoff`。不影响当前流程方向和证据有效性的缺陷先写入 `deferred_findings_reference` 后继续；需要小幅调整当前动作才能继续的，记录调整及依据后继续；只有会破坏真值、盲测隔离、哈希/合同绑定、来源时序、拒绝覆盖或授权边界的严重缺陷才暂停并转修复。检察者不得以“先跑通”为由绕过这些硬门。
 
@@ -52,6 +53,8 @@ Use `strict_audit` when it is explicitly selected or a legacy beta.3 contract ha
 
 前七段属于公司级 `company_foundation`；`direction_decision` 按 `route_instance`、`candidate_development` 按 `direction_instance`、`customer_operations` 按 `customer_thread` 循环记录。一条路线或一个客户完成，不能把整个公司的后续阶段永久标为完成。
 
+已确认行业的“双向汇合”是一个另行登记的 `route_instance` 覆盖层，不伪造公司级阶段PASS。它只能在业务范围、产品中性应用闭合、有限方向验证和跨技能回执都通过时，把该路线呈现给业务员做扫描决定。它不释放其他路线。
+
 当行业分类骨架已经存在，但RC2研究合同、方法校准、全量浅筛、触发节点证据处置或反向审计任一未通过时，`industry_semantic_expansion` 就是最早未完成阶段。此时必须阻断旧公司地图、旧路线包和客户搜索，不能因目录里已有后期文件而越级。
 
 ## 路由
@@ -64,6 +67,7 @@ Use `strict_audit` when it is explicitly selected or a legacy beta.3 contract ha
 | `company_framework_bootstrap` | 用户要为新公司搭建完整框架，且已明确公司边界并授权创建空结构 | 创建独立 `company_id`、空目录/登记和状态文件，重开验证后停止；不得带入另一家公司数据 |
 | `framework_resume` | 已有公司工作区需要恢复上下文或继续 | 从蓝图和实际产物重建 `company_workflow_state`，只路由到最早未完成或已过期阶段 |
 | `specialist_handoff` | 当前阶段必须由专业技能执行 | 生成一个有边界的 `specialist_handoff_packet`；收到可追溯返回包并验收前不进入下一阶段 |
+| `business_route_closure_review` | 业务员已确认一个行业范围，地图和客户开发需以路线实例方式补齐中间证据 | 校验 `business_route_closure_receipt_v1`；只允许呈现方向给业务员决定，不改变全局语义阶段且不扫描客户 |
 | `framework_replication_plan` | 用户要在第二家公司或另一个账号复刻流程 | 生成 `workflow_replication_manifest` 与缺失依赖报告；安装、传输和目标账号写入仍需单独授权 |
 | `business_decision_record` | 业务员明确给出路线、客户、跟进、草稿或风险字段决定 | 生成并在明确授权后执行 `workbench_update_packet`；保存后重开验证并停止 |
 
@@ -133,7 +137,7 @@ CONTENT_CALIBRATION_FAIL 或 CONTENT_CALIBRATION_INCOMPLETE → content_first_ca
 
 只有真实、非空且符合冻结合同的哈希和闭集状态才能越过对应门。`full_screening_authorization` 布尔值或 `content_full_screening_state` 自报不能授权；只有授权引用、独立receipt引用与真实SHA-256、冻结末端范围SHA-256全部匹配，并由Task 8 gate验证绑定当前最终合同、校准报告和末端范围后，才能进入 `AUTHORIZED_NOT_STARTED`。静态结构测试、YAML可解析、插件版本正确或 `platform_audit_state = PASS` 都不得写成 `CONTENT_CALIBRATION_PASS`。平台审计缺失不抹消已完整保存的可评分内容；但内容哈希、真值、评分卡或receiver证据缺失必须停在内容门。
 
-No controller action may change `RESEARCH_ONLY_BLOCKED` to a downstream PASS. A future bridge from content-first research into the official workflow requires a separately authored migration contract and user authorization; this skill does not implement that bridge.
+No controller action may change `RESEARCH_ONLY_BLOCKED` to a global downstream PASS. The only route-scoped exception is `business_route_closure_review`: it requires a separately authored, hash-bound receipt and user-authorized business scope, sets `global_semantic_stage_effect = none`, and stops before candidate scanning. It is not a migration of content-first research into the official shared base.
 
 仅当 `semantic_evaluation_mode = strict_audit` 或历史 beta.3 合同确实没有模式字段时，使用下列兼容路由：
 
@@ -161,7 +165,7 @@ strict_audit的 semantic_method_validation_state 不是 EFFECTIVE → semantic_m
 
 - `company-product-knowledge-builder`：公司身份边界、来源接收、产品事实库和受控产品事实包；不得自行推断行业路线。
 - `industry-application-map-builder`：官方行业骨架、RC2方法合同与校准、产品中立浅筛/证据/反向审计、公司能力匹配、覆盖复核和路线池交接；它不搜索具体客户。
-- `foreign-trade-customer-development`：路线编译与验证、候选采集任务、原始批次接收、独立候选复核、完整背调和沟通前交接。
+- `foreign-trade-customer-development`：完整路线编译、业务闭合路线的有限方向验证、候选采集任务、原始批次接收、独立候选复核、完整背调和沟通前交接。
 - `foreign-trade-customer-operations`：客户线程验收、实际互动接收、客户状态、下一动作、商业边界和 `communication_brief_packet`；不生成任何对外正文。
 - `foreign-trade-customer-communication`：只基于已验收运营简报生成首封、未回复跟进、回复、账户沟通或敏感沟通候选；不得决定客户状态、商业条件、批准或发送。
 - 获批准的采集执行器：只执行 `candidate_collection_task` 并追加 `raw_candidate_batch`；不判断客户合格，不写业务工作簿。

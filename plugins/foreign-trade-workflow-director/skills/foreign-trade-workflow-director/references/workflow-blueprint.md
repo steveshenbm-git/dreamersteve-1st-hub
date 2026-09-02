@@ -2,7 +2,7 @@
 
 `blueprint_id: foreign-trade-complete-workflow`
 
-`blueprint_version: 0.5.0-beta.1`
+`blueprint_version: 0.5.0-beta.2`
 
 ## 判定原则
 
@@ -37,6 +37,8 @@
 - `framework_review` 按一次 `review_cycle` 保存，只在重大失败、依赖变化或已授权里程碑触发；没有新复盘任务本身不阻断下一条业务实例。
 
 完整行业骨架不等于行业语义层完成。骨架中的 `not_expanded` 只是旧式覆盖登记，不能代替 RC2 的可审计筛查记录。正式流程覆盖范围必须是 `full registered terminal-node scope`；每个节点需要可审计浅筛，但并非每个节点都强制深度展开。只要还有 `not_screened`、未处置触发节点或未通过反向审计，流程必须停在 `industry_semantic_expansion`，旧公司地图、路线池和客户数据均不能越过这个门。
+
+上述是公司基础层的全局门。业务员已确认的某一命名行业可进入 `business_route_closure_review` 覆盖层，但不将阶段5–7改为PASS。覆盖层必须哈希绑定业务范围、产品中性应用闭合、有限方向验证和跨技能回执；`global_semantic_stage_effect = none`，只允许将该方向呈现给业务员，客户扫描仍需人工另行授权。
 
 用户可以明确授权一个 `pilot` 范围来验证字段和方法，但 pilot 只能标记为局部验证，不能把 `industry_semantic_expansion` 的全量门记为 PASS，也不能据此声称已经完成全行业筛查。
 
@@ -91,14 +93,14 @@ content_first_contract_prepare
 | Skill | 蓝图要求的能力 |
 |---|---|
 | `company-product-knowledge-builder` | 公司隔离、来源接收、产品事实维护、受控产品事实包 |
-| `industry-application-map-builder` | 官方分类骨架、产品中立行业语义展开、公司匹配、覆盖复核、路线池导出 |
-| `foreign-trade-customer-development` | 路线编译/验证、候选任务、原始批次接收、独立复核、背调和沟通前交接 |
+| `industry-application-map-builder` | 官方分类骨架、产品中立行业语义展开、多产品公司匹配、业务路线应用闭合、覆盖复核、路线池导出 |
+| `foreign-trade-customer-development` | 完整路线编译、有限方向验证、候选任务、原始批次接收、独立复核、背调和沟通前交接 |
 | `foreign-trade-customer-operations` | 客户线程、实际互动、状态、下一动作、商业边界和沟通简报；不生成对外正文 |
 | `foreign-trade-customer-communication` | 只基于已验收沟通简报生成对外候选正文；不决定客户状态、商业条件、批准或发送 |
 
 只看到技能名称或安装目录不能证明能力兼容。`environment_audit` 必须核对实际版本、技能合同、来源市场和所需路由；没有兼容矩阵或直接证据时记为 `UNVERIFIED`。同一技能名来自两个已启用市场时记为 `FAIL`，在用户单独选定唯一来源并授权迁移前不安装、卸载或继续路由。
 
-当前待验证候选集固定为：`company-product-knowledge-builder 0.1.0`、`industry-application-map-builder 0.4.0-beta.6`、`foreign-trade-customer-development 0.3.0-beta.1`、`foreign-trade-customer-operations 0.3.0-beta.1`、`foreign-trade-customer-communication 0.1.0-beta.1`和 `foreign-trade-workflow-director 0.5.0-beta.1`。其中任一版本不符只能记为 `UNVERIFIED`。接口集成通过只证明字段、哈希、路由和停止门可交接，不证明业务技能的真实效果。
+当前待验证候选集固定为：`company-product-knowledge-builder 0.1.0`、`industry-application-map-builder 0.4.0-beta.7`、`foreign-trade-customer-development 0.3.0-beta.2`、`foreign-trade-customer-operations 0.3.0-beta.1`、`foreign-trade-customer-communication 0.1.0-beta.1`和 `foreign-trade-workflow-director 0.5.0-beta.2`。其中任一版本不符只能记为 `UNVERIFIED`。接口集成通过只证明字段、哈希、路由和停止门可交接，不证明业务技能的真实效果。
 
 `customer_operations` 是业务大阶段，不等于一个技能独占全部工作。它的客户线程内部固定按 `DEVELOPMENT_READY → THREAD_ACCEPTED / INTERACTION_ACCEPTED → OPERATION_DECISION_READY → COMMUNICATION_BRIEF_ACCEPTED → COMMUNICATION_CANDIDATE_READY → CANDIDATE_REVIEW_PENDING` 前进，精确转换以 `customer-flow-transition-registry.v1.json` 为准。控制器只接受组合验证器 PASS 的一段交接；不得把后段文件存在、草稿生成或人工批准当作前段已经完成，更不得把批准写成实际发送。
 

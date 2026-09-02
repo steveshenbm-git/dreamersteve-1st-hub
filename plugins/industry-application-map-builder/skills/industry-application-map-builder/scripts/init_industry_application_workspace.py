@@ -113,34 +113,104 @@ def init_company(args: argparse.Namespace) -> int:
         return fail("MAP_ROOT_INVALID", str(map_root))
     if not args.company_id:
         return fail("COMPANY_ID_REQUIRED", "--company-id is required")
-    if not args.company_library_root or not args.product_packet or not args.product_scope:
+    if not args.company_library_root:
         return fail(
             "COMPANY_INPUT_REQUIRED",
-            "--company-library-root, --product-packet, and --product-scope are required",
+            "--company-library-root is required",
+        )
+
+    legacy_input = bool(args.product_packet or args.product_scope)
+    manifest_input = bool(args.product_packet_manifest)
+    if legacy_input == manifest_input:
+        return fail(
+            "PRODUCT_INPUT_MODE_INVALID",
+            "provide either --product-packet with --product-scope, or --product-packet-manifest",
+        )
+    if legacy_input and (not args.product_packet or not args.product_scope):
+        return fail(
+            "COMPANY_INPUT_REQUIRED",
+            "--product-packet and --product-scope are required together",
         )
 
     company_library = args.company_library_root.resolve()
-    packet_path = args.product_packet.resolve()
     facts_path = company_library / "02-事实库" / "facts.json"
     company_file = company_library / "company.json"
-    for required in (company_file, packet_path, facts_path):
+    for required in (company_file, facts_path):
         if not required.is_file():
             return fail("COMPANY_INPUT_MISSING", str(required))
 
     company = read_json(company_file)
-    packet = read_json(packet_path).get("product_development_fact_packet", {})
     facts = read_json(facts_path)
-    if any(
-        value != args.company_id
-        for value in (
-            company.get("company_id"),
-            packet.get("company_id"),
-            facts.get("company_id"),
-        )
-    ):
+    if company.get("company_id") != args.company_id or facts.get("company_id") != args.company_id:
         return fail("CROSS_COMPANY_INPUT", args.company_id)
-    if "internal_industry_application_mapping" not in packet.get("allowed_use", []):
-        return fail("PRODUCT_PACKET_USE_NOT_ALLOWED", str(packet_path))
+
+    packet_path: Path | None = None
+    packet_sha256 = ""
+    manifest_path: Path | None = None
+    manifest_sha256 = ""
+    product_scope = ""
+    product_scopes: list[str] = []
+    product_input_mode = "single_packet_legacy"
+    if manifest_input:
+        manifest_path = args.product_packet_manifest.resolve()
+        if not manifest_path.is_file():
+            return fail("COMPANY_INPUT_MISSING", str(manifest_path))
+        manifest_document = read_json(manifest_path)
+        manifest = manifest_document.get("company_product_packet_manifest", {})
+        if not isinstance(manifest, dict) or manifest.get("company_id") != args.company_id:
+            return fail("PRODUCT_PACKET_MANIFEST_INVALID", str(manifest_path))
+        if Path(str(manifest.get("company_library_root", ""))).resolve() != company_library:
+            return fail("PRODUCT_PACKET_MANIFEST_LIBRARY_MISMATCH", str(manifest_path))
+        if Path(str(manifest.get("facts_path", ""))).resolve() != facts_path.resolve():
+            return fail("PRODUCT_PACKET_MANIFEST_FACTS_MISMATCH", str(manifest_path))
+        if manifest.get("facts_sha256") != sha256_file(facts_path):
+            return fail("PRODUCT_PACKET_MANIFEST_FACTS_STALE", str(manifest_path))
+        product_scopes = manifest.get("product_scopes", [])
+        packets = manifest.get("packets", [])
+        if (
+            not isinstance(product_scopes, list)
+            or not product_scopes
+            or len(product_scopes) != len(set(product_scopes))
+            or not isinstance(packets, list)
+            or [item.get("product_scope") for item in packets if isinstance(item, dict)] != product_scopes
+        ):
+            return fail("PRODUCT_PACKET_MANIFEST_INVALID", str(manifest_path))
+        for item in packets:
+            current_packet_path = Path(str(item.get("product_packet_path", ""))).resolve()
+            if not current_packet_path.is_file() or item.get("product_packet_sha256") != sha256_file(current_packet_path):
+                return fail("PRODUCT_PACKET_MANIFEST_PACKET_STALE", str(current_packet_path))
+            current_packet = read_json(current_packet_path).get("product_development_fact_packet", {})
+            if (
+                current_packet.get("company_id") != args.company_id
+                or current_packet.get("product_family") != item.get("product_scope")
+                or "internal_industry_application_mapping" not in current_packet.get("allowed_use", [])
+            ):
+                return fail("PRODUCT_PACKET_MANIFEST_PACKET_INVALID", str(current_packet_path))
+        manifest_sha256 = sha256_file(manifest_path)
+        product_input_mode = "multi_packet_manifest_v1"
+    else:
+        packet_path = args.product_packet.resolve()
+        if not packet_path.is_file():
+            return fail("COMPANY_INPUT_MISSING", str(packet_path))
+        packet = read_json(packet_path).get("product_development_fact_packet", {})
+        if packet.get("company_id") != args.company_id:
+            return fail("CROSS_COMPANY_INPUT", args.company_id)
+        if "internal_industry_application_mapping" not in packet.get("allowed_use", []):
+            return fail("PRODUCT_PACKET_USE_NOT_ALLOWED", str(packet_path))
+        product_scope = args.product_scope
+        product_scopes = [product_scope]
+        packet_sha256 = sha256_file(packet_path)
+
+    business_register_path = args.business_industry_register.resolve() if args.business_industry_register else None
+    business_register_sha256 = ""
+    if business_register_path:
+        if not business_register_path.is_file():
+            return fail("COMPANY_INPUT_MISSING", str(business_register_path))
+        register_document = read_json(business_register_path)
+        register = register_document.get("business_validated_industry_register", register_document)
+        if not isinstance(register, dict) or register.get("company_id") != args.company_id:
+            return fail("BUSINESS_INDUSTRY_REGISTER_INVALID", str(business_register_path))
+        business_register_sha256 = sha256_file(business_register_path)
 
     company_root = map_root / "04-公司地图" / args.company_id
     if company_root.exists():
@@ -156,19 +226,25 @@ def init_company(args: argparse.Namespace) -> int:
     replacements = {
         "[[COMPANY_ID]]": args.company_id,
         "[[COMPANY_LIBRARY_ROOT]]": str(company_library),
-        "[[PRODUCT_PACKET_PATH]]": str(packet_path),
-        "[[PRODUCT_PACKET_SHA256]]": sha256_file(packet_path),
+        "[[PRODUCT_PACKET_PATH]]": str(packet_path) if packet_path else "",
+        "[[PRODUCT_PACKET_SHA256]]": packet_sha256,
         "[[FACTS_PATH]]": str(facts_path),
         "[[FACTS_SHA256]]": sha256_file(facts_path),
         "[[SHARED_TAXONOMY_PATH]]": str(taxonomy),
         "[[TAXONOMY_SHA256]]": sha256_file(taxonomy),
         "[[SHARED_APPLICATION_BASE_PATH]]": str(application),
         "[[APPLICATION_BASE_SHA256]]": sha256_file(application),
-        "[[PRODUCT_SCOPE]]": args.product_scope,
+        "[[PRODUCT_SCOPE]]": product_scope,
         "[[DECLARED_TAXONOMY_SCOPE]]": args.declared_taxonomy_scope,
         "[[DECLARED_APPLICATION_SCOPE]]": args.declared_application_scope,
         "[[ALLOWED_SOURCE_SCOPE]]": args.allowed_source_scope,
         "[[INITIALIZED_AT]]": today,
+        "[[PRODUCT_INPUT_MODE]]": product_input_mode,
+        "[[PRODUCT_PACKET_MANIFEST_PATH]]": str(manifest_path) if manifest_path else "",
+        "[[PRODUCT_PACKET_MANIFEST_SHA256]]": manifest_sha256,
+        "[[PRODUCT_SCOPES]]": json.dumps(product_scopes, ensure_ascii=False, separators=(",", ":")),
+        "[[BUSINESS_INDUSTRY_REGISTER_PATH]]": str(business_register_path) if business_register_path else "",
+        "[[BUSINESS_INDUSTRY_REGISTER_SHA256]]": business_register_sha256,
     }
     replace_xlsx_tokens(workbook, replacements)
     write_json(company_root / "review-log.json", {"schema_version": "1.0", "reviews": []})
@@ -186,13 +262,19 @@ def init_company(args: argparse.Namespace) -> int:
             "company_id": args.company_id,
             "company_map_path": str(workbook.relative_to(map_root)),
             "company_library_root": str(company_library),
-            "product_packet_path": str(packet_path),
-            "product_packet_sha256": sha256_file(packet_path),
+            "product_input_mode": product_input_mode,
+            "product_packet_path": str(packet_path) if packet_path else "",
+            "product_packet_sha256": packet_sha256,
+            "product_packet_manifest_path": str(manifest_path) if manifest_path else "",
+            "product_packet_manifest_sha256": manifest_sha256,
             "facts_path": str(facts_path),
             "facts_sha256": sha256_file(facts_path),
             "taxonomy_sha256": sha256_file(taxonomy),
             "application_base_sha256": sha256_file(application),
-            "product_scope": args.product_scope,
+            "product_scope": product_scope,
+            "product_scopes": product_scopes,
+            "business_industry_register_path": str(business_register_path) if business_register_path else "",
+            "business_industry_register_sha256": business_register_sha256,
             "declared_taxonomy_scope": args.declared_taxonomy_scope,
             "declared_application_scope": args.declared_application_scope,
             "allowed_source_scope": args.allowed_source_scope,
@@ -213,6 +295,8 @@ def parser() -> argparse.ArgumentParser:
     result.add_argument("--company-library-root", type=Path)
     result.add_argument("--product-packet", type=Path)
     result.add_argument("--product-scope")
+    result.add_argument("--product-packet-manifest", type=Path)
+    result.add_argument("--business-industry-register", type=Path)
     result.add_argument("--taxonomy-system", default="UNASSIGNED")
     result.add_argument("--taxonomy-version", default="UNASSIGNED")
     result.add_argument("--taxonomy-source-url", default="")

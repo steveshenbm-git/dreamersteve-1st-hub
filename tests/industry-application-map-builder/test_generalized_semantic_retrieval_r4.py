@@ -2393,9 +2393,9 @@ class GeneralizedSemanticRetrievalR4Tests(unittest.TestCase):
             (DIRECTOR_PLUGIN / ".codex-plugin/plugin.json").read_text()
         )
         self.assertEqual(map_manifest["name"], "industry-application-map-builder")
-        self.assertEqual(map_manifest["version"], "0.4.0-beta.6")
+        self.assertEqual(map_manifest["version"], "0.4.0-beta.7")
         self.assertEqual(director_manifest["name"], "foreign-trade-workflow-director")
-        self.assertEqual(director_manifest["version"], "0.4.0-beta.2")
+        self.assertEqual(director_manifest["version"], "0.5.0-beta.2")
         for contract_template in CONTRACT_TEMPLATES:
             with self.subTest(contract_template=contract_template.name):
                 contract = json.loads(contract_template.read_text())["semantic_research_contract"]

@@ -20,8 +20,12 @@
 - `technical_match_state`: `satisfied / violated / unknown / conflicted`
 - `research_disposition`: `active / deferred / closed`
 - `map_route_status`: `路线线索 / 路线候选 / 待外部核实 / 暂缓 / 排除`
+- `customer_discovery_readiness`: `ready_for_direction_compilation / ready_for_limited_direction_validation / needs_application_evidence / blocked`
+- `regulatory_qualification_state`: `satisfied / violated / unknown / conflicted`
 
 这些字段不能互相代替。`supported` 不表示技术满足，技术满足不表示市场存在，路线候选不表示业务员确认可扫描。
+
+`路线闭合` 只对命名路线实例生效。它不能改变全局 `industry_semantic_expansion`、`RESEARCH_ONLY_BLOCKED` 或其他路线的状态。在技术/监管为 `unknown` 时，最多只能进入有限方向验证；`violated / conflicted` 阻断对应产品轨。
 
 ## 变更影响
 

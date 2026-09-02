@@ -1,4 +1,4 @@
 interface:
   display_name: "外贸客户开发"
-  short_description: "评审已验证路线池、编译开发方向并筛选候选企业"
-  default_prompt: "使用 $foreign-trade-customer-development 校验 company_route_pool_packet，执行 route_portfolio_review，输出无综合评分的路线评审与承接条件请求，停止等待业务员选择。"
+  short_description: "评审路线、独立验证方向并受控开发候选企业"
+  default_prompt: "使用 $foreign-trade-customer-development 校验 company_route_pool_packet：严格路线候选做完整方向编译；业务闭合路线只做种子与保留样本分离的有限方向验证。不得在业务员另行授权前扫描客户或声称产品适配/合规。"

@@ -147,6 +147,26 @@ class DirectionDiscoveryContractTests(unittest.TestCase):
         ):
             self.assertIn(required, research_text)
 
+    def test_business_route_lead_is_limited_and_uses_independent_holdout_evidence(self):
+        skill_text = (SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        research_text = (
+            SKILL_ROOT / "references" / "research-and-sources.md"
+        ).read_text(encoding="utf-8")
+        workbook_text = (
+            SKILL_ROOT / "references" / "workbook-and-handoff.md"
+        ).read_text(encoding="utf-8")
+        combined = skill_text + research_text + workbook_text
+        for required in (
+            "ready_for_limited_direction_validation",
+            "limited_direction_validation",
+            "application_seed",
+            "direction_holdout",
+            "source_dependency_group",
+            "salesperson_scan_authorization",
+            "validate_direction_validation.py",
+        ):
+            self.assertIn(required, combined)
+
 
 if __name__ == "__main__":
     unittest.main()

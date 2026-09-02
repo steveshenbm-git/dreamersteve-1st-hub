@@ -61,7 +61,11 @@ limitations
 
 ## 工作簿字段
 
-共享应用底座保存产出产品、应用节点、需求原子、关系边、证据来源和覆盖台账。公司地图保存输入快照、产品能力、路线候选、逐项匹配、排除暂缓、公司覆盖、路线交接和变更记录。列表字段使用JSON字符串数组，未知值留空或使用明确的状态字段，不写“可能没问题”等模糊文本。
+共享应用底座保存产出产品、应用节点、需求原子、关系边、证据来源和覆盖台账。公司地图保存输入快照、产品能力、路线候选、逐项匹配、排除暂缓、公司覆盖、路线交接、变更记录和 `路线闭合`。列表字段使用JSON字符串数组，未知值留空或使用明确的状态字段，不写“可能没问题”等模糊文本。
+
+`company_product_packet_manifest` 使一张公司地图可以同时承载多个 `product_scope`，但每个能力、路线和逐项匹配只能引用本范围事实包内的E3事实。`ROUTE_PRODUCT_FACT_WRONG_SCOPE` 或 `CAPABILITY_PRODUCT_FACT_WRONG_SCOPE` 必须阻断导出。
+
+`路线候选` 新增 `business_industry_id`、`business_route_closure_id`、`regulatory_qualification_state` 和 `customer_discovery_readiness`。`路线闭合` 另行保存业务登记引用/哈希、应用证据/依赖组、允许与禁止下游动作、复核结果和授权引用。
 
 路线中的 `geography_hypotheses` 只保存待验证的国家或地区假设，`geography_evidence_ids` 保存支撑这些假设的公开证据编号。前者非空而后者为空、证据不可解析或证据状态不是 `supported` 时，路线不得导出为路线候选；这两个字段都不构成国家优先级。
 

@@ -51,22 +51,39 @@ COMPANY_SHEETS = [
     "覆盖台账",
     "路线交接",
     "变更记录",
+    "路线闭合",
 ]
 
 COMPANY_HEADERS = {
-    "公司与输入": ["company_id", "company_library_root", "product_packet_path", "product_packet_sha256", "facts_path", "facts_sha256", "shared_taxonomy_path", "taxonomy_sha256", "shared_application_base_path", "application_base_sha256", "product_scope", "declared_taxonomy_scope", "declared_application_scope", "allowed_source_scope", "initialized_at"],
+    "公司与输入": ["company_id", "company_library_root", "product_packet_path", "product_packet_sha256", "facts_path", "facts_sha256", "shared_taxonomy_path", "taxonomy_sha256", "shared_application_base_path", "application_base_sha256", "product_scope", "declared_taxonomy_scope", "declared_application_scope", "allowed_source_scope", "initialized_at", "product_input_mode", "product_packet_manifest_path", "product_packet_manifest_sha256", "product_scopes", "business_industry_register_path", "business_industry_register_sha256"],
     "产品能力": ["capability_id", "company_id", "product_scope", "product_fact_ids", "product_source_ids", "dimension", "operator", "value", "unit", "conditions", "known_limits", "evidence_state"],
-    "路线候选": ["route_candidate_id", "company_id", "product_scope", "application_node_id", "taxonomy_node_ids", "output_product_ids", "use_point_or_process", "target_enterprise_activity", "product_fact_ids", "product_source_ids", "application_evidence_ids", "application_source_groups", "evidence_state", "technical_match_state", "known_limit_conflict", "research_disposition", "map_route_status", "geography_hypotheses", "geography_evidence_ids", "unresolved_conditions", "derivation_trace"],
+    "路线候选": ["route_candidate_id", "company_id", "product_scope", "application_node_id", "taxonomy_node_ids", "output_product_ids", "use_point_or_process", "target_enterprise_activity", "product_fact_ids", "product_source_ids", "application_evidence_ids", "application_source_groups", "evidence_state", "technical_match_state", "known_limit_conflict", "research_disposition", "map_route_status", "geography_hypotheses", "geography_evidence_ids", "unresolved_conditions", "derivation_trace", "business_industry_id", "business_route_closure_id", "regulatory_qualification_state", "customer_discovery_readiness"],
     "匹配明细": ["match_id", "route_candidate_id", "requirement_atom_id", "capability_id", "match_state", "condition_compatibility", "process_interface_compatibility", "limit_conflict", "product_fact_ids", "application_evidence_ids", "rationale"],
     "排除暂缓": ["disposition_id", "route_candidate_id", "application_node_id", "disposition", "reason", "evidence_ids", "reviewed_at"],
     "覆盖台账": ["coverage_id", "company_id", "product_scope", "coverage_object_type", "coverage_object_id", "coverage_state", "disposition", "route_candidate_ids", "gap", "reviewed_at"],
-    "路线交接": ["handoff_id", "route_candidate_id", "target_skill", "handoff_state", "exported_at", "packet_path", "salesperson_decision_required"],
+    "路线交接": ["handoff_id", "route_candidate_id", "target_skill", "handoff_state", "exported_at", "packet_path", "salesperson_decision_required", "business_route_closure_id", "customer_discovery_readiness"],
     "变更记录": ["change_id", "changed_at", "actor", "reason", "affected_ids", "prior_state", "new_state", "authorization_basis"],
+    "路线闭合": ["closure_id", "route_candidate_id", "business_industry_id", "business_scope_reference", "business_scope_sha256", "application_closure_state", "application_evidence_ids", "application_source_groups", "customer_discovery_readiness", "regulatory_qualification_state", "allowed_downstream_actions", "prohibited_downstream_actions", "review_result", "reviewed_at", "authorization_reference"],
 }
 
 EVIDENCE_STATES = {"supported", "hypothesis", "unknown", "conflicted"}
 TECHNICAL_STATES = {"satisfied", "violated", "unknown", "conflicted"}
 MAP_ROUTE_STATUSES = {"路线线索", "路线候选", "待外部核实", "暂缓", "排除"}
+PRODUCT_INPUT_MODES = {"single_packet_legacy", "multi_packet_manifest_v1"}
+DISCOVERY_READINESS_STATES = {
+    "",
+    "ready_for_direction_compilation",
+    "ready_for_limited_direction_validation",
+    "needs_application_evidence",
+    "blocked",
+}
+APPLICATION_CLOSURE_STATES = {"supported", "needs_evidence", "conflicted"}
+REQUIRED_LIMITED_PROHIBITIONS = {
+    "recommend_product",
+    "claim_product_fit",
+    "claim_regulatory_compliance",
+    "scan_candidates",
+}
 
 
 def read_json(path: Path):
@@ -86,6 +103,26 @@ def safe_list(errors: list[dict[str, str]], value: Any, field: str, path: Path) 
     except ValueError as exc:
         errors.append(diagnostic("INVALID_JSON_LIST", str(exc), path))
         return []
+
+
+def packet_fact_ids(packet: dict[str, Any]) -> set[str]:
+    result: set[str] = set()
+    for field, value in packet.items():
+        if field.startswith("confirmed_") or field in {"required_conditions", "known_limits"}:
+            if isinstance(value, list):
+                result.update(item for item in value if isinstance(item, str) and item)
+    return result
+
+
+def approved_company_fact(fact: dict[str, Any] | None, company_id: str) -> bool:
+    return bool(
+        fact
+        and fact.get("company_id") == company_id
+        and fact.get("subject_scope") == "own_company"
+        and fact.get("statement_kind") == "source_fact"
+        and fact.get("evidence_level") == "E3"
+        and fact.get("review_status") == "approved"
+    )
 
 
 def check_sheet_contract(
@@ -171,21 +208,122 @@ def validate_workspace(map_root: Path, company_id: str | None = None) -> dict[st
                 )
             )
 
-    packet_path = Path(company["product_packet_path"])
     facts_path = Path(company["facts_path"])
-    for required in (packet_path, facts_path):
-        if not required.is_file():
-            errors.append(diagnostic("COMPANY_INPUT_MISSING", str(required), required))
+    if not facts_path.is_file():
+        errors.append(diagnostic("COMPANY_INPUT_MISSING", str(facts_path), facts_path))
     if errors and any(item["code"] == "COMPANY_INPUT_MISSING" for item in errors):
         return {"status": "FAIL", "errors": errors}
-    if company.get("product_packet_sha256") != sha256_file(packet_path):
-        errors.append(diagnostic("PRODUCT_PACKET_HASH_MISMATCH", company_id, packet_path))
     if company.get("facts_sha256") != sha256_file(facts_path):
         errors.append(diagnostic("FACTS_HASH_MISMATCH", company_id, facts_path))
     if company.get("taxonomy_sha256") != sha256_file(taxonomy_path):
         errors.append(diagnostic("COMPANY_TAXONOMY_SNAPSHOT_STALE", company_id, taxonomy_path))
     if company.get("application_base_sha256") != sha256_file(application_path):
         errors.append(diagnostic("COMPANY_APPLICATION_SNAPSHOT_STALE", company_id, application_path))
+
+    product_input_mode = company.get("product_input_mode") or "single_packet_legacy"
+    if product_input_mode not in PRODUCT_INPUT_MODES:
+        errors.append(diagnostic("PRODUCT_INPUT_MODE_INVALID", product_input_mode, registry_path))
+    product_scopes = company.get("product_scopes")
+    if not isinstance(product_scopes, list) or not product_scopes:
+        product_scopes = [company.get("product_scope")] if company.get("product_scope") else []
+    if len(product_scopes) != len(set(product_scopes)) or any(not isinstance(item, str) or not item for item in product_scopes):
+        errors.append(diagnostic("PRODUCT_SCOPES_INVALID", company_id, registry_path))
+        product_scopes = []
+
+    facts_payload = read_json(facts_path)
+    facts = {fact.get("fact_id"): fact for fact in facts_payload.get("facts", []) if isinstance(fact, dict)}
+    packet_fact_ids_by_scope: dict[str, set[str]] = {}
+    packet_paths: list[Path] = []
+    if product_input_mode == "single_packet_legacy":
+        packet_path = Path(str(company.get("product_packet_path", "")))
+        if not packet_path.is_file():
+            errors.append(diagnostic("COMPANY_INPUT_MISSING", str(packet_path), packet_path))
+        else:
+            packet_paths.append(packet_path)
+            if company.get("product_packet_sha256") != sha256_file(packet_path):
+                errors.append(diagnostic("PRODUCT_PACKET_HASH_MISMATCH", company_id, packet_path))
+            packet = read_json(packet_path).get("product_development_fact_packet", {})
+            scope = company.get("product_scope", "")
+            if packet.get("company_id") != company_id:
+                errors.append(diagnostic("CROSS_COMPANY_INPUT", company_id, packet_path))
+            if "internal_industry_application_mapping" not in packet.get("allowed_use", []):
+                errors.append(diagnostic("PRODUCT_PACKET_USE_NOT_ALLOWED", company_id, packet_path))
+            packet_fact_ids_by_scope[scope] = packet_fact_ids(packet)
+    elif product_input_mode == "multi_packet_manifest_v1":
+        manifest_path = Path(str(company.get("product_packet_manifest_path", "")))
+        if not manifest_path.is_file():
+            errors.append(diagnostic("PRODUCT_PACKET_MANIFEST_MISSING", company_id, manifest_path))
+        else:
+            if company.get("product_packet_manifest_sha256") != sha256_file(manifest_path):
+                errors.append(diagnostic("PRODUCT_PACKET_MANIFEST_HASH_MISMATCH", company_id, manifest_path))
+            manifest_document = read_json(manifest_path)
+            manifest = manifest_document.get("company_product_packet_manifest", {})
+            if (
+                not isinstance(manifest, dict)
+                or manifest.get("company_id") != company_id
+                or Path(str(manifest.get("facts_path", ""))).resolve() != facts_path.resolve()
+                or manifest.get("facts_sha256") != sha256_file(facts_path)
+                or manifest.get("product_scopes") != product_scopes
+            ):
+                errors.append(diagnostic("PRODUCT_PACKET_MANIFEST_INVALID", company_id, manifest_path))
+            packets = manifest.get("packets", []) if isinstance(manifest, dict) else []
+            if not isinstance(packets, list) or len(packets) != len(product_scopes):
+                errors.append(diagnostic("PRODUCT_PACKET_MANIFEST_INVALID", company_id, manifest_path))
+                packets = []
+            for item in packets:
+                if not isinstance(item, dict):
+                    errors.append(diagnostic("PRODUCT_PACKET_MANIFEST_INVALID", company_id, manifest_path))
+                    continue
+                scope = item.get("product_scope")
+                current_packet_path = Path(str(item.get("product_packet_path", "")))
+                if scope not in product_scopes or scope in packet_fact_ids_by_scope:
+                    errors.append(diagnostic("PRODUCT_PACKET_MANIFEST_SCOPE_INVALID", str(scope), manifest_path))
+                    continue
+                if not current_packet_path.is_file():
+                    errors.append(diagnostic("COMPANY_INPUT_MISSING", str(current_packet_path), current_packet_path))
+                    continue
+                packet_paths.append(current_packet_path)
+                if item.get("product_packet_sha256") != sha256_file(current_packet_path):
+                    errors.append(diagnostic("PRODUCT_PACKET_HASH_MISMATCH", str(scope), current_packet_path))
+                packet = read_json(current_packet_path).get("product_development_fact_packet", {})
+                if (
+                    packet.get("company_id") != company_id
+                    or packet.get("product_family") != scope
+                    or "internal_industry_application_mapping" not in packet.get("allowed_use", [])
+                ):
+                    errors.append(diagnostic("PRODUCT_PACKET_MANIFEST_PACKET_INVALID", str(scope), current_packet_path))
+                ids = packet_fact_ids(packet)
+                if item.get("product_fact_ids") != sorted(ids):
+                    errors.append(diagnostic("PRODUCT_PACKET_MANIFEST_FACT_SET_MISMATCH", str(scope), manifest_path))
+                packet_fact_ids_by_scope[str(scope)] = ids
+            if set(packet_fact_ids_by_scope) != set(product_scopes):
+                errors.append(diagnostic("PRODUCT_PACKET_MANIFEST_SCOPE_INCOMPLETE", company_id, manifest_path))
+
+    business_register_path_value = company.get("business_industry_register_path", "")
+    business_industry_ids: set[str] = set()
+    business_register_path: Path | None = None
+    if business_register_path_value:
+        business_register_path = Path(str(business_register_path_value))
+        if not business_register_path.is_file():
+            errors.append(diagnostic("BUSINESS_INDUSTRY_REGISTER_MISSING", company_id, business_register_path))
+        elif company.get("business_industry_register_sha256") != sha256_file(business_register_path):
+            errors.append(diagnostic("BUSINESS_INDUSTRY_REGISTER_HASH_MISMATCH", company_id, business_register_path))
+        else:
+            register_document = read_json(business_register_path)
+            register = register_document.get("business_validated_industry_register", register_document)
+            if not isinstance(register, dict) or register.get("company_id") != company_id:
+                errors.append(diagnostic("BUSINESS_INDUSTRY_REGISTER_INVALID", company_id, business_register_path))
+            else:
+                industries = register.get("industries", [])
+                if not isinstance(industries, list):
+                    errors.append(diagnostic("BUSINESS_INDUSTRY_REGISTER_INVALID", company_id, business_register_path))
+                else:
+                    business_industry_ids = {
+                        str(item.get("industry_id") or item.get("business_industry_id"))
+                        for item in industries
+                        if isinstance(item, dict)
+                        and (item.get("industry_id") or item.get("business_industry_id"))
+                    }
 
     input_rows = read_sheet_records(workbook, "公司与输入")
     if len(input_rows) != 1:
@@ -195,7 +333,7 @@ def validate_workspace(map_root: Path, company_id: str | None = None) -> dict[st
         expected_snapshot = {
             "company_id": company_id,
             "company_library_root": str(Path(company["company_library_root"]).resolve()),
-            "product_packet_path": str(packet_path.resolve()),
+            "product_packet_path": str(Path(str(company.get("product_packet_path", ""))).resolve()) if company.get("product_packet_path") else "",
             "product_packet_sha256": company.get("product_packet_sha256", ""),
             "facts_path": str(facts_path.resolve()),
             "facts_sha256": company.get("facts_sha256", ""),
@@ -207,6 +345,12 @@ def validate_workspace(map_root: Path, company_id: str | None = None) -> dict[st
             "declared_taxonomy_scope": company.get("declared_taxonomy_scope", ""),
             "declared_application_scope": company.get("declared_application_scope", ""),
             "allowed_source_scope": company.get("allowed_source_scope", ""),
+            "product_input_mode": product_input_mode,
+            "product_packet_manifest_path": str(Path(str(company.get("product_packet_manifest_path", ""))).resolve()) if company.get("product_packet_manifest_path") else "",
+            "product_packet_manifest_sha256": company.get("product_packet_manifest_sha256", ""),
+            "product_scopes": json.dumps(product_scopes, ensure_ascii=False, separators=(",", ":")),
+            "business_industry_register_path": str(Path(str(company.get("business_industry_register_path", ""))).resolve()) if company.get("business_industry_register_path") else "",
+            "business_industry_register_sha256": company.get("business_industry_register_sha256", ""),
         }
         mismatches = [
             field
@@ -385,30 +529,14 @@ def validate_workspace(map_root: Path, company_id: str | None = None) -> dict[st
                             )
                         )
 
-    facts_payload = read_json(facts_path)
-    packet = read_json(packet_path).get("product_development_fact_packet", {})
-    if facts_payload.get("company_id") != company_id or packet.get("company_id") != company_id:
-        errors.append(diagnostic("CROSS_COMPANY_INPUT", company_id, packet_path))
-    if "internal_industry_application_mapping" not in packet.get("allowed_use", []):
-        errors.append(diagnostic("PRODUCT_PACKET_USE_NOT_ALLOWED", company_id, packet_path))
-    facts = {fact.get("fact_id"): fact for fact in facts_payload.get("facts", [])}
-    packet_fact_ids: set[str] = set()
-    for field, value in packet.items():
-        if field.startswith("confirmed_") or field in {"required_conditions", "known_limits"}:
-            if isinstance(value, list):
-                packet_fact_ids.update(item for item in value if isinstance(item, str))
-
-    for fact_id in packet_fact_ids:
+    if facts_payload.get("company_id") != company_id:
+        errors.append(diagnostic("CROSS_COMPANY_INPUT", company_id, facts_path))
+    all_packet_fact_ids = set().union(*packet_fact_ids_by_scope.values()) if packet_fact_ids_by_scope else set()
+    for fact_id in all_packet_fact_ids:
         fact = facts.get(fact_id)
         if not fact:
-            errors.append(diagnostic("UNRESOLVED_PACKET_FACT", fact_id, packet_path))
-        elif not (
-            fact.get("company_id") == company_id
-            and fact.get("subject_scope") == "own_company"
-            and fact.get("statement_kind") == "source_fact"
-            and fact.get("evidence_level") == "E3"
-            and fact.get("review_status") == "approved"
-        ):
+            errors.append(diagnostic("UNRESOLVED_PACKET_FACT", fact_id, facts_path))
+        elif not approved_company_fact(fact, company_id):
             errors.append(diagnostic("PRODUCT_FACT_NOT_APPROVED_E3", fact_id, facts_path))
 
     taxonomy_rows = read_sheet_records(taxonomy_path, "行业骨架")
@@ -497,25 +625,56 @@ def validate_workspace(map_root: Path, company_id: str | None = None) -> dict[st
     if len(capability_ids) != len(capabilities):
         errors.append(diagnostic("DUPLICATE_CAPABILITY_ID", company_id, workbook))
     for capability in capabilities:
+        capability_id = capability.get("capability_id", "")
         if capability.get("company_id") != company_id:
-            errors.append(diagnostic("CROSS_COMPANY_CAPABILITY", capability.get("capability_id", ""), workbook))
+            errors.append(diagnostic("CROSS_COMPANY_CAPABILITY", capability_id, workbook))
+        capability_scope = capability.get("product_scope", "")
+        if capability_scope not in product_scopes:
+            errors.append(diagnostic("CAPABILITY_PRODUCT_SCOPE_INVALID", capability_id, workbook))
+        scope_fact_ids = packet_fact_ids_by_scope.get(capability_scope, set())
         for fact_id in safe_list(errors, capability.get("product_fact_ids"), "product_fact_ids", workbook):
             fact = facts.get(fact_id)
-            if fact_id not in packet_fact_ids or not fact:
+            if not fact:
                 errors.append(diagnostic("UNRESOLVED_PRODUCT_FACT", fact_id, workbook))
-            elif not (
-                fact.get("company_id") == company_id
-                and fact.get("subject_scope") == "own_company"
-                and fact.get("statement_kind") == "source_fact"
-                and fact.get("evidence_level") == "E3"
-                and fact.get("review_status") == "approved"
-            ):
+            elif fact_id not in scope_fact_ids:
+                errors.append(diagnostic("CAPABILITY_PRODUCT_FACT_WRONG_SCOPE", f"{capability_id}: {fact_id}", workbook))
+            elif not approved_company_fact(fact, company_id):
                 errors.append(diagnostic("PRODUCT_FACT_NOT_APPROVED_E3", fact_id, workbook))
 
     route_rows = read_sheet_records(workbook, "路线候选")
     route_ids = {row.get("route_candidate_id") for row in route_rows}
     if len(route_ids) != len(route_rows):
         errors.append(diagnostic("DUPLICATE_ROUTE_ID", company_id, workbook))
+    closure_rows = read_sheet_records(workbook, "路线闭合")
+    closure_ids = [row.get("closure_id", "") for row in closure_rows]
+    if len(set(closure_ids)) != len(closure_ids) or any(not item for item in closure_ids):
+        errors.append(diagnostic("ROUTE_CLOSURE_ID_INVALID", company_id, workbook))
+    closures_by_route: dict[str, list[dict[str, str]]] = {}
+    for closure in closure_rows:
+        closure_id = closure.get("closure_id", "")
+        closure_route_id = closure.get("route_candidate_id", "")
+        closures_by_route.setdefault(closure_route_id, []).append(closure)
+        if closure_route_id not in route_ids:
+            errors.append(diagnostic("ROUTE_CLOSURE_UNKNOWN_ROUTE", closure_id, workbook))
+        if closure.get("business_industry_id") not in business_industry_ids:
+            errors.append(diagnostic("ROUTE_CLOSURE_BUSINESS_SCOPE_UNKNOWN", closure_id, workbook))
+        scope_reference = Path(str(closure.get("business_scope_reference", "")))
+        if business_register_path is None or scope_reference.resolve() != business_register_path.resolve():
+            errors.append(diagnostic("ROUTE_CLOSURE_BUSINESS_REFERENCE_MISMATCH", closure_id, workbook))
+        elif not scope_reference.is_file() or closure.get("business_scope_sha256") != sha256_file(scope_reference):
+            errors.append(diagnostic("ROUTE_CLOSURE_BUSINESS_HASH_MISMATCH", closure_id, scope_reference))
+        if closure.get("application_closure_state") not in APPLICATION_CLOSURE_STATES:
+            errors.append(diagnostic("ROUTE_CLOSURE_APPLICATION_STATE_INVALID", closure_id, workbook))
+        if closure.get("customer_discovery_readiness") not in DISCOVERY_READINESS_STATES - {""}:
+            errors.append(diagnostic("ROUTE_CLOSURE_DISCOVERY_READINESS_INVALID", closure_id, workbook))
+        if closure.get("regulatory_qualification_state") not in TECHNICAL_STATES:
+            errors.append(diagnostic("ROUTE_CLOSURE_REGULATORY_STATE_INVALID", closure_id, workbook))
+        if closure.get("review_result") not in {"PASS", "FAIL", "UNVERIFIED"}:
+            errors.append(diagnostic("ROUTE_CLOSURE_REVIEW_RESULT_INVALID", closure_id, workbook))
+        if closure.get("review_result") == "PASS" and (
+            not closure.get("reviewed_at") or not closure.get("authorization_reference")
+        ):
+            errors.append(diagnostic("ROUTE_CLOSURE_REVIEW_TRACE_MISSING", closure_id, workbook))
     route_keys: set[tuple[str, str, str]] = set()
     match_rows = read_sheet_records(workbook, "匹配明细")
     matches_by_route: dict[str, list[dict[str, str]]] = {}
@@ -544,7 +703,8 @@ def validate_workspace(map_root: Path, company_id: str | None = None) -> dict[st
         route_keys.add(route_key)
         if route.get("company_id") != company_id:
             errors.append(diagnostic("CROSS_COMPANY_ROUTE", route_id, workbook))
-        if route.get("product_scope") != company.get("product_scope"):
+        route_scope = route.get("product_scope", "")
+        if route_scope not in product_scopes:
             errors.append(diagnostic("ROUTE_PRODUCT_SCOPE_MISMATCH", route_id, workbook))
         status = route.get("map_route_status")
         if status == "已确认可扫描":
@@ -555,23 +715,26 @@ def validate_workspace(map_root: Path, company_id: str | None = None) -> dict[st
             errors.append(diagnostic("ROUTE_EVIDENCE_STATE_INVALID", route_id, workbook))
         if route.get("technical_match_state") not in TECHNICAL_STATES:
             errors.append(diagnostic("ROUTE_TECHNICAL_STATE_INVALID", route_id, workbook))
+        readiness = route.get("customer_discovery_readiness", "")
+        if readiness not in DISCOVERY_READINESS_STATES:
+            errors.append(diagnostic("ROUTE_DISCOVERY_READINESS_INVALID", route_id, workbook))
+        regulatory_state = route.get("regulatory_qualification_state", "")
+        if regulatory_state and regulatory_state not in TECHNICAL_STATES:
+            errors.append(diagnostic("ROUTE_REGULATORY_STATE_INVALID", route_id, workbook))
 
         product_fact_ids = safe_list(errors, route.get("product_fact_ids"), "product_fact_ids", workbook)
         product_sources = set(safe_list(errors, route.get("product_source_ids"), "product_source_ids", workbook))
         application_sources = set(safe_list(errors, route.get("application_source_groups"), "application_source_groups", workbook))
         if product_sources & application_sources:
             errors.append(diagnostic("CIRCULAR_SOURCE_DEPENDENCY", route_id, workbook))
+        scope_fact_ids = packet_fact_ids_by_scope.get(route_scope, set())
         for fact_id in product_fact_ids:
             fact = facts.get(fact_id)
-            if fact_id not in packet_fact_ids or not fact:
+            if not fact:
                 errors.append(diagnostic("UNRESOLVED_PRODUCT_FACT", fact_id, workbook))
-            elif not (
-                fact.get("company_id") == company_id
-                and fact.get("subject_scope") == "own_company"
-                and fact.get("statement_kind") == "source_fact"
-                and fact.get("evidence_level") == "E3"
-                and fact.get("review_status") == "approved"
-            ):
+            elif fact_id not in scope_fact_ids:
+                errors.append(diagnostic("ROUTE_PRODUCT_FACT_WRONG_SCOPE", f"{route_id}: {fact_id}", workbook))
+            elif not approved_company_fact(fact, company_id):
                 errors.append(diagnostic("PRODUCT_FACT_NOT_APPROVED_E3", fact_id, workbook))
         application_id = route.get("application_node_id")
         application = applications.get(application_id)
@@ -624,6 +787,64 @@ def validate_workspace(map_root: Path, company_id: str | None = None) -> dict[st
             errors.append(diagnostic("APPLICATION_SOURCE_GROUP_MISMATCH", route_id, workbook))
         if product_sources & resolved_source_groups:
             errors.append(diagnostic("CIRCULAR_SOURCE_DEPENDENCY", route_id, workbook))
+
+        if readiness == "ready_for_limited_direction_validation":
+            if status != "路线线索":
+                errors.append(diagnostic("LIMITED_ROUTE_STATUS_INVALID", route_id, workbook))
+            if route.get("business_industry_id") not in business_industry_ids:
+                errors.append(diagnostic("LIMITED_ROUTE_BUSINESS_SCOPE_UNKNOWN", route_id, workbook))
+            if route.get("evidence_state") != "supported" or not app_evidence:
+                errors.append(diagnostic("LIMITED_ROUTE_APPLICATION_EVIDENCE_INSUFFICIENT", route_id, workbook))
+            if not application or application.get("evidence_state") != "supported":
+                errors.append(diagnostic("LIMITED_ROUTE_APPLICATION_NODE_NOT_SUPPORTED", route_id, workbook))
+            if any(
+                evidence.get(evidence_id, {}).get("evidence_state") != "supported"
+                or evidence.get(evidence_id, {}).get("source_subject") == "own_company"
+                for evidence_id in app_evidence
+            ):
+                errors.append(diagnostic("LIMITED_ROUTE_APPLICATION_EVIDENCE_INVALID", route_id, workbook))
+            if (
+                route.get("technical_match_state") in {"violated", "conflicted"}
+                or regulatory_state in {"violated", "conflicted"}
+                or str(route.get("known_limit_conflict", "")).lower() != "false"
+            ):
+                errors.append(diagnostic("LIMITED_ROUTE_QUALIFICATION_BLOCKED", route_id, workbook))
+            route_closures = closures_by_route.get(route_id, [])
+            closure_matches = [
+                item
+                for item in route_closures
+                if item.get("closure_id") == route.get("business_route_closure_id")
+                and item.get("business_industry_id") == route.get("business_industry_id")
+            ]
+            if len(closure_matches) != 1:
+                errors.append(diagnostic("LIMITED_ROUTE_CLOSURE_NOT_UNIQUE", route_id, workbook))
+            else:
+                closure = closure_matches[0]
+                closure_evidence = safe_list(
+                    errors, closure.get("application_evidence_ids"), "closure.application_evidence_ids", workbook
+                )
+                closure_sources = safe_list(
+                    errors, closure.get("application_source_groups"), "closure.application_source_groups", workbook
+                )
+                actions = set(safe_list(
+                    errors, closure.get("allowed_downstream_actions"), "closure.allowed_downstream_actions", workbook
+                ))
+                prohibitions = set(safe_list(
+                    errors, closure.get("prohibited_downstream_actions"), "closure.prohibited_downstream_actions", workbook
+                ))
+                if (
+                    closure.get("review_result") != "PASS"
+                    or closure.get("application_closure_state") != "supported"
+                    or closure.get("customer_discovery_readiness") != readiness
+                    or closure.get("regulatory_qualification_state") != regulatory_state
+                    or closure_evidence != app_evidence
+                    or set(closure_sources) != resolved_source_groups
+                ):
+                    errors.append(diagnostic("LIMITED_ROUTE_CLOSURE_MISMATCH", route_id, workbook))
+                if actions != {"compile_and_validate_direction"}:
+                    errors.append(diagnostic("LIMITED_ROUTE_ACTION_INVALID", route_id, workbook))
+                if not REQUIRED_LIMITED_PROHIBITIONS.issubset(prohibitions):
+                    errors.append(diagnostic("LIMITED_ROUTE_PROHIBITIONS_INCOMPLETE", route_id, workbook))
 
         geography = safe_list(errors, route.get("geography_hypotheses"), "geography_hypotheses", workbook)
         geography_evidence = safe_list(
@@ -738,6 +959,14 @@ def validate_workspace(map_root: Path, company_id: str | None = None) -> dict[st
             errors.append(diagnostic("HANDOFF_UNKNOWN_ROUTE", row.get("handoff_id", ""), workbook))
         if row.get("target_skill") not in ("", "foreign-trade-customer-development"):
             errors.append(diagnostic("HANDOFF_TARGET_INVALID", row.get("handoff_id", ""), workbook))
+        route = next(
+            (item for item in route_rows if item.get("route_candidate_id") == row.get("route_candidate_id")),
+            None,
+        )
+        if route and row.get("business_route_closure_id") not in ("", route.get("business_route_closure_id", "")):
+            errors.append(diagnostic("HANDOFF_CLOSURE_MISMATCH", row.get("handoff_id", ""), workbook))
+        if route and row.get("customer_discovery_readiness") not in ("", route.get("customer_discovery_readiness", "")):
+            errors.append(diagnostic("HANDOFF_DISCOVERY_READINESS_MISMATCH", row.get("handoff_id", ""), workbook))
 
     unique = []
     seen = set()

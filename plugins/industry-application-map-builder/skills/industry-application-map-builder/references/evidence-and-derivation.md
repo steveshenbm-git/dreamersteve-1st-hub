@@ -62,6 +62,8 @@ AND known_limit_conflict == false
 
 应用关系只有假设、任一硬要求未知或来源无法独立时，保留为 `路线线索`。明确违反时进入路线级排除。存在冲突时暂缓并提出复核任务。
 
+`business_validated_route_closure` 不改写上述公式。它只在业务确认行业、产品中性应用链为 `supported`、技术/监管资格未被证明为 `violated` 或 `conflicted`、且无已知限制冲突时，将命名 `路线线索` 标记为 `ready_for_limited_direction_validation`。未知状态保留，不得改成技术满足、公司产品适配或合规结论。
+
 ## 来源独立性
 
 公司产品来源与产品中性应用来源分别记录。一个混合公司宣传资料不能同时作为公司能力事实和独立应用需求证据。共享来源使用 `source_dependency_group` 标识同源转载、同一底层研究或同一商业主体；同一依赖组的多页面不能算独立相互印证。若共享应用材料直接来自或依赖某条公司产品来源，`source_dependency_group` 必须使用该产品 `source_id`，以便循环来源检查能够阻断自证。

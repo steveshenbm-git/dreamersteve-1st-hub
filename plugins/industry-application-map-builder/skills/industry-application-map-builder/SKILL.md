@@ -51,7 +51,7 @@ This skill owns shared industry/application knowledge, RC2 semantic-method resea
 1. Select exactly one route from the table below.
 2. Determine whether the request authorizes writes. Review, audit, explain, and diagnose requests remain read-only.
 3. For semantic-method routes, require one map root, frozen taxonomy snapshot, product-neutral research theme, contract version, model profile, allowed source scope, budget, and explicit authorization for the requested phase. `semantic_calibration_case_prepare` requires a hash-valid `case_preparation_locked` contract; model tasks require the new-version final `frozen` contract. Do not require or load company facts.
-4. For company routes, require one explicit `company_id`, company product-library root, product fact packet, product scope, map root, and declared research scope. Resolve every fact ID to the same company's `facts.json` and freeze all input hashes before matching.
+4. For company routes, require one explicit `company_id`, company product-library root, map root, declared research scope, and either one product fact packet plus product scope or one frozen `company_product_packet_manifest`. Resolve every fact ID to the same company's `facts.json`, keep each product scope separate, and freeze all input hashes before matching.
 5. Stop if an input is missing, another company appears, a hash or contract changed, a confirmed ID does not resolve, the taxonomy version is unfrozen, or the requested semantic phase lacks its own authorization.
 
 ## Route selection
@@ -62,6 +62,7 @@ This skill owns shared industry/application knowledge, RC2 semantic-method resea
 | `application_knowledge_update` | Add or revise official taxonomy or product-neutral application evidence | [industry-application-schema.md](references/industry-application-schema.md) and [evidence-and-derivation.md](references/evidence-and-derivation.md) | Shared base and affected-route review flags are updated; no company fit is asserted |
 | `company_map_build` | Match one approved product fact packet to the shared application base | [evidence-and-derivation.md](references/evidence-and-derivation.md) and [coverage-and-lifecycle.md](references/coverage-and-lifecycle.md) | Company routes and coverage dispositions are recorded; no customer search starts |
 | `company_map_review` | Review coverage, conflicts, stale inputs, exclusions, or route lifecycle | [coverage-and-lifecycle.md](references/coverage-and-lifecycle.md) and [pressure-scenarios.md](references/pressure-scenarios.md) | `PASS / FAIL / UNVERIFIED` review and required action are recorded |
+| `business_validated_route_closure` | The company has a user-confirmed industry scope and needs the shortest evidence-safe bridge into direction validation | [business-validated-route-closure.md](references/business-validated-route-closure.md) | One route-scoped application closure and `路线线索` are recorded; technical/regulatory unknowns remain explicit and customer scanning stays blocked |
 | `route_pool_handoff` | Export validated route candidates for customer-development direction work | [handoff-contracts.md](references/handoff-contracts.md) | A registered `company_route_pool_packet` is written inside the company map; stop before direction or company research |
 | `semantic_contract_prepare` | Complete and lock the product-neutral theme, taxonomy snapshot, model profile, prompts, budget, sampling and isolated write boundary | [industry-semantic-research-contract.md](references/industry-semantic-research-contract.md) | `case_preparation_locked` contract with `locked_input_sha256`; case-set hash and control IDs remain empty; stop before candidate preparation |
 | `semantic_calibration_case_prepare` | Build and freeze the 40-case truth package, then bind it to a new final contract version | [industry-semantic-calibration-and-audit.md](references/industry-semantic-calibration-and-audit.md) | Real case-set hash, real control IDs and new-version final `frozen` contract; incomplete truth returns `INCONCLUSIVE` and no model task is issued |
@@ -163,6 +164,8 @@ approved_product_fact -> capability_atom -> requirement_atom_match -> applicatio
 
 Apply the four-state formula in [evidence-and-derivation.md](references/evidence-and-derivation.md). A route becomes `路线候选` only when the application relation is supported, every hard technical requirement is satisfied, required conditions and interfaces are compatible, and no known limit conflicts. Otherwise keep it as `路线线索`, `暂缓`, `排除`, or an explicit unknown. Never average these states.
 
+A business-confirmed industry may use `business_validated_route_closure` without weakening that strict candidate definition. It may release only a named `路线线索` to limited direction validation when the shared application chain is supported, the business register and closure are hash-bound, and technical/regulatory states are not `violated` or `conflicted`. This route-level bridge has `global_semantic_stage_effect = none`; it never changes `industry_semantic_expansion`, never releases another route, and never authorizes candidate scanning.
+
 ## Workbook gate
 
 Use `spreadsheets:Spreadsheets` for every `.xlsx` creation or edit. Start from the bundled templates, preserve machine headers in row 1 and Chinese business labels in row 2, keep data from row 3 onward, and retain filters, frozen headers, validations, widths, and styles. Reopen and visually inspect every changed sheet before reporting success.
@@ -207,6 +210,8 @@ For each route:
 6. Record geography only as a sourced,待验证 hypothesis. Do not convert it to a country priority.
 
 An application failure excludes only that product-scope/application route. It does not exclude the whole industry, another product, or another company.
+
+When more than one product family is in scope, first create a frozen manifest with `scripts/freeze_company_product_packet_manifest.py`, then initialize the company map with `--product-packet-manifest`. A capability or route may cite facts only from its own manifest entry. A business-confirmed route additionally records the current business-industry register and one `路线闭合` row; see [business-validated-route-closure.md](references/business-validated-route-closure.md).
 
 ## Coverage and handoff
 

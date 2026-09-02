@@ -193,7 +193,7 @@ class R4Beta5CasePackageTests(unittest.TestCase):
             "semantic_research_contract"
         ]
 
-        self.assertEqual(manifest["version"], "0.4.0-beta.6")
+        self.assertEqual(manifest["version"], "0.4.0-beta.7")
         self.assertEqual(template["map_builder_plugin_version"], "0.4.0-beta.6")
         self.assertEqual(template["case_package_contract_version"], "1.0-beta5")
         for field in (

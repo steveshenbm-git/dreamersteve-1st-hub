@@ -38,7 +38,8 @@ python3 scripts/verify_route_pool_packet.py \
 |---|---|---|
 | `map_route_status = 路线候选` 且路线字段与证据链完整 | `可编译方向` | 请求商业承接视图，等待业务员决定 |
 | `map_route_status = 待外部核实` | `待外部核实` | 仅列出待核问题，不编译方向 |
-| `map_route_status = 路线线索` | `需补路线证据` | 返回地图技能补证，不编译方向 |
+| `map_route_status = 路线线索` 且无有效路线闭合 | `需补路线证据` | 返回地图技能补证，不编译方向 |
+| `map_route_status = 路线线索` 且有唯一PASS闭合，`customer_discovery_readiness = ready_for_limited_direction_validation` | `有限方向验证` | 只编译可观察企业规则并做独立保留样本验证；禁止推品、适配/合规声明和客户扫描 |
 | `map_route_status = 暂缓` 或 `排除` | `不可进入` | 保留原因，不编译方向 |
 
 若当前路线决策涉及最小起订量、交期、样品、区域、客户类型、付款、合规文件或其他承接维度，输出下列显式交接并停止该路线；不得假装在后台调用另一个技能：
@@ -66,6 +67,22 @@ development_readiness_request:
 `route_portfolio_review_packet` 必须逐路线保留研究就绪、商业承接、时效、支持事实、冲突、未知、待办和来源引用。不得生成综合路线评分，不得按路线数量、候选数量或模型偏好自动排序。国家或地区假设不得直接变成最终市场优先级；市场范围、顺序、取舍以及 `salesperson_route_decision = 选择编译／继续核实／暂缓／淘汰` 均由业务员填写，并保留 `decision_basis` 与 `decision_date`。
 
 ## 开发方向编译与核实
+
+### 有限方向验证
+
+`有限方向验证` 不是对严格 `路线候选` 的降标准命名。它只接受路线包中已被地图技能和生产者登记锁定的一条路线线索。可以执行的动作只有：
+
+1. 保留业务行业、共享应用节点和目标企业活动边界。
+2. 将边界编译为可观察企业规则、排除规则和未知项。
+3. 将地图应用证据标记为 `application_seed`，再用完全独立的 `direction_holdout` 验证方向规则。
+
+种子与保留样本的 `source_dependency_group`、`source_reference` 和 `observed_company_id` 都不得重合。正反证据不得将 `technical_qualification_state` 或 `regulatory_qualification_state` 的 `unknown` 自动改成 `satisfied`。在向业务员呈现前执行：
+
+```bash
+python3 scripts/validate_direction_validation.py /absolute/path/to/direction-validation.json
+```
+
+PASS 只表示方向验证证据独立且合同完整。它不授权客户扫描；业务员必须另行记录 `direction_status = 已确认可扫描` 和完整扫描范围。
 
 ### `direction_compilation`
 
